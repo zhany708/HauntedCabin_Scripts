@@ -10,7 +10,7 @@ public class CameraShake : MonoBehaviour
     float m_Intensity;
     bool m_IsShake =  false;
 
-
+    int a;
 
 
 

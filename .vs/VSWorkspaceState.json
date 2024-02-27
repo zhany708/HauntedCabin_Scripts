@@ -1,6 +1,8 @@
 {
   "ExpandedNodes": [
-    ""
+    "",
+    "\\Camera"
   ],
+  "SelectedNode": "\\Camera\\CameraShake.cs",
   "PreviewInSolutionExplorer": false
 }
