@@ -28,7 +28,7 @@ public class Weapon : MonoBehaviour
     #endregion
 
     #region Variables
-    protected Vector2 mousePosition;     //鼠标的方向
+    public Vector2 mousePosition { get; private set; }     //鼠标的方向
     #endregion
 
     #region Unity Callback Functions
@@ -76,6 +76,8 @@ public class Weapon : MonoBehaviour
         weaponInventoryFlip.FlipX(player.FacingNum);       //实时翻转武器，防止玩家翻转时武器也被翻转
     }
 
+
+
     protected virtual void PlayAudioSound()     //播放武器攻击音效
     {
         if (audioSource != null && audioSource.clip != null)
@@ -93,6 +95,13 @@ public class Weapon : MonoBehaviour
     private void AnimationFinishTrigger()
     {
         ExitWeapon();
+    }
+    #endregion
+
+    #region Setters
+    public void SetMousePosition(Vector2 thisPos)
+    {
+        mousePosition = thisPos;
     }
     #endregion
 }
