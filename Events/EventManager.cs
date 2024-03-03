@@ -31,6 +31,9 @@ public class EventManager : MonoBehaviour
         EventCount = 0;
         EnterSecondStageCount = 1;
         IsSecondStage = false;
+
+
+        UIManager.Instance.InitPanel(UIConst.TransitionStagePanel);     //提前加载进入二阶段的文字
     }
 
     

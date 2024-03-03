@@ -65,15 +65,15 @@ public class UIManager
 
 
 
-
-    private UIManager()     //构造函数
+    //构造函数
+    private UIManager()     
     {
         InitDicts();
     }
 
 
-
-    private void InitDicts()    //初始化字典
+    //初始化字典
+    private void InitDicts()    
     {
         PanelDict = new Dictionary<string, BasePanel>();
         m_PrefabDict = new Dictionary<string, GameObject>();
@@ -91,9 +91,27 @@ public class UIManager
     //打开界面
     public BasePanel OpenPanel(string name)
     {
-        //检查界面是否已经打开
         BasePanel panel = null;
+        GameObject panelPrefab = null;
+        GameObject panelObject = null;
 
+
+        //检查缓存的预制件中是否已经有要打开的界面，如果有则直接打开，无须进行下面的检查
+        if (m_PrefabDict.TryGetValue(name, out panelPrefab))
+        {
+            //打开界面
+            panelObject = GameObject.Instantiate(panelPrefab, UIRoot, false);    //生成出来，并使它成为UIRoot的一个子节点
+
+            panel = panelObject.GetComponent<BasePanel>();
+            PanelDict.Add(name, panel);       //加入存放已打开界面的字典
+            return panel;
+        }
+
+
+
+
+
+        //检查界面是否已经打开
         if (PanelDict.TryGetValue(name, out panel))     //此函数会尝试从字典中寻找第一个参数的元素并赋值给第二个参数，最后返回true如果在字典中找到了第一个参数对应的元素
         {
             Debug.LogError("This panel is already opened: " +  name);
@@ -112,8 +130,6 @@ public class UIManager
 
 
         //使用缓存的预制件
-        GameObject panelPrefab = null;
-
         if (!m_PrefabDict.TryGetValue(name, out panelPrefab))
         {
             string realPath = "Prefab/UI/Panels/" + path;    //如果没有被加载过，则加载出来并放入缓存字典
@@ -124,7 +140,7 @@ public class UIManager
 
 
         //打开界面
-        GameObject panelObject = GameObject.Instantiate(panelPrefab, UIRoot, false);    //生成出来，并使它成为UIRoot的一个子节点
+        panelObject = GameObject.Instantiate(panelPrefab, UIRoot, false);    //生成出来，并使它成为UIRoot的一个子节点
 
         panel = panelObject.GetComponent<BasePanel>();
         PanelDict.Add(name, panel);       //加入存放已打开界面的字典
@@ -153,6 +169,40 @@ public class UIManager
         }
 
         return true;
+    }
+
+
+
+    //提前加载界面（提前将预制件放入字典，防止卡顿）(跟打开界面函数一模一样，只是少了生成并打开界面的步骤)
+    public void InitPanel(string name)  
+    {
+        BasePanel panel = null;
+
+        if (PanelDict.TryGetValue(name, out panel))     //此函数会尝试从字典中寻找第一个参数的元素并赋值给第二个参数，最后返回true如果在字典中找到了第一个参数对应的元素
+        {
+            Debug.LogError("This panel is already opened: " + name);
+        }
+
+
+        //检查路径是否有配置
+        string path = "";
+
+        if (!m_PathDict.TryGetValue(name, out path))
+        {
+            Debug.LogError("Something wrong with the name or path of this panel: " + name);
+        }
+
+
+        //使用缓存的预制件
+        GameObject panelPrefab = null;
+
+        if (!m_PrefabDict.TryGetValue(name, out panelPrefab))
+        {
+            string realPath = "Prefab/UI/Panels/" + path;    //如果没有被加载过，则加载出来并放入缓存字典
+
+            panelPrefab = Resources.Load<GameObject>(realPath);     //通过Load函数从Assets中寻找资源赋值（必须在Resources文件夹下面）
+            m_PrefabDict.Add(name, panelPrefab);    //加入存放界面预制件的字典
+        }
     }
 
 

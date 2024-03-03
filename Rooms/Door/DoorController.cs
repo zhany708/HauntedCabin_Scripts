@@ -128,14 +128,6 @@ public class DoorController : MonoBehaviour
         {
             if (EnemyCount >= EnemyObjects.Length)
             {
-                /*
-                for (int i = 0; i < DoorAnimators.Length; i++)
-                {
-                    IsRoomClean = true;
-                    OpenDoors();
-                }
-                */
-
                 IsRoomClean = true;
                 OpenDoors();
             }
