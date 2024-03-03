@@ -57,9 +57,8 @@ public class PlayerInputHandler : MonoBehaviour
         {
             AttackInputs[(int)CombatInputs.primary] = false;
         }
-        */
+        
 
-        /*
         if (context.phase == InputActionPhase.Started)
         {
             AttackInputs[(int)CombatInputs.primary] = true;
@@ -101,6 +100,7 @@ public class PlayerInputHandler : MonoBehaviour
     #endregion
 
     #region Setters
+    /*
     public void ResetAttackInputs()
     {
         for (int i = 0; i < AttackInputs.Length; i++)
@@ -108,6 +108,7 @@ public class PlayerInputHandler : MonoBehaviour
             AttackInputs[i] = false;
         }
     }
+    */
     #endregion
 }
 

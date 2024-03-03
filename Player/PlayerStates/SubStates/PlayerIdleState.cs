@@ -2,7 +2,7 @@ public class PlayerIdleState : PlayerGroundedState
 {
     public PlayerIdleState(Player player, PlayerStateMachine stateMachine, SO_PlayerData playerData, string animBoolName) : base(player, stateMachine, playerData, animBoolName)
     {
-
+        
     }
 
 
@@ -13,6 +13,7 @@ public class PlayerIdleState : PlayerGroundedState
         Movement.SetVelocityZero();       //将玩家速度归零
     }
 
+    /*
     public override void LogicUpdate()
     {
         base.LogicUpdate();
@@ -22,4 +23,5 @@ public class PlayerIdleState : PlayerGroundedState
             stateMachine.ChangeState(player.MoveState);
         }
     }
+    */
 }

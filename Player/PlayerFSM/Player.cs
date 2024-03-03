@@ -41,13 +41,13 @@ public class Player : MonoBehaviour
     public float MinOrthoSize = 5.4f;
     public float MaxOrthoSize = 10f;
 
+
+    public bool IsFirstFrame { get; private set; } = true;
     public int FacingNum { get; private set; }
 
 
     int m_CurrentPrimaryWeaponNum = 0;      //使角色游戏开始默认装备匕首
     int m_CurrentSecondaryWeaponNum = 0;
-
-    bool m_FirstFrame = true;
     #endregion
 
     #region Unity Callback Functions
@@ -88,21 +88,21 @@ public class Player : MonoBehaviour
     {
         //Core.LogicUpdate();     //获取当前速度
 
-        if (m_FirstFrame)       //防止第一帧角色异常翻转。ToDO:后续每当暂停游戏时，也需要防止恢复后第一帧角色异常翻转
+        if (IsFirstFrame)       //防止第一帧角色异常翻转。ToDO:后续每当暂停游戏时，也需要防止恢复后第一帧角色异常翻转
         {
-            m_FirstFrame = false;
+            IsFirstFrame = false;
             return;
         }
 
         PlayerFlip();   //持续检测是否翻转玩家
         ZoomCamera();   //调整相机的矫正尺寸
 
-        StateMachine.currentState.LogicUpdate();
+        StateMachine.currentState.LogicUpdate();    //持续调用当前状态的逻辑函数
     }
 
     private void FixedUpdate()
     {
-        StateMachine.currentState.PhysicsUpdate();
+        StateMachine.currentState.PhysicsUpdate();  //持续调用当前状态的物理逻辑函数
     }
     #endregion
 
