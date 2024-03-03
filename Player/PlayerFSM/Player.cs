@@ -36,6 +36,7 @@ public class Player : MonoBehaviour
     #endregion
 
     #region Other Variable
+    //以下三个变量用于改变相机高度
     public float ZoomSpeed = 0.5f;
     public float MinOrthoSize = 5.4f;
     public float MaxOrthoSize = 10f;

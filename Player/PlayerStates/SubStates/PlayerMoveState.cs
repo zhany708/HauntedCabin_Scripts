@@ -13,7 +13,7 @@ public class PlayerMoveState : PlayerGroundedState
     {
         base.Enter();
 
-        player.FootAnimator.SetBool("Move", true);      //设置玩家的脚上的动画器参数
+        //player.FootAnimator.SetBool("Move", true);      //设置玩家的脚上的动画器参数
     }
 
     public override void LogicUpdate()
@@ -49,6 +49,6 @@ public class PlayerMoveState : PlayerGroundedState
     {
         base.Exit();
 
-        player.FootAnimator.SetBool("Move", false);
+        //player.FootAnimator.SetBool("Move", false);
     }
 }

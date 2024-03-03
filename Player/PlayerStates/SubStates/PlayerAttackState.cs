@@ -1,7 +1,14 @@
+using System.Collections;
+using UnityEngine;
+
 public class PlayerAttackState : PlayerAbilityState
 {
 
     Weapon m_Weapon;
+
+    float m_AttackCooldownTime = 0;
+
+
 
 
 
@@ -10,23 +17,42 @@ public class PlayerAttackState : PlayerAbilityState
     {
         m_Weapon = weapon;
 
+        if (m_Weapon is GunWeapon)
+        {
+            GunWeapon gunWeapon = (GunWeapon)m_Weapon;
+
+            m_AttackCooldownTime = gunWeapon.GunData.AttackDetail.AttackCooldownTime;
+        }
+
         m_Weapon.OnExit += ExitHandler;
     }
 
     public override void Enter()
     {
+        Debug.Log("You entered Attack state!");
+
+        //player.InputHandler.ResetAttackInputs();
+
         base.Enter();
+
 
         isAttack = true;
 
         m_Weapon.EnterWeapon();
     }
 
+    public override void Exit()
+    {
+        Debug.Log("You exited Attack state!");
+
+        base.Exit();
+    }
+
     public override void PhysicsUpdate()
     {
         base.PhysicsUpdate();
 
-        Movement.SetVelocity(playerData.MovementVelocity, player.InputHandler.RawMovementInput);
+        Movement.SetVelocity(playerData.MovementVelocity, input);
     }
 
 
@@ -37,7 +63,7 @@ public class PlayerAttackState : PlayerAbilityState
         AnimationFinishTrigger();
 
         isAttack = false;
-        isAbilityDone = true;
+        isAbilityDone = true;       //设置isAbilityDone为真以进入闲置状态
     }
 
     /*

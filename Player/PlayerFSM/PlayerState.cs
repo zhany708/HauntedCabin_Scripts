@@ -1,3 +1,5 @@
+using UnityEngine;
+
 public class PlayerState
 {
     protected Core core;
@@ -32,7 +34,11 @@ public class PlayerState
     protected SO_PlayerData playerData;
 
     //protected float startTime;    //用于检查每个状态的持续时间
+
+    protected Vector2 input;        //闲置状态和移动状态需要的向量数值
+
     protected bool isAnimationFinished = false;     //用于检查动画是否播放完毕
+    protected bool canAttack;
     protected bool isAttack = false;
     protected bool isHit = false;
 
@@ -64,7 +70,9 @@ public class PlayerState
 
     public virtual void LogicUpdate() 
     { 
-        if (Combat.IsHit && !isHit && !isAttack)
+        CheckIsMoving();    //判断是否播放脚步移动动画
+
+        if (Combat.IsHit && !isHit && !isAttack)    //检查是否进入受击状态
         {
             stateMachine.ChangeState(player.HitState);
         }
@@ -74,4 +82,20 @@ public class PlayerState
     public virtual void PhysicsUpdate() { }
     
     public virtual void AnimationFinishTrigger() => isAnimationFinished = true; 
+
+
+    protected void CheckIsMoving()      //检查玩家是否按下WASD键，从而判断是否播放脚步移动动画
+    {
+        input = player.InputHandler.RawMovementInput;   //通过Player脚本调用闲置状态和移动状态需要的向量数值
+
+        if (input.x == 0f && input.y == 0f)
+        {
+            player.FootAnimator.SetBool("Move", false);
+        }
+
+        else
+        {
+            player.FootAnimator.SetBool("Move", true);
+        }
+    }
 }

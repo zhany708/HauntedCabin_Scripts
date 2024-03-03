@@ -55,6 +55,8 @@ public class Weapon : MonoBehaviour
     #region Other Functions
     public virtual void EnterWeapon()
     {
+        //Debug.Log("Enter the weapon!");
+
         animator.SetBool("Attack", true);
     }
 

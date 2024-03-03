@@ -4,10 +4,6 @@ using static UnityEngine.RuleTile.TilingRuleOutput;
 
 public class PlayerGroundedState : PlayerState
 {
-
-    protected Vector2 input;
-
-
     public PlayerGroundedState(Player player, PlayerStateMachine stateMachine, SO_PlayerData playerData, string animBoolName) : base(player, stateMachine, playerData, animBoolName)
     {
     }
@@ -17,12 +13,11 @@ public class PlayerGroundedState : PlayerState
     {
         base.LogicUpdate();
 
-        input = player.InputHandler.RawMovementInput;   //通过Player脚本调用闲置状态和移动状态需要的向量数值
 
-
-        if (player.InputHandler.AttackInputs[(int)CombatInputs.primary])        //按下鼠标左键时，过渡到主武器攻击状态
+        //检查是否进入攻击状态
+        if (player.InputHandler.AttackInputs[(int)CombatInputs.primary] && stateMachine.currentState != player.PrimaryAttackState)        //按下鼠标左键时，过渡到主武器攻击状态
         {
-            //先检查当前武器是否为远程武器（使用is时继承的类也算），再检查是否处于未激活状态。如果都为真则在激活前就赋值鼠标坐标
+            //先检查当前武器是否为远程武器（使用is时继承的类也会返回真），再检查是否处于未激活状态。如果都为真则在激活前就赋值鼠标坐标
             if (player.PrimaryWeapon is GunWeapon && !player.PrimaryWeapon.transform.parent.gameObject.activeSelf)
             {
                 //Debug.Log("Mouse position is updated!");
@@ -37,7 +32,7 @@ public class PlayerGroundedState : PlayerState
         }
 
 
-        else if (player.InputHandler.AttackInputs[(int)CombatInputs.secondary])     //按下鼠标右键时，过渡到副武器攻击状态
+        else if (player.InputHandler.AttackInputs[(int)CombatInputs.secondary] && stateMachine.currentState != player.SecondaryAttackState)     //按下鼠标右键时，过渡到副武器攻击状态
         {
             //先检查当前武器是否为远程武器，再检查是否处于未激活状态。如果都为真则在激活前就赋值鼠标坐标
             if (player.SecondaryWeapon is GunWeapon && !player.SecondaryWeapon.transform.parent.gameObject.activeSelf)

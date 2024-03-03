@@ -20,7 +20,7 @@ public class PlayerInputHandler : MonoBehaviour
 
 
 
-
+    #region Unity Callback Functions
     private void Start()
     {
         int count = Enum.GetValues(typeof(CombatInputs)).Length;        //返回二，也就是两种攻击武器
@@ -35,10 +35,9 @@ public class PlayerInputHandler : MonoBehaviour
             ProjectedMousePos = Camera.main.ScreenToWorldPoint(m_MousePos);        //将鼠标坐标从相对相机改成相对世界
         }
     }
+    #endregion
 
-
-
-
+    #region CallbackContexts
     public void OnMoveInput(InputAction.CallbackContext context)
     {
         RawMovementInput = context.ReadValue<Vector2>().normalized;   //(0,1) (0,-1) (1,0) (-1,0)四种向量表示方向
@@ -48,6 +47,7 @@ public class PlayerInputHandler : MonoBehaviour
 
     public void OnPrimaryAttackInput(InputAction.CallbackContext context) 
     {
+        /*
         if (context.started)    //按下鼠标左键时
         {
             AttackInputs[(int)CombatInputs.primary] = true;
@@ -57,19 +57,25 @@ public class PlayerInputHandler : MonoBehaviour
         {
             AttackInputs[(int)CombatInputs.primary] = false;
         }
+        */
+
+        /*
+        if (context.phase == InputActionPhase.Started)
+        {
+            AttackInputs[(int)CombatInputs.primary] = true;
+        }
+        else if (context.phase == InputActionPhase.Canceled)
+        {
+            AttackInputs[(int)CombatInputs.primary] = false;
+        }
+        */
+
+        AttackInputs[(int)CombatInputs.primary] = context.performed;
     }
 
     public void OnSecondaryAttackInput(InputAction.CallbackContext context)
     {
-        if (context.started)    //按下鼠标右键时
-        {
-            AttackInputs[(int)CombatInputs.secondary] = true;
-        }
-
-        if (context.canceled)
-        {
-            AttackInputs[(int)CombatInputs.secondary] = false;
-        }
+        AttackInputs[(int)CombatInputs.secondary] = context.performed;
     }
 
 
@@ -92,6 +98,17 @@ public class PlayerInputHandler : MonoBehaviour
     {
         IsSpacePressed = context.performed;     //按下空格时为真，松开后为假
     }
+    #endregion
+
+    #region Setters
+    public void ResetAttackInputs()
+    {
+        for (int i = 0; i < AttackInputs.Length; i++)
+        {
+            AttackInputs[i] = false;
+        }
+    }
+    #endregion
 }
 
 

@@ -17,4 +17,6 @@ public struct GunAttackDetails
     public float DamageAmount;
 
     public float KnockbackStrength;
+
+    public float AttackCooldownTime;
 }
