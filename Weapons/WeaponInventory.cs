@@ -12,16 +12,16 @@ public class WeaponConst    //用于存储武器的名称
 
 
 
-public class PlayerInventory        //用于储存武器
+public class WeaponInventory        //用于储存武器
 {
-    private static PlayerInventory m_Instance;
-    public static PlayerInventory Instance    //单例模式（整局游戏只存在一个此类的实例）
+    private static WeaponInventory m_Instance;
+    public static WeaponInventory Instance    //单例模式（整局游戏只存在一个此类的实例）
     {
         get
         {
             if (m_Instance == null)     //第一次检查
             {
-                m_Instance = new PlayerInventory();
+                m_Instance = new WeaponInventory();
             }
             return m_Instance;
         }
@@ -91,7 +91,7 @@ public class PlayerInventory        //用于储存武器
 
 
 
-    private PlayerInventory()
+    private WeaponInventory()
     {
         InitDicts();
     }

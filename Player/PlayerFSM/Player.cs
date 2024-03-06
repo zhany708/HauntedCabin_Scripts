@@ -107,14 +107,14 @@ public class Player : MonoBehaviour
         {
             PrimaryWeapon.gameObject.SetActive(false);  //取消激活当前武器
 
-            PrimaryWeapon = PlayerInventory.Instance.LoadWeapon(weapon.name, isPrimary);
+            PrimaryWeapon = WeaponInventory.Instance.LoadWeapon(weapon.name, isPrimary);
             PrimaryAttackState = new PlayerAttackState(this, StateMachine, PlayerData, "Idle", PrimaryWeapon);       //激活新攻击状态
         }
         else
         {
             SecondaryWeapon.gameObject.SetActive(false);
 
-            SecondaryWeapon = PlayerInventory.Instance.LoadWeapon(weapon.name, isPrimary);
+            SecondaryWeapon = WeaponInventory.Instance.LoadWeapon(weapon.name, isPrimary);
             SecondaryAttackState = new PlayerAttackState(this, StateMachine, PlayerData, "Idle", SecondaryWeapon);
         }
     }
