@@ -24,7 +24,6 @@ public class Player : MonoBehaviour
 
     public Core Core { get; private set; }
     public PlayerInputHandler InputHandler { get; private set; }
-    public PlayerInventory Inventory { get; private set; }
     public Weapon PrimaryWeapon {  get; private set; }
     public Weapon SecondaryWeapon {  get; private set; }
 
@@ -44,10 +43,6 @@ public class Player : MonoBehaviour
 
     public bool IsFirstFrame { get; private set; } = true;
     public int FacingNum { get; private set; }
-
-
-    int m_CurrentPrimaryWeaponNum = 0;      //使角色游戏开始默认装备匕首
-    int m_CurrentSecondaryWeaponNum = 0;
     #endregion
 
     #region Unity Callback Functions
@@ -75,7 +70,6 @@ public class Player : MonoBehaviour
     private void Start()
     {
         InputHandler = GetComponent<PlayerInputHandler>();
-        Inventory = GetComponent<PlayerInventory>();
 
         m_PlayerFlip = new Flip(transform);
 
@@ -109,44 +103,23 @@ public class Player : MonoBehaviour
     #region Other Functions
     public void ChangeWeapon(GameObject weapon, bool isPrimary)
     {
-        int newWeaponNum = CheckWeaponIndex(weapon);        //获取新的武器计数
-
-        //将需要更换的武器通过SetActive激活，并根据主/副生成新的攻击状态
-        if (isPrimary)      //激活新武器于主手
+        if (isPrimary)
         {
-            Inventory.PrimaryWeapon[m_CurrentPrimaryWeaponNum].SetActive(false);
-            Inventory.PrimaryWeapon[newWeaponNum].SetActive(true);      
+            PrimaryWeapon.gameObject.SetActive(false);  //取消激活当前武器
 
-            PrimaryAttackState = new PlayerAttackState(this, StateMachine, PlayerData, "Idle", Inventory.PrimaryWeapon[newWeaponNum].GetComponent<Weapon>());       //激活新攻击状态
-
-            m_CurrentPrimaryWeaponNum = newWeaponNum;   //重新设置当前武器计数
+            PrimaryWeapon = PlayerInventory.Instance.LoadWeapon(weapon.name, isPrimary);
+            PrimaryAttackState = new PlayerAttackState(this, StateMachine, PlayerData, "Idle", PrimaryWeapon);       //激活新攻击状态
         }
-
-        else     //激活新武器于副手
+        else
         {
-            Inventory.SecondaryWeapon[m_CurrentSecondaryWeaponNum].SetActive(false);
-            Inventory.SecondaryWeapon[newWeaponNum].SetActive(true);      
+            SecondaryWeapon.gameObject.SetActive(false);
 
-            SecondaryAttackState = new PlayerAttackState(this, StateMachine, PlayerData, "Idle", Inventory.SecondaryWeapon[newWeaponNum].GetComponent<Weapon>());  
-
-            m_CurrentSecondaryWeaponNum = newWeaponNum;
+            SecondaryWeapon = PlayerInventory.Instance.LoadWeapon(weapon.name, isPrimary);
+            SecondaryAttackState = new PlayerAttackState(this, StateMachine, PlayerData, "Idle", SecondaryWeapon);
         }
     }
 
 
-    private int CheckWeaponIndex(GameObject weapon)    //主武器和副武器的顺序一样，所以无需区分计数
-    {
-        int WeaponNum = 0;
-        for (int i = 0; i < Inventory.PrimaryWeapon.Length; i++)
-        {
-            if (weapon.ToString() == Inventory.PrimaryWeapon[i].ToString())
-            {
-                WeaponNum = i;
-            }
-        }
-
-        return WeaponNum;
-    }
 
 
     private void PlayerFlip()
