@@ -9,7 +9,7 @@ public class GunWeapon : Weapon
     public SO_GunData GunData {  get; private set; }
 
 
-
+ 
     protected Transform muzzlePos;
 
 
@@ -40,10 +40,13 @@ public class GunWeapon : Weapon
 
         m_GunFlip = new Flip(transform);
 
-        muzzlePos = transform.Find("Muzzle");
+        //muzzlePos = transform.Find("Muzzle");
     }
 
-
+    private void OnEnable()
+    {
+        muzzlePos = transform.Find("Muzzle");
+    }
 
 
 

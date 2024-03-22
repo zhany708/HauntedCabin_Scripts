@@ -75,6 +75,8 @@ public class Player : MonoBehaviour
 
         FacingNum = 1;  //游戏开始时初始化FacingNum，否则武器贴图无法正常显示
 
+        MakeSpriteVisible(SecondaryWeapon.transform.gameObject, false);       //在游戏开始前隐藏副武器
+
         StateMachine.Initialize(IdleState);     //初始化状态为闲置
     }
 
@@ -103,12 +105,26 @@ public class Player : MonoBehaviour
     #region Other Functions
     public void ChangeWeapon(GameObject weapon, bool isPrimary)
     {
+        bool isPrimaryAttackState = false;    //检查更换武器时是否处于要放置的攻击状态（主还是副）
+
+        if (PrimaryWeapon.transform.gameObject.GetComponent<SpriteRenderer>().color == new Color(1f, 1f, 1f, 1f))       //通过透明度检查处于哪个攻击状态
+        {
+            isPrimaryAttackState = true;
+        }
+
+
+
         if (isPrimary)
         {
-            PrimaryWeapon.gameObject.SetActive(false);  //取消激活当前武器
+            PrimaryWeapon.gameObject.SetActive(false);
 
             PrimaryWeapon = WeaponInventory.Instance.LoadWeapon(weapon.name, isPrimary);
             PrimaryAttackState = new PlayerAttackState(this, StateMachine, PlayerData, "Idle", PrimaryWeapon);       //激活新攻击状态
+
+            if (!isPrimaryAttackState)
+            {
+                MakeSpriteVisible(PrimaryWeapon.transform.gameObject, false);       //如果当前不在主武器攻击状态，则换新武器后再次隐藏
+            }
         }
         else
         {
@@ -116,11 +132,27 @@ public class Player : MonoBehaviour
 
             SecondaryWeapon = WeaponInventory.Instance.LoadWeapon(weapon.name, isPrimary);
             SecondaryAttackState = new PlayerAttackState(this, StateMachine, PlayerData, "Idle", SecondaryWeapon);
+
+            if (isPrimaryAttackState)
+            {
+                MakeSpriteVisible(SecondaryWeapon.transform.gameObject, false);     //如果当前不在副武器攻击状态，则换新武器后再次隐藏
+            }
         }
     }
 
 
-
+    public void MakeSpriteVisible(GameObject thisObject, bool isVisible)     //更改渲染的透明度以激活/隐藏物体
+    {
+        if (isVisible)    //激活
+        {
+            thisObject.GetComponent<SpriteRenderer>().color = new Color(1f, 1f, 1f, 1f);
+        }
+        else              //隐藏
+        {
+            thisObject.GetComponent<SpriteRenderer>().color = new Color(1f, 1f, 1f, 0f);        
+        }
+        
+    }
 
     private void PlayerFlip()
     {
