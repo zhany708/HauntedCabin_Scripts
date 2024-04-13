@@ -203,6 +203,12 @@ public class Player : MonoBehaviour
     #region Setters
     public void SetWeapon(Weapon thisWeapon, bool isPrimary)
     {
+        if (thisWeapon == null)
+        {
+            Debug.LogError("Attempted to set a null weapon");
+            return;
+        }
+
         if (isPrimary)
         {
             PrimaryWeapon = thisWeapon;

@@ -82,13 +82,10 @@ public class Weapon : MonoBehaviour
 
     protected virtual void PlayAudioSound()     //≤•∑≈Œ‰∆˜π•ª˜“Ù–ß
     {
-        if (audioSource != null && audioSource.clip != null)
+        if (!string.IsNullOrEmpty(WeaponData.AudioClipName) )
         {
-            //audioSource.clip = WeaponAudio;
-
-            //audioSource.volume = 1f;  //…Ë÷√“Ù¡ø
-            audioSource.Play();
-        }
+            SoundManager.Instance.PlaySFXAsync(WeaponData.AudioClipName, WeaponData.AudioVolume);          
+        }      
     }
     #endregion
 

@@ -4,6 +4,9 @@ using UnityEngine;
 
 public abstract class Event : MonoBehaviour
 {
+    public SO_EventData EventData;
+
+
     protected EventManager eventManager;
     protected DoorController doorController;
 

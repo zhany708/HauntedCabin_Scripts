@@ -146,7 +146,7 @@ public class UIManager
 
 
 
-    //提前加载界面（提前将预制件放入字典，防止卡顿）(跟打开界面函数一模一样，只是少了生成并打开界面的步骤)
+    //提前加载界面（提前将预制件放入字典，防止卡顿）(跟打开界面函数几乎一模一样，只是少了生成并打开界面的步骤)
     public IEnumerator InitPanel(string name)
     {
         if (PanelDict.ContainsKey(name))
