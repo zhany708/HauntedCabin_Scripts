@@ -20,15 +20,18 @@ public class HealthBar : MonoBehaviour
 
 
 
-    private void Start()
+    private IEnumerator Start()     //因为需要异步加载UI。所以使用协程而不是void
     {
-        UIManager.Instance.OpenPanel("PlayerStatusBar");    //显示玩家状态栏
+        //等待UI加载完毕
+        yield return UIManager.Instance.OpenPanel(UIConst.PlayerStatusBar);    //显示玩家状态栏
 
+        //UI加载完毕后才会获取组件
         m_Player = GetComponentInParent<Player>();
 
         m_MaxHp = m_Player.PlayerData.MaxHealth;        //游戏开始时初始化最大生命值
         m_CurrentHp = m_MaxHp;
 
+        //这个时候再运行此函数。就不会出现某个异步加载的组件还没初始化完毕就需要使用
         UpdateHealthBar();
     }
 
@@ -44,6 +47,14 @@ public class HealthBar : MonoBehaviour
 
     private void UpdateHealthBar()
     {
+        //使用组件前检查是否为空
+        if (m_HpImage == null || m_HpEffectImage == null)
+        {
+            Debug.LogError("Health bar images are not set.");
+            return;
+        }
+
+
         m_HpImage.fillAmount = m_CurrentHp / m_MaxHp;
 
         if (m_UpdateCoroutine != null)      

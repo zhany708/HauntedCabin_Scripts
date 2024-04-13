@@ -1,5 +1,7 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
 
 
 
@@ -81,7 +83,6 @@ public class WeaponInventory        //用于储存武器
 
 
     //Dictionary<string, Weapon> m_WeaponDict;      //存放正在使用的武器的字典
-    Dictionary<string, string> m_PathDict;       //使用字典存储武器的配置路径表
     Dictionary<string, GameObject> m_PrefabDict;     //预制件缓存字典
 
 
@@ -100,77 +101,38 @@ public class WeaponInventory        //用于储存武器
     private void InitDicts()
     {
         m_PrefabDict = new Dictionary<string, GameObject>();
-
-        m_PathDict = new Dictionary<string, string>()   //初始化所有界面的路径
-        {
-            {WeaponConst.Dagger, "Dagger/Dagger" },
-            {WeaponConst.Shotgun, "Guns/Shotgun" }
-        };
     }
 
 
 
+    
 
-    public Weapon LoadWeapon(string name, bool isPrimary)
+    //加载武器
+    public IEnumerator LoadWeapon(string name, bool isPrimary)
     {
-        Weapon weapon = null;
-        GameObject weaponPrefab = null;
-        GameObject weaponObject = null;
-
-
-        //检查缓存的预制件中是否已经有要生成的武器，如果有则直接获取，无须进行下面的检查
-        if (m_PrefabDict.TryGetValue(name, out weaponPrefab))
-        {
-            if (isPrimary)
-            {
-                weaponObject = GameObject.Instantiate(weaponPrefab, PrimaryWeapon, false);    //生成出来，并使它成为主武器的子物体
-            }
-            else
-            {
-                weaponObject = GameObject.Instantiate(weaponPrefab, SecondaryWeapon, false);    //生成出来，并使它成为副武器的子物体
-            }
-
-
-            weapon = weaponObject.GetComponent<Weapon>();
-            return weapon;
-        }
-
-
-
-
-
-        //检查武器是否有路径配置
-        string path = "";
-
-        if (!m_PathDict.TryGetValue(name, out path))
-        {
-            Debug.LogError("Something wrong with the name or path of this panel: " + name);
-            return null;
-        }
-
-
-        //使用缓存的预制件
+        GameObject weaponPrefab;
         if (!m_PrefabDict.TryGetValue(name, out weaponPrefab))
         {
-            string realPath = "Prefab/Weapons/" + path;    //如果没有被加载过，则加载出来并放入缓存字典
+            //异步加载预制件
+            var handle = Addressables.LoadAssetAsync<GameObject>(name);
+            yield return new WaitUntil(() => handle.IsDone);
 
-            weaponPrefab = Resources.Load<GameObject>(realPath);     //通过Load函数从Assets中寻找资源赋值（必须在Resources文件夹下面）
-            m_PrefabDict.Add(name, weaponPrefab);    //加入存放武器预制件的字典
+            if (handle.Status == UnityEngine.ResourceManagement.AsyncOperations.AsyncOperationStatus.Failed)
+            {
+                Debug.LogError("Failed to load the panel prefab: " + name);
+                yield break;
+            }
+
+            weaponPrefab = handle.Result;
+            m_PrefabDict[name] = weaponPrefab;  //缓存加载的预制件
         }
 
 
-        if (isPrimary)
-        {
-            weaponObject = GameObject.Instantiate(weaponPrefab, PrimaryWeapon, false);    //生成出来，并使它成为主武器的子物体
-        }
-        else
-        {
-            weaponObject = GameObject.Instantiate(weaponPrefab, SecondaryWeapon, false);    //生成出来，并使它成为副武器的子物体
-        }
+        GameObject weaponObject = GameObject.Instantiate(weaponPrefab, isPrimary? PrimaryWeapon : SecondaryWeapon, false);
 
-
-        weapon = weaponObject.GetComponent<Weapon>();
-        return weapon;
+        //将武器预制件赋值给Player脚本中的主/副武器
+        Player player = GameObject.FindObjectOfType<Player>();
+        player.SetWeapon(weaponObject.GetComponent<Weapon>(), isPrimary);
     }
 }
 

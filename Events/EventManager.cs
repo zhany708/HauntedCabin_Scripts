@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -33,7 +34,7 @@ public class EventManager : MonoBehaviour
         IsSecondStage = false;
 
 
-        UIManager.Instance.InitPanel(UIConst.TransitionStagePanel);     //提前加载进入二阶段的文字
+        StartCoroutine(UIManager.Instance.InitPanel(UIConst.TransitionStagePanel) );     //提前加载进入二阶段的文字
     }
 
     
@@ -86,7 +87,7 @@ public class EventManager : MonoBehaviour
     #region AnimationEvents
     private void DisplayTransitionStageText()       //用于阶段动画中决定何时显示文字
     {
-        UIManager.Instance.OpenPanel(UIConst.TransitionStagePanel);
+        StartCoroutine(UIManager.Instance.OpenPanel(UIConst.TransitionStagePanel) );
     }
     #endregion
 

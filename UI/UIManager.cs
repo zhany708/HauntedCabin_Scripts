@@ -1,5 +1,8 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
+using System.Collections;
+
 
 
 
@@ -54,8 +57,6 @@ public class UIManager
 
 
     public Dictionary<string, BasePanel> PanelDict;      //存放已打开界面的字典（里面存储的都是正在打开的界面）
-
-    Dictionary<string, string> m_PathDict;       //使用字典存储界面的配置路径表
     Dictionary<string, GameObject> m_PrefabDict;     //预制件缓存字典
 
 
@@ -77,75 +78,47 @@ public class UIManager
     {
         PanelDict = new Dictionary<string, BasePanel>();
         m_PrefabDict = new Dictionary<string, GameObject>();
-
-        m_PathDict = new Dictionary<string, string>()   //初始化所有界面的路径
-        {
-            { UIConst.TransitionStagePanel, "Others/TransitionStagePanel"},
-            { UIConst.PlayerStatusBar, "Others/PlayerStatusBar"}
-        };
     }
+
+
 
 
 
 
     //打开界面
-    public BasePanel OpenPanel(string name)
+    public IEnumerator OpenPanel(string name)
     {
-        BasePanel panel = null;
-        GameObject panelPrefab = null;
-        GameObject panelObject = null;
-
-
-        //检查缓存的预制件中是否已经有要打开的界面，如果有则直接打开，无须进行下面的检查
-        if (m_PrefabDict.TryGetValue(name, out panelPrefab))
+        if (PanelDict.ContainsKey(name))
         {
-            //打开界面
-            panelObject = GameObject.Instantiate(panelPrefab, UIRoot, false);    //生成出来，并使它成为UIRoot的一个子节点
-
-            panel = panelObject.GetComponent<BasePanel>();
-            PanelDict.Add(name, panel);       //加入存放已打开界面的字典
-            return panel;
+            Debug.LogError("This panel is already opened: " + name);
+            yield break;
         }
 
-
-
-
-
-        //检查界面是否已经打开
-        if (PanelDict.TryGetValue(name, out panel))     //此函数会尝试从字典中寻找第一个参数的元素并赋值给第二个参数，最后返回true如果在字典中找到了第一个参数对应的元素
-        {
-            Debug.LogError("This panel is already opened: " +  name);
-            return null;
-        }
-
-
-        //检查路径是否有配置
-        string path = "";
-
-        if (!m_PathDict.TryGetValue(name, out path))
-        {
-            Debug.LogError("Something wrong with the name or path of this panel: " + name);
-            return null;
-        }
-
-
-        //使用缓存的预制件
+        GameObject panelPrefab;
         if (!m_PrefabDict.TryGetValue(name, out panelPrefab))
         {
-            string realPath = "Prefab/UI/Panels/" + path;    //如果没有被加载过，则加载出来并放入缓存字典
+            //异步加载预制件
+            var handle = Addressables.LoadAssetAsync<GameObject>(name);
+            yield return new WaitUntil(() => handle.IsDone);
 
-            panelPrefab = Resources.Load<GameObject>(realPath);     //通过Load函数从Assets中寻找资源赋值（必须在Resources文件夹下面）
-            m_PrefabDict.Add(name, panelPrefab);    //加入存放界面预制件的字典
+            if (handle.Status == UnityEngine.ResourceManagement.AsyncOperations.AsyncOperationStatus.Failed)
+            {
+                Debug.LogError("Failed to load the panel prefab: " + name);
+                yield break;
+            }
+
+            panelPrefab = handle.Result;
+            m_PrefabDict[name] = panelPrefab;  //缓存加载的预制件
         }
 
 
-        //打开界面
-        panelObject = GameObject.Instantiate(panelPrefab, UIRoot, false);    //生成出来，并使它成为UIRoot的一个子节点
-
-        panel = panelObject.GetComponent<BasePanel>();
-        PanelDict.Add(name, panel);       //加入存放已打开界面的字典
-        return panel;
+        GameObject panelObject = GameObject.Instantiate(panelPrefab, UIRoot, false);
+        BasePanel panel = panelObject.GetComponent<BasePanel>();
+        PanelDict.Add(name, panel);
+        yield return panel;  //返回UI，用于进一步的处理(可选)
     }
+
+
 
     //关闭界面
     public bool ClosePanel(string name)
@@ -174,34 +147,29 @@ public class UIManager
 
 
     //提前加载界面（提前将预制件放入字典，防止卡顿）(跟打开界面函数一模一样，只是少了生成并打开界面的步骤)
-    public void InitPanel(string name)  
+    public IEnumerator InitPanel(string name)
     {
-        BasePanel panel = null;
-
-        if (PanelDict.TryGetValue(name, out panel))     //此函数会尝试从字典中寻找第一个参数的元素并赋值给第二个参数，最后返回true如果在字典中找到了第一个参数对应的元素
+        if (PanelDict.ContainsKey(name))
         {
             Debug.LogError("This panel is already opened: " + name);
+            yield break;
         }
 
-
-        //检查路径是否有配置
-        string path = "";
-
-        if (!m_PathDict.TryGetValue(name, out path))
-        {
-            Debug.LogError("Something wrong with the name or path of this panel: " + name);
-        }
-
-
-        //使用缓存的预制件
-        GameObject panelPrefab = null;
-
+        GameObject panelPrefab;
         if (!m_PrefabDict.TryGetValue(name, out panelPrefab))
         {
-            string realPath = "Prefab/UI/Panels/" + path;    //如果没有被加载过，则加载出来并放入缓存字典
+            //异步加载预制件
+            var handle = Addressables.LoadAssetAsync<GameObject>(name);
+            yield return new WaitUntil(() => handle.IsDone);
 
-            panelPrefab = Resources.Load<GameObject>(realPath);     //通过Load函数从Assets中寻找资源赋值（必须在Resources文件夹下面）
-            m_PrefabDict.Add(name, panelPrefab);    //加入存放界面预制件的字典
+            if (handle.Status == UnityEngine.ResourceManagement.AsyncOperations.AsyncOperationStatus.Failed)
+            {
+                Debug.LogError("Failed to load the panel prefab: " + name);
+                yield break;
+            }
+
+            panelPrefab = handle.Result;
+            m_PrefabDict[name] = panelPrefab;  //缓存加载的预制件
         }
     }
 

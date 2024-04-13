@@ -2,6 +2,7 @@ using System;
 using Cinemachine;
 using UnityEngine;
 using ZhangYu.Utilities;
+using System.Collections;
 
 
 public class Player : MonoBehaviour
@@ -105,6 +106,12 @@ public class Player : MonoBehaviour
     #region Other Functions
     public void ChangeWeapon(GameObject weapon, bool isPrimary)
     {
+        StartCoroutine(ChangeWeaponCoroutine(weapon.name, isPrimary));
+
+    }
+
+    private IEnumerator ChangeWeaponCoroutine(string weaponName, bool isPrimary)
+    {
         bool isPrimaryAttackState = false;    //检查更换武器时是否处于要放置的攻击状态（主还是副）
 
         if (PrimaryWeapon.transform.gameObject.GetComponent<SpriteRenderer>().color == new Color(1f, 1f, 1f, 1f))       //通过透明度检查处于哪个攻击状态
@@ -116,9 +123,14 @@ public class Player : MonoBehaviour
 
         if (isPrimary)
         {
-            PrimaryWeapon.gameObject.SetActive(false);
+            if (PrimaryWeapon != null && PrimaryWeapon.gameObject.activeSelf)
+            {
+                PrimaryWeapon.gameObject.SetActive(false);
+            }
 
-            PrimaryWeapon = WeaponInventory.Instance.LoadWeapon(weapon.name, isPrimary);
+            yield return WeaponInventory.Instance.LoadWeapon(weaponName, isPrimary);
+
+
             PrimaryAttackState = new PlayerAttackState(this, StateMachine, PlayerData, "Idle", PrimaryWeapon);       //激活新攻击状态
 
             if (!isPrimaryAttackState)
@@ -128,9 +140,14 @@ public class Player : MonoBehaviour
         }
         else
         {
-            SecondaryWeapon.gameObject.SetActive(false);
+            if (SecondaryWeapon != null && SecondaryWeapon.gameObject.activeSelf)
+            {
+                SecondaryWeapon.gameObject.SetActive(false);
+            }
 
-            SecondaryWeapon = WeaponInventory.Instance.LoadWeapon(weapon.name, isPrimary);
+            yield return WeaponInventory.Instance.LoadWeapon(weaponName, isPrimary);
+
+
             SecondaryAttackState = new PlayerAttackState(this, StateMachine, PlayerData, "Idle", SecondaryWeapon);
 
             if (isPrimaryAttackState)
@@ -139,6 +156,7 @@ public class Player : MonoBehaviour
             }
         }
     }
+
 
 
     public void MakeSpriteVisible(GameObject thisObject, bool isVisible)     //更改渲染的透明度以激活/隐藏物体
@@ -179,6 +197,20 @@ public class Player : MonoBehaviour
     private void DestroyPlayerAfterDeath()      //用于动画事件，摧毁物体
     {
         Destroy(gameObject);   
+    }
+    #endregion
+
+    #region Setters
+    public void SetWeapon(Weapon thisWeapon, bool isPrimary)
+    {
+        if (isPrimary)
+        {
+            PrimaryWeapon = thisWeapon;
+        }
+        else
+        {
+            SecondaryWeapon = thisWeapon;
+        }
     }
     #endregion
 }
