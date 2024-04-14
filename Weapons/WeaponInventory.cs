@@ -4,16 +4,6 @@ using UnityEngine;
 using UnityEngine.AddressableAssets;
 
 
-
-public class WeaponConst    //用于存储武器的名称
-{
-    public const string Dagger = "Dagger";    //初始匕首
-    public const string Shotgun = "Shotgun";    //霰弹枪
-}
-
-
-
-
 public class WeaponInventory        //用于储存武器
 {
     private static WeaponInventory m_Instance;
@@ -119,12 +109,12 @@ public class WeaponInventory        //用于储存武器
 
             if (handle.Status == UnityEngine.ResourceManagement.AsyncOperations.AsyncOperationStatus.Failed)
             {
-                Debug.LogError("Failed to load the panel prefab: " + name);
+                Debug.LogError("Failed to load the weapon prefab: " + name);
                 yield break;
             }
 
             weaponPrefab = handle.Result;
-            m_PrefabDict[name] = weaponPrefab;  //缓存加载的预制件
+            m_PrefabDict[name] = weaponPrefab;  //将加载的预制件存进字典
         }
 
 
@@ -134,5 +124,31 @@ public class WeaponInventory        //用于储存武器
         Player player = GameObject.FindObjectOfType<Player>();
         player.SetWeapon(weaponObject.GetComponent<Weapon>(), isPrimary);
     }
-}
 
+
+    //在Addressables里释放武器，只有这样才能释放内存
+    public void ReleaseWeapon(string key)
+    {
+        if (key.EndsWith("(Clone)"))
+        {
+            //检查是否有“克隆”后缀，如果有的话减去后缀。（Clone）刚好有7个字符
+            key = key.Substring(0, key.Length - 7);
+        }
+
+
+        if (m_PrefabDict.TryGetValue(key, out GameObject weaponPrefab))
+        {
+            Addressables.Release(weaponPrefab);
+
+            //从预制件缓存字典中移除武器物体
+            m_PrefabDict.Remove(key);
+
+            Debug.Log("Weapon released and removed from dictionary: " + key);
+        }
+
+        else
+        {
+            Debug.LogError("This weapon is not loaded yet, cannot release: " + key);
+        }
+    }
+}

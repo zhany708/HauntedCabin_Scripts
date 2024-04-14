@@ -72,7 +72,7 @@ public class DoorController : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            RoomTrigger.enabled = false;    //玩家进入房间后取消激活门的碰撞器，防止玩家反复进出房间导致二次生成事件或敌人
+            RoomTrigger.enabled = false;    //玩家进入房间后取消激活门的触发器，防止玩家反复进出房间导致二次生成事件或敌人
 
             if (!IsRoomClean)
             {

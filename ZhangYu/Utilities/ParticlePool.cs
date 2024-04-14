@@ -52,7 +52,7 @@ public class ParticlePool       //用于子弹，特效等的对象池
         return _object;
     }
 
-    public void PushObject(GameObject prefab)
+    public bool PushObject(GameObject prefab)
     {
         if (prefab != null)
         {
@@ -65,6 +65,10 @@ public class ParticlePool       //用于子弹，特效等的对象池
             m_ParticlePool[_name].Enqueue(prefab);     //生成后将物体放入对象池
 
             prefab.SetActive(false);    //放入后取消激活
-        }      
+
+            return true;
+        }     
+        
+        return false;
     }
 }

@@ -1,5 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
 
 
 
@@ -7,7 +10,7 @@ using UnityEngine;
 
 public class RoomGenerator : MonoBehaviour
 {
-    public GameObject[] AllRooms;
+    public SO_RoomKeys RoomKeys;
 
     public Transform FatherOfAllRooms;      //所有生成的房间的父物体，为了整洁美观
 
@@ -15,10 +18,27 @@ public class RoomGenerator : MonoBehaviour
     //public List<Vector2> GeneratedRoomPos = new List<Vector2>();      //用于Debug，因为Unity里看不到HashSet
 
 
-    int m_GeneratedRoomNum = 0;
-    const int m_MaxGeneratedRoomNum = 20;
+
+    //储存加载过的房间
+    Dictionary<string, GameObject> m_RoomDict;
 
 
+    int m_GeneratedRoomNum = 0;             //生成了多少房间
+    const int m_MaxGeneratedRoomNum = 20;   //最多可以生成的房间数
+
+    int m_RandomGeneratedNum = -1;          //随机生成的数（用于新的房间生成的索引）
+
+
+
+
+
+
+
+    private void Awake()
+    {
+        //初始化字典
+        m_RoomDict = new Dictionary<string, GameObject>();
+    }
 
 
     public void GenerateRoom(Transform currentRoom, RoomType currentRoomType)
@@ -53,11 +73,67 @@ public class RoomGenerator : MonoBehaviour
     }
 
 
-    
 
 
-    private void GenerateSuitableRoom(Vector2 newRoomPos, string neededDoorName)
+
+    private async Task<GameObject> LoadRoomAsync(string name)
     {
+        //如果字典里已经有房间了，则直接返回
+        if (m_RoomDict.TryGetValue(name, out GameObject val))
+        {
+            return val;
+        }
+
+
+        //异步加载房间后，检查物体是否存在
+        GameObject loadedRoomObject = await Addressables.LoadAssetAsync<GameObject>(name).Task;
+        if (loadedRoomObject != null)
+        {
+            //将房间物体储存进字典
+            m_RoomDict[name] = loadedRoomObject;
+
+            return loadedRoomObject;
+        }
+
+        else
+        {
+            Debug.LogError("Failed to load room: " + name);
+            return null;
+        }
+    }
+
+
+    //在Addressables里释放房间，只有这样才能释放内存
+    public void ReleaseRoom(string key)
+    {
+        if (key.EndsWith("(Clone)"))
+        {
+            //检查是否有“克隆”后缀，如果有的话减去后缀。（Clone）刚好有7个字符
+            key = key.Substring(0, key.Length - 7);
+        }
+
+
+        if (m_RoomDict.TryGetValue(key, out GameObject roomPrefab))
+        {
+            Addressables.Release(roomPrefab);
+
+            //从字典中移除房间物体
+            m_RoomDict.Remove(key);
+
+            Debug.Log("Room released and removed from dictionary: " + key);
+        }
+
+        else
+        {
+            Debug.LogError("This room is not loaded yet, cannot release: " + key);
+        }
+    }
+
+
+
+    private async void GenerateSuitableRoom(Vector2 newRoomPos, string neededDoorName)
+    {
+        GameObject newRoom = null;
         bool isRoomPlaced = false;
         int attemptCount = 0;
         const int maxAttempts = 200;     //最大尝试次数
@@ -66,9 +142,31 @@ public class RoomGenerator : MonoBehaviour
         {
             attemptCount++;
 
-            int randomRoomNum = Random.Range(0, AllRooms.Length);       //随机生成房间的索引
+            m_RandomGeneratedNum = UnityEngine.Random.Range(0, RoomKeys.FirstFloorRoomKeys.Count);       //随机生成房间的索引   ToDo：需要决定生成哪一层的房间
 
-            GameObject newRoom = Instantiate(AllRooms[randomRoomNum], newRoomPos, Quaternion.identity, FatherOfAllRooms);
+
+            //确认随机索引后尝试异步加载房间
+            try
+            {
+                GameObject loadedRoom = await LoadRoomAsync(RoomKeys.FirstFloorRoomKeys[m_RandomGeneratedNum] );       //异步加载事件
+                if (loadedRoom != null)
+                {
+                    //加载成功后，将房间生成出来
+                    newRoom = Instantiate(loadedRoom, newRoomPos, Quaternion.identity, FatherOfAllRooms);
+                }   
+
+                else
+                {
+                    Debug.LogError("Failed to load room: " + RoomKeys.FirstFloorRoomKeys[m_RandomGeneratedNum] );
+                }
+            }
+
+            catch (Exception ex)
+            {
+                Debug.LogError("Error loading room: " + ex.Message);
+            }
+
+
             RoomType newRoomType = newRoom.GetComponent<RoomType>();
 
             //先检查是否直接有需要的门，如果没有则通过旋转之后再次检查
@@ -79,6 +177,7 @@ public class RoomGenerator : MonoBehaviour
             else
             {
                 Destroy(newRoom);
+                ReleaseRoom(newRoom.name);
             }
         }
 

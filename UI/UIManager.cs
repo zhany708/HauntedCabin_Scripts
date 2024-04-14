@@ -5,16 +5,6 @@ using System.Collections;
 
 
 
-
-public class UIConst    //用于存储界面的名称
-{
-    public const string PlayerStatusBar = "PlayerStatusBar";    //玩家状态栏。在HealthBar脚本里初始化
-    public const string TransitionStagePanel = "TransitionStagePanel";    //进入二阶段文字
-}
-
-
-
-
 public class UIManager
 {
     private static UIManager m_Instance;
@@ -178,5 +168,32 @@ public class UIManager
     public void ChangePanelLayer(BasePanel thisPanel)   //改变UI的渲染层级
     {
 
+    }
+
+
+    //在Addressables里释放UI，只有这样才能释放内存
+    public void ReleaseUI(string key)
+    {
+        if (key.EndsWith("(Clone)"))
+        {
+            //检查是否有“克隆”后缀，如果有的话减去后缀。（Clone）刚好有7个字符
+            key = key.Substring(0, key.Length - 7);
+        }
+
+
+        if (m_PrefabDict.TryGetValue(key, out GameObject panelPrefab))
+        {
+            Addressables.Release(panelPrefab);
+
+            //从预制件缓存字典中移除UI物体
+            m_PrefabDict.Remove(key);
+
+            Debug.Log("UI released and removed from dictionary: " + key);
+        }
+
+        else
+        {
+            Debug.LogError("This UI is not loaded yet, cannot release: " + key);
+        }
     }
 }

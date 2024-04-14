@@ -75,9 +75,30 @@ public class SoundManager : MonoBehaviour
     }
 
 
-    public void ReleaseClip()
+    //在Addressables里释放音频，只有这样才能释放内存
+    public void ReleaseAudioClip(string key)
     {
+        if (key.EndsWith("(Clone)"))
+        {
+            //检查是否有“克隆”后缀，如果有的话减去后缀。（Clone）刚好有7个字符
+            key = key.Substring(0, key.Length - 7);
+        }
 
+
+        if (m_AudioDict.TryGetValue(key, out AudioClip clip))
+        {
+            Addressables.Release(clip);
+
+            //从字典中移除音频
+            m_AudioDict.Remove(key);
+
+            Debug.Log("AudioClip released and removed from dictionary: " + key);
+        }
+
+        else
+        {
+            Debug.LogError("This AudioClip is not loaded yet, cannot release: " + key);
+        }
     }
 
 

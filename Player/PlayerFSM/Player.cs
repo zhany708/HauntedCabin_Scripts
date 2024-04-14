@@ -104,9 +104,10 @@ public class Player : MonoBehaviour
     #endregion
 
     #region Other Functions
-    public void ChangeWeapon(GameObject weapon, bool isPrimary)
+    //更换武器
+    public void ChangeWeapon(string weaponName, bool isPrimary)
     {
-        StartCoroutine(ChangeWeaponCoroutine(weapon.name, isPrimary));
+        StartCoroutine(ChangeWeaponCoroutine(weaponName, isPrimary));
 
     }
 
@@ -125,10 +126,10 @@ public class Player : MonoBehaviour
         {
             if (PrimaryWeapon != null && PrimaryWeapon.gameObject.activeSelf)
             {
-                PrimaryWeapon.gameObject.SetActive(false);
+                PrimaryWeapon.gameObject.SetActive(false);      //换武器前先取消激活当前武器
             }
 
-            yield return WeaponInventory.Instance.LoadWeapon(weaponName, isPrimary);
+            yield return WeaponInventory.Instance.LoadWeapon(weaponName, isPrimary);    //等待异步加载
 
 
             PrimaryAttackState = new PlayerAttackState(this, StateMachine, PlayerData, "Idle", PrimaryWeapon);       //激活新攻击状态
@@ -158,19 +159,21 @@ public class Player : MonoBehaviour
     }
 
 
-
-    public void MakeSpriteVisible(GameObject thisObject, bool isVisible)     //更改渲染的透明度以激活/隐藏物体
+    //更改渲染的透明度以激活/隐藏物体
+    public void MakeSpriteVisible(GameObject thisObject, bool isVisible)     
     {
         if (isVisible)    //激活
         {
             thisObject.GetComponent<SpriteRenderer>().color = new Color(1f, 1f, 1f, 1f);
         }
+
         else              //隐藏
         {
             thisObject.GetComponent<SpriteRenderer>().color = new Color(1f, 1f, 1f, 0f);        
-        }
-        
+        }       
     }
+
+
 
     private void PlayerFlip()
     {
@@ -179,7 +182,10 @@ public class Player : MonoBehaviour
         m_PlayerFlip.FlipX(FacingNum);
     }
 
-    private void ZoomCamera()       //通过鼠标滚轮拉近或拉远相机
+
+
+    //通过鼠标滚轮拉近或拉远相机
+    private void ZoomCamera()       
     {
         if (PlayerCamera != null)
         {

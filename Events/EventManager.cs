@@ -1,12 +1,15 @@
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
+using UnityEngine.InputSystem;
 
 public class EventManager : MonoBehaviour
 {
     [SerializeField]
-    public SO_EventKeys AllEvents;
+    public SO_EventKeys EventKeys;
+    public SO_UIKeys UIKeys;
 
 
     public bool IsSecondStage {  get; private set; }
@@ -14,41 +17,73 @@ public class EventManager : MonoBehaviour
 
 
     Animator m_Animator;
-    GameObject m_EventPrefab;
+    GameObject m_EventPrefab;       //事件预制件
     Vector2 m_RoomPosition;
 
+    //储存加载过的事件
+    Dictionary<string, GameObject> m_EventDict;
 
-    int EventCount;
-    int EnterSecondStageCount;
-
+    int m_EventCount;                 //生成过多少房间
+    int m_EnterSecondStageCount;      //进入二阶段所需的房间数
+    int m_RandomGeneratedNum;         //随机生成的数（用于新的房间生成的索引）
 
 
 
     private void Awake()
     {
         m_Animator = GetComponent<Animator>();
+
+        m_EventDict = new Dictionary<string, GameObject>();
     }
 
     private void Start()
     {
-        EventCount = 0;
-        EnterSecondStageCount = 1;
+        //初始化变量，防止出现Bug
+        m_EventCount = 0;
+        m_EnterSecondStageCount = 1;
+        m_RandomGeneratedNum = -1;
         IsSecondStage = false;
 
-        //提前加载进入二阶段的文字
-        StartCoroutine(UIManager.Instance.InitPanel(UIConst.TransitionStagePanel) );     
+
+        //提前加载进入二阶段的文字，但不实例化   
+        if (UIKeys != null && !string.IsNullOrEmpty(UIKeys.TransitionStagePanelKey))
+        {
+            StartCoroutine(UIManager.Instance.InitPanel(UIKeys.TransitionStagePanelKey));
+        }
+
+        else
+        {
+            Debug.LogError("UIKeys not set or TransitionStagePanelKey is empty.");
+        }
     }
 
     
 
 
+
+
+
     private async Task<Event> LoadEventAsync(string name)
     {
+        
+        //如果字典里已经有事件了，则直接返回
+        if (m_EventDict.TryGetValue(name, out GameObject thisGameObject))
+        {
+            Event eventComponent = thisGameObject.GetComponent<Event>();
+            return eventComponent;
+        }
+        
+
+        //异步加载事件后，获取Event组件，最后返回该组件
         GameObject loadedEventObject = await Addressables.LoadAssetAsync<GameObject>(name).Task;
         Event loadedEvent = null;
         if (loadedEventObject != null)
         {
+            //从物体上获取Event组件
             loadedEvent = loadedEventObject.GetComponent<Event>();
+
+            //将Event变量储存进字典
+            m_EventDict[name] = loadedEventObject;
         }
 
         else
@@ -60,58 +95,110 @@ public class EventManager : MonoBehaviour
     }
 
 
+    //在Addressables里释放事件，只有这样才能释放内存
+    public void ReleaseEvent(string key)
+    {
+        if (key.EndsWith("(Clone)") )
+        {
+            //检查是否有“克隆”后缀，如果有的话减去后缀。（Clone）刚好有7个字符
+            key = key.Substring(0, key.Length - 7);
+        }
+
+
+        if (m_EventDict.TryGetValue(key, out GameObject eventPrefab))
+        {
+            Addressables.Release(eventPrefab);
+
+            //从字典中移除变量
+            m_EventDict.Remove(key);
+
+            Debug.Log("Event released and removed from dictionary: " + key);
+        }
+
+        else
+        {
+            Debug.LogError("This event is not loaded yet, cannot release: " + key);
+        }
+    }
+
+
+
+
     public async void GenerateRandomEvent(Vector2 position, DoorController thisDoor)
     {
         m_RoomPosition = position;
 
-        int index = UnityEngine.Random.Range(0, AllEvents.Keys.Count);       //随机生成事件
+        m_RandomGeneratedNum = UnityEngine.Random.Range(0, EventKeys.EvilEventKeys.Count);       //根据列表的数量随机生成预兆事件    Todo:等事件足够多后需要决定触发预兆事件的频率
         
-        //确认随机索引后尝试异步加载
+        //确认随机索引后尝试异步加载事件
         try
         {
-            Event loadedEvent = await LoadEventAsync(AllEvents.Keys[index]);       //异步加载事件
+            Event loadedEvent = await LoadEventAsync(EventKeys.EvilEventKeys[m_RandomGeneratedNum]);       //异步加载事件
             if (loadedEvent != null)
             {
-                m_EventPrefab = ParticlePool.Instance.GetObject(loadedEvent.EventData.EventPrefab);        //生成事件预制件
+                m_EventPrefab = ParticlePool.Instance.GetObject(loadedEvent.EventData.EventPrefab);        //使用对象池生成事件预制件
             }
 
             else
             {
-                Debug.LogError("Failed to load event: " + AllEvents.Keys[index]);
+                Debug.LogError("Failed to load event: " + EventKeys.EvilEventKeys[m_RandomGeneratedNum]);
             }
         }
 
         catch (Exception ex)
         {
-            Debug.LogError("Error playing music: " + ex.Message);
+            Debug.LogError("Error loading event: " + ex.Message);
         }
 
 
 
-        m_EventPrefab.transform.parent.position = m_RoomPosition;      //赋值事件触发的房间坐标给事件的父物体（因为对象池的缘故）
-        m_EventPrefab.GetComponent<Event>().SetDoor(thisDoor);        //将事件发生的房间传过去
-        m_EventPrefab.GetComponent<Event>().SetEventManager(this);       //将当前脚本传给Event脚本
-        m_EventPrefab.GetComponent<Event>().StartEvent();       //开始事件
+        m_EventPrefab.transform.parent.position = m_RoomPosition;      //赋值事件触发的房间的坐标给事件的父物体（因为对象池的缘故）
+        m_EventPrefab.GetComponent<Event>().SetDoor(thisDoor);         //将事件发生的房间传过去
+        m_EventPrefab.GetComponent<Event>().SetEventManager(this);     //将当前脚本传给Event脚本
+        m_EventPrefab.GetComponent<Event>().StartEvent();              //开始事件
 
-        //AllEvents.RemoveAt(index);      //开始事件后从List中移除事件，防止之后重复触发事件
+        //AllEvents.EvilEventKeys.RemoveAt(index);      //开始事件后从列表中移除事件，防止之后重复触发事件
     }
 
+
+    //取消激活事件物体
     public void DeactivateEventObject()
     {
-        ParticlePool.Instance.PushObject(m_EventPrefab);    //将事件放回对象池
+        
+        //尝试将事件推回对象池
+        if (!ParticlePool.Instance.PushObject(m_EventPrefab) )
+        {
+            Debug.LogError("Failed to push the event object back to the pool: " + m_EventPrefab.name);
+        }
+        
+
+        //用Addressables释放事件
+        if (m_EventPrefab != null)
+        {
+            string eventName = m_EventPrefab.name;
+            if (eventName.EndsWith("(Clone)"))
+            {
+                //检查是否有“克隆”后缀，如果有的话减去后缀。（Clone）刚好有7个字符
+                eventName = eventName.Substring(0, eventName.Length - 7);
+            }
+
+            ReleaseEvent(eventName);
+        }
+
+        else
+        {
+            Debug.LogError("Event prefab reference is null, cannot release resources.");
+        }  
     }
 
 
 
 
 
-
-
-
-
+    //检查是否进入二阶段
     private void CheckIfTranstionToSecondStage()
     {
-        if (EventCount >= EnterSecondStageCount)
+        if (m_EventCount >= m_EnterSecondStageCount)
         {
             transform.position = m_RoomPosition;        //将事件管理器的坐标移到当前房间
             m_Animator.SetTrigger("TranstionSecondStage");  //随后播放过渡阶段的动画
@@ -123,7 +210,16 @@ public class EventManager : MonoBehaviour
     #region AnimationEvents
     private void DisplayTransitionStageText()       //用于阶段动画中决定何时显示文字
     {
-        StartCoroutine(UIManager.Instance.OpenPanel(UIConst.TransitionStagePanel) );
+        //显示转阶段文字
+        if (UIKeys != null && !string.IsNullOrEmpty(UIKeys.TransitionStagePanelKey))
+        {
+            StartCoroutine(UIManager.Instance.OpenPanel(UIKeys.TransitionStagePanelKey));
+        }
+
+        else
+        {
+            Debug.LogError("UIKeys not set or TransitionStagePanelKey is empty.");
+        }
     }
     #endregion
 
@@ -137,7 +233,7 @@ public class EventManager : MonoBehaviour
 
     public void IncrementEventCount()
     {
-        EventCount++;
+        m_EventCount++;
 
         CheckIfTranstionToSecondStage();    //每次事件计数增加后检查是否满足进入二阶段
     }

@@ -2,10 +2,6 @@ using UnityEngine;
 
 public class E_EvilTelephone : Event
 {
-    public AudioClip AnswerClip;
-   
-
-
     Animator m_Animator;
     AudioSource m_AudioSource;
     Collider2D m_Collider;
@@ -56,10 +52,9 @@ public class E_EvilTelephone : Event
 
     private void PlayRingSound()        //用于动画帧事件，播放响铃声
     {
-        if (m_AudioSource != null && m_AudioSource.clip != null && !m_AudioSource.isPlaying)    //防止重复播放音效
+        if (m_AudioSource != null && !m_AudioSource.isPlaying)      //防止重复播放
         {
-            m_AudioSource.volume = 0.6f;  //设置音量
-            m_AudioSource.Play();   //动画开始时播放响铃声
+            SoundManager.Instance.PlaySFXAsyncWithAudioSource(m_AudioSource, EventData.AudioClipNames[0], 0.6f);
         }
     }
 
@@ -67,10 +62,13 @@ public class E_EvilTelephone : Event
     {
         if (m_AudioSource != null)   
         {
-            m_AudioSource.clip = AnswerClip;    //更改为接电话的音效
+            //先暂停当前的音频
+            m_AudioSource.Stop();
 
-            m_AudioSource.volume = 1f;  //设置到最大音量
-            m_AudioSource.Play();   //动画开始时播放响铃声
+            SoundManager.Instance.PlaySFXAsyncWithAudioSource(m_AudioSource, EventData.AudioClipNames[1], EventData.AudioVolume);
+
+            //释放响铃声的音频
+            SoundManager.Instance.ReleaseAudioClip(EventData.AudioClipNames[0]);
         }
     }
 }

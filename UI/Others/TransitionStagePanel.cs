@@ -57,6 +57,8 @@ public class TransitionStagePanel : BasePanel
             () =>
             {
                 Destroy(gameObject);
+
+                UIManager.Instance.ReleaseUI(name);
             }
         );
     }

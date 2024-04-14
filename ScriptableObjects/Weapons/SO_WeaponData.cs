@@ -7,6 +7,7 @@ public class SO_WeaponData : ScriptableObject
 {
     public int AmountOfAttack { get; protected set; }       //用于在攻击性武器数值脚本中修改
 
+
     public string AudioClipName;    //该武器的音效名，用于加载
     public float AudioVolume = 1f;       //武器音效的音量
 

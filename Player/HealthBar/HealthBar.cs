@@ -5,6 +5,10 @@ using UnityEngine.UI;
 
 public class HealthBar : MonoBehaviour
 {
+    public SO_UIKeys UIKeys;
+
+
+
     Image m_HpImage;
     Image m_HpEffectImage;     //血量缓冲图片
 
@@ -22,8 +26,17 @@ public class HealthBar : MonoBehaviour
 
     private IEnumerator Start()     //因为需要异步加载UI。所以使用协程而不是void
     {
-        //等待UI加载完毕
-        yield return UIManager.Instance.OpenPanel(UIConst.PlayerStatusBar);    //显示玩家状态栏
+        //检查UIKeys是否为空且要加载的名字是否存在，随后等待UI加载完毕
+        if (UIKeys != null && !string.IsNullOrEmpty(UIKeys.PlayerStatusBarKey) )
+        {
+            yield return UIManager.Instance.OpenPanel(UIKeys.PlayerStatusBarKey);    //显示玩家状态栏
+        }
+
+        else
+        {
+            Debug.LogError("UIKeys not set or playerStatusBarKey is empty.");
+        }
+        
 
         //UI加载完毕后才会获取组件
         m_Player = GetComponentInParent<Player>();
