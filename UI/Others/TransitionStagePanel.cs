@@ -47,9 +47,9 @@ public class TransitionStagePanel : BasePanel
 
     public override void FadeOut(CanvasGroup thisCanvasGroup, float fadeDuration)
     {
-        if (UIManager.Instance.PanelDict.ContainsKey(name))
+        if (UIManager.Instance.PanelDict.ContainsKey(panelName))
         {
-            UIManager.Instance.PanelDict.Remove(name);
+            UIManager.Instance.PanelDict.Remove(panelName);
         }
 
 
@@ -58,7 +58,7 @@ public class TransitionStagePanel : BasePanel
             {
                 Destroy(gameObject);
 
-                UIManager.Instance.ReleaseUI(name);
+                UIManager.Instance.ReleaseUI(panelName);
             }
         );
     }

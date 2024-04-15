@@ -26,7 +26,7 @@ public class BasePanel : MonoBehaviour
     protected bool isTyping = false;        //表示是否正在显示文本
 
     protected bool isRemoved = false;       //表示UI是否被移除
-    protected new string name;
+    protected string panelName;
 
 
 
@@ -45,24 +45,29 @@ public class BasePanel : MonoBehaviour
 
     public virtual void OpenPanel(string name)
     {
-        this.name = name;
+        this.panelName = name;
     }
 
     public virtual void ClosePanel()
     {
-        Debug.Log("Panel is closed!");
+        //Debug.Log("Panel is closed: " + panelName);
 
         isRemoved = true;
 
-        
-        gameObject.SetActive(false);    //隐藏界面后销毁物体
-        Destroy(gameObject);
-        
+        //隐藏界面
+        gameObject.SetActive(false);
 
-        //移除缓存，表示界面没打开
-        if (UIManager.Instance.PanelDict.ContainsKey(name))
+        //销毁物体
+        Destroy(gameObject);
+
+        //释放物体和内存
+        UIManager.Instance.ReleaseUI(panelName);
+
+
+        //从字典中移除，表示界面没打开
+        if (UIManager.Instance.PanelDict.ContainsKey(panelName))
         {
-            UIManager.Instance.PanelDict.Remove(name);
+            UIManager.Instance.PanelDict.Remove(panelName);
         }
     }
 
@@ -82,9 +87,9 @@ public class BasePanel : MonoBehaviour
         thisCanvasGroup.blocksRaycasts = false;     //取消遮挡射线（因为物体没有被销毁。只是看不见了）
 
         //移除缓存，表示界面没打开
-        if (UIManager.Instance.PanelDict.ContainsKey(name))
+        if (UIManager.Instance.PanelDict.ContainsKey(panelName))
         {
-            UIManager.Instance.PanelDict.Remove(name);
+            UIManager.Instance.PanelDict.Remove(panelName);
         }
     }
 

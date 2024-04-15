@@ -11,10 +11,12 @@ public class PlayerInputHandler : MonoBehaviour
     public Vector2 MouseScrollInput { get; private set; }       //鼠标滚轮的信息
 
 
-    public bool[] AttackInputs { get; private set; }    //用于检测主武器和副武器
+    public bool[] AttackInputs { get; private set; }    //用于检测鼠标按键，决定使用主武器或副武器
     public bool IsSpacePressed {  get; private set; }   //用于表示是否按下空格
 
     Vector2 m_MousePos;
+
+    bool m_CanDetectAttack = true;   //决定是否检测鼠标按键（需要交互UI时取消检测）
 
 
 
@@ -69,12 +71,18 @@ public class PlayerInputHandler : MonoBehaviour
         }
         */
 
-        AttackInputs[(int)CombatInputs.primary] = context.performed;
+        if (m_CanDetectAttack)
+        {
+            AttackInputs[(int)CombatInputs.primary] = context.performed;
+        }   
     }
 
     public void OnSecondaryAttackInput(InputAction.CallbackContext context)
     {
-        AttackInputs[(int)CombatInputs.secondary] = context.performed;
+        if (m_CanDetectAttack)
+        {
+            AttackInputs[(int)CombatInputs.secondary] = context.performed;
+        }
     }
 
 
@@ -100,6 +108,11 @@ public class PlayerInputHandler : MonoBehaviour
     #endregion
 
     #region Setters
+    public void SetCanDetectAttack(bool canDetectAttack)
+    {
+        m_CanDetectAttack = canDetectAttack;
+    }
+
     /*
     public void ResetAttackInputs()
     {

@@ -44,6 +44,9 @@ public class Player : MonoBehaviour
 
     public bool IsFirstFrame { get; private set; } = true;
     public int FacingNum { get; private set; }
+
+    //当前状态，用于Debug
+    string m_CurrentState;
     #endregion
 
     #region Unity Callback Functions
@@ -83,6 +86,8 @@ public class Player : MonoBehaviour
 
     private void Update()
     {
+        //实时显示当前状态
+        m_CurrentState = StateMachine.currentState.ToString();
         //Core.LogicUpdate();     //获取当前速度
 
         if (IsFirstFrame)       //防止第一帧角色异常翻转。ToDO:后续每当暂停游戏时，也需要防止恢复后第一帧角色异常翻转
@@ -109,6 +114,7 @@ public class Player : MonoBehaviour
     {
         StartCoroutine(ChangeWeaponCoroutine(weaponName, isPrimary));
 
+        //StateMachine.ChangeState(IdleState);
     }
 
     private IEnumerator ChangeWeaponCoroutine(string weaponName, bool isPrimary)
@@ -124,6 +130,9 @@ public class Player : MonoBehaviour
 
         if (isPrimary)
         {
+            //更换武器之前退出当前武器攻击状态状态，防止出现Bug
+            //PrimaryWeapon.ExitWeapon();
+
             if (PrimaryWeapon != null && PrimaryWeapon.gameObject.activeSelf)
             {
                 PrimaryWeapon.gameObject.SetActive(false);      //换武器前先取消激活当前武器
@@ -224,5 +233,14 @@ public class Player : MonoBehaviour
             SecondaryWeapon = thisWeapon;
         }
     }
+    #endregion
+
+    #region Getters
+    /*
+    public string GetCurrentState()
+    {
+        return m_CurrentState;
+    }
+    */
     #endregion
 }

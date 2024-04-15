@@ -8,14 +8,22 @@ using System;
 public class SoundManager : MonoBehaviour
 {
     public static SoundManager Instance { get; private set; }
+
+    public SO_AudioClipKeys AudioClipKeys;
+
     public float MusicVolume {  get; private set; }               //背景音乐的音量
     public float SfxVolume { get; private set; }        //音效音量
+
 
 
     AudioSource m_MusicSource;  //用于BGM
     AudioSource m_SfxSource;    //用于音效
 
     Dictionary<string, AudioClip> m_AudioDict;
+
+
+
+
 
 
     private void Awake()
@@ -35,11 +43,13 @@ public class SoundManager : MonoBehaviour
         m_AudioDict = new Dictionary<string, AudioClip>();
     }
 
-    private void Start()
+    private async void Start()
     {
         //初始化音量
-        MusicVolume = 1f;
+        MusicVolume = 0.5f;
         SfxVolume = 1f;
+
+        await PlayBGMAsync(AudioClipKeys.StopForAMoment, true, MusicVolume);
     }
 
 

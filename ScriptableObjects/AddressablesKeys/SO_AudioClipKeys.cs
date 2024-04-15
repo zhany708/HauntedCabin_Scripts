@@ -6,7 +6,7 @@ public class SO_AudioClipKeys : ScriptableObject
 {
     //BGM
     [Header("BGM Music")]
-
+    public string StopForAMoment;   //休闲音乐
 
 
     //某些音效因为在创建独立的ScriptableObject时已经储存音效名字了，因此不会从这里调取名字！

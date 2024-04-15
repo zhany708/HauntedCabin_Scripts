@@ -1,7 +1,3 @@
-using UnityEngine;
-using static UnityEngine.RuleTile.TilingRuleOutput;
-
-
 public class PlayerGroundedState : PlayerState
 {
     public PlayerGroundedState(Player player, PlayerStateMachine stateMachine, SO_PlayerData playerData, string animBoolName) : base(player, stateMachine, playerData, animBoolName)
