@@ -45,8 +45,11 @@ public class DoorController : MonoBehaviour
         RightTopPatrolPoint = new Vector2(m_MainRoom.transform.position.x + 5, m_MainRoom.transform.position.y + 2);
         */
 
-        //生成的x范围为房间坐标的x加减5，生成的y范围为房间坐标的y加减2
-        m_EnemySpwanPos = new RandomPosition(new Vector2(m_MainRoom.transform.position.x - 5, m_MainRoom.transform.position.y - 2), new Vector2(m_MainRoom.transform.position.x + 5, m_MainRoom.transform.position.y + 2));
+        if (EnemyObjects.Length != 0)   //如果房间有怪物
+        {
+            //生成的x范围为房间坐标的x加减5，生成的y范围为房间坐标的y加减2
+            m_EnemySpwanPos = new RandomPosition(new Vector2(m_MainRoom.transform.position.x - 5, m_MainRoom.transform.position.y - 2), new Vector2(m_MainRoom.transform.position.x + 5, m_MainRoom.transform.position.y + 2));
+        }
     }
 
     private void Start()
@@ -104,7 +107,7 @@ public class DoorController : MonoBehaviour
     {
         for (int i = 0; i < DoorAnimators.Length; i++)
         {
-            DoorAnimators[i].SetBool("IsOpen", true);      //怪物全部死亡后将门打开
+            DoorAnimators[i].SetBool("IsOpen", true);      //将门打开
             DoorAnimators[i].SetBool("IsClose", false);
         }
     }
@@ -113,7 +116,7 @@ public class DoorController : MonoBehaviour
     {
         for (int i = 0; i < DoorAnimators.Length; i++)
         {
-            DoorAnimators[i].SetBool("IsOpen", false);      //角色进入房间后将门关闭
+            DoorAnimators[i].SetBool("IsOpen", false);      //将门关闭
             DoorAnimators[i].SetBool("IsClose", true);
         }
     }
@@ -157,14 +160,16 @@ public class DoorController : MonoBehaviour
 
 
 
-    public void SetHasGeneratedEvent(bool isTrue)
-    {
-        HasGeneratedEvent = isTrue;
-    }
-
-
     public void IncrementEnemyCount()
     {
         EnemyCount++;
     }
+
+
+    #region Setters
+    public void SetHasGeneratedEvent(bool isTrue)
+    {
+        HasGeneratedEvent = isTrue;
+    }
+    #endregion
 }
