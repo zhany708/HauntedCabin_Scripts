@@ -4,18 +4,22 @@ using UnityEngine;
 
 public class SideDoorController : MonoBehaviour
 {
-    public float XOffset;
-    public float YOffset;
+    //角色传送时需要的数值，用于表示将要传送的房间坐标的偏移
+    public float XOffset = 16.9f;
+    public float YOffset = 10.7f;
 
-    //透明度的值
-    public float TransparentValue = 0f;
+    //房间隐藏时透明度的值
+    public float HiddenTransparency = 0.5f;
 
 
 
     protected SpriteRenderer sprite;
 
-
+    //用于储存所有触发了门的碰撞器
     List<Collider2D> m_AllObjects;
+
+    const float m_DefaultTransparency = 1f;
+
 
 
 
@@ -37,12 +41,12 @@ public class SideDoorController : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D other)
     {
         //只有玩家或敌人触发了门的触发器后，才会降低透明度
-        if (sprite != null && ( other.CompareTag("Player") || other.CompareTag("Enemy")) )
+        if (other.CompareTag("Player") || other.CompareTag("Enemy") )
         {
             m_AllObjects.Add(other);
 
             //降低门的透明度
-            sprite.color = new Color(1f, 1f, 1f, TransparentValue);
+            ChangeTransparency(HiddenTransparency);
         }
 
 
@@ -95,21 +99,29 @@ public class SideDoorController : MonoBehaviour
         //先检查离开碰撞器的是否为玩家或敌人
         if (other.CompareTag("Player") || other.CompareTag("Enemy"))
         {
-            //在检查列表的元素数量是否为0
+            //再检查列表的元素数量是否为0
             if (m_AllObjects.Count > 0)
             {
                 m_AllObjects.Remove(other);
             }
 
             //只要仍然有触发器没有离开门，那么即使玩家/敌人离开了门的触发器，门依然保持半透明
-            if (m_AllObjects.Count == 0 && sprite.color.a == TransparentValue)     //当玩家离开门后，且门的透明度被更改过
+            if (m_AllObjects.Count == 0 && sprite.color.a == HiddenTransparency)        //只有门的透明度为此脚本中的变量时，才调回透明度
             {
-                if (sprite != null)
-                {
-                    //调回门的透明度
-                    sprite.color = new Color(1f, 1f, 1f, 1f);
-                }
+                ChangeTransparency(m_DefaultTransparency);
             }
+        }
+    }
+
+
+
+
+    private void ChangeTransparency(float alphaVal)
+    {
+        if (sprite != null)
+        {
+            //更改门的透明度
+            sprite.color = new Color(1f, 1f, 1f, alphaVal);
         }
     }
 }

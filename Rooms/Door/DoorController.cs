@@ -77,18 +77,29 @@ public class DoorController : MonoBehaviour
         {
             RoomTrigger.enabled = false;    //玩家进入房间后取消激活门的触发器，防止玩家反复进出房间导致二次生成事件或敌人
 
+            //检查房间是否清理完毕
             if (!IsRoomClean)
             {
                 CloseDoors();
 
+                //检查是否为初始房间
                 if (!m_IsRootRoom)    
                 {
+                    //游戏处于第一阶段时
                     if (!EventManagerAtDoor.IsSecondStage)
                     {
-                        //Debug.Log(transform.position);
-                        EventManagerAtDoor.GenerateRandomEvent(transform.position, this);   //第一阶段时生成事件
-                        HasGeneratedEvent = true;
+                        //检查是否已经生成过事件
+                        if (!HasGeneratedEvent)
+                        {
+                            //Debug.Log("An event has generated here: " + transform.position);
+                            EventManagerAtDoor.GenerateRandomEvent(transform.position, this);   //第一阶段时生成事件
+
+                            //房间生成过一次事件后就不会再生成了，因此无需重置布尔值
+                            HasGeneratedEvent = true;
+                        }                    
                     }
+
+                    //游戏处于第二阶段时
                     else
                     {
                         GenerateEnemy();    //只有进入二阶段后才会生成敌人
@@ -167,9 +178,11 @@ public class DoorController : MonoBehaviour
 
 
     #region Setters
+    /*
     public void SetHasGeneratedEvent(bool isTrue)
     {
         HasGeneratedEvent = isTrue;
     }
+    */
     #endregion
 }
