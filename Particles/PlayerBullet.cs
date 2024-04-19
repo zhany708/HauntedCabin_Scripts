@@ -41,11 +41,15 @@ public class PlayerBullet : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D other)
     {
+        //Debug.Log("The Player bullet collided with : " + other.gameObject.name);
+
         DestroyBullet();       //使子弹碰到其他碰撞体（墙壁，家具等）时自毁
     }
 
     protected virtual void OnTriggerEnter2D(Collider2D other)
     {
+        //Debug.Log("The Player bullet triggered the : " + other.gameObject.name);
+
         Idamageable damageable = other.GetComponent<Idamageable>();
 
         if (damageable != null)

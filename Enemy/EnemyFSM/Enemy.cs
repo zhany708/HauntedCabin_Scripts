@@ -13,7 +13,7 @@ public class EnemyParameter
 
     //攻击相关
     public Transform Target;     //玩家的坐标
-    public Transform[] ChasePoints;     //追击范围
+    //public Transform[] ChasePoints;     //追击范围
     public Transform AttackPoint;   //攻击范围的圆心位置
 }
 #endregion
@@ -164,6 +164,7 @@ public class Enemy : MonoBehaviour
     #endregion
 
     #region Main Functions
+    /*
     //检测玩家是否超出追击范围
     public bool CheckOutside()
     {
@@ -174,7 +175,7 @@ public class Enemy : MonoBehaviour
 
         return Parameter.Target.position.x < minX || Parameter.Target.position.x > maxX || Parameter.Target.position.y < minY || Parameter.Target.position.y > maxY;
     }
-
+    */
     private void SetCanAttackTrue()     //用于Action，由于不能传参数，因此不能用下面Setters里的函数
     {
         CanAttack = true;

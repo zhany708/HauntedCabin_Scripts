@@ -23,9 +23,9 @@ public class EnemyChaseState : EnemyState
 
         base.LogicUpdate();
 
-        if (enemy.Parameter.Target == null || enemy.CheckOutside())
+        if (enemy.Parameter.Target == null) //|| enemy.CheckOutside())  可添加：玩家啊超出追击范围时切换到待机状态
         {
-            stateMachine.ChangeState(enemy.IdleState);      //丢失目标或者超出追击范围时切换到待机状态
+            stateMachine.ChangeState(enemy.IdleState);      //丢失目标后切换到待机状态
         }
 
         //检测攻击范围：第一个参数为圆心位置，第二个为半径，第三个为目标图层.玩家处于攻击范围且攻击间隔结束则进入攻击状态
