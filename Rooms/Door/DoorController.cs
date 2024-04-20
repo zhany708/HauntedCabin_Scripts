@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using ZhangYu.Utilities;
@@ -14,6 +15,7 @@ public class DoorController : MonoBehaviour
 
     public int EnemyCount {  get; private set; }
     public bool HasGeneratedEvent { get; private set; }
+    public bool HasDeactivateEvent { get; private set; }
     public bool IsRoomClean { get; private set; }     //表示房间中怪物是否清理干净
 
 
@@ -63,8 +65,10 @@ public class DoorController : MonoBehaviour
         {
             IsRoomClean = false;
         }
-        
+
+
         HasGeneratedEvent = false;
+        HasDeactivateEvent = false;
         EnemyCount = 0;
     }
 
@@ -88,14 +92,20 @@ public class DoorController : MonoBehaviour
                     //游戏处于第一阶段时
                     if (!EventManagerAtDoor.IsSecondStage)
                     {
-                        //检查是否已经生成过事件
+                        //检查是否已经生成过事件，如果没有生成过则继续
                         if (!HasGeneratedEvent)
                         {
                             //Debug.Log("An event has generated here: " + transform.position);
                             EventManagerAtDoor.GenerateRandomEvent(transform.position, this);   //第一阶段时生成事件
 
-                            //房间生成过一次事件后就不会再生成了，因此无需重置布尔值
+                            //房间生成过一次事件后就不会再生成了，因此在这里设置之后，其他地方无需重置布尔值
                             HasGeneratedEvent = true;
+
+                            //如果房间没有怪物需要生成，则生成事件后就干净了
+                            if (EnemyObjects.Length == 0)
+                            {
+                                IsRoomClean = true;
+                            }
                         }                    
                     }
 
@@ -108,9 +118,6 @@ public class DoorController : MonoBehaviour
             }              
         }
     }
-
-
-
 
 
 
@@ -184,5 +191,11 @@ public class DoorController : MonoBehaviour
         HasGeneratedEvent = isTrue;
     }
     */
+
+    public void SetHasDeactivateEvent(bool isTrue)
+    {
+        HasDeactivateEvent = isTrue;
+    }
+    
     #endregion
 }

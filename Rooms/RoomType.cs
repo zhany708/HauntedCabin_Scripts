@@ -43,8 +43,6 @@ public class RoomType : MonoBehaviour
     DoorFlags m_DoorFlags;
 
 
-    bool m_CanRotate;
-    bool m_isRotate = false;
 
     /* X轴180翻转上下，Y轴180翻转左右，Z轴180同时翻转上下和左右
     1. 四周都有门（不需要旋转）
@@ -67,10 +65,7 @@ public class RoomType : MonoBehaviour
         m_DoorFlags = DoorFlags.None;       //给Bit Flag赋值
 
 
-        if (!m_isRotate)
-        {
-            SetDoorFlags();     //游戏开始时赋值四个布尔
-        }
+        SetDoorFlags();     //游戏开始时赋值四个布尔       
     }
 
     private void OnEnable()
@@ -97,7 +92,6 @@ public class RoomType : MonoBehaviour
 
         if (hasLeftDoor && hasRightDoor && hasUpDoor && hasDownDoor)    //先检查是否都有门
         {
-            m_CanRotate = false;
             return RoomTypeName.AllDirection;
         }
 
@@ -105,12 +99,10 @@ public class RoomType : MonoBehaviour
         {
             if (hasUpDoor || hasDownDoor)
             {
-                m_CanRotate = true;
                 return RoomTypeName.AllHorizontalAndOneVertical;
             }
             else
             {
-                m_CanRotate = false;
                 return RoomTypeName.AllHorizontal;
             }
         }
@@ -119,110 +111,32 @@ public class RoomType : MonoBehaviour
         {
             if (hasLeftDoor || hasRightDoor)
             {
-                m_CanRotate = true;
                 return RoomTypeName.OneHorizontalAndAllVertical;
             }
             else
             {
-                m_CanRotate = false;
                 return RoomTypeName.AllVertical;
             }
         }
 
         else if (hasHorizontal && hasVertical)      //再检查是否两个方向都有门
         {
-            m_CanRotate = true;
             return RoomTypeName.OneHorizontalAndOneVertical;
         }
 
         else if (hasHorizontal)     //再检查是否只有一个方向有门
         {
-            m_CanRotate = true;
             return RoomTypeName.OneHorizontal;
         }
 
         else if (hasVertical)
         {
-            m_CanRotate = true;
             return RoomTypeName.OneVertical;
         }
 
         return RoomTypeName.None;   //默认返回空
     }
 
-
-
-
-    public void RotateRoom(string needDoor)
-    {
-        RoomTypeName currentRoomType = GetRoomType();
-        //Debug.Log(currentRoomType);
-
-        Vector3 newRotation = Vector3.zero;     //默认值
-
-        DoorFlags newDoorFlags = m_DoorFlags;   //先通过新的临时旗帜进行计算，最后再判断是否赋值给常驻的旗帜
-
-        if (!m_CanRotate)
-        {
-            //Debug.Log(gameObject.name + " cannot be rotated!");       //显示当前房间无法旋转，用于调试
-            return;
-        }
-
-
-        switch (currentRoomType)
-        {
-            case RoomTypeName.OneHorizontal:
-            case RoomTypeName.OneHorizontalAndAllVertical:
-                if (needDoor == "LeftDoor" || needDoor == "RightDoor")
-                {
-                    newRotation = new Vector3(0, 180f, 0);      //横向翻转
-
-                    newDoorFlags ^= DoorFlags.Left;      //将这两个布尔的值互换
-                    newDoorFlags ^= DoorFlags.Right;
-                }
-                break;
-
-            case RoomTypeName.OneVertical:
-            case RoomTypeName.AllHorizontalAndOneVertical:
-                if (needDoor == "UpDoor" || needDoor == "DownDoor")
-                {
-                    newRotation = new Vector3(180f, 0, 0);      //竖向翻转
-
-                    newDoorFlags ^= DoorFlags.Up;
-                    newDoorFlags ^= DoorFlags.Down;
-                }
-                break;
-
-            case RoomTypeName.OneHorizontalAndOneVertical:
-                if (needDoor == "LeftDoor" || needDoor == "RightDoor")
-                {
-                    newRotation = new Vector3(0, 180f, 0);
-                    
-                    newDoorFlags ^= DoorFlags.Left;
-                    newDoorFlags ^= DoorFlags.Right;
-                }
-
-                else if (needDoor == "UpDoor" || needDoor == "DownDoor")
-                {
-                    newRotation = new Vector3(180f, 0, 0);
-                    
-                    newDoorFlags ^= DoorFlags.Up;
-                    newDoorFlags ^= DoorFlags.Down;
-                }
-                break;
-
-            default:
-                break;
-        }
-
-
-        if (newRotation != Vector3.zero)    //如果房间进行过旋转时
-        {
-            m_DoorFlags = newDoorFlags;     //赋值给常驻的旗帜
-
-            transform.rotation = Quaternion.Euler(newRotation);     //改变房间旋转角度
-        }
-    }
 
 
 
@@ -263,9 +177,6 @@ public class RoomType : MonoBehaviour
     #endregion
 
     #region Setters
-    public void SetIsRotate(bool isTrue)
-    {
-        m_isRotate = isTrue;
-    }
+
     #endregion
 }
