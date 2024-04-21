@@ -9,16 +9,15 @@ using UnityEngine.AddressableAssets;
 public class RoomGenerator : MonoBehaviour
 {
     public SO_RoomKeys RoomKeys;
-    public GameObject BlockDoorBarrel;
     public Transform FatherOfAllRooms;      //所有生成的房间的父物体，为了整洁美观
-    public LayerMask roomLayerMask;
+    public LayerMask roomLayerMask;         //房间的图层
     
 
     //储存加载过的房间的坐标和物体，用于检查是否有连接的门
     public Dictionary<Vector2, GameObject> GeneratedRoomDict = new Dictionary<Vector2, GameObject>();
 
 
-
+    //限制墙壁的大小，可根据难度的不同调整
     public float MaximumXPos = 35f;
     public float MaximumYPos = 35f;
 
@@ -26,11 +25,16 @@ public class RoomGenerator : MonoBehaviour
     //储存加载过的房间的名字和物体，用于异步加载的检查
     Dictionary<string, GameObject> m_RoomDict;
 
+    //随机生成的数（用于新的房间生成的索引）
+    int m_RandomGeneratedNum = -1;          
 
-    int m_RandomGeneratedNum = -1;          //随机生成的数（用于新的房间生成的索引）
-
-
+    //表示当前房间
     Transform m_CurrentRoomTransform;
+
+    //运用Physics2D检查重复坐标时需要的X和Y的值
+    const float m_PhysicsCheckingXPos = 15f;
+    const float m_PhysicsCheckingYPos = 10f;
+
 
     //用于生成挡住玩家进入门的障碍物的坐标
     Vector2 m_BlockUpDoor = new Vector2(0f, 3.7f);
@@ -48,8 +52,14 @@ public class RoomGenerator : MonoBehaviour
     }
 
 
+    private void Start()
+    {
+        //自动设置层级
+        //roomLayerMask = LayerMask.GetMask("OnlyTriggerPlayerAndEnemy");
+    }
 
 
+    //生成房间
     public void GenerateRoom(Transform currentRoom, RoomType currentRoomType)
     {
         m_CurrentRoomTransform = currentRoom;
@@ -75,7 +85,7 @@ public class RoomGenerator : MonoBehaviour
             if (CanGenerateRoomAtPosition(currentRoomTransform.position, offset))
             {
                 //如果目标位置为空，则生成房间
-                GenerateSuitableRoom(newRoomPos, neededDoorName);     //如果所有条件都满足，则生成合适的房间
+                GenerateSuitableRoom(newRoomPos, neededDoorName);
             }
 
             else
@@ -89,6 +99,7 @@ public class RoomGenerator : MonoBehaviour
     }
 
 
+    //运用物理函数检查要生成的坐标是否已经有房间了
     private bool IsPositionEmpty(Vector2 positionToCheck, Vector2 roomSize)
     {
         //第一个参数为中心点，第二个参数为正方形大小，第三个参数为角度，第四个参数为检测的目标层级
@@ -97,27 +108,19 @@ public class RoomGenerator : MonoBehaviour
     }
 
 
-    private bool CanGenerateRoomAtPosition(Vector2 curremtRoomPos, Vector2 offset)
+    private bool CanGenerateRoomAtPosition(Vector2 currentRoomPos, Vector2 offset)
     {
-        Vector2 newRoomPos = curremtRoomPos + offset;
+        Vector2 newRoomPos = currentRoomPos + offset;
 
         //以目标点（上面的newRoomPos）为中心点开始的长方形大小
-        Vector2 roomSize = new Vector2(15f, 10f);
+        Vector2 roomSize = new Vector2(m_PhysicsCheckingXPos, m_PhysicsCheckingYPos);
 
         //检查这个长方形大小里是否有房间图层
-        if (IsPositionEmpty(newRoomPos, roomSize))
-        {
-            return true;
-        }
-
-        else
-        {
-            return false;
-        }
+        return IsPositionEmpty(newRoomPos, roomSize);     
     }
 
 
-
+    //检查参数中坐标对应的房间是否有连接当前房间的门
     private void CheckRequiredDoorAtOverlapPosition(Vector2 checkPos, Transform currentRoomTransform, string neededDoorName)
     {
         if (GeneratedRoomDict.ContainsKey(checkPos))
@@ -160,14 +163,14 @@ public class RoomGenerator : MonoBehaviour
                     };
 
                     //在指定的门前生成障碍物
-                    Instantiate(BlockDoorBarrel, (Vector2)currentRoomTransform.position + blockObjectPos, Quaternion.identity, currentRoomTransform);
+                    EnvironmentManager.Instance.GenerateBarrelToBlockDoor(currentRoomTransform, (Vector2)currentRoomTransform.position + blockObjectPos);
                 }
             }
         }
     }
 
 
-
+    //异步加载
     private async Task<GameObject> LoadRoomAsync(string name)
     {
         //如果字典里已经有房间了，则直接返回
@@ -230,7 +233,7 @@ public class RoomGenerator : MonoBehaviour
         int attemptCount = 0;
         const int maxAttempts = 50;     //最大尝试次数
 
-        while (!isRoomPlaced && attemptCount < maxAttempts)     //生成房间次数大于200次后强制返回，防止出现无限循环
+        while (!isRoomPlaced && attemptCount < maxAttempts)     //生成房间次数大于50次后强制返回，防止出现无限循环
         {
             attemptCount++;
 
@@ -295,7 +298,7 @@ public class RoomGenerator : MonoBehaviour
     }
 
 
-
+    //检查参数中房间类型脚本，从而确定房间是否有需要的门
     private bool HasRequiredDoor(RoomType roomType, string neededDoorName)
     {
         DoorFlags newDoorFlags = roomType.GetDoorFlags();
@@ -311,6 +314,7 @@ public class RoomGenerator : MonoBehaviour
     }
 
 
+    //检查要生成的房间的坐标是否超出了限制墙壁
     private bool CheckIfBreakMaximumPos(Transform currentRoomTransform, Vector2 newRoomPos)
     {
         //如果要生成的房间的坐标超出了限制墙壁时，则在进入那个房间的门口处生成障碍物阻止玩家前进
@@ -319,7 +323,7 @@ public class RoomGenerator : MonoBehaviour
             //Debug.Log("Cannot generate new room at this position: " + newRoomPos);
 
             Vector2 blockObjectPos = newRoomPos.x <= 0 ? m_BlockLeftDoor : m_BlockRightDoor;
-            Instantiate(BlockDoorBarrel, (Vector2)currentRoomTransform.position + blockObjectPos, Quaternion.identity, currentRoomTransform);
+            EnvironmentManager.Instance.GenerateBarrelToBlockDoor(currentRoomTransform, (Vector2)currentRoomTransform.position + blockObjectPos);
 
             return true;
         }
@@ -327,15 +331,13 @@ public class RoomGenerator : MonoBehaviour
         else if (Mathf.Abs(newRoomPos.y) >= MaximumYPos)
         {
             Vector2 blockObjectPos = newRoomPos.y <= 0 ? m_BlockDownDoor : m_BlockUpDoor;
-            Instantiate(BlockDoorBarrel, (Vector2)currentRoomTransform.position + blockObjectPos, Quaternion.identity, currentRoomTransform);
+            EnvironmentManager.Instance.GenerateBarrelToBlockDoor(currentRoomTransform, (Vector2)currentRoomTransform.position + blockObjectPos);
 
             return true;
         }
 
         return false;
     }
-
-
 
 
     #region Getters

@@ -1,5 +1,6 @@
 using Cinemachine;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 
@@ -8,7 +9,7 @@ public class RootRoomController : MonoBehaviour
     public float HiddenTransparency = 0.01f;
 
 
-    SpriteRenderer[] m_AllSprites;
+    List<SpriteRenderer> m_AllSprites;
 
     DoorController m_DoorInsideThisRoom;
     RoomGenerator m_RoomManager;
@@ -26,7 +27,7 @@ public class RootRoomController : MonoBehaviour
     private void Awake()
     {
         //获取该物体以及所有子物体的精灵图组件
-        m_AllSprites = GetComponentsInChildren<SpriteRenderer>();
+        m_AllSprites = new List<SpriteRenderer>(GetComponentsInChildren<SpriteRenderer>() );
 
         m_DoorInsideThisRoom = GetComponentInChildren<DoorController>();
 
@@ -80,10 +81,7 @@ public class RootRoomController : MonoBehaviour
             //房间周围生成过一次房间后就不会再生成了
             if (!m_HasGeneratedRoom)
             {
-                m_RoomManager.GenerateRoom(transform, m_RoomType);  //每当玩家进入房间，则在当前房间周围生成新的房间
-
-                //生成完房间后再次获取所有精灵图，防止新生成的木桶没有变暗
-                m_AllSprites = GetComponentsInChildren<SpriteRenderer>();
+                m_RoomManager.GenerateRoom(transform, m_RoomType);  //当玩家进入房间时，在当前房间周围生成新的房间
             }         
         }
     }
@@ -119,6 +117,20 @@ public class RootRoomController : MonoBehaviour
             var tempColor = sprite.color;
             tempColor.a = alphaVal;
             sprite.color = tempColor;
+        }
+    }
+
+
+    //添加新的精灵图到列表
+    public void AddNewSpriteRenderers()
+    {
+        SpriteRenderer[] newSprites = GetComponentsInChildren<SpriteRenderer>();
+        foreach(var sprite in newSprites)
+        {
+            if(!m_AllSprites.Contains(sprite) )
+            {
+                m_AllSprites.Add(sprite);
+            }
         }
     }
 

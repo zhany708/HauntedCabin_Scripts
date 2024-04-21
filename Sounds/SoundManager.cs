@@ -28,14 +28,18 @@ public class SoundManager : MonoBehaviour
 
     private void Awake()
     {
-        if (Instance != null)
+        //单例模式
+        if (Instance == null)
         {
-            Destroy(gameObject);
-            return;
+            Instance = this;
         }
 
-        Instance = this;
-    
+        else if (Instance != this)
+        {
+            Destroy(gameObject);
+        }
+
+
         //初始化（添加两个音频源）
         m_MusicSource = gameObject.AddComponent<AudioSource>();
         m_SfxSource = gameObject.AddComponent<AudioSource>();

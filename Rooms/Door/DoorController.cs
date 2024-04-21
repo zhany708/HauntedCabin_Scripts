@@ -7,6 +7,7 @@ public class DoorController : MonoBehaviour
 {
     public Animator[] DoorAnimators;
     public GameObject[] EnemyObjects;
+    public LayerMask furnitureLayerMask;
     public Collider2D RoomTrigger {  get; private set; }
 
 
@@ -23,6 +24,11 @@ public class DoorController : MonoBehaviour
 
     RootRoomController m_MainRoom; 
     RandomPosition m_EnemySpwanPos;
+
+
+    //运用Physics2D检查重复坐标时需要的X和Y的值
+    const float m_PhysicsCheckingXPos = 1f;
+    const float m_PhysicsCheckingYPos = 2.5f;
 
 
     bool m_IsRootRoom;
@@ -49,8 +55,11 @@ public class DoorController : MonoBehaviour
 
         if (EnemyObjects.Length != 0)   //如果房间有怪物
         {
-            //生成的x范围为房间坐标的x加减5，生成的y范围为房间坐标的y加减2
-            m_EnemySpwanPos = new RandomPosition(new Vector2(m_MainRoom.transform.position.x - 5, m_MainRoom.transform.position.y - 2), new Vector2(m_MainRoom.transform.position.x + 5, m_MainRoom.transform.position.y + 2));
+            //敌人生成的x范围为房间坐标的x加减7；生成的y范围为房间坐标的y加1.5，减4
+            Vector2 leftDownPos = new Vector2(m_MainRoom.transform.position.x - 7, m_MainRoom.transform.position.y - 4);
+            Vector2 rightTopPos = new Vector2(m_MainRoom.transform.position.x + 7, m_MainRoom.transform.position.y + 1.5f);
+
+            m_EnemySpwanPos = new RandomPosition(leftDownPos, rightTopPos);
         }
     }
 
@@ -70,6 +79,9 @@ public class DoorController : MonoBehaviour
         HasGeneratedEvent = false;
         HasDeactivateEvent = false;
         EnemyCount = 0;
+
+        //自动给所有此脚本中的的层级赋值
+        furnitureLayerMask = LayerMask.GetMask("Furniture");
     }
 
 
@@ -158,12 +170,32 @@ public class DoorController : MonoBehaviour
 
 
 
-
+    //需要做的：用Physics2D.Oberlap检测怪物即将生成的坐标是否跟家具重合，如果重合则重新生成坐标
     private void GenerateEnemy()
     {
         if (EnemyObjects.Length != 0)   //如果房间有怪物
         {
             List<Vector2> enemySpawnList = m_EnemySpwanPos.GenerateMultiRandomPos(EnemyObjects.Length);     //根据怪物数量生成随机坐标list
+
+            //检查要生成的坐标处是否有家具
+            Vector2 checkSize = new Vector2(m_PhysicsCheckingXPos, m_PhysicsCheckingYPos);      //物理检测的大小
+            bool isCheckDone = false;     //表示是否检查完
+            while(!isCheckDone)
+            {
+                isCheckDone = true;     //重置布尔
+
+                for (int i = 0; i < enemySpawnList.Count; i++)
+                {
+                    if (!IsPositionEmpty(enemySpawnList[i], checkSize))
+                    {
+                        enemySpawnList[i] = m_EnemySpwanPos.GenerateSingleRandomPos();
+
+                        isCheckDone = false;        //设置布尔，从而继续检查
+                    }
+                }
+            }
+           
+
 
             for (int i = 0; i < EnemyObjects.Length; i++)
             {
@@ -173,6 +205,15 @@ public class DoorController : MonoBehaviour
                 enemy.GetComponentInChildren<Stats>().SetCurrentHealth(enemy.GetComponentInChildren<Stats>().MaxHealth);    //生成敌人后重置生命，否则重新激活的敌人生命依然为0
             }
         }
+    }
+
+
+    //运用物理函数检查要生成的坐标是否有家具
+    private bool IsPositionEmpty(Vector2 positionToCheck, Vector2 checkSize)
+    {
+        //第一个参数为中心点，第二个参数为长方形大小，第三个参数为角度，第四个参数为检测的目标层级
+        Collider2D overlapCheck = Physics2D.OverlapBox(positionToCheck, checkSize, 0f, furnitureLayerMask);
+        return overlapCheck == null;
     }
 
 
