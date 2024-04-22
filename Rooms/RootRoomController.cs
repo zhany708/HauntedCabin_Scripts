@@ -114,9 +114,13 @@ public class RootRoomController : MonoBehaviour
     {
         foreach(var sprite in m_AllSprites)
         {
-            var tempColor = sprite.color;
-            tempColor.a = alphaVal;
-            sprite.color = tempColor;
+            //检查精灵图是否为空，防止报错
+            if (sprite != null)
+            {
+                var tempColor = sprite.color;
+                tempColor.a = alphaVal;
+                sprite.color = tempColor;
+            }          
         }
     }
 

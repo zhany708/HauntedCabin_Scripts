@@ -122,7 +122,7 @@ public class Enemy : MonoBehaviour
         AttackTimer = new Timer(enemyData.AttackInterval);      //用攻击间隔初始化计时器
 
         //根据所处房间初始化随机生成坐标脚本（transform.localPosition返回的永远是相对于父物体的坐标）
-        PatrolRandomPos = new RandomPosition(Parameter.PatrolPoints[0].transform.localPosition + (Vector3)SpawnPos, Parameter.PatrolPoints[1].transform.localPosition + (Vector3)SpawnPos);
+        PatrolRandomPos = new RandomPosition(Parameter.PatrolPoints[0].transform.localPosition + (Vector3)SpawnPos, Parameter.PatrolPoints[1].transform.localPosition + (Vector3)SpawnPos, 1f);
         //Debug.Log("The LeftDown point is " + (Parameter.PatrolPoints[0].transform.localPosition + (Vector3)SpawnPos) );
 
         EnemyFlip = new Flip(transform);

@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using ZhangYu.Utilities;
@@ -59,7 +58,7 @@ public class DoorController : MonoBehaviour
             Vector2 leftDownPos = new Vector2(m_MainRoom.transform.position.x - 7, m_MainRoom.transform.position.y - 4);
             Vector2 rightTopPos = new Vector2(m_MainRoom.transform.position.x + 7, m_MainRoom.transform.position.y + 1.5f);
 
-            m_EnemySpwanPos = new RandomPosition(leftDownPos, rightTopPos);
+            m_EnemySpwanPos = new RandomPosition(leftDownPos, rightTopPos, 1f);
         }
     }
 
@@ -132,24 +131,20 @@ public class DoorController : MonoBehaviour
     }
 
 
-
-    public void OpenDoors()
+    //用于设置门的动画器
+    private void SetDoorState(bool isOpen)
     {
-        for (int i = 0; i < DoorAnimators.Length; i++)
+        foreach(Animator animator in DoorAnimators)
         {
-            DoorAnimators[i].SetBool("IsOpen", true);      //将门打开
-            DoorAnimators[i].SetBool("IsClose", false);
+            animator.SetBool("IsOpen", isOpen);
+            animator.SetBool("IsClose", isOpen);
         }
     }
 
-    private void CloseDoors()
-    {
-        for (int i = 0; i < DoorAnimators.Length; i++)
-        {
-            DoorAnimators[i].SetBool("IsOpen", false);      //将门关闭
-            DoorAnimators[i].SetBool("IsClose", true);
-        }
-    }
+    public void OpenDoors() => SetDoorState(true);
+
+    private void CloseDoors() => SetDoorState(false);
+
 
 
 
@@ -170,30 +165,15 @@ public class DoorController : MonoBehaviour
 
 
 
-    //需要做的：用Physics2D.Oberlap检测怪物即将生成的坐标是否跟家具重合，如果重合则重新生成坐标
+    //生成敌人后，用Physics2D.Oberlap检测怪物即将生成的坐标是否跟家具重合，如果重合则重新生成坐标
     private void GenerateEnemy()
     {
         if (EnemyObjects.Length != 0)   //如果房间有怪物
         {
             List<Vector2> enemySpawnList = m_EnemySpwanPos.GenerateMultiRandomPos(EnemyObjects.Length);     //根据怪物数量生成随机坐标list
 
-            //检查要生成的坐标处是否有家具
-            Vector2 checkSize = new Vector2(m_PhysicsCheckingXPos, m_PhysicsCheckingYPos);      //物理检测的大小
-            bool isCheckDone = false;     //表示是否检查完
-            while(!isCheckDone)
-            {
-                isCheckDone = true;     //重置布尔
-
-                for (int i = 0; i < enemySpawnList.Count; i++)
-                {
-                    if (!IsPositionEmpty(enemySpawnList[i], checkSize))
-                    {
-                        enemySpawnList[i] = m_EnemySpwanPos.GenerateSingleRandomPos();
-
-                        isCheckDone = false;        //设置布尔，从而继续检查
-                    }
-                }
-            }
+            //生成完坐标列表后。检查列表中是否有跟家具重合的坐标
+            CheckIfCollideFurniture(enemySpawnList);
            
 
 
@@ -205,6 +185,40 @@ public class DoorController : MonoBehaviour
                 enemy.GetComponentInChildren<Stats>().SetCurrentHealth(enemy.GetComponentInChildren<Stats>().MaxHealth);    //生成敌人后重置生命，否则重新激活的敌人生命依然为0
             }
         }
+    }
+
+
+    //检查列表中的所有坐标处是否有家具
+    private void CheckIfCollideFurniture(List<Vector2> enemySpawnPosList)
+    {       
+        Vector2 checkSize = new Vector2(m_PhysicsCheckingXPos, m_PhysicsCheckingYPos);      //物理检测的大小
+
+        float adaptiveTolerance = m_EnemySpwanPos.GetOverlapTolerance();        //获取检查重复的距离
+        int attemptCount = 0;       //用于防止进入无限循环的变量
+
+
+        while (attemptCount < 100)      //确保不超过最大尝试次数
+        {
+            bool isOverlap = false;
+
+            for (int i = 0; i < enemySpawnPosList.Count; i++)
+            {
+                if (!IsPositionEmpty(enemySpawnPosList[i], checkSize))
+                {
+                    enemySpawnPosList[i] = m_EnemySpwanPos.GenerateNonOverlappingPosition(enemySpawnPosList);
+
+                    m_EnemySpwanPos.SetOverlapTolerance(adaptiveTolerance);     //设置新的检查重复的距离
+
+                    isOverlap = true;  //设置布尔以继续检查
+                }
+            }
+
+            if (!isOverlap) break;  //当没有重复时则退出循环
+
+            attemptCount++;
+            adaptiveTolerance -= 0.1f;  //如果实在难以生成不会重复的坐标的话，减少检查重复的距离
+        }
+
     }
 
 
