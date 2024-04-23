@@ -10,7 +10,7 @@ public class WeaponPickUp : MonoBehaviour
 
     PickupWeaponPanel weaponPickupPanel;
 
-
+    bool m_IsPanelOpen = false;     //用于防止玩家在UI显示时重新触发拾取武器的触发器导致的重复打开UI
 
 
 
@@ -45,7 +45,7 @@ public class WeaponPickUp : MonoBehaviour
     //玩家碰撞地上的武器后，显示武器拾取UI
     private IEnumerator ProcessWeaponPickup(Collider2D other)
     {
-        if (other.gameObject.CompareTag("Player"))
+        if (other.gameObject.CompareTag("Player") && !m_IsPanelOpen)
         {
             Player player = other.gameObject.GetComponentInParent<Player>();    //由于碰撞的是玩家的combat子物体，因此要用InParent
 
@@ -60,7 +60,19 @@ public class WeaponPickUp : MonoBehaviour
 
                 //将角色脚本和武器物体传递给UI，用于不同的按钮功能
                 weaponPickupPanel.SetPlayerAndWeapon(player, WeaponPreFab, this);
+
+                //在传递此脚本给UI后，再设置布尔值
+                m_IsPanelOpen = true;
             }
         }
     }
+
+
+
+    #region Setters
+    public void SetIsPanelOpen(bool isOpen)
+    {
+        m_IsPanelOpen=isOpen;
+    }
+    #endregion
 }

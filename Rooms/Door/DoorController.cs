@@ -6,7 +6,7 @@ public class DoorController : MonoBehaviour
 {
     public Animator[] DoorAnimators;
     public GameObject[] EnemyObjects;
-    public LayerMask furnitureLayerMask;
+    public LayerMask FurnitureLayerMask;
     public Collider2D RoomTrigger {  get; private set; }
 
 
@@ -25,9 +25,9 @@ public class DoorController : MonoBehaviour
     RandomPosition m_EnemySpwanPos;
 
 
-    //运用Physics2D检查重复坐标时需要的X和Y的值
+    //运用Physics2D检查重复坐标时需要的X和Y的值（火蝙蝠Y轴上有0.5的偏差，因为坐标点位于脚底）
     const float m_PhysicsCheckingXPos = 1f;
-    const float m_PhysicsCheckingYPos = 2.5f;
+    const float m_PhysicsCheckingYPos = 4f;
 
 
     bool m_IsRootRoom;
@@ -54,9 +54,9 @@ public class DoorController : MonoBehaviour
 
         if (EnemyObjects.Length != 0)   //如果房间有怪物
         {
-            //敌人生成的x范围为房间坐标的x加减7；生成的y范围为房间坐标的y加1.5，减4
-            Vector2 leftDownPos = new Vector2(m_MainRoom.transform.position.x - 7, m_MainRoom.transform.position.y - 4);
-            Vector2 rightTopPos = new Vector2(m_MainRoom.transform.position.x + 7, m_MainRoom.transform.position.y + 1.5f);
+            //敌人生成的x范围为房间坐标的x加减6；生成的y范围为房间坐标的y加1.5，减4
+            Vector2 leftDownPos = new Vector2(m_MainRoom.transform.position.x - 6, m_MainRoom.transform.position.y - 4);
+            Vector2 rightTopPos = new Vector2(m_MainRoom.transform.position.x + 6, m_MainRoom.transform.position.y + 1.5f);
 
             m_EnemySpwanPos = new RandomPosition(leftDownPos, rightTopPos, 1f);
         }
@@ -80,7 +80,7 @@ public class DoorController : MonoBehaviour
         EnemyCount = 0;
 
         //自动给所有此脚本中的的层级赋值
-        furnitureLayerMask = LayerMask.GetMask("Furniture");
+        FurnitureLayerMask = LayerMask.GetMask("Furniture");
     }
 
 
@@ -137,7 +137,7 @@ public class DoorController : MonoBehaviour
         foreach(Animator animator in DoorAnimators)
         {
             animator.SetBool("IsOpen", isOpen);
-            animator.SetBool("IsClose", isOpen);
+            animator.SetBool("IsClose", !isOpen);
         }
     }
 
@@ -225,8 +225,8 @@ public class DoorController : MonoBehaviour
     //运用物理函数检查要生成的坐标是否有家具
     private bool IsPositionEmpty(Vector2 positionToCheck, Vector2 checkSize)
     {
-        //第一个参数为中心点，第二个参数为长方形大小，第三个参数为角度，第四个参数为检测的目标层级
-        Collider2D overlapCheck = Physics2D.OverlapBox(positionToCheck, checkSize, 0f, furnitureLayerMask);
+        //第一个参数为中心点，第二个参数为长方形大小（沿着中心各延申一半），第三个参数为角度，第四个参数为检测的目标层级
+        Collider2D overlapCheck = Physics2D.OverlapBox(positionToCheck, checkSize, 0f, FurnitureLayerMask);
         return overlapCheck == null;
     }
 

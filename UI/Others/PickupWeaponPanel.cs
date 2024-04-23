@@ -15,6 +15,7 @@ public class PickupWeaponPanel : BasePanel
     TextMeshProUGUI m_ItemNameText;
     //要拾取的武器物体
     GameObject m_WeaponPrefab;
+
     //玩家脚本
     Player m_Player;
     //拾取武器脚本
@@ -66,6 +67,8 @@ public class PickupWeaponPanel : BasePanel
 
         //界面关闭后允许玩家攻击
         playerInputHandler.SetCanDetectAttack(true);
+
+        m_WeaponPickup.SetIsPanelOpen(false);
     }
 
 
