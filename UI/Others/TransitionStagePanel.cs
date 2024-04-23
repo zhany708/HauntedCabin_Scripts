@@ -58,7 +58,7 @@ public class TransitionStagePanel : BasePanel
             {
                 Destroy(gameObject);
 
-                UIManager.Instance.ReleaseUI(panelName);
+                UIManager.Instance.ReleasePrefab(panelName);
             }
         );
     }

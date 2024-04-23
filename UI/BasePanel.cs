@@ -61,7 +61,7 @@ public class BasePanel : MonoBehaviour
         Destroy(gameObject);
 
         //释放物体和内存
-        UIManager.Instance.ReleaseUI(panelName);
+        UIManager.Instance.ReleasePrefab(panelName);
 
 
         //从字典中移除，表示界面没打开

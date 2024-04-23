@@ -5,10 +5,8 @@ using System.Threading.Tasks;
 using System;
 
 
-public class SoundManager : MonoBehaviour
+public class SoundManager : ManagerTemplate<SoundManager>
 {
-    public static SoundManager Instance { get; private set; }
-
     public SO_AudioClipKeys AudioClipKeys;
 
     public float MusicVolume {  get; private set; }               //背景音乐的音量
@@ -19,6 +17,7 @@ public class SoundManager : MonoBehaviour
     AudioSource m_MusicSource;  //用于BGM
     AudioSource m_SfxSource;    //用于音效
 
+    //由于音频管理器加载的文件类型是音频，不是游戏物体，所以需要有自己的字典
     Dictionary<string, AudioClip> m_AudioDict;
 
 
@@ -26,18 +25,9 @@ public class SoundManager : MonoBehaviour
 
 
 
-    private void Awake()
+    protected override void Awake()
     {
-        //单例模式
-        if (Instance == null)
-        {
-            Instance = this;
-        }
-
-        else if (Instance != this)
-        {
-            Destroy(gameObject);
-        }
+        base.Awake();
 
 
         //初始化（添加两个音频源）
@@ -55,7 +45,6 @@ public class SoundManager : MonoBehaviour
 
         await PlayBGMAsync(AudioClipKeys.StopForAMoment, true, MusicVolume);
     }
-
 
 
 

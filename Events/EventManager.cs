@@ -1,11 +1,9 @@
 using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using UnityEngine;
-using UnityEngine.AddressableAssets;
 
 
-public class EventManager : MonoBehaviour
+
+public class EventManager : ManagerTemplate<EventManager>
 {
     [SerializeField]
     public SO_EventKeys EventKeys;
@@ -20,8 +18,7 @@ public class EventManager : MonoBehaviour
     GameObject m_EventPrefab;       //事件预制件
     Vector2 m_RoomPosition;
 
-    //储存加载过的事件
-    Dictionary<string, GameObject> m_EventDict;
+
 
     int m_EventCount;                 //生成过多少房间
     int m_EnterSecondStageCount;      //进入二阶段所需的房间数
@@ -29,11 +26,11 @@ public class EventManager : MonoBehaviour
 
 
 
-    private void Awake()
+    protected override void Awake()
     {
-        m_Animator = GetComponent<Animator>();
+        base.Awake();
 
-        m_EventDict = new Dictionary<string, GameObject>();
+        m_Animator = GetComponent<Animator>();
     }
 
     private async void Start()
@@ -57,70 +54,7 @@ public class EventManager : MonoBehaviour
         }
     }
 
-    
-
-
-
-
-
-    private async Task<Event> LoadEventAsync(string name)
-    {
-        
-        //如果字典里已经有事件了，则直接返回
-        if (m_EventDict.TryGetValue(name, out GameObject thisGameObject))
-        {
-            Event eventComponent = thisGameObject.GetComponent<Event>();
-            return eventComponent;
-        }
-        
-
-        //异步加载事件后，获取Event组件，最后返回该组件
-        GameObject loadedEventObject = await Addressables.LoadAssetAsync<GameObject>(name).Task;
-        Event loadedEvent = null;
-        if (loadedEventObject != null)
-        {
-            //从物体上获取Event组件
-            loadedEvent = loadedEventObject.GetComponent<Event>();
-
-            //将Event变量储存进字典
-            m_EventDict[name] = loadedEventObject;
-        }
-
-        else
-        {
-            Debug.LogError("Failed to load event: " + name);
-        }
-
-        return loadedEvent;
-    }
-
-
-    //在Addressables里释放事件，只有这样才能释放内存
-    public void ReleaseEvent(string key)
-    {
-        if (key.EndsWith("(Clone)") )
-        {
-            //检查是否有“克隆”后缀，如果有的话减去后缀。（Clone）刚好有7个字符
-            key = key.Substring(0, key.Length - 7);
-        }
-
-
-        if (m_EventDict.TryGetValue(key, out GameObject eventPrefab))
-        {
-            Addressables.Release(eventPrefab);
-
-            //从字典中移除变量
-            m_EventDict.Remove(key);
-
-            Debug.Log("Event released and removed from dictionary: " + key);
-        }
-
-        else
-        {
-            Debug.LogError("This event is not loaded yet, cannot release: " + key);
-        }
-    }
-
+ 
 
 
 
@@ -133,9 +67,11 @@ public class EventManager : MonoBehaviour
         //确认随机索引后尝试异步加载事件
         try
         {
-            Event loadedEvent = await LoadEventAsync(EventKeys.EvilEventKeys[m_RandomGeneratedNum]);       //异步加载事件
-            if (loadedEvent != null)
+            GameObject loadedEventPrefab = await LoadPrefabAsync(EventKeys.EvilEventKeys[m_RandomGeneratedNum]);       //异步加载事件物体
+            if (loadedEventPrefab != null)
             {
+                Event loadedEvent = loadedEventPrefab.GetComponent<Event>();
+
                 m_EventPrefab = ParticlePool.Instance.GetObject(loadedEvent.EventData.EventPrefab);        //使用对象池生成事件预制件
             }
 
@@ -182,7 +118,7 @@ public class EventManager : MonoBehaviour
                 eventName = eventName.Substring(0, eventName.Length - 7);
             }
 
-            ReleaseEvent(eventName);
+            ReleasePrefab(eventName);
         }
 
         else

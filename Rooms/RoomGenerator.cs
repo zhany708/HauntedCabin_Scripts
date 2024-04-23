@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using UnityEngine;
-using UnityEngine.AddressableAssets;
 
 
 
-public class RoomGenerator : MonoBehaviour
+public class RoomGenerator : ManagerTemplate<RoomGenerator>
 {
     public SO_RoomKeys RoomKeys;
     public Transform FatherOfAllRooms;      //所有生成的房间的父物体，为了整洁美观
@@ -22,8 +20,6 @@ public class RoomGenerator : MonoBehaviour
     public float MaximumYPos = 35f;
 
 
-    //储存加载过的房间的名字和物体，用于异步加载的检查
-    Dictionary<string, GameObject> m_RoomDict;
 
     //随机生成的数（用于新的房间生成的索引）
     int m_RandomGeneratedNum = -1;          
@@ -43,13 +39,6 @@ public class RoomGenerator : MonoBehaviour
     Vector2 m_BlockRightDoor = new Vector2(7.55f, -0.7f);
 
 
-
-
-    private void Awake()
-    {
-        //初始化字典
-        m_RoomDict = new Dictionary<string, GameObject>();
-    }
 
 
     private void Start()
@@ -169,61 +158,7 @@ public class RoomGenerator : MonoBehaviour
         }
     }
 
-
-    //异步加载
-    private async Task<GameObject> LoadRoomAsync(string name)
-    {
-        //如果字典里已经有房间了，则直接返回
-        if (m_RoomDict.TryGetValue(name, out GameObject val))
-        {
-            return val;
-        }
-
-
-        //异步加载房间后，检查物体是否存在
-        GameObject loadedRoomObject = await Addressables.LoadAssetAsync<GameObject>(name).Task;
-        if (loadedRoomObject != null)
-        {
-            //将房间物体储存进字典
-            m_RoomDict[name] = loadedRoomObject;
-
-            return loadedRoomObject;
-        }
-
-        else
-        {
-            Debug.LogError("Failed to load room: " + name);
-            return null;
-        }
-    }
-
-
-    //在Addressables里释放房间，只有这样才能释放内存
-    public void ReleaseRoom(string key)
-    {
-        if (key.EndsWith("(Clone)"))
-        {
-            //检查是否有“克隆”后缀，如果有的话减去后缀。（Clone）刚好有7个字符
-            key = key.Substring(0, key.Length - 7);
-        }
-
-
-        if (m_RoomDict.TryGetValue(key, out GameObject roomPrefab))
-        {
-            Addressables.Release(roomPrefab);
-
-            //从字典中移除房间物体
-            m_RoomDict.Remove(key);
-
-            Debug.Log("Room released and removed from dictionary: " + key);
-        }
-
-        else
-        {
-            Debug.LogError("This room is not loaded yet, cannot release: " + key);
-        }
-    }
-
+    
 
 
     private async void GenerateSuitableRoom(Vector2 newRoomPos, string neededDoorName)
@@ -243,7 +178,7 @@ public class RoomGenerator : MonoBehaviour
             //确认随机索引后尝试异步加载房间
             try
             {
-                GameObject loadedRoom = await LoadRoomAsync(RoomKeys.FirstFloorRoomKeys[m_RandomGeneratedNum] );       //异步加载事件
+                GameObject loadedRoom = await LoadPrefabAsync(RoomKeys.FirstFloorRoomKeys[m_RandomGeneratedNum] );       //异步加载事件
                 if (loadedRoom != null)
                 {
                     //加载成功后，将房间生成出来
@@ -287,7 +222,7 @@ public class RoomGenerator : MonoBehaviour
             else
             {
                 Destroy(newRoom);
-                ReleaseRoom(newRoom.name);
+                ReleasePrefab(newRoom.name);
             }
         }
 
