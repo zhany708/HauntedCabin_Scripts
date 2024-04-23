@@ -1,73 +1,51 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
-using System.Collections;
+using System.Threading.Tasks;
 
 
 
-public class UIManager
+public class UIManager : MonoBehaviour
 {
-    private static UIManager m_Instance;
-    public static UIManager Instance    //单例模式（整局游戏只存在一个此类的实例）
+    public static UIManager Instance { get; private set; }
+
+
+
+    public Dictionary<string, BasePanel> PanelDict = new Dictionary<string, BasePanel>();      //存放已打开界面的字典（里面存储的都是正在打开的界面）
+    Dictionary<string, GameObject> m_PrefabDict = new Dictionary<string, GameObject>();     //预制件缓存字典
+
+
+    Transform m_UIRoot;     //用于储存所有的UI（为了美观）
+
+
+
+
+
+
+
+
+
+    private void Awake()
     {
-        get
+        //单例模式
+        if (Instance != null && Instance != this)
         {
-            if (m_Instance == null)     //第一次检查
-            {
-                m_Instance = new UIManager();
-            }
-            return m_Instance;
+            Destroy(gameObject);
         }
-    }
 
-
-    private Transform m_UIRoot;
-    public Transform UIRoot     //所有UI的跟节点（最顶层的父物体）
-    {
-        get
+        else
         {
-            if (m_UIRoot == null)
-            {
-                GameObject canvasObject = GameObject.Find("Canvas");
-
-                if (canvasObject != null)
-                {
-                    m_UIRoot = canvasObject.transform;
-                }
-                else
-                {
-                    m_UIRoot = new GameObject("Canvas").transform;
-                }               
-            }
-            return m_UIRoot;
+            Instance = this;
         }
-    }
 
+        //寻找画布物体，没有的话就创建一个
+        GameObject canvasObject = GameObject.Find("Canvas");
+        if (canvasObject == null)
+        {
+            canvasObject = new GameObject("Canvas");
+        }
 
-
-
-    public Dictionary<string, BasePanel> PanelDict;      //存放已打开界面的字典（里面存储的都是正在打开的界面）
-    Dictionary<string, GameObject> m_PrefabDict;     //预制件缓存字典
-
-
-
-
-
-
-
-
-    //构造函数
-    private UIManager()     
-    {
-        InitDicts();
-    }
-
-
-    //初始化字典
-    private void InitDicts()    
-    {
-        PanelDict = new Dictionary<string, BasePanel>();
-        m_PrefabDict = new Dictionary<string, GameObject>();
+        m_UIRoot = canvasObject.transform;
     }
 
 
@@ -76,36 +54,34 @@ public class UIManager
 
 
     //打开界面
-    public IEnumerator OpenPanel(string name)
+    public async Task OpenPanel(string name)
     {
+        //如果界面已经打开，则报错
         if (PanelDict.ContainsKey(name))
         {
             Debug.LogError("This panel is already opened: " + name);
-            yield break;
+            return;
         }
 
-        GameObject panelPrefab;
-        if (!m_PrefabDict.TryGetValue(name, out panelPrefab))
+        //异步加载，随后检查是否加载成功
+        GameObject panelPrefab = await LoadPanelAsync(name);
+        if (panelPrefab == null)
         {
-            //异步加载预制件
-            var handle = Addressables.LoadAssetAsync<GameObject>(name);
-            yield return new WaitUntil(() => handle.IsDone);
+            Debug.LogError("Failed to load panel prefab: " + name);
+            return;
+        }
+        
 
-            if (handle.Status == UnityEngine.ResourceManagement.AsyncOperations.AsyncOperationStatus.Failed)
-            {
-                Debug.LogError("Failed to load the panel prefab: " + name);
-                yield break;
-            }
-
-            panelPrefab = handle.Result;
-            m_PrefabDict[name] = panelPrefab;  //缓存加载的预制件
+        //异步加载后生成物体并获取物体身上的组件
+        GameObject panelObject = GameObject.Instantiate(panelPrefab, m_UIRoot, false);
+        BasePanel panel = panelObject.GetComponent<BasePanel>();
+        if (panel == null)
+        {
+            Debug.LogError("No BasePanel component found on prefab: " + name);
+            return;
         }
 
-
-        GameObject panelObject = GameObject.Instantiate(panelPrefab, UIRoot, false);
-        BasePanel panel = panelObject.GetComponent<BasePanel>();
         PanelDict.Add(name, panel);
-        yield return panel;  //返回UI，用于进一步的处理(可选)
     }
 
 
@@ -137,31 +113,47 @@ public class UIManager
 
 
     //提前加载界面（提前将预制件放入字典，防止卡顿）(跟打开界面函数几乎一模一样，只是少了生成并打开界面的步骤)
-    public IEnumerator InitPanel(string name)
+    public async Task InitPanel(string name)
     {
         if (PanelDict.ContainsKey(name))
         {
             Debug.LogError("This panel is already opened: " + name);
-            yield break;
+            return;
         }
 
-        GameObject panelPrefab;
-        if (!m_PrefabDict.TryGetValue(name, out panelPrefab))
-        {
-            //异步加载预制件
-            var handle = Addressables.LoadAssetAsync<GameObject>(name);
-            yield return new WaitUntil(() => handle.IsDone);
+        await LoadPanelAsync(name);
+    }
 
-            if (handle.Status == UnityEngine.ResourceManagement.AsyncOperations.AsyncOperationStatus.Failed)
+    //异步加载
+    private async Task<GameObject> LoadPanelAsync(string name)
+    {
+        //检查字典里是否有界面，如果有的话直接返回
+        if (!m_PrefabDict.TryGetValue(name, out GameObject panelPrefab))
+        {
+            //异步加载界面
+            var handle = Addressables.LoadAssetAsync<GameObject>(name);
+            await handle.Task;
+
+            //检查异步加载是否成功
+            if (handle.Status == UnityEngine.ResourceManagement.AsyncOperations.AsyncOperationStatus.Succeeded)
             {
-                Debug.LogError("Failed to load the panel prefab: " + name);
-                yield break;
+                panelPrefab = handle.Result;
+
+                //将界面预制件存进字典
+                m_PrefabDict[name] = panelPrefab;
             }
 
-            panelPrefab = handle.Result;
-            m_PrefabDict[name] = panelPrefab;  //缓存加载的预制件
+            else
+            {
+                Debug.LogError($"Failed to load Panel prefab: {name}");
+                return null;
+            }
         }
+
+        return panelPrefab;
     }
+
+
 
 
 

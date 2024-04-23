@@ -24,12 +24,12 @@ public class HealthBar : MonoBehaviour
 
 
 
-    private IEnumerator Start()     //因为需要异步加载UI。所以使用协程而不是void
+    private async void Start()     //因为需要异步加载UI。所以使用async（如果不使用的话，可能会出现还没加载完就接着跑下面的代码的情况）
     {
         //检查UIKeys是否为空且要加载的名字是否存在，随后等待UI加载完毕
         if (UIKeys != null && !string.IsNullOrEmpty(UIKeys.PlayerStatusBarKey) )
         {
-            yield return UIManager.Instance.OpenPanel(UIKeys.PlayerStatusBarKey);    //显示玩家状态栏
+            await UIManager.Instance.OpenPanel(UIKeys.PlayerStatusBarKey);    //显示玩家状态栏
         }
 
         else

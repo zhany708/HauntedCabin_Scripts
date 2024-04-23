@@ -1,20 +1,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemyPool       //用于生成敌人的对象池
+public class EnemyPool : MonoBehaviour       //用于生成敌人的对象池
 {
-    public static EnemyPool Instance
-    {
-        get
-        {
-            if (m_Instance == null)
-            {
-                m_Instance = new EnemyPool();
-            }
-            return m_Instance;
-        }
-    }
-    private static EnemyPool m_Instance;
+    public static EnemyPool Instance { get; private set; }
+
 
     Dictionary<string, Queue<GameObject>> m_EnemyPool = new Dictionary<string, Queue<GameObject>>();
 
@@ -22,46 +12,99 @@ public class EnemyPool       //用于生成敌人的对象池
 
 
 
-    public GameObject GetObject(GameObject prefab, Vector2 spawnPos)
+
+
+
+    private void Awake()
     {
-        GameObject enemyObject;
-
-        if (!m_EnemyPool.ContainsKey(prefab.name) || m_EnemyPool[prefab.name].Count == 0)       //检查池中是否有物体，或物体数量是否为0
+        //单例模式
+        if (Instance != null && Instance != this)
         {
-            enemyObject = GameObject.Instantiate(prefab);
-            PushObject(enemyObject);
-
-            if (m_Pool == null)
-            {
-                m_Pool = new GameObject("EnemyPool");   //生成储存所有池对象的总父物体
-            }
-
-            GameObject m_Child = GameObject.Find(prefab.name);
-            if (!m_Child)
-            {
-                m_Child = new GameObject(prefab.name);     //生成每个池对象的父物体
-                m_Child.transform.SetParent(m_Pool.transform);      //将每个池对象的父物体设置为总父物体的子物体
-            }
-
-            enemyObject.transform.SetParent(m_Child.transform);     //将每个物体设置为池对象的父物体的子物体
+            Destroy(this.gameObject);
         }
 
-        enemyObject = m_EnemyPool[prefab.name].Dequeue();       //按照预制体名获取对象池中的预制体
-        enemyObject.GetComponentInChildren<Enemy>().SetSpawnPos(spawnPos);      //将生成坐标传给敌人，好确定巡逻坐标
-        enemyObject.SetActive(true); 
-        return enemyObject;       
+        else
+        {
+            Instance = this;
+
+            m_Pool = new GameObject("EnemyPool");
+        }
+
     }
 
-    public void PushObject(GameObject prefab)
+
+
+    //获取物体
+    public GameObject GetObject(GameObject prefab)
     {
-        string enemyName = prefab.name.Replace("(Clone)", string.Empty);    //将克隆后缀替换成空
-
-        if (!m_EnemyPool.ContainsKey(enemyName))
+        //检查池中有没有物体，没有的话则新建一个并加进去
+        if (!m_EnemyPool.TryGetValue(prefab.name, out var queue) || queue.Count == 0)
         {
-            m_EnemyPool.Add(enemyName, new Queue<GameObject>());    //查找物体名是否存在于对象池，若不存在则新生成一个
+            var newObject = CreateNewObject(prefab);
+            PushObject(newObject);
         }
-        m_EnemyPool[enemyName].Enqueue(prefab);     //生成后将物体放入对象池
 
-        prefab.SetActive(false);    //放入后取消激活
+        var obj = m_EnemyPool[prefab.name].Dequeue();
+        obj.SetActive(true);
+
+        return obj;
+
+    }
+
+
+
+    private GameObject CreateNewObject(GameObject prefab)
+    {
+        //先找父物体，随后再创建
+        GameObject childContainer = FindOrCreateChildContainer(prefab.name);
+        GameObject obj = Instantiate(prefab, childContainer.transform);
+
+        return obj;
+    }
+
+    //用于寻找或创建子物体的父物体（为了整洁美观）
+    private GameObject FindOrCreateChildContainer(string name)
+    {
+        Transform childTransform = m_Pool.transform.Find(name);
+
+        if (childTransform == null)
+        {
+            GameObject child = new GameObject(name);
+            child.transform.SetParent(m_Pool.transform);
+
+            return child;
+        }
+
+        return childTransform.gameObject;
+    }
+
+
+
+
+
+    //储存物体
+    public bool PushObject(GameObject obj)
+    {
+        if (obj != null)
+        {
+            //去掉物体名字的后缀
+            string name = obj.name.Replace("(Clone)", "").Trim();
+
+            if (!m_EnemyPool.ContainsKey(name))
+            {
+                //如果池中没有物体，则创建一个并加进去
+                m_EnemyPool[name] = new Queue<GameObject>();
+            }
+
+            m_EnemyPool[name].Enqueue(obj);
+
+            //创建完后取消激活
+            obj.SetActive(false);
+            obj.transform.SetParent(FindOrCreateChildContainer(name).transform);
+
+            return true;
+        }
+
+        return false;
     }
 }

@@ -39,7 +39,13 @@ public class E_EvilTelephone : Event
 
 
 
-
+    private void OnDestroy()
+    {       
+        //释放响铃声的音频
+        SoundManager.Instance.ReleaseAudioClip(EventData.AudioClipNames[0]);
+        //释放接电话的音频
+        SoundManager.Instance.ReleaseAudioClip(EventData.AudioClipNames[1]);      
+    }
 
 
     public override void StartEvent()
@@ -66,9 +72,6 @@ public class E_EvilTelephone : Event
             m_AudioSource.Stop();
 
             SoundManager.Instance.PlaySFXAsyncWithAudioSource(m_AudioSource, EventData.AudioClipNames[1], EventData.AudioVolume);
-
-            //释放响铃声的音频
-            SoundManager.Instance.ReleaseAudioClip(EventData.AudioClipNames[0]);
         }
     }
 }

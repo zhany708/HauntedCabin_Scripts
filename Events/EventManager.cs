@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
-using UnityEngine.InputSystem;
+
 
 public class EventManager : MonoBehaviour
 {
@@ -36,7 +36,7 @@ public class EventManager : MonoBehaviour
         m_EventDict = new Dictionary<string, GameObject>();
     }
 
-    private void Start()
+    private async void Start()
     {
         //初始化变量，防止出现Bug
         m_EventCount = 0;
@@ -48,7 +48,7 @@ public class EventManager : MonoBehaviour
         //提前加载进入二阶段的文字，但不实例化   
         if (UIKeys != null && !string.IsNullOrEmpty(UIKeys.TransitionStagePanelKey))
         {
-            StartCoroutine(UIManager.Instance.InitPanel(UIKeys.TransitionStagePanelKey));
+            await UIManager.Instance.InitPanel(UIKeys.TransitionStagePanelKey);
         }
 
         else
@@ -208,12 +208,12 @@ public class EventManager : MonoBehaviour
     }
 
     #region AnimationEvents
-    private void DisplayTransitionStageText()       //用于阶段动画中决定何时显示文字
+    private async void DisplayTransitionStageText()       //用于阶段动画中决定何时显示文字
     {
         //显示转阶段文字
         if (UIKeys != null && !string.IsNullOrEmpty(UIKeys.TransitionStagePanelKey))
         {
-            StartCoroutine(UIManager.Instance.OpenPanel(UIKeys.TransitionStagePanelKey));
+            await UIManager.Instance.OpenPanel(UIKeys.TransitionStagePanelKey);
         }
 
         else

@@ -64,7 +64,7 @@ public class SoundManager : MonoBehaviour
 
 
     //使用Addressables加载音频
-    public async Task<AudioClip> LoadClipAsync(string name)
+    private async Task<AudioClip> LoadClipAsync(string name)
     {
         //如果字典里已经有了，则直接返回
         if (m_AudioDict.TryGetValue(name, out AudioClip clip))

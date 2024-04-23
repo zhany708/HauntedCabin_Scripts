@@ -1,21 +1,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ParticlePool       //用于子弹，特效等的对象池
+public class ParticlePool : MonoBehaviour       //用于子弹，特效等的对象池
 {
-    public static ParticlePool Instance
-    {
-        get
-        {
-            if (m_Instance == null)
-            {
-                m_Instance = new ParticlePool();
-            }
-            return m_Instance;
-        }
-    }
+    public static ParticlePool Instance {  get; private set; }
 
-    private static ParticlePool m_Instance;
+
 
     private Dictionary<string, Queue<GameObject>> m_ParticlePool = new Dictionary<string, Queue<GameObject>>();     //使用字典对不同的物体进行分开存储
 
@@ -23,52 +13,95 @@ public class ParticlePool       //用于子弹，特效等的对象池
 
 
 
-    public GameObject GetObject(GameObject prefab)
+    private void Awake()
     {
-        GameObject _object;
-
-        if (!m_ParticlePool.ContainsKey(prefab.name) || m_ParticlePool[prefab.name].Count == 0)       //检查池中是否有物体，或物体数量是否为0
+        //单例模式
+        if (Instance != null && Instance != this)
         {
-            _object = GameObject.Instantiate(prefab);
-            PushObject(_object);
-
-            if (m_Pool == null)
-            {
-                m_Pool = new GameObject("ParticlePool");   //生成储存所有池对象的总父物体
-            }
-
-            GameObject m_Child = GameObject.Find(prefab.name);
-            if (!m_Child)
-            {
-                m_Child = new GameObject(prefab.name);     //生成每个池对象的父物体
-                m_Child.transform.SetParent(m_Pool.transform);      //将每个父物体设置为总父物体的子物体
-            }
-
-            _object.transform.SetParent(m_Child.transform);     //将每个物体设置为其父物体的子物体
+            Destroy(this.gameObject);
         }
 
-        _object = m_ParticlePool[prefab.name].Dequeue();       //按照预制体名获取对象池中的预制体
-        _object.SetActive(true);
-        return _object;
+        else
+        {
+            Instance = this;
+
+            m_Pool = new GameObject("ParticlePool");
+        }
+
     }
 
-    public bool PushObject(GameObject prefab)
+
+    //获取物体
+    public GameObject GetObject(GameObject prefab)
     {
-        if (prefab != null)
+        //检查池中有没有物体，没有的话则新建一个并加进去
+        if (!m_ParticlePool.TryGetValue(prefab.name, out var queue) || queue.Count == 0)
         {
-            string _name = prefab.name.Replace("(Clone)", string.Empty);    //将克隆后缀替换成空
+            var newObject = CreateNewObject(prefab);
+            PushObject(newObject);
+        }
 
-            if (!m_ParticlePool.ContainsKey(_name))
+        var obj = m_ParticlePool[prefab.name].Dequeue();
+        obj.SetActive(true);
+
+        return obj;
+
+    }
+
+
+
+    private GameObject CreateNewObject(GameObject prefab)
+    {
+        //先找父物体，随后再创建
+        GameObject childContainer = FindOrCreateChildContainer(prefab.name);
+        GameObject obj = Instantiate(prefab, childContainer.transform);
+
+        return obj;
+    }
+
+    //用于寻找或创建子物体的父物体（为了整洁美观）
+    private GameObject FindOrCreateChildContainer(string name)
+    {
+        Transform childTransform = m_Pool.transform.Find(name);
+
+        if (childTransform == null)
+        {
+            GameObject child = new GameObject(name);
+            child.transform.SetParent(m_Pool.transform);
+
+            return child;
+        }
+
+        return childTransform.gameObject;
+    }
+
+
+
+
+
+    //储存物体
+    public bool PushObject(GameObject obj)
+    {
+        if (obj != null)
+        {
+            //去掉物体名字的后缀
+            string name = obj.name.Replace("(Clone)", "").Trim();
+
+            if (!m_ParticlePool.ContainsKey(name))
             {
-                m_ParticlePool.Add(_name, new Queue<GameObject>());    //查找物体名是否存在于对象池，若不存在则新生成一个
+                //如果池中没有物体，则创建一个并加进去
+                m_ParticlePool[name] = new Queue<GameObject>();
             }
-            m_ParticlePool[_name].Enqueue(prefab);     //生成后将物体放入对象池
 
-            prefab.SetActive(false);    //放入后取消激活
+            m_ParticlePool[name].Enqueue(obj);
+
+            //创建完后取消激活
+            obj.SetActive(false);
+            obj.transform.SetParent(FindOrCreateChildContainer(name).transform);
 
             return true;
-        }     
-        
+        }
+     
         return false;
     }
 }

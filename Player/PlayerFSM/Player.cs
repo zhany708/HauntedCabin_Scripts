@@ -110,14 +110,7 @@ public class Player : MonoBehaviour
 
     #region Other Functions
     //更换武器
-    public void ChangeWeapon(string weaponName, bool isPrimary)
-    {
-        StartCoroutine(ChangeWeaponCoroutine(weaponName, isPrimary));
-
-        //StateMachine.ChangeState(IdleState);
-    }
-
-    private IEnumerator ChangeWeaponCoroutine(string weaponName, bool isPrimary)
+    public async void ChangeWeapon(string weaponName, bool isPrimary)
     {
         bool isPrimaryAttackState = false;    //检查更换武器时是否处于要放置的攻击状态（主还是副）
 
@@ -138,7 +131,7 @@ public class Player : MonoBehaviour
                 PrimaryWeapon.gameObject.SetActive(false);      //换武器前先取消激活当前武器
             }
 
-            yield return WeaponInventory.Instance.LoadWeapon(weaponName, isPrimary);    //等待异步加载
+            await WeaponManager.Instance.LoadWeapon(weaponName, isPrimary);    //等待异步加载
 
 
             PrimaryAttackState = new PlayerAttackState(this, StateMachine, PlayerData, "Idle", PrimaryWeapon);       //激活新攻击状态
@@ -148,6 +141,7 @@ public class Player : MonoBehaviour
                 MakeSpriteVisible(PrimaryWeapon.transform.gameObject, false);       //如果当前不在主武器攻击状态，则换新武器后再次隐藏
             }
         }
+
         else
         {
             if (SecondaryWeapon != null && SecondaryWeapon.gameObject.activeSelf)
@@ -155,7 +149,7 @@ public class Player : MonoBehaviour
                 SecondaryWeapon.gameObject.SetActive(false);
             }
 
-            yield return WeaponInventory.Instance.LoadWeapon(weaponName, isPrimary);
+            await WeaponManager.Instance.LoadWeapon(weaponName, isPrimary);
 
 
             SecondaryAttackState = new PlayerAttackState(this, StateMachine, PlayerData, "Idle", SecondaryWeapon);
@@ -165,8 +159,11 @@ public class Player : MonoBehaviour
                 MakeSpriteVisible(SecondaryWeapon.transform.gameObject, false);     //如果当前不在副武器攻击状态，则换新武器后再次隐藏
             }
         }
+
+        //StateMachine.ChangeState(IdleState);
     }
 
+    
 
     //更改渲染的透明度以激活/隐藏物体
     public void MakeSpriteVisible(GameObject thisObject, bool isVisible)     

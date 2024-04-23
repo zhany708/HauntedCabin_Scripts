@@ -1,5 +1,7 @@
+using DG.Tweening;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 
 public class RootRoomController : MonoBehaviour
@@ -12,10 +14,16 @@ public class RootRoomController : MonoBehaviour
     DoorController m_DoorInsideThisRoom;
     RoomGenerator m_RoomManager;
     RoomType m_RoomType;
-
+    PostProcessController m_PostProcessController;
 
     const float m_DefaultTransparency = 1f;
+
+    //后期处理相关的变量
+    public float m_DarkPostProcessColorValue = -250f;
+    public float m_PostProcessDuration = 1f;
+
     bool m_HasGeneratedRoom = false;
+
 
     
 
@@ -34,6 +42,13 @@ public class RootRoomController : MonoBehaviour
         {
             Debug.LogError("Cannot find the Gameobject 'RoomManager'.");
         }
+
+        m_PostProcessController = GameObject.Find("PostProcess").GetComponent<PostProcessController>();
+        if (m_PostProcessController == null)
+        {
+            Debug.LogError("Cannot find the Gameobject 'PostProcess'.");
+        }
+
 
         m_RoomType = GetComponent<RoomType>();
     }
@@ -61,7 +76,7 @@ public class RootRoomController : MonoBehaviour
         if (m_RoomManager.GeneratedRoomDict.ContainsKey(transform.position))
         {
             m_RoomManager.GeneratedRoomDict.Remove(transform.position);
-        }                  
+        }
     }
 
 
@@ -91,7 +106,18 @@ public class RootRoomController : MonoBehaviour
             //玩家离开房间后，将房间变得透明
             ChangeRoomTransparency(HiddenTransparency);
 
-            if(m_DoorInsideThisRoom != null)
+
+            //确保只在场景持续存在且未卸载时，才会使用DoTeen（否则在场景卸载后会报错）
+            if (SceneManager.GetActiveScene().isLoaded)
+            {
+                //将相机亮度一瞬间的变暗
+                m_PostProcessController.DarkenThenBrighten(m_DarkPostProcessColorValue, m_PostProcessDuration);
+            }
+            
+
+
+
+            if (m_DoorInsideThisRoom != null)
             {
                 m_DoorInsideThisRoom.RoomTrigger.enabled = true;    //玩家离开房间后重新激活门的触发器，从而让玩家之后再进入时生成敌人
 

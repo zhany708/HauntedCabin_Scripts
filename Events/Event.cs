@@ -28,7 +28,7 @@ public abstract class Event : MonoBehaviour
 
 
 
-
+    #region Setters
     public void SetEventManager(EventManager manager)
     {
         eventManager = manager;
@@ -38,4 +38,5 @@ public abstract class Event : MonoBehaviour
     {
         doorController = thisdoorController;
     }
+    #endregion
 }

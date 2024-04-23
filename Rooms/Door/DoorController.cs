@@ -179,10 +179,19 @@ public class DoorController : MonoBehaviour
 
             for (int i = 0; i < EnemyObjects.Length; i++)
             {
-                GameObject enemy = EnemyPool.Instance.GetObject(EnemyObjects[i], enemySpawnList[i]);     //从敌人对象池中生成敌人
+                GameObject enemy = EnemyPool.Instance.GetObject(EnemyObjects[i]);     //从敌人对象池中生成敌人
+
+                //生成完后设置出生坐标
+                enemy.GetComponentInChildren<Enemy>().SetSpawnPos(enemySpawnList[i]);
+
+                //设置生成坐标
                 enemy.transform.position = enemySpawnList[i];
+
+                //设置门控制器的脚本
                 enemy.GetComponentInChildren<EnemyDeath>().SetDoorController(this);
-                enemy.GetComponentInChildren<Stats>().SetCurrentHealth(enemy.GetComponentInChildren<Stats>().MaxHealth);    //生成敌人后重置生命，否则重新激活的敌人生命依然为0
+
+                //生成敌人后重置生命，否则重新激活的敌人生命依然为0
+                enemy.GetComponentInChildren<Stats>().SetCurrentHealth(enemy.GetComponentInChildren<Stats>().MaxHealth);    
             }
         }
     }
