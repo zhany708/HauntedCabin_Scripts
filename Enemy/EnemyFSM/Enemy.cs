@@ -74,7 +74,6 @@ public class Enemy : MonoBehaviour
     #region Variables
     public bool CanAttack { get ; private set; }        //用于攻击间隔
 
-    Vector2 SpawnPos;
     //float m_LastHitTime;        //上次受击时间
     bool m_IsReactivate = false;    //判断敌人是否为重新激活
     #endregion
@@ -121,9 +120,13 @@ public class Enemy : MonoBehaviour
     {
         AttackTimer = new Timer(enemyData.AttackInterval);      //用攻击间隔初始化计时器
 
-        //根据所处房间初始化随机生成坐标脚本（transform.localPosition返回的永远是相对于父物体的坐标）
-        PatrolRandomPos = new RandomPosition(Parameter.PatrolPoints[0].transform.localPosition + (Vector3)SpawnPos, Parameter.PatrolPoints[1].transform.localPosition + (Vector3)SpawnPos, 1f);
-        //Debug.Log("The LeftDown point is " + (Parameter.PatrolPoints[0].transform.localPosition + (Vector3)SpawnPos) );
+        //根据父物体的坐标初始化随机生成坐标脚本（transform.localPosition返回的永远是相对于父物体的坐标），使用跟物体的世界坐标进行计算（因为只有跟物体的坐标在这之前赋过值了）
+        Vector2 leftDownPos = Parameter.PatrolPoints[0].transform.localPosition + transform.parent.position;
+        Vector2 rightTopPos = Parameter.PatrolPoints[1].transform.localPosition + transform.parent.position;
+
+        PatrolRandomPos = new RandomPosition(leftDownPos, rightTopPos, 1f);     
+        Debug.Log("The LeftDown point of PatrolRandomPos is " + PatrolRandomPos.GetLeftDownPos() + ", and the RightTop point is " + PatrolRandomPos.GetRightTopPos() );
+        
 
         EnemyFlip = new Flip(transform);
 
@@ -205,6 +208,13 @@ public class Enemy : MonoBehaviour
         {
             Parameter.Target = other.transform;     //储存玩家的位置信息
         }
+
+        /*
+        else if ( (other.gameObject.CompareTag("Furniture") || other.gameObject.CompareTag("Wall") ) && StateMachine.CurrentState == PatrolState)
+        {
+            StateMachine.ChangeState(IdleState);        //当地人巡逻时，与家具或墙触发碰撞时切换成闲置状态    
+        }
+        */
     }
 
     private void OnTriggerExit2D(Collider2D other)
@@ -215,16 +225,15 @@ public class Enemy : MonoBehaviour
         }
     }
 
-
+    /*
     private void OnCollisionEnter2D(Collision2D other)
     {
-        if (other.gameObject.CompareTag("Furniture") || other.gameObject.CompareTag("Wall"))
+        if ( (other.gameObject.CompareTag("Furniture") || other.gameObject.CompareTag("Wall") ) && StateMachine.CurrentState == PatrolState)
         {
-            StateMachine.ChangeState(IdleState);        //与家具或墙触发碰撞时切换成闲置状态    
+            StateMachine.ChangeState(IdleState);        //当地人巡逻时，与家具或墙触发碰撞时切换成闲置状态    
         }
-
     }
-
+    */
 
     private void OnDrawGizmos()
     {
@@ -256,9 +265,10 @@ public class Enemy : MonoBehaviour
     }
     */
 
-    public void SetSpawnPos(Vector2 pos)
+    public void ResetLocalPos()
     {
-        SpawnPos = pos;
+        //将此脚本绑定的物体的相对于父物体的坐标清零
+        transform.localPosition = Vector2.zero;
     }
     #endregion
 }

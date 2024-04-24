@@ -54,9 +54,9 @@ public class DoorController : MonoBehaviour
 
         if (EnemyObjects.Length != 0)   //如果房间有怪物
         {
-            //敌人生成的x范围为房间坐标的x加减6；生成的y范围为房间坐标的y加1.5，减3.5
-            Vector2 leftDownPos = new Vector2(m_MainRoom.transform.position.x - 6, m_MainRoom.transform.position.y - 3.5f);
-            Vector2 rightTopPos = new Vector2(m_MainRoom.transform.position.x + 6, m_MainRoom.transform.position.y + 1.5f);
+            //敌人生成的x范围为房间坐标的x加减5.5；生成的y范围为房间坐标的y加1.5，减3.5
+            Vector2 leftDownPos = new Vector2(m_MainRoom.transform.position.x - 5.5f, m_MainRoom.transform.position.y - 3.5f);
+            Vector2 rightTopPos = new Vector2(m_MainRoom.transform.position.x + 5.5f, m_MainRoom.transform.position.y + 1.5f);
 
             m_EnemySpwanPos = new RandomPosition(leftDownPos, rightTopPos, 1f);
         }
@@ -179,19 +179,25 @@ public class DoorController : MonoBehaviour
 
             for (int i = 0; i < EnemyObjects.Length; i++)
             {
-                GameObject enemy = EnemyPool.Instance.GetObject(EnemyObjects[i]);     //从敌人对象池中生成敌人
+                //这里的enemy物体是敌人的跟物体（包含巡逻坐标的），在生成的同时赋予物体生成坐标
+                GameObject enemyObject = EnemyPool.Instance.GetObject(EnemyObjects[i], enemySpawnList[i]);     //从敌人对象池中生成敌人
 
-                //生成完后设置出生坐标
-                enemy.GetComponentInChildren<Enemy>().SetSpawnPos(enemySpawnList[i]);
+                //Debug.Log("The enemy spawn position is : " + enemySpawnList[i]);
 
-                //设置生成坐标
-                enemy.transform.position = enemySpawnList[i];
+                //生成完后重置敌人脚本绑定的物体的本地（相对于父物体）坐标。因为敌人从对象池重新生成后，本地坐标会继承死亡前的本地坐标
+                Enemy enemyScript = enemyObject.GetComponentInChildren<Enemy>();
+
+                if (enemyScript != null)
+                {
+                    enemyScript.ResetLocalPos();
+                }
+ 
 
                 //设置门控制器的脚本
-                enemy.GetComponentInChildren<EnemyDeath>().SetDoorController(this);
+                enemyObject.GetComponentInChildren<EnemyDeath>().SetDoorController(this);
 
                 //生成敌人后重置生命，否则重新激活的敌人生命依然为0
-                enemy.GetComponentInChildren<Stats>().SetCurrentHealth(enemy.GetComponentInChildren<Stats>().MaxHealth);    
+                enemyObject.GetComponentInChildren<Stats>().SetCurrentHealth(enemyObject.GetComponentInChildren<Stats>().MaxHealth);    
             }
         }
     }

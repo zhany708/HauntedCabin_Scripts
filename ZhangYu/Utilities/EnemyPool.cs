@@ -34,30 +34,33 @@ public class EnemyPool : MonoBehaviour       //用于生成敌人的对象池
 
 
 
-    //获取物体
-    public GameObject GetObject(GameObject prefab)
+    //获取物体，第二个参数为敌人的生成坐标
+    public GameObject GetObject(GameObject prefab, Vector2 spawnPos)
     {
         //检查池中有没有物体，没有的话则新建一个并加进去
         if (!m_EnemyPool.TryGetValue(prefab.name, out var queue) || queue.Count == 0)
         {
-            var newObject = CreateNewObject(prefab);
+            var newObject = CreateNewObject(prefab, spawnPos);
             PushObject(newObject);
         }
 
         var obj = m_EnemyPool[prefab.name].Dequeue();
+
+        //在物体激活前赋予坐标给敌人的跟物体，这样才能正确的初始化生成巡逻点的脚本
+        obj.transform.position = spawnPos;
+
         obj.SetActive(true);
 
         return obj;
-
     }
 
 
 
-    private GameObject CreateNewObject(GameObject prefab)
+    private GameObject CreateNewObject(GameObject prefab, Vector2 spawnPos)
     {
         //先找父物体，随后再创建
         GameObject childContainer = FindOrCreateChildContainer(prefab.name);
-        GameObject obj = Instantiate(prefab, childContainer.transform);
+        GameObject obj = Instantiate(prefab, spawnPos, Quaternion.identity, childContainer.transform);
 
         return obj;
     }
