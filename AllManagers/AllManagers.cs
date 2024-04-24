@@ -1,26 +1,15 @@
-using UnityEngine;
 
-public class AllManagers : MonoBehaviour
+
+
+public class AllManagers : ManagerTemplate<AllManagers>
 {
-    public static AllManagers Instance;
-
-
-
-
-    private void Awake()
+    protected override void Awake()
     {
-        //单例模式
-        if (Instance == null)
-        {
-            Instance = this;
+        base.Awake();
 
-            //确保自己以及所有子物体不会在加载其他场景时因为意外被删除
-            DontDestroyOnLoad(gameObject);
-        }
 
-        else if (Instance != this)
-        {
-            Destroy(gameObject);
-        }          
+        //将两个在主菜单界面就初始化过的管理器设置为自己的子物体
+        UIManager.Instance.SetParent(transform);
+        SoundManager.Instance.SetParent(transform);
     }
 }

@@ -1,8 +1,6 @@
-using System;
 using Cinemachine;
 using UnityEngine;
 using ZhangYu.Utilities;
-using System.Collections;
 
 
 public class Player : MonoBehaviour

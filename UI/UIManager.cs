@@ -6,6 +6,10 @@ using System.Threading.Tasks;
 
 public class UIManager : ManagerTemplate<UIManager>
 {
+    [SerializeField]
+    public SO_UIKeys UIKeys;
+
+
     public Dictionary<string, BasePanel> PanelDict = new Dictionary<string, BasePanel>();      //存放已打开界面的字典（里面存储的都是正在打开的界面）
 
 
@@ -31,6 +35,16 @@ public class UIManager : ManagerTemplate<UIManager>
         }
 
         m_UIRoot = canvasObject.transform;
+
+        //加载新场景时不删除Canvas总组件
+        DontDestroyOnLoad(canvasObject);
+    }
+
+
+    private async void Start()
+    {
+        //游戏开始时加载开始界面
+        await OpenPanel(UIKeys.MainMenuPanel);
     }
 
 
@@ -60,12 +74,19 @@ public class UIManager : ManagerTemplate<UIManager>
         //异步加载后生成物体并获取物体身上的组件
         GameObject panelObject = GameObject.Instantiate(panelPrefab, m_UIRoot, false);
         BasePanel panel = panelObject.GetComponent<BasePanel>();
-        if (panel == null)
+        if (panel != null)
+        {
+            //获取组件后，打开界面
+            panel.OpenPanel(name);
+        }
+
+        else
         {
             Debug.LogError("No BasePanel component found on prefab: " + name);
             return;
         }
 
+        //将界面加进储存正在打开界面的字典
         PanelDict.Add(name, panel);
     }
 

@@ -1,32 +1,13 @@
 using UnityEngine;
 
 
-public class EnvironmentManager : MonoBehaviour     //用于处理游戏过程中的一些动态变化（比如在某个地方生成某个新东西）
+public class EnvironmentManager : ManagerTemplate<EnvironmentManager>     //用于处理游戏过程中的一些动态变化（比如在某个地方生成某个新东西）
 {
-    public static EnvironmentManager Instance { get; private set; }
-
-
     public GameObject BlockDoorBarrel;      //挡住玩家进入门的障碍物
 
 
 
 
-
-
-
-    private void Awake()
-    {
-        //单例模式
-        if (Instance == null)
-        {
-            Instance = this;
-        }
-
-        else if (Instance != this)
-        {
-            Destroy(gameObject);
-        }
-    }
 
 
 

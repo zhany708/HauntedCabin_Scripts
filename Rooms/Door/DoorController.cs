@@ -26,7 +26,7 @@ public class DoorController : MonoBehaviour
 
 
     //运用Physics2D检查重复坐标时需要的X和Y的值（火蝙蝠Y轴上有0.5的偏差，因为坐标点位于脚底）
-    const float m_PhysicsCheckingXPos = 1f;
+    const float m_PhysicsCheckingXPos = 2f;
     const float m_PhysicsCheckingYPos = 4f;
 
 
@@ -54,8 +54,8 @@ public class DoorController : MonoBehaviour
 
         if (EnemyObjects.Length != 0)   //如果房间有怪物
         {
-            //敌人生成的x范围为房间坐标的x加减6；生成的y范围为房间坐标的y加1.5，减4
-            Vector2 leftDownPos = new Vector2(m_MainRoom.transform.position.x - 6, m_MainRoom.transform.position.y - 4);
+            //敌人生成的x范围为房间坐标的x加减6；生成的y范围为房间坐标的y加1.5，减3.5
+            Vector2 leftDownPos = new Vector2(m_MainRoom.transform.position.x - 6, m_MainRoom.transform.position.y - 3.5f);
             Vector2 rightTopPos = new Vector2(m_MainRoom.transform.position.x + 6, m_MainRoom.transform.position.y + 1.5f);
 
             m_EnemySpwanPos = new RandomPosition(leftDownPos, rightTopPos, 1f);

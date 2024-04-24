@@ -5,8 +5,6 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "newWeaponKeys", menuName = "Data/Weapon Data/Weapon Keys")]
 public class SO_WeaponKeys : ScriptableObject
 {
-    public SO_UIKeys UIKeys;
-
     //在编辑器里将所有名字加进列表
     public List<string> weaponKeyList = new List<string>();
     private HashSet<string> weaponKeys;     //哈希表的搜寻速度为O(1)

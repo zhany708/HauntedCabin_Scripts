@@ -19,11 +19,7 @@ public class TransitionStagePanel : BasePanel
 
         m_TransitionStageText = GetComponentInChildren<TextMeshProUGUI>();
     }
-
-    private void OnEnable()
-    {
-        OpenPanel("TransitionStagePanel");
-    }
+    
 
 
 

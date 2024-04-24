@@ -2,7 +2,9 @@ using DG.Tweening;
 using System.Collections;
 using TMPro;
 using UnityEngine;
-using UnityEngine.InputSystem;
+using UnityEngine.EventSystems;
+
+
 
 public class BasePanel : MonoBehaviour
 {
@@ -21,6 +23,9 @@ public class BasePanel : MonoBehaviour
 
 
 
+    //用于保证一直可以使用键盘操控按钮
+    protected GameObject lastSelectedButton;
+
     protected PlayerInputHandler playerInputHandler;
 
     protected bool isTyping = false;        //表示是否正在显示文本
@@ -37,8 +42,34 @@ public class BasePanel : MonoBehaviour
 
     protected virtual void Awake() 
     {
+        //这个脚本跟打字和跳过对话相关
         playerInputHandler = FindObjectOfType<PlayerInputHandler>();     //寻找有PlayerInputHandler组件的物体
     }
+
+
+    protected virtual void Start()
+    {
+        //初始化按钮，随后将其设置到EventSystem
+        EventSystem.current.SetSelectedGameObject(lastSelectedButton);
+    }
+
+
+    protected virtual void Update()
+    {
+        //如果因为鼠标点击的原因，导致无法用键盘选择按钮，则重新设置键盘默认按钮
+        if (EventSystem.current.currentSelectedGameObject == null)
+        {
+            EventSystem.current.SetSelectedGameObject(lastSelectedButton);
+        }
+
+        else
+        {
+            lastSelectedButton = EventSystem.current.currentSelectedGameObject;
+        }
+    }
+
+
+
 
 
 

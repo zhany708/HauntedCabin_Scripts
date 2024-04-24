@@ -1,9 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.Events;
 using TMPro;
+
 
 public class PickupWeaponPanel : BasePanel
 {
@@ -30,7 +28,7 @@ public class PickupWeaponPanel : BasePanel
         m_ItemNameText = GetComponentInChildren<TextMeshProUGUI>();
     }
 
-    private void Start()
+    protected override void Start()
     {
         if (EquipOnPrimary == null || EquipOnSecondary == null || Leave == null) 
         {
@@ -38,15 +36,16 @@ public class PickupWeaponPanel : BasePanel
             return;
         }
 
-
+        //将按钮和函数绑定起来
         EquipOnPrimary.onClick.AddListener( () => ButtonAction(EquipOnPrimary.name) );
         EquipOnSecondary.onClick.AddListener(() => ButtonAction(EquipOnSecondary.name));
         Leave.onClick.AddListener(() => ButtonAction(Leave.name));
-    }
 
-    private void OnEnable()
-    {
-        OpenPanel("PickupWeaponPanel");
+
+        //默认按钮为“装备在主武器”按钮，随后将其设置到EventSystem
+        lastSelectedButton = EquipOnPrimary.gameObject;
+
+        base.Start();
     }
 
 

@@ -43,10 +43,14 @@ public class SideDoorController : MonoBehaviour
         //只有玩家或敌人触发了门的触发器后，才会降低透明度
         if (other.CompareTag("Player") || other.CompareTag("Enemy") )
         {
-            m_AllObjects.Add(other);
+            //检查碰撞器是否为空，防止Bug
+            if (other != null)
+            {
+                m_AllObjects.Add(other);
 
-            //降低门的透明度
-            ChangeTransparency(HiddenTransparency);
+                //降低门的透明度
+                ChangeTransparency(HiddenTransparency);
+            }          
         }
     }
 

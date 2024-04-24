@@ -27,6 +27,12 @@ public abstract class ManagerTemplate<T> : MonoBehaviour where T : Component
         else
         {
             Instance = this as T;
+
+            //只有在没有父物体时才运行防删函数，否则会出现提醒
+            if (gameObject.transform.parent == null)
+            {
+                DontDestroyOnLoad(gameObject);
+            }         
         }
     }
 
@@ -89,5 +95,16 @@ public abstract class ManagerTemplate<T> : MonoBehaviour where T : Component
         {
             Debug.LogError("This GameObject is not loaded yet, cannot release: " + key);
         }
+    }
+
+
+    //将管理器设置为AllManagers的子物体
+    public void SetParent(Transform thisParent)
+    {
+        //检测当前物体的父物体是否为空
+        if (gameObject.transform.parent == null)
+        {
+            gameObject.transform.parent = thisParent;           
+        }      
     }
 }

@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class WeaponPickUp : MonoBehaviour
 {
-    public SO_WeaponKeys WeaponKeys;
+    //public SO_WeaponKeys WeaponKeys;
     public GameObject WeaponPreFab;
 
 
@@ -20,9 +20,9 @@ public class WeaponPickUp : MonoBehaviour
     private async void Start()
     {
         //提前加载拾取武器的UI。防止卡顿
-        if (WeaponKeys != null && !string.IsNullOrEmpty(WeaponKeys.UIKeys.PickupWeaponPanelKey))
+        if (!string.IsNullOrEmpty(UIManager.Instance.UIKeys.PickupWeaponPanelKey))
         {
-            await UIManager.Instance.InitPanel(WeaponKeys.UIKeys.PickupWeaponPanelKey);
+            await UIManager.Instance.InitPanel(UIManager.Instance.UIKeys.PickupWeaponPanelKey);
         }
 
         else
@@ -49,7 +49,7 @@ public class WeaponPickUp : MonoBehaviour
         {
             Player player = other.gameObject.GetComponentInParent<Player>();    //由于碰撞的是玩家的combat子物体，因此要用InParent
 
-            await UIManager.Instance.OpenPanel(WeaponKeys.UIKeys.PickupWeaponPanelKey);
+            await UIManager.Instance.OpenPanel(UIManager.Instance.UIKeys.PickupWeaponPanelKey);
 
             
             weaponPickupPanel = FindAnyObjectByType<PickupWeaponPanel>();

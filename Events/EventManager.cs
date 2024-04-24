@@ -7,7 +7,6 @@ public class EventManager : ManagerTemplate<EventManager>
 {
     [SerializeField]
     public SO_EventKeys EventKeys;
-    public SO_UIKeys UIKeys;
 
 
     public bool IsSecondStage {  get; private set; }
@@ -43,9 +42,9 @@ public class EventManager : ManagerTemplate<EventManager>
 
 
         //提前加载进入二阶段的文字，但不实例化   
-        if (UIKeys != null && !string.IsNullOrEmpty(UIKeys.TransitionStagePanelKey))
+        if (UIManager.Instance.UIKeys != null && !string.IsNullOrEmpty(UIManager.Instance.UIKeys.TransitionStagePanelKey))
         {
-            await UIManager.Instance.InitPanel(UIKeys.TransitionStagePanelKey);
+            await UIManager.Instance.InitPanel(UIManager.Instance.UIKeys.TransitionStagePanelKey);
         }
 
         else
@@ -147,9 +146,9 @@ public class EventManager : ManagerTemplate<EventManager>
     private async void DisplayTransitionStageText()       //用于阶段动画中决定何时显示文字
     {
         //显示转阶段文字
-        if (UIKeys != null && !string.IsNullOrEmpty(UIKeys.TransitionStagePanelKey))
+        if (UIManager.Instance.UIKeys != null && !string.IsNullOrEmpty(UIManager.Instance.UIKeys.TransitionStagePanelKey))
         {
-            await UIManager.Instance.OpenPanel(UIKeys.TransitionStagePanelKey);
+            await UIManager.Instance.OpenPanel(UIManager.Instance.UIKeys.TransitionStagePanelKey);
         }
 
         else

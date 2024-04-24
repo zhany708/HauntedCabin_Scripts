@@ -9,7 +9,7 @@ public class SoundManager : ManagerTemplate<SoundManager>
 {
     public SO_AudioClipKeys AudioClipKeys;
 
-    public float MusicVolume {  get; private set; }               //背景音乐的音量
+    public float MusicVolume { get; private set; }               //背景音乐的音量
     public float SfxVolume { get; private set; }        //音效音量
 
 
@@ -37,13 +37,11 @@ public class SoundManager : ManagerTemplate<SoundManager>
         m_AudioDict = new Dictionary<string, AudioClip>();
     }
 
-    private async void Start()
+    private void Start()
     {
         //初始化音量
         MusicVolume = 0.5f;
         SfxVolume = 1f;
-
-        await PlayBGMAsync(AudioClipKeys.StopForAMoment, true, MusicVolume);
     }
 
 
