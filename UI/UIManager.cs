@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.Threading.Tasks;
+using UnityEngine.SceneManagement;
 
 
 
@@ -43,11 +44,21 @@ public class UIManager : ManagerTemplate<UIManager>
 
     private async void Start()
     {
-        //游戏开始时加载开始界面
-        await OpenPanel(UIKeys.MainMenuPanel);
+        //检查是否处于场景0（主菜单）
+        if (SceneManager.GetActiveScene().name == "MainMenu")
+        {
+            //游戏开始时加载开始界面
+            await OpenPanel(UIKeys.MainMenuPanel);
+        }
+
+        else
+        {
+            //不在主菜单时，则播放一楼BGM
+            await SoundManager.Instance.PlayBGMAsync(SoundManager.Instance.AudioClipKeys.StopForAMoment, true);
+        }
     }
 
-
+    
 
 
 
@@ -86,8 +97,12 @@ public class UIManager : ManagerTemplate<UIManager>
             return;
         }
 
-        //将界面加进储存正在打开界面的字典
-        PanelDict.Add(name, panel);
+
+        if (!PanelDict.ContainsKey(name))
+        {
+            //将界面加进储存正在打开界面的字典
+            PanelDict.Add(name, panel);
+        }         
     }
 
 
@@ -106,8 +121,9 @@ public class UIManager : ManagerTemplate<UIManager>
 
         if (panel.CanvasGroup != null)
         {
-            panel.FadeOut(panel.CanvasGroup, 1f);       //如果可以淡出的话优先淡出
+            panel.Fade(panel.CanvasGroup, panel.FadeOutAlpha, panel.FadeDuration, false);       //如果可以淡出的话优先淡出
         }
+
         else
         {
             panel.ClosePanel();

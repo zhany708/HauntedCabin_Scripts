@@ -1,6 +1,5 @@
 using TMPro;
-using DG.Tweening;
-using UnityEngine;
+
 
 
 public class TransitionStagePanel : BasePanel
@@ -28,7 +27,7 @@ public class TransitionStagePanel : BasePanel
     {
         base.OpenPanel(name);
 
-        FadeIn(CanvasGroup, 1f);     //淡入
+        Fade(CanvasGroup, FadeInAlpha, FadeDuration, false);     //淡入
 
         DisplayText(m_TransitionStageText);     //显示文本
         StartCoroutine(ClosePanelAfterDelay(m_DisplayDuration));     //显示一定时间后自动关闭界面
@@ -36,26 +35,9 @@ public class TransitionStagePanel : BasePanel
 
     public override void ClosePanel()
     {
-        FadeOut(CanvasGroup, 1f);     //淡出
-    }
+        Fade(CanvasGroup, FadeOutAlpha, FadeDuration, false);     //淡出
 
-
-
-    public override void FadeOut(CanvasGroup thisCanvasGroup, float fadeDuration)
-    {
-        if (UIManager.Instance.PanelDict.ContainsKey(panelName))
-        {
-            UIManager.Instance.PanelDict.Remove(panelName);
-        }
-
-
-        DOTween.To(() => thisCanvasGroup.alpha, x => thisCanvasGroup.alpha = x, 0, fadeDuration).OnComplete(      //执行完后销毁物体
-            () =>
-            {
-                Destroy(gameObject);
-
-                UIManager.Instance.ReleasePrefab(panelName);
-            }
-        );
+        //淡出后删除物体
+        base.ClosePanel();
     }
 }

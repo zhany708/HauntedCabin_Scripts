@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 
 
-public class MainMenuPanel : BasePanel
+public class MainMenuPanel : PanelWithButton
 {
     public Button PlayButton;
     public Button QuitButton;

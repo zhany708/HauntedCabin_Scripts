@@ -125,7 +125,7 @@ public class Enemy : MonoBehaviour
         Vector2 rightTopPos = Parameter.PatrolPoints[1].transform.localPosition + transform.parent.position;
 
         PatrolRandomPos = new RandomPosition(leftDownPos, rightTopPos, 1f);     
-        Debug.Log("The LeftDown point of PatrolRandomPos is " + PatrolRandomPos.GetLeftDownPos() + ", and the RightTop point is " + PatrolRandomPos.GetRightTopPos() );
+        //Debug.Log("The LeftDown point of PatrolRandomPos is " + PatrolRandomPos.GetLeftDownPos() + ", and the RightTop point is " + PatrolRandomPos.GetRightTopPos() );
         
 
         EnemyFlip = new Flip(transform);

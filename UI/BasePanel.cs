@@ -2,7 +2,6 @@ using DG.Tweening;
 using System.Collections;
 using TMPro;
 using UnityEngine;
-using UnityEngine.EventSystems;
 
 
 
@@ -22,9 +21,10 @@ public class BasePanel : MonoBehaviour
     }
 
 
+    public float FadeDuration { get; protected set; }
+    public float FadeInAlpha { get; protected set; }
+    public float FadeOutAlpha { get; protected set; }
 
-    //用于保证一直可以使用键盘操控按钮
-    protected GameObject lastSelectedButton;
 
     protected PlayerInputHandler playerInputHandler;
 
@@ -39,34 +39,17 @@ public class BasePanel : MonoBehaviour
 
 
 
-
     protected virtual void Awake() 
     {
         //这个脚本跟打字和跳过对话相关
         playerInputHandler = FindObjectOfType<PlayerInputHandler>();     //寻找有PlayerInputHandler组件的物体
+
+
+        FadeDuration = 1f;
+        FadeInAlpha = 1f;
+        FadeOutAlpha = 0f;
     }
 
-
-    protected virtual void Start()
-    {
-        //初始化按钮，随后将其设置到EventSystem
-        EventSystem.current.SetSelectedGameObject(lastSelectedButton);
-    }
-
-
-    protected virtual void Update()
-    {
-        //如果因为鼠标点击的原因，导致无法用键盘选择按钮，则重新设置键盘默认按钮
-        if (EventSystem.current.currentSelectedGameObject == null)
-        {
-            EventSystem.current.SetSelectedGameObject(lastSelectedButton);
-        }
-
-        else
-        {
-            lastSelectedButton = EventSystem.current.currentSelectedGameObject;
-        }
-    }
 
 
 
@@ -77,6 +60,9 @@ public class BasePanel : MonoBehaviour
     public virtual void OpenPanel(string name)
     {
         this.panelName = name;
+
+        //淡入界面
+        Fade(CanvasGroup, FadeInAlpha, FadeDuration, true);
     }
 
     public virtual void ClosePanel()
@@ -94,100 +80,129 @@ public class BasePanel : MonoBehaviour
         //释放物体和内存
         UIManager.Instance.ReleasePrefab(panelName);
 
-
         //从字典中移除，表示界面没打开
-        if (UIManager.Instance.PanelDict.ContainsKey(panelName))
+        UIManager.Instance.PanelDict.Remove(panelName);       
+    }
+
+
+
+    //用于界面的淡入/淡出（淡入时第四个参数应为真，淡出时为假）
+    public virtual void Fade(CanvasGroup targetGroup, float targetAlpha, float duration, bool blocksRaycasts)
+    {
+        if(targetGroup != null)
         {
+            targetGroup.DOFade(targetAlpha, duration).OnComplete(() =>
+            {
+                targetGroup.blocksRaycasts = blocksRaycasts;      //设置是否阻挡射线检测
+            });
+        }
+    
+
+        if (targetAlpha == FadeInAlpha && !UIManager.Instance.PanelDict.ContainsKey(panelName))
+        {
+            //添加缓存进字典，表示界面正在打开
+            UIManager.Instance.PanelDict.Add(panelName, this);
+
+            isRemoved = false;
+        }
+
+        else if (targetAlpha == FadeOutAlpha)
+        {
+            //从字典中移除缓存，表示界面没打开
             UIManager.Instance.PanelDict.Remove(panelName);
+
+            isRemoved = true;
         }
     }
 
 
+    /*
     protected void FadeIn(CanvasGroup thisCanvasGroup, float fadeDuration)   //用于界面的淡入
-    {     
+    {
+        isRemoved = false;
+
         thisCanvasGroup.alpha = 0f;
-        DOTween.To(() => thisCanvasGroup.alpha, x => thisCanvasGroup.alpha = x, 1f, fadeDuration);     //在1秒之内将透明度从0变为1，实现淡入效果     
+        DOTween.To(() => thisCanvasGroup.alpha, x => thisCanvasGroup.alpha = x, 1f, fadeDuration);     //在1秒之内将透明度从0变为1，实现淡入效果
+                
+        //如果遮挡射线在取消状态，则重新激活
+        if (thisCanvasGroup.blocksRaycasts == false)
+        {
+            thisCanvasGroup.blocksRaycasts = true;
+        }
+
+        //添加缓存进字典，表示界面正在打开
+        if (!UIManager.Instance.PanelDict.ContainsKey(panelName))
+        {
+            UIManager.Instance.PanelDict.Add(panelName, this);
+        }
     }
 
-    public virtual void FadeOut(CanvasGroup thisCanvasGroup, float fadeDuration)   //用于界面的淡出（另一种关闭界面的方式）
+    public virtual void FadeOut(CanvasGroup thisCanvasGroup, float fadeDuration)   //用于界面的淡出（另一种关闭界面的方式，但不会销毁物体，只是通过更改透明度隐藏了起来）
     {
         isRemoved = true;      
 
         DOTween.To(() => thisCanvasGroup.alpha, x => thisCanvasGroup.alpha = x, 0, fadeDuration);   //在1秒之内将透明度从1变为0，实现淡出效果     
 
-        thisCanvasGroup.blocksRaycasts = false;     //取消遮挡射线（因为物体没有被销毁。只是看不见了）
 
-        //移除缓存，表示界面没打开
+        //如果遮挡射线在激活状态，则取消激活
+        if (thisCanvasGroup.blocksRaycasts == true)
+        {
+            thisCanvasGroup.blocksRaycasts = false;     //取消遮挡射线（因为物体没有被销毁。只是看不见了）
+        }
+           
+
+        //从字典中移除缓存，表示界面没打开
         if (UIManager.Instance.PanelDict.ContainsKey(panelName))
         {
             UIManager.Instance.PanelDict.Remove(panelName);
         }
     }
+    */
 
 
 
 
-
-    protected virtual void DisplayText(TextMeshProUGUI thisText)        //显示文本
+    protected virtual void DisplayText(TextMeshProUGUI textComponent)        //显示文本
     {
-        if (thisText != null)
+        if (textComponent != null)
         {
             isTyping = true;        //表示正在打字（防止正在打字时按空格会关闭UI）
 
-            TypeWriterEffect(thisText, 0.05f);     //每隔0.05秒打一个字
+            StartCoroutine(TypeText(textComponent, textComponent.text, 0.05f) );     //每隔0.05秒打一个字
         }
     }
 
-    protected void TypeWriterEffect(TextMeshProUGUI textComponent, float typeSpeed)      //打字机效果
+
+
+
+    protected IEnumerator TypeText(TextMeshProUGUI textComponent, string fullText, float typeSpeed)
     {
-        StartCoroutine(TypeText(textComponent, textComponent.text, typeSpeed));
-    }
+        textComponent.text = "";     //先清空文本里的文字
 
-
-
-
-    protected IEnumerator TypeText(TextMeshProUGUI textComponent, string fullText, float typeSpeed)      //用于打字机（每个字一个一个打出来）
-    {
-        textComponent.text = " ";       //先清空文本里的文字
-
-        foreach (char letter in fullText.ToCharArray())     //访问文本里的每一个元素（包括字。符号。空格等）
+        foreach (char letter in fullText)   //访问文本里的每一个元素（包括字。符号。空格等）
         {
-            if (playerInputHandler.IsSpacePressed)
+            if (playerInputHandler.IsSpacePressed)       //玩家按下空格后直接显示全部文字
             {
-                textComponent.text = fullText;      //玩家按下空格后直接显示全部文字
-
-                yield return new WaitForSeconds(0.5f);      //0.5秒后再设置布尔，防止显示完所有文字后UI立刻消失（详情看下面的ClosePanelAfterDelay函数）
-                isTyping = false;
-
-                yield break;    //退出协程
-            }
-
-
-            textComponent.text += letter;       
-
-            yield return new WaitForSeconds(typeSpeed);     //每当一个字打出来后，等待一段时间再继续运行（打下一个字）
-        }
-
-        isTyping = false;       //文本全部打完后设置isTyping布尔为false
-    }
-
-    protected IEnumerator ClosePanelAfterDelay(float delay)      //用于延迟一段时间后自动关闭界面
-    {
-        float elapsedTime = 0;
-
-        while (elapsedTime < delay)
-        {
-            if (playerInputHandler.IsSpacePressed && !isTyping)     //如果延迟过程中，且文本已显示完毕的情况下玩家按下空格，则立即关闭UI
-            {
-                ClosePanel();
-
+                textComponent.text = fullText;
                 yield break;
             }
 
-            elapsedTime += Time.deltaTime;
-            yield return null;
+            textComponent.text += letter;
+            yield return new WaitForSeconds(typeSpeed);     //每当一个字打出来后，等待一段时间再继续运行（打下一个字）
         }
 
-        ClosePanel();       //优先执行改写过的函数
+        isTyping = false;
+    }
+
+
+
+    protected IEnumerator ClosePanelAfterDelay(float delay)      //用于延迟一段时间后自动关闭界面
+    {
+        yield return new WaitForSeconds(delay);
+
+        if (!isTyping)
+        {
+            ClosePanel();
+        }
     }
 }

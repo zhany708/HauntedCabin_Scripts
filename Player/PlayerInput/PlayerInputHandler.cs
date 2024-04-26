@@ -13,6 +13,7 @@ public class PlayerInputHandler : MonoBehaviour
 
     public bool[] AttackInputs { get; private set; }    //用于检测鼠标按键，决定使用主武器或副武器
     public bool IsSpacePressed {  get; private set; }   //用于表示是否按下空格
+    public bool IsEscPressed { get; private set; }      //用于表示是否按下Esc键
 
     Vector2 m_MousePos;
 
@@ -104,6 +105,11 @@ public class PlayerInputHandler : MonoBehaviour
     public void OnSpacebar(InputAction.CallbackContext context)    //用于读取键盘空格
     {
         IsSpacePressed = context.performed;     //按下空格时为真，松开后为假
+    }
+
+    public void OnEscKey(InputAction.CallbackContext context)    //用于读取键盘Esc
+    {
+        IsEscPressed = context.performed;     //按下Esc时为真，松开后为假
     }
     #endregion
 

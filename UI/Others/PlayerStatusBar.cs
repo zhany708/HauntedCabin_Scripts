@@ -18,6 +18,8 @@ public class PlayerStatusBar : BasePanel
 
     protected override void Awake()
     {
+        base.Awake();
+
         GameObject playerHealthBar = GameObject.Find("PlayerHealthBar");    //获取PlayerHealthBar游戏物体
 
         if (playerHealthBar != null )
