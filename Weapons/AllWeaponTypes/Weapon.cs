@@ -1,5 +1,4 @@
 using System;
-using Unity.Burst.CompilerServices;
 using UnityEngine;
 using ZhangYu.Utilities;
 
@@ -48,7 +47,11 @@ public class Weapon : MonoBehaviour
 
     protected virtual void Update()
     {
-        PointToMouse();
+        //游戏正常时，让武器持续指向鼠标
+        if (!PauseMenuPanel.IsGamePaused)
+        {
+            PointToMouse();
+        }
     }
     #endregion
 

@@ -15,8 +15,16 @@ public class MainMenuPanel : PanelWithButton
 
 
 
+    protected override void Awake()
+    {
+        base.Awake();
 
-    protected async override void Start()
+        //默认按钮为“开始游戏”按钮
+        firstSelectedButton = PlayButton.gameObject;
+    }
+
+
+    private async void Start()
     {
         //检查按钮组件是否存在
         if (PlayButton == null || QuitButton == null)
@@ -28,13 +36,7 @@ public class MainMenuPanel : PanelWithButton
         //将按钮和函数绑定起来
         PlayButton.onClick.AddListener(() => PlayGame() );
         QuitButton.onClick.AddListener(() => QuitGame() );
-
-
-        //默认按钮为“开始游戏”按钮，随后将其设置到EventSystem
-        lastSelectedButton = PlayButton.gameObject;
-
-
-        base.Start();
+   
 
         //播放主界面BGN
         await SoundManager.Instance.PlayBGMAsync(SoundManager.Instance.AudioClipKeys.MyVeryOwnDeadShip, true, SoundManager.Instance.MusicVolume);

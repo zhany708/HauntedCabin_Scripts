@@ -1,3 +1,4 @@
+using DG.Tweening;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -11,9 +12,9 @@ public class PauseMenuPanel : PanelWithButton       //挂载在Canvas游戏物体上，因
     public Button MainMenuButton;
     public Button QuitButton;
 
-    public GameObject PauseMenuUI;
 
-    bool isGamePaused = false;
+    //加static就无需获得此脚本的引用即可调用此变量
+    public static bool IsGamePaused {  get; private set; }
 
 
 
@@ -24,12 +25,6 @@ public class PauseMenuPanel : PanelWithButton       //挂载在Canvas游戏物体上，因
     protected override void Awake()
     {
         base.Awake();
-
-        if (PauseMenuUI == null)
-        {
-            Debug.LogError("PauseMenuPanel is not assigned in the Canvas.");
-            return;
-        }
 
         //检查按钮组件是否存在
         if (ResumeButton == null || MainMenuButton == null || QuitButton == null)
@@ -45,37 +40,39 @@ public class PauseMenuPanel : PanelWithButton       //挂载在Canvas游戏物体上，因
         QuitButton.onClick.AddListener(() => QuitGame());
 
 
-        if (lastSelectedButton == null)
-        {
-            //默认按钮为“开始游戏”按钮，随后将其设置到EventSystem
-            lastSelectedButton = ResumeButton.gameObject;
-        }         
+        //默认按钮为“恢复”按钮
+        firstSelectedButton = ResumeButton.gameObject;
     }
 
 
-    protected override void Start()
+    private void Start()
     {
-        base.Start();
-
+        //设置当前界面的名字
         panelName = UIManager.Instance.UIKeys.PauseMenuPanel;
 
-        //将UI界面加进字典
-        if (!UIManager.Instance.PanelDict.ContainsKey(panelName) )
-        {
-            UIManager.Instance.PanelDict.Add(panelName, this);
-        }      
+        //初始化布尔
+        IsGamePaused = false;
+
+        //设置此界面的淡入值
+        FadeInAlpha = 0.75f;
     }
 
 
     protected override void Update()
     {
-        base.Update();
+        //当界面打开时
+        if (CanvasGroup.alpha == FadeInAlpha)
+        {
+            base.Update();
 
-        //这个脚本持续检查玩家是否按下Esc，在暂停过程中按下的话则恢复游戏，否则就暂停游戏    需要做的：添加一个计时器，防止玩家反复按Esc时界面频繁的打开和关闭
-        if (playerInputHandler.IsEscPressed)
+        }
+        //base.Update();
+
+        //持续检查玩家是否按下Esc，在暂停过程中按下的话则恢复游戏，否则就暂停游戏
+        if (Input.GetKeyDown(KeyCode.Escape))
         {
             //游戏暂停时
-            if (isGamePaused)
+            if (IsGamePaused)
             {
                 Resume();
             }
@@ -85,9 +82,8 @@ public class PauseMenuPanel : PanelWithButton       //挂载在Canvas游戏物体上，因
             {
                 Pause();
             }
-        }
+        }                  
     }
-
 
 
 
@@ -96,29 +92,34 @@ public class PauseMenuPanel : PanelWithButton       //挂载在Canvas游戏物体上，因
     //恢复游戏
     private void Resume()
     {
-        PauseMenuUI.SetActive(false);
+        base.OnDisable();
+
+        //关闭界面
+        Fade(CanvasGroup, FadeOutAlpha, 0, false);
 
         //恢复游戏的时间流逝
         Time.timeScale = 1f;
-      
-        isGamePaused = false;
+        
+        IsGamePaused = false;
     }
+
 
     //暂停游戏
     private void Pause()
     {
-        PauseMenuUI.SetActive(true);
+        base.OnEnable();        //Bug：在其他界面打开时，打开此界面后无法将其加入父类中的列表
+
+        //打开界面
+        Fade(CanvasGroup, FadeInAlpha, 0, true);
 
         //暂停游戏的时间流逝
-        Time.timeScale = 0f;
+        Time.timeScale = 0f;        
 
-        isGamePaused = true;
+        IsGamePaused = true;
     }
 
 
-
-
-
+    //返回主菜单
     private void BackToMainMenu()
     {
         //先恢复游戏，随后返回主菜单
@@ -131,6 +132,7 @@ public class PauseMenuPanel : PanelWithButton       //挂载在Canvas游戏物体上，因
     }
 
 
+    //退出游戏
     private void QuitGame()
     {
         //退出游戏（用于本地游戏包）

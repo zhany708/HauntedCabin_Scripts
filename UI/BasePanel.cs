@@ -100,6 +100,8 @@ public class BasePanel : MonoBehaviour
 
         if (targetAlpha == FadeInAlpha && !UIManager.Instance.PanelDict.ContainsKey(panelName))
         {
+            //Debug.Log("Panel added to the PanelDict: " + panelName);
+
             //添加缓存进字典，表示界面正在打开
             UIManager.Instance.PanelDict.Add(panelName, this);
 
@@ -108,56 +110,15 @@ public class BasePanel : MonoBehaviour
 
         else if (targetAlpha == FadeOutAlpha)
         {
+            //Debug.Log("Panel removed from the PanelDict: " + panelName);
+
             //从字典中移除缓存，表示界面没打开
             UIManager.Instance.PanelDict.Remove(panelName);
 
             isRemoved = true;
         }
     }
-
-
-    /*
-    protected void FadeIn(CanvasGroup thisCanvasGroup, float fadeDuration)   //用于界面的淡入
-    {
-        isRemoved = false;
-
-        thisCanvasGroup.alpha = 0f;
-        DOTween.To(() => thisCanvasGroup.alpha, x => thisCanvasGroup.alpha = x, 1f, fadeDuration);     //在1秒之内将透明度从0变为1，实现淡入效果
-                
-        //如果遮挡射线在取消状态，则重新激活
-        if (thisCanvasGroup.blocksRaycasts == false)
-        {
-            thisCanvasGroup.blocksRaycasts = true;
-        }
-
-        //添加缓存进字典，表示界面正在打开
-        if (!UIManager.Instance.PanelDict.ContainsKey(panelName))
-        {
-            UIManager.Instance.PanelDict.Add(panelName, this);
-        }
-    }
-
-    public virtual void FadeOut(CanvasGroup thisCanvasGroup, float fadeDuration)   //用于界面的淡出（另一种关闭界面的方式，但不会销毁物体，只是通过更改透明度隐藏了起来）
-    {
-        isRemoved = true;      
-
-        DOTween.To(() => thisCanvasGroup.alpha, x => thisCanvasGroup.alpha = x, 0, fadeDuration);   //在1秒之内将透明度从1变为0，实现淡出效果     
-
-
-        //如果遮挡射线在激活状态，则取消激活
-        if (thisCanvasGroup.blocksRaycasts == true)
-        {
-            thisCanvasGroup.blocksRaycasts = false;     //取消遮挡射线（因为物体没有被销毁。只是看不见了）
-        }
-           
-
-        //从字典中移除缓存，表示界面没打开
-        if (UIManager.Instance.PanelDict.ContainsKey(panelName))
-        {
-            UIManager.Instance.PanelDict.Remove(panelName);
-        }
-    }
-    */
+  
 
 
 

@@ -27,18 +27,12 @@ public class PickupWeaponPanel : PanelWithButton
 
         m_ItemNameText = GetComponentInChildren<TextMeshProUGUI>();
 
-        //默认按钮为“装备在主武器”按钮，随后将其设置到EventSystem
-        if (lastSelectedButton == null)
-        {
-            lastSelectedButton = EquipOnPrimary.gameObject;
-        }
+        //默认按钮为“装备在主武器”按钮
+        firstSelectedButton = EquipOnPrimary.gameObject;       
     }
 
-    protected override void Start()
+    private void Start()
     {
-        base.Start();
-
-
         if (EquipOnPrimary == null || EquipOnSecondary == null || Leave == null) 
         {
             Debug.LogError("Some buttons are not assigned in the PickupWeaponPanel.");
