@@ -88,7 +88,7 @@ public abstract class ManagerTemplate<T> : MonoBehaviour where T : Component
             //从预制件缓存字典中移除物体
             m_PrefabDict.Remove(key);
 
-            Debug.Log("Gameobject released and removed from dictionary: " + key);
+            //Debug.Log("Gameobject released and removed from dictionary: " + key);
         }
 
         else

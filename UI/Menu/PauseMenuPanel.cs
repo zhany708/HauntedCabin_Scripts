@@ -1,4 +1,3 @@
-using DG.Tweening;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -60,13 +59,13 @@ public class PauseMenuPanel : PanelWithButton       //挂载在Canvas游戏物体上，因
 
     protected override void Update()
     {
-        //当界面打开时
+        //当界面打开时才调用父类的Update函数
         if (CanvasGroup.alpha == FadeInAlpha)
         {
             base.Update();
 
         }
-        //base.Update();
+
 
         //持续检查玩家是否按下Esc，在暂停过程中按下的话则恢复游戏，否则就暂停游戏
         if (Input.GetKeyDown(KeyCode.Escape))
