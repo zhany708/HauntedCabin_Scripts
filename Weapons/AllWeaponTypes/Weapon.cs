@@ -47,7 +47,7 @@ public class Weapon : MonoBehaviour
 
     protected virtual void Update()
     {
-        //游戏正常时，让武器持续指向鼠标
+        //游戏没有暂停时，让武器持续指向鼠标
         if (!PauseMenuPanel.IsGamePaused)
         {
             PointToMouse();

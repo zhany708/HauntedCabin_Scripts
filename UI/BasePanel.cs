@@ -1,4 +1,5 @@
 using DG.Tweening;
+using System;
 using System.Collections;
 using TMPro;
 using UnityEngine;
@@ -7,6 +8,11 @@ using UnityEngine;
 
 public class BasePanel : MonoBehaviour
 {
+    public event Action OnFadeInFinished;       //界面完全淡入时调用的事件，接收方为子类
+    public event Action OnFadeOutFinished;       //界面完全淡出时调用的事件，接收方为子类
+
+
+
     private CanvasGroup m_CanvasGroup;
     public CanvasGroup CanvasGroup      //Lazy Loading（只在需要使用组件时才加载组件（而不是在Awake函数里默认加载），节省内存）
     {
@@ -94,9 +100,27 @@ public class BasePanel : MonoBehaviour
             targetGroup.DOFade(targetAlpha, duration).OnComplete(() =>
             {
                 targetGroup.blocksRaycasts = blocksRaycasts;      //设置是否阻挡射线检测
+
+                //打开界面
+                if(targetAlpha == FadeInAlpha)
+                {
+                    OnFadeInFinished?.Invoke();
+                }
+
+                else
+                {
+                    OnFadeOutFinished?.Invoke();
+                }             
             });
         }
     
+        else
+        {
+            Debug.LogError("CanvasGroup is not found in this panel: " + panelName);
+        }
+
+
+
 
         if (targetAlpha == FadeInAlpha && !UIManager.Instance.PanelDict.ContainsKey(panelName))
         {

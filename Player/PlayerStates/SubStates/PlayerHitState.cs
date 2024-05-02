@@ -1,10 +1,5 @@
-using UnityEngine;
-
-
 public class PlayerHitState : PlayerGroundedState
 {
-    AnimatorStateInfo m_AnimatorStateInfo;
-
     public PlayerHitState(Player player, PlayerStateMachine stateMachine, SO_PlayerData playerData, string animBoolName) : base(player, stateMachine, playerData, animBoolName)
     {
     }
@@ -20,19 +15,26 @@ public class PlayerHitState : PlayerGroundedState
     {
         base.Exit();
 
-        Combat.SetIsHit(false);
+        combat.SetIsHit(false);
         isHit = false;
     }
 
     public override void LogicUpdate()
     {
+        //检查玩家是否死亡
+        if (playerStats.GetCurrentHealth() <= 0)
+        {
+            stateMachine.ChangeState(player.DeathState);
+        }
+
+        
         input = player.InputHandler.RawMovementInput;   //通过Player脚本调用闲置状态和移动状态需要的向量数值
 
 
 
-        m_AnimatorStateInfo = core.Animator.GetCurrentAnimatorStateInfo(0);       //获取当前动画
+        animatorStateInfo = core.Animator.GetCurrentAnimatorStateInfo(0);       //获取当前动画
 
-        if (m_AnimatorStateInfo.IsName("Hit") && m_AnimatorStateInfo.normalizedTime >= 0.95f)
+        if (animatorStateInfo.IsName("Hit") && animatorStateInfo.normalizedTime >= 0.95f)
         {
             stateMachine.ChangeState(player.IdleState);     //受击动画结束后切换成闲置状态
         }
@@ -40,6 +42,6 @@ public class PlayerHitState : PlayerGroundedState
 
     public override void PhysicsUpdate()
     {
-        //禁止玩家受击时自由移动
+        //重写此函数，从而禁止玩家受击时自由移动
     }
 }

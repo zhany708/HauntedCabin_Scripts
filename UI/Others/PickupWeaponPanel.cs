@@ -46,6 +46,21 @@ public class PickupWeaponPanel : PanelWithButton
     }
 
 
+    protected override void OnEnable()
+    {
+        base.OnEnable();
+
+        OnFadeOutFinished += ClosePanel;
+    }
+
+    protected override void OnDisable()
+    {
+        base.OnDisable();
+
+        OnFadeOutFinished -= ClosePanel;
+    }
+
+
 
 
 
@@ -78,7 +93,7 @@ public class PickupWeaponPanel : PanelWithButton
                 m_Player.ChangeWeapon(m_WeaponPrefab.name, true);
 
                 //装备完后关闭界面，并删除地上的武器
-                ClosePanel();
+                Fade(CanvasGroup, FadeOutAlpha, FadeDuration, false);
                 Destroy(m_WeaponPickup.gameObject);
                 break;
 
@@ -87,12 +102,12 @@ public class PickupWeaponPanel : PanelWithButton
                 m_Player.ChangeWeapon(m_WeaponPrefab.name, false);
 
                 //装备完后关闭界面，并删除地上的武器
-                ClosePanel();
+                Fade(CanvasGroup, FadeOutAlpha, FadeDuration, false);
                 Destroy(m_WeaponPickup.gameObject);
                 break;
 
             case "Leave":
-                ClosePanel();
+                Fade(CanvasGroup, FadeOutAlpha, FadeDuration, false);
                 break;
 
             default:

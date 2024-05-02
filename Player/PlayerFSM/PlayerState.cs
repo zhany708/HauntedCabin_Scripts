@@ -1,10 +1,12 @@
 using UnityEngine;
 
+
+
 public class PlayerState
 {
     protected Core core;
     
-    protected Movement Movement
+    protected Movement movement
     {
         get
         {
@@ -16,7 +18,7 @@ public class PlayerState
     private Movement m_Movement; 
     
     
-    protected Combat Combat
+    protected Combat combat
     {
         get
         {
@@ -26,8 +28,21 @@ public class PlayerState
         }
     }
     private Combat m_Combat;
-    
 
+
+    protected PlayerStats playerStats
+    {
+        get
+        {
+            if (m_PlayerStats) { return m_PlayerStats; }
+            m_PlayerStats = core.GetCoreComponent<PlayerStats>();
+            return m_PlayerStats;
+        }
+    }
+    private PlayerStats m_PlayerStats;
+
+
+    protected AnimatorStateInfo animatorStateInfo;
 
     protected Player player;
     protected PlayerStateMachine stateMachine;
@@ -72,7 +87,7 @@ public class PlayerState
 
         SetMoveAnimation();    //判断是否播放脚步移动动画
 
-        if (Combat.IsHit && !isHit && !isAttack)    //检查是否进入受击状态
+        if (combat.IsHit && !isHit && !isAttack)    //检查是否进入受击状态
         {
             stateMachine.ChangeState(player.HitState);
         }
@@ -81,7 +96,18 @@ public class PlayerState
 
     public virtual void PhysicsUpdate() 
     {
-        Movement.SetVelocity(playerData.MovementVelocity, input);       //将移动逻辑放在跟状态中，这样玩家无需进入移动状态也可以移动（某些状态需要覆盖此函数，如受击状态）
+        //只有当没有带按钮的界面打开时，才允许玩家移动
+        if (!PanelWithButton.IsPanelWithButtonOpened)
+        {
+            //将移动逻辑放在跟状态中，这样玩家无需进入移动状态也可以移动（某些状态需要覆盖此函数，如受击状态）
+            movement.SetVelocity(playerData.MovementVelocity, input);
+        }
+
+        //否则暂停玩家的移动
+        else
+        {
+            movement.SetVelocityZero();
+        }
     }
     
 

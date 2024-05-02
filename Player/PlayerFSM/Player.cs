@@ -10,6 +10,7 @@ public class Player : MonoBehaviour
     public PlayerIdleState IdleState { get; private set; }
     public PlayerMoveState MoveState { get; private set; }
     public PlayerHitState HitState { get; private set; }
+    public PlayerDeathState DeathState { get; private set; }
     public PlayerAttackState PrimaryAttackState { get; private set; }
     public PlayerAttackState SecondaryAttackState { get; private set; }
     #endregion
@@ -65,6 +66,7 @@ public class Player : MonoBehaviour
         IdleState = new PlayerIdleState(this, StateMachine, PlayerData, "Idle");
         MoveState = new PlayerMoveState(this, StateMachine, PlayerData, "Idle");
         HitState = new PlayerHitState(this, StateMachine, PlayerData, "Hit");
+        DeathState = new PlayerDeathState(this, StateMachine, PlayerData, "Death");
         PrimaryAttackState = new PlayerAttackState(this, StateMachine, PlayerData, "Idle", PrimaryWeapon);
         SecondaryAttackState = new PlayerAttackState(this, StateMachine, PlayerData, "Idle", SecondaryWeapon);
     }

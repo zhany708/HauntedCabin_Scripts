@@ -5,8 +5,10 @@ using UnityEngine.UI;
 
 
 
-public class PauseMenuPanel : PanelWithButton       //挂载在Canvas游戏物体上，因为整个游戏过程中都有可能会用到此界面
+public class PauseMenuPanel : PanelWithButton       //整个游戏过程中都会用到此界面
 {
+    public static PauseMenuPanel Instance { get; private set; }
+
     public Button ResumeButton;
     public Button MainMenuButton;
     public Button QuitButton;
@@ -24,6 +26,26 @@ public class PauseMenuPanel : PanelWithButton       //挂载在Canvas游戏物体上，因
     protected override void Awake()
     {
         base.Awake();
+
+        //单例模式
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+        }
+
+        else
+        {
+            Instance = this;
+
+            //只有在没有父物体时才运行防删函数，否则会出现提醒
+            if (gameObject.transform.parent == null)
+            {
+                DontDestroyOnLoad(gameObject);
+            }
+        }
+
+
+
 
         //检查按钮组件是否存在
         if (ResumeButton == null || MainMenuButton == null || QuitButton == null)
@@ -54,6 +76,7 @@ public class PauseMenuPanel : PanelWithButton       //挂载在Canvas游戏物体上，因
 
         //设置此界面的淡入值
         FadeInAlpha = 0.75f;
+        FadeDuration = 0;
     }
 
 
@@ -84,6 +107,21 @@ public class PauseMenuPanel : PanelWithButton       //挂载在Canvas游戏物体上，因
         }                  
     }
 
+    //重写函数，因为此界面游戏开始时就存在
+    protected override void OnEnable() 
+    {
+        OnFadeInFinished += base.OnEnable;
+        OnFadeOutFinished += base.OnDisable;
+    }
+
+    protected override void OnDisable()
+    {
+        OnFadeInFinished -= base.OnEnable;
+        OnFadeOutFinished -= base.OnDisable;
+    }
+
+
+
 
 
 
@@ -91,10 +129,10 @@ public class PauseMenuPanel : PanelWithButton       //挂载在Canvas游戏物体上，因
     //恢复游戏
     private void Resume()
     {
-        base.OnDisable();
+        //base.OnDisable();
 
         //关闭界面
-        Fade(CanvasGroup, FadeOutAlpha, 0, false);
+        Fade(CanvasGroup, FadeOutAlpha, FadeDuration, false);
 
         //恢复游戏的时间流逝
         Time.timeScale = 1f;
@@ -106,10 +144,10 @@ public class PauseMenuPanel : PanelWithButton       //挂载在Canvas游戏物体上，因
     //暂停游戏
     private void Pause()
     {
-        base.OnEnable();        //Bug：在其他界面打开时，打开此界面后无法将其加入父类中的列表
+        //base.OnEnable();
 
         //打开界面
-        Fade(CanvasGroup, FadeInAlpha, 0, true);
+        Fade(CanvasGroup, FadeInAlpha, FadeDuration, true);
 
         //暂停游戏的时间流逝
         Time.timeScale = 0f;        
@@ -125,7 +163,19 @@ public class PauseMenuPanel : PanelWithButton       //挂载在Canvas游戏物体上，因
         Resume();
 
         //返回主界面场景
-        SceneManager.LoadScene("MainMenu");
+        if (SceneManager.GetActiveScene().name == "MainMenu")
+        {
+            //游戏开始时加载开始界面
+            Debug.Log("You are already in the Main Menu!");
+        }
+
+        else
+        {
+            //EventSystem.current.gameObject.SetActive(false);
+
+            //不在主菜单时，则返回主菜单
+            SceneManager.LoadScene("MainMenu");
+        }
 
         //ClosePanel();
     }
