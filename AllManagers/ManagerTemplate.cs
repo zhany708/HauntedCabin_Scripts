@@ -107,4 +107,14 @@ public abstract class ManagerTemplate<T> : MonoBehaviour where T : Component
             gameObject.transform.parent = thisParent;           
         }      
     }
+
+
+    //设置脚本中跟物体的坐标
+    protected void SetupRootGameObject(ref Transform rootGameObject, string rootGameObjectName)
+    {
+        //尝试寻找游戏中含有第二个参数的名字的物体，如果没找到的话就新建一个
+        GameObject rootObject = GameObject.Find(rootGameObjectName) ?? new GameObject(rootGameObjectName);
+
+        rootGameObject = rootObject.transform;
+    }
 }

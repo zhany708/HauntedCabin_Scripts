@@ -73,8 +73,10 @@ public class PanelWithButton : BasePanel        //专门用于有按钮的界面UI
         CheckIsPanelWithButtonOpened();
     }
 
-    protected virtual void OnDisable()
+    protected override void OnDisable()
     {
+        base.OnDisable();
+
         //界面关闭后移出列表
         if (m_OpenedPanelsWithButton.Contains(this))
         {

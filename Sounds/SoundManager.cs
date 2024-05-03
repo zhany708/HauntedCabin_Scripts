@@ -35,15 +35,12 @@ public class SoundManager : ManagerTemplate<SoundManager>
         m_SfxSource = gameObject.AddComponent<AudioSource>();
 
         m_AudioDict = new Dictionary<string, AudioClip>();
-    }
 
-    private void Start()
-    {
+
         //≥ı ºªØ“Ù¡ø
         MusicVolume = 0.5f;
         SfxVolume = 1f;
     }
-
 
 
 

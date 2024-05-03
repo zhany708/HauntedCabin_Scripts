@@ -7,7 +7,6 @@ using UnityEngine;
 public class RoomGenerator : ManagerTemplate<RoomGenerator>
 {
     public SO_RoomKeys RoomKeys;
-    public Transform FatherOfAllRooms;      //所有生成的房间的父物体，为了整洁美观
     public LayerMask roomLayerMask;         //房间的图层
     
 
@@ -27,6 +26,9 @@ public class RoomGenerator : ManagerTemplate<RoomGenerator>
     //表示当前房间
     Transform m_CurrentRoomTransform;
 
+    //所有生成的房间的父物体（为了整洁美观）
+    Transform m_AllRooms;
+
     //运用Physics2D检查重复坐标时需要的X和Y的值
     const float m_PhysicsCheckingXPos = 15f;
     const float m_PhysicsCheckingYPos = 10f;
@@ -41,11 +43,29 @@ public class RoomGenerator : ManagerTemplate<RoomGenerator>
 
 
 
+
+    protected override void Awake()
+    {
+        base.Awake();
+
+        //赋值房间跟物体给脚本
+        SetupRootGameObject(ref m_AllRooms, "AllRooms");
+    }
+
     private void Start()
     {
         //自动设置层级
         //roomLayerMask = LayerMask.GetMask("OnlyTriggerPlayerAndEnemy");
     }
+
+
+
+
+
+
+
+
+
 
 
     //生成房间
@@ -181,8 +201,15 @@ public class RoomGenerator : ManagerTemplate<RoomGenerator>
                 GameObject loadedRoom = await LoadPrefabAsync(RoomKeys.FirstFloorRoomKeys[m_RandomGeneratedNum] );       //异步加载事件
                 if (loadedRoom != null)
                 {
+                    //如果因为场景加载等原因导致房间跟物体被删除过，就重新获取
+                    if (m_AllRooms ==  null)
+                    {
+                        //赋值房间跟物体给脚本
+                        SetupRootGameObject(ref m_AllRooms, "AllRooms");
+                    }
+
                     //加载成功后，将房间生成出来
-                    newRoom = Instantiate(loadedRoom, newRoomPos, Quaternion.identity, FatherOfAllRooms);
+                    newRoom = Instantiate(loadedRoom, newRoomPos, Quaternion.identity, m_AllRooms);
                 }   
 
                 else

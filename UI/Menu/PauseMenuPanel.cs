@@ -129,8 +129,6 @@ public class PauseMenuPanel : PanelWithButton       //整个游戏过程中都会用到此界
     //恢复游戏
     private void Resume()
     {
-        //base.OnDisable();
-
         //关闭界面
         Fade(CanvasGroup, FadeOutAlpha, FadeDuration, false);
 
@@ -144,8 +142,6 @@ public class PauseMenuPanel : PanelWithButton       //整个游戏过程中都会用到此界
     //暂停游戏
     private void Pause()
     {
-        //base.OnEnable();
-
         //打开界面
         Fade(CanvasGroup, FadeInAlpha, FadeDuration, true);
 
@@ -171,13 +167,9 @@ public class PauseMenuPanel : PanelWithButton       //整个游戏过程中都会用到此界
 
         else
         {
-            //EventSystem.current.gameObject.SetActive(false);
-
             //不在主菜单时，则返回主菜单
             SceneManager.LoadScene("MainMenu");
         }
-
-        //ClosePanel();
     }
 
 

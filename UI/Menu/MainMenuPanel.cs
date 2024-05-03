@@ -38,10 +38,16 @@ public class MainMenuPanel : PanelWithButton
         QuitButton.onClick.AddListener(() => QuitGame() );
    
 
+        //初始化界面名字
+        if (panelName  == null)
+        {
+            panelName = UIManager.Instance.UIKeys.MainMenuPanel;
+        }
+        
+
         //播放主界面BGN
         await SoundManager.Instance.PlayBGMAsync(SoundManager.Instance.AudioClipKeys.MyVeryOwnDeadShip, true, SoundManager.Instance.MusicVolume);
     }
-
 
 
 
@@ -56,7 +62,9 @@ public class MainMenuPanel : PanelWithButton
         //播放一楼BGM
         await SoundManager.Instance.PlayBGMAsync(SoundManager.Instance.AudioClipKeys.StopForAMoment, true, SoundManager.Instance.MusicVolume);
 
-        ClosePanel();
+        //ClosePanel();
+        //从字典中移除，表示界面没打开
+        UIManager.Instance.PanelDict.Remove(panelName);
     }
 
     private void QuitGame()

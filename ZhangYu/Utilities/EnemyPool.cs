@@ -28,6 +28,9 @@ public class EnemyPool : MonoBehaviour       //用于生成敌人的对象池
             Instance = this;
 
             m_Pool = new GameObject("EnemyPool");
+
+            //防止加载场景后跟父物体被删除
+            DontDestroyOnLoad(m_Pool);
         }
 
     }

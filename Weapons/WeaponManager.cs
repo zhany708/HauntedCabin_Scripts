@@ -62,6 +62,13 @@ public class WeaponManager : ManagerTemplate<WeaponManager>        //ÓÃÓÚ¹ÜÀíÎäÆ
             return;
         }
 
+        //Èç¹ûÒòÎª³¡¾°¼ÓÔØµÈÔ­Òòµ¼ÖÂÍæ¼ÒÎïÌå±»É¾³ı¹ı£¬¾ÍÖØĞÂ»ñÈ¡Ö÷¸±ÎäÆ÷
+        if (m_PrimaryWeapon == null || m_SecondaryWeapon == null)
+        {
+            //¸³ÖµÖ÷ÎäÆ÷ºÍ¸±ÎäÆ÷¸ø½Å±¾
+            SetupWeaponHolder(ref m_PrimaryWeapon, "PrimaryWeapon");
+            SetupWeaponHolder(ref m_SecondaryWeapon, "SecondaryWeapon");
+        }
 
         //Éú³ÉÎïÌå£¬²¢¸ù¾İµÚ¶ş¸ö²ÎÊı¾ö¶¨¸¸ÎïÌåÎªÖ÷ÎäÆ÷»¹ÊÇ¸±ÎäÆ÷
         GameObject weaponObject = Instantiate(weaponPrefab, isPrimary ? m_PrimaryWeapon : m_SecondaryWeapon);

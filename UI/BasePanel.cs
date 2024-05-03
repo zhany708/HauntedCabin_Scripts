@@ -57,7 +57,11 @@ public class BasePanel : MonoBehaviour
     }
 
 
-
+    protected virtual void OnDisable()
+    {
+        //从字典中移除，表示界面没打开
+        UIManager.Instance.PanelDict.Remove(panelName);
+    }
 
 
 
@@ -84,10 +88,7 @@ public class BasePanel : MonoBehaviour
         Destroy(gameObject);
 
         //释放物体和内存
-        UIManager.Instance.ReleasePrefab(panelName);
-
-        //从字典中移除，表示界面没打开
-        UIManager.Instance.PanelDict.Remove(panelName);       
+        UIManager.Instance.ReleasePrefab(panelName);     
     }
 
 

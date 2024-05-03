@@ -20,7 +20,7 @@ public class UIManager : ManagerTemplate<UIManager>
 
 
 
-
+    
 
 
 
@@ -28,17 +28,11 @@ public class UIManager : ManagerTemplate<UIManager>
     {
         base.Awake();
 
-        //寻找画布物体，没有的话就创建一个
-        GameObject canvasObject = GameObject.Find("Canvas");
-        if (canvasObject == null)
-        {
-            canvasObject = new GameObject("Canvas");
-        }
-
-        m_UIRoot = canvasObject.transform;
+        //寻找画布跟物体，没有的话就创建一个
+        SetupRootGameObject(ref m_UIRoot, "Canvas");
 
         //加载新场景时不删除Canvas总组件
-        DontDestroyOnLoad(canvasObject);
+        //DontDestroyOnLoad(m_UIRoot);
     }
 
 
@@ -48,7 +42,7 @@ public class UIManager : ManagerTemplate<UIManager>
         if (SceneManager.GetActiveScene().name == "MainMenu")
         {
             //游戏开始时加载开始界面
-            await OpenPanel(UIKeys.MainMenuPanel);
+            //await OpenPanel(UIKeys.MainMenuPanel);
         }
 
         else
@@ -80,7 +74,14 @@ public class UIManager : ManagerTemplate<UIManager>
             Debug.LogError("Failed to load panel prefab: " + name);
             return;
         }
-        
+
+
+        //如果因为场景加载等原因导致画布跟物体被删除过，就重新获取
+        if (m_UIRoot == null)
+        {
+            //寻找画布跟物体，没有的话就创建一个
+            SetupRootGameObject(ref m_UIRoot, "Canvas");
+        }
 
         //异步加载后生成物体并获取物体身上的组件
         GameObject panelObject = GameObject.Instantiate(panelPrefab, m_UIRoot, false);

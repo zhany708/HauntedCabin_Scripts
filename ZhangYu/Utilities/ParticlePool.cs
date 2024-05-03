@@ -26,6 +26,9 @@ public class ParticlePool : MonoBehaviour       //用于子弹，特效等的对象池
             Instance = this;
 
             m_Pool = new GameObject("ParticlePool");
+
+            //防止加载场景后跟父物体被删除
+            DontDestroyOnLoad(m_Pool);
         }
 
     }

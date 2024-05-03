@@ -19,9 +19,9 @@ public class EventManager : ManagerTemplate<EventManager>
 
 
 
-    int m_EventCount;                 //生成过多少房间
-    int m_EnterSecondStageCount;      //进入二阶段所需的房间数
-    int m_RandomGeneratedNum;         //随机生成的数（用于新的房间生成的索引）
+    int m_EventCount;                 //生成过多少事件
+    int m_EnterSecondStageCount;      //进入二阶段所需的事件数
+    int m_RandomGeneratedNum;         //随机生成的数（用于新的事件生成的索引）
 
 
 
@@ -158,14 +158,12 @@ public class EventManager : ManagerTemplate<EventManager>
     }
     #endregion
 
-    #region Setters
-    
+    #region Setters 
     public void SetIsSecondStage(bool isTrue)
     {
         IsSecondStage = isTrue;
     }
     
-
     public void IncrementEventCount()
     {
         m_EventCount++;
