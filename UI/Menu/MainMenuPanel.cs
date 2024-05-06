@@ -62,7 +62,6 @@ public class MainMenuPanel : PanelWithButton
         //播放一楼BGM
         await SoundManager.Instance.PlayBGMAsync(SoundManager.Instance.AudioClipKeys.StopForAMoment, true, SoundManager.Instance.MusicVolume);
 
-        //ClosePanel();
         //从字典中移除，表示界面没打开
         UIManager.Instance.PanelDict.Remove(panelName);
     }

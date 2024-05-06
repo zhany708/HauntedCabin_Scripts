@@ -25,7 +25,11 @@ public class FireBatAttackState : EnemyAttackState
     {
         if (core.AnimatorInfo.IsName("Attack") && core.AnimatorInfo.normalizedTime >= 0.95f)     //²¥·ÅÍê¹¥»÷¶¯»­Ôò·¢Éä»ğÇòÇÒÇĞ»»³É×·»÷×´Ì¬
         {
-            m_FireBat.FireBallLaunch(m_Target);
+            if (m_Target != null)
+            {
+                m_FireBat.FireBallLaunch(m_Target);
+            }
+            
             stateMachine.ChangeState(enemy.ChaseState);
         }
     }

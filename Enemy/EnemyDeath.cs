@@ -1,3 +1,7 @@
+using UnityEngine;
+
+
+
 public class EnemyDeath : Death
 {
     public DoorController DoorController { get; private set; }
@@ -14,6 +18,11 @@ public class EnemyDeath : Death
         {
             DoorController.IncrementEnemyCount();     //增加敌人计数器的计数
         }  
+
+        else
+        {
+            Debug.LogError("Cannot find the DoorController component!");
+        }
     }
 
 

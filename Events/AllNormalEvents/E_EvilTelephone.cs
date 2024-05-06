@@ -1,5 +1,7 @@
 using UnityEngine;
 
+
+
 public class E_EvilTelephone : Event
 {
     Animator m_Animator;
@@ -15,6 +17,14 @@ public class E_EvilTelephone : Event
         m_AudioSource = GetComponent<AudioSource>();
         m_Collider = GetComponent<Collider2D>();
     }
+
+    private void OnEnable()
+    {
+        //每次加载时都重置碰撞框
+        m_Collider.enabled = true;
+    }
+
+
 
 
     private void OnTriggerEnter2D(Collider2D other)

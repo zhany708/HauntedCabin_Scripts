@@ -19,11 +19,13 @@ public class EnemyHitState : EnemyState
 
     public override void LogicUpdate()
     {
-        if (enemyStats.GetCurrentHealth() == 0)
+        //先判断是否死亡
+        if (enemyStats.GetCurrentHealth() <= 0)
         {
             stateMachine.ChangeState(enemy.DeathState);
         }
 
+        //没有死亡的话进入攻击状态
         else if (core.AnimatorInfo.IsName("Hit"))
         {
             if (core.AnimatorInfo.normalizedTime >= 0.95f)

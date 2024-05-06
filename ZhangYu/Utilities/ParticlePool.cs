@@ -1,7 +1,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ParticlePool : MonoBehaviour       //用于子弹，特效等的对象池
+
+
+public class ParticlePool : MonoBehaviour       //用于子弹，特效等的对象池。生成出来的所有物体都放在子物体
 {
     public static ParticlePool Instance {  get; private set; }
 
@@ -9,7 +11,9 @@ public class ParticlePool : MonoBehaviour       //用于子弹，特效等的对象池
 
     private Dictionary<string, Queue<GameObject>> m_ParticlePool = new Dictionary<string, Queue<GameObject>>();     //使用字典对不同的物体进行分开存储
 
-    private GameObject m_Pool;      //所有生成物体的根父物体
+
+
+
 
 
 
@@ -24,13 +28,7 @@ public class ParticlePool : MonoBehaviour       //用于子弹，特效等的对象池
         else
         {
             Instance = this;
-
-            m_Pool = new GameObject("ParticlePool");
-
-            //防止加载场景后跟父物体被删除
-            DontDestroyOnLoad(m_Pool);
         }
-
     }
 
 
@@ -48,14 +46,13 @@ public class ParticlePool : MonoBehaviour       //用于子弹，特效等的对象池
         obj.SetActive(true);
 
         return obj;
-
     }
 
 
 
     private GameObject CreateNewObject(GameObject prefab)
     {
-        //先找父物体，随后再创建
+        //先找用来存放每类物体的父物体，随后再创建
         GameObject childContainer = FindOrCreateChildContainer(prefab.name);
         GameObject obj = Instantiate(prefab, childContainer.transform);
 
@@ -65,12 +62,15 @@ public class ParticlePool : MonoBehaviour       //用于子弹，特效等的对象池
     //用于寻找或创建子物体的父物体（为了整洁美观）
     private GameObject FindOrCreateChildContainer(string name)
     {
-        Transform childTransform = m_Pool.transform.Find(name);
+        //先尝试在当前物体的子物体中寻找参数中的名字的物体
+        Transform childTransform = transform.Find(name);
 
         if (childTransform == null)
         {
             GameObject child = new GameObject(name);
-            child.transform.SetParent(m_Pool.transform);
+
+            //将每种类型的物体的父物体设置为当前物体的子物体
+            child.transform.SetParent(transform);
 
             return child;
         }
@@ -100,6 +100,8 @@ public class ParticlePool : MonoBehaviour       //用于子弹，特效等的对象池
 
             //创建完后取消激活
             obj.SetActive(false);
+
+            //随后设置父物体
             obj.transform.SetParent(FindOrCreateChildContainer(name).transform);
 
             return true;

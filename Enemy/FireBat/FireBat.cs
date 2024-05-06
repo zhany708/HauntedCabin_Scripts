@@ -18,21 +18,28 @@ public class FireBat : Enemy
 
     public void FireBallLaunch(Transform target)
     {
-        Vector2 attackX = transform.localScale.x >= 0 ? Vector2.right : Vector2.left;      //根据动画参数MoveX判断敌人朝向
-        float deviation = 0.2f;     //偏离参数（偏离嘴部多少）
-        Vector2 attackPosition = Movement.Rigidbody2d.position + Vector2.up * 0.8f + attackX * deviation;       //火球生成位置在y轴上应位于头部，x轴上应偏离敌人的位置（嘴部发射）
+        if (target != null)
+        {
+            //储存参数的临时坐标，防止函数运行期间参数消失
+            Vector3 tempPos = target.position;
 
 
-        float angle = Mathf.Atan2((target.position.y + 0.5f - attackPosition.y), (target.position.x - attackPosition.x)) * Mathf.Rad2Deg;      //计算火球与玩家中心之间的夹角
-
-        //生成火球，并设置坐标和旋转
-        GameObject FireBallObject = ParticlePool.Instance.GetObject(FireBallPrefab);
-        FireBallObject.transform.position = attackPosition;
-        FireBallObject.transform.rotation = Quaternion.Euler(0, 0, angle);
+            Vector2 attackX = transform.localScale.x >= 0 ? Vector2.right : Vector2.left;      //根据动画参数MoveX判断敌人朝向
+            float deviation = 0.2f;     //偏离参数（偏离嘴部多少）
+            Vector2 attackPosition = Movement.Rigidbody2d.position + Vector2.up * 0.8f + attackX * deviation;       //火球生成位置在y轴上应位于头部，x轴上应偏离敌人的位置（嘴部发射）
 
 
+            float angle = Mathf.Atan2((tempPos.y + 0.5f - attackPosition.y), (tempPos.x - attackPosition.x)) * Mathf.Rad2Deg;      //计算火球与玩家中心之间的夹角
 
-        EnemyBullet fireBall = FireBallObject.GetComponent<EnemyBullet>();        //调用火球脚本
-        fireBall.SetSpeed(target.position + Vector3.up * 0.5f - FireBallObject.transform.position);        //朝角色中心方向发射火球
+            //生成火球，并设置坐标和旋转
+            GameObject FireBallObject = ParticlePool.Instance.GetObject(FireBallPrefab);
+            FireBallObject.transform.position = attackPosition;
+            FireBallObject.transform.rotation = Quaternion.Euler(0, 0, angle);
+
+
+
+            EnemyBullet fireBall = FireBallObject.GetComponent<EnemyBullet>();        //调用火球脚本
+            fireBall.SetSpeed(tempPos + Vector3.up * 0.5f - FireBallObject.transform.position);        //朝角色中心方向发射火球
+        }       
     }
 }

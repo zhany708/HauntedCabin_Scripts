@@ -170,5 +170,17 @@ public class EventManager : ManagerTemplate<EventManager>
 
         CheckIfTranstionToSecondStage();    //每次事件计数增加后检查是否满足进入二阶段
     }
+
+    //重置游戏
+    public void ResetGame()
+    {
+        //判断玩家是否进行过游戏
+        if (m_EventCount != 0 || IsSecondStage)
+        {
+            //重置触发过的事件
+            m_EventCount = 0;
+            IsSecondStage = false;
+        }
+    }
     #endregion
 }

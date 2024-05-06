@@ -170,7 +170,7 @@ public class BasePanel : MonoBehaviour
             if (playerInputHandler.IsSpacePressed)       //玩家按下空格后直接显示全部文字
             {
                 textComponent.text = fullText;
-                yield break;
+                break;
             }
 
             textComponent.text += letter;

@@ -1,14 +1,16 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemyPool : MonoBehaviour       //用于生成敌人的对象池
+
+
+public class EnemyPool : MonoBehaviour       //用于生成敌人的对象池，生成出来的所有敌人都放在子物体
 {
     public static EnemyPool Instance { get; private set; }
 
 
     Dictionary<string, Queue<GameObject>> m_EnemyPool = new Dictionary<string, Queue<GameObject>>();
 
-    GameObject m_Pool;
+
 
 
 
@@ -20,19 +22,13 @@ public class EnemyPool : MonoBehaviour       //用于生成敌人的对象池
         //单例模式
         if (Instance != null && Instance != this)
         {
-            Destroy(this.gameObject);
+            Destroy(gameObject);
         }
 
         else
         {
             Instance = this;
-
-            m_Pool = new GameObject("EnemyPool");
-
-            //防止加载场景后跟父物体被删除
-            DontDestroyOnLoad(m_Pool);
         }
-
     }
 
 
@@ -61,7 +57,7 @@ public class EnemyPool : MonoBehaviour       //用于生成敌人的对象池
 
     private GameObject CreateNewObject(GameObject prefab, Vector2 spawnPos)
     {
-        //先找父物体，随后再创建
+        //先找用来存放每类敌人的父物体，随后再创建
         GameObject childContainer = FindOrCreateChildContainer(prefab.name);
         GameObject obj = Instantiate(prefab, spawnPos, Quaternion.identity, childContainer.transform);
 
@@ -71,12 +67,15 @@ public class EnemyPool : MonoBehaviour       //用于生成敌人的对象池
     //用于寻找或创建子物体的父物体（为了整洁美观）
     private GameObject FindOrCreateChildContainer(string name)
     {
-        Transform childTransform = m_Pool.transform.Find(name);
+        //先尝试在当前物体的子物体中寻找参数中的名字的物体
+        Transform childTransform = transform.Find(name);
 
         if (childTransform == null)
         {
             GameObject child = new GameObject(name);
-            child.transform.SetParent(m_Pool.transform);
+
+            //将每种类型的敌人的父物体设置为当前物体的子物体
+            child.transform.SetParent(transform);
 
             return child;
         }
@@ -106,11 +105,31 @@ public class EnemyPool : MonoBehaviour       //用于生成敌人的对象池
 
             //创建完后取消激活
             obj.SetActive(false);
+
+            //随后设置父物体
             obj.transform.SetParent(FindOrCreateChildContainer(name).transform);
 
             return true;
         }
 
         return false;
+    }
+
+
+
+    public void ResetGame()
+    {
+        //在场景中取消激活所有敌人
+        foreach (Transform child in transform)    
+        {
+            foreach (Transform child2 in child)     //检索每一个子物体的子物体
+            {
+                if (child2.CompareTag("Enemy"))
+                {
+                    //这里必须放回池中，不能单纯的取消激活。否则在敌人存活时重置游戏后，将不会重复使用之前生成过的敌人物体
+                    PushObject(child2.gameObject);      //将敌人脚本的父物体放回池中，也将放回父物体的所有子物体
+                }
+            }
+        }
     }
 }
