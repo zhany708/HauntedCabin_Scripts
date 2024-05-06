@@ -26,6 +26,9 @@ public class Death : CoreComponent      //如果需要不同的死亡效果，则新建一个脚本
 
         Movement.Rigidbody2d.constraints = RigidbodyConstraints2D.FreezeAll;        //防止死亡后物体还能接着移动
 
+        //取消激活战斗组件，防止出现鞭尸现象
+        combat.gameObject.SetActive(false);
+
         core.Animator.SetBool("Death", true);
     }
 }

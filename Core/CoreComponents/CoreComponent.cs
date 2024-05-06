@@ -17,6 +17,18 @@ public class CoreComponent : MonoBehaviour
     private Movement m_Movement;
 
 
+    protected Combat combat
+    {
+        get
+        {
+            if (m_Combat) { return m_Combat; }      //检查组件是否为空
+            m_Combat = core.GetCoreComponent<Combat>();
+            return m_Combat;
+        }
+    }
+    private Combat m_Combat;
+
+
     protected Stats Stats
     {
         get

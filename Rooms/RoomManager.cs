@@ -4,7 +4,7 @@ using UnityEngine;
 
 
 
-public class RoomGenerator : ManagerTemplate<RoomGenerator>
+public class RoomManager : ManagerTemplate<RoomManager>
 {
     public SO_RoomKeys RoomKeys;
     public LayerMask roomLayerMask;         //房间的图层

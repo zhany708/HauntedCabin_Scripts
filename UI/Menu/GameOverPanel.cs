@@ -1,0 +1,90 @@
+using UnityEngine.UI;
+using UnityEngine;
+using UnityEngine.SceneManagement;
+
+
+
+public class GameOverPanel : PanelWithButton
+{
+    public Button RestartButton;
+    public Button QuitButton;
+
+
+
+
+
+    protected override void Awake()
+    {
+        base.Awake();
+
+        //默认按钮为“重新开始”按钮
+        firstSelectedButton = RestartButton.gameObject;
+
+        //设置此界面的淡入值
+        FadeInAlpha = 0.75f;
+    }
+
+    private void Start()
+    {
+        //检查按钮组件是否存在
+        if (RestartButton == null || QuitButton == null)
+        {
+            Debug.LogError("Some buttons are not assigned in the GameOverPanel.");
+            return;
+        }
+
+        //将按钮和函数绑定起来
+        RestartButton.onClick.AddListener(() => Restart());
+        QuitButton.onClick.AddListener(() => QuitGame());
+    }
+
+    
+    protected override void OnEnable()
+    {
+        base.OnEnable();
+
+        OnFadeOutFinished += BackToMainMenu;        //彻底淡出时执行返回主菜单的函数
+    }
+
+    protected override void OnDisable()
+    {
+        base.OnDisable();
+
+        OnFadeOutFinished -= BackToMainMenu;
+    }
+    
+
+
+
+
+
+
+    private void Restart()
+    {
+        //关闭界面
+        Fade(CanvasGroup, FadeOutAlpha, FadeDuration, false);
+    }
+
+    //返回主菜单
+    private void BackToMainMenu()
+    {
+        //返回主菜单
+        SceneManager.LoadScene("MainMenu");
+
+        //重置游戏的各种系统
+        EventManager.Instance.ResetGame();
+        EnemyPool.Instance.ResetGame();       
+    }
+
+
+    private void QuitGame()
+    {
+        //退出游戏（用于本地游戏包）
+        Application.Quit();
+
+        //在Unity编辑器内退出游玩模式
+        #if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
+        #endif
+    }
+}

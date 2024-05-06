@@ -17,12 +17,7 @@ public class Stats : CoreComponent      //用于管理生命，魔力等状态信息
 
 
 
-    protected override void Awake()
-    {
-        base.Awake();
 
-        //currentHealth = MaxHealth;      //游戏开始时重置当前生命值
-    }
 
     private void Start()
     {

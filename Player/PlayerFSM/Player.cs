@@ -40,7 +40,8 @@ public class Player : MonoBehaviour
     public float MinOrthoSize = 5.4f;
     public float MaxOrthoSize = 10f;
 
-
+    
+    //public static bool IsAttackable {  get; private set; }      //表示玩家是否可攻击，用于受击间隔
     public bool IsFirstFrame { get; private set; } = true;
     public int FacingNum { get; private set; }
 

@@ -102,15 +102,15 @@ public class BasePanel : MonoBehaviour
             {
                 targetGroup.blocksRaycasts = blocksRaycasts;      //设置是否阻挡射线检测
 
-                //打开界面
-                if(targetAlpha == FadeInAlpha)
+                //界面彻底淡出时
+                if(targetAlpha == FadeOutAlpha)
                 {
-                    OnFadeInFinished?.Invoke();
+                    OnFadeOutFinished?.Invoke();
                 }
 
                 else
                 {
-                    OnFadeOutFinished?.Invoke();
+                    OnFadeInFinished?.Invoke(); 
                 }             
             });
         }

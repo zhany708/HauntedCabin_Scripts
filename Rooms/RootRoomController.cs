@@ -6,21 +6,24 @@ using UnityEngine.SceneManagement;
 
 public class RootRoomController : MonoBehaviour
 {
+    //玩家离开房间后房间变成的透明度
     public float HiddenTransparency = 0.01f;
-
-
-    List<SpriteRenderer> m_AllSprites;
-
-    DoorController m_DoorInsideThisRoom;
-    RoomGenerator m_RoomManager;
-    RoomType m_RoomType;
-    PostProcessController m_PostProcessController;
-
-    const float m_DefaultTransparency = 1f;
 
     //后期处理相关的变量
     public float m_DarkPostProcessColorValue = -250f;
     public float m_PostProcessDuration = 1f;
+
+
+    List<SpriteRenderer> m_AllSprites;
+
+
+    DoorController m_DoorInsideThisRoom;
+    RoomManager m_RoomManager;
+    RoomType m_RoomType;
+    PostProcessController m_PostProcessController;
+
+    //默认透明度为1
+    const float m_DefaultTransparency = 1f; 
 
     bool m_HasGeneratedRoom = false;
 
@@ -37,7 +40,7 @@ public class RootRoomController : MonoBehaviour
 
         m_DoorInsideThisRoom = GetComponentInChildren<DoorController>();
 
-        m_RoomManager = GameObject.Find("RoomManager").GetComponent<RoomGenerator>();   //寻找场景中这个名字的物体，并获得相应的组件
+        m_RoomManager = GameObject.Find("RoomManager").GetComponent<RoomManager>();   //寻找场景中这个名字的物体，并获得相应的组件
         if (m_RoomManager == null)
         {
             Debug.LogError("Cannot find the Gameobject 'RoomManager'.");
@@ -121,7 +124,8 @@ public class RootRoomController : MonoBehaviour
             {
                 m_DoorInsideThisRoom.RoomTrigger.enabled = true;    //玩家离开房间后重新激活门的触发器，从而让玩家之后再进入时生成敌人
 
-                if (m_DoorInsideThisRoom.HasGeneratedEvent && !m_DoorInsideThisRoom.HasDeactivateEvent)     //如果房间生成过事件，且还没取消激活该事件时
+                //如果房间生成过事件，且还没取消激活该事件时
+                if (m_DoorInsideThisRoom.HasGeneratedEvent && !m_DoorInsideThisRoom.HasDeactivateEvent)     
                 {
                     m_DoorInsideThisRoom.EventManagerAtDoor.DeactivateEventObject();        //玩家离开房间后销毁事件物体
                     m_DoorInsideThisRoom.SetHasDeactivateEvent(true);                                                                            

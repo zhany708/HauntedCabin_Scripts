@@ -98,12 +98,14 @@ public class EventManager : ManagerTemplate<EventManager>
 
     //取消激活事件物体
     public void DeactivateEventObject()
-    {
-        
+    {       
         //尝试将事件推回对象池
         if (!ParticlePool.Instance.PushObject(m_EventPrefab) )
         {
-            Debug.LogError("Failed to push the event object back to the pool: " + m_EventPrefab.name);
+            if (m_EventPrefab != null)
+            {
+                Debug.LogError("Failed to push the event object back to the pool: " + m_EventPrefab.name);
+            }         
         }
         
 

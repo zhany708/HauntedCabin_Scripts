@@ -7,7 +7,7 @@ public class TransitionStagePanel : BasePanel
 {
     TextMeshProUGUI m_TransitionStageText;      //文本组件
 
-    float m_DisplayDuration = 10f;
+    float m_DisplayDuration = 5f;
 
 
 

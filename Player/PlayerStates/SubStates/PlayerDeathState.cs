@@ -1,5 +1,6 @@
-using System.Diagnostics;
 using UnityEngine;
+
+
 
 public class PlayerDeathState : PlayerState
 {
@@ -18,6 +19,17 @@ public class PlayerDeathState : PlayerState
         player.SecondaryWeapon.gameObject.SetActive(false);
     }
 
+    public override async void Exit()
+    {
+        base.Exit();
+
+        player.gameObject.SetActive(false);    //取消激活玩家，从而退出玩家状态机
+
+        //游戏结束界面不能放在LogicUpdate函数里，防止重复打开多个界面
+        await UIManager.Instance.OpenPanel(UIManager.Instance.UIKeys.GameOverPanel);
+    }
+
+
 
 
     public override void LogicUpdate()
@@ -26,10 +38,10 @@ public class PlayerDeathState : PlayerState
 
         if (animatorStateInfo.IsName("Death") && animatorStateInfo.normalizedTime >= 0.95f)
         {
-            player.gameObject.SetActive(false);     //取消激活玩家，防止出现鞭尸现象
+            Debug.Log("Game Over!");
 
-            //死亡动画播完后打开游戏结束界面
-            UnityEngine.Debug.Log("Game Over!");
+            //死亡动画播完后进入“闲置”状态（实际上直接退出玩家状态机）
+            stateMachine.ChangeState(player.IdleState);
         }
     }
 
