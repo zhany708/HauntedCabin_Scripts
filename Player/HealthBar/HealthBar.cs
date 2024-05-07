@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -20,10 +21,24 @@ public class HealthBar : MonoBehaviour
 
 
 
-    private async void Start()     //因为需要异步加载UI。所以使用async（如果不使用的话，可能会出现还没加载完就接着跑下面的代码的情况）
+
+
+
+    
+    private async void Start()     
+    {
+        await InitializeHealthBarAsync();
+    }
+    
+
+
+
+
+    //因为需要异步加载UI。所以使用async（如果不使用的话，可能会出现还没加载完就接着跑下面的代码的情况）
+    private async Task InitializeHealthBarAsync()   
     {
         //检查UIKeys是否为空且要加载的名字是否存在，随后等待UI加载完毕
-        if (UIManager.Instance.UIKeys != null && !string.IsNullOrEmpty(UIManager.Instance.UIKeys.PlayerStatusBarKey) )
+        if (UIManager.Instance.UIKeys != null && !string.IsNullOrEmpty(UIManager.Instance.UIKeys.PlayerStatusBarKey))
         {
             await UIManager.Instance.OpenPanel(UIManager.Instance.UIKeys.PlayerStatusBarKey);    //显示玩家状态栏
         }
@@ -32,10 +47,16 @@ public class HealthBar : MonoBehaviour
         {
             Debug.LogError("UIKeys not set or playerStatusBarKey is empty.");
         }
-        
+
 
         //UI加载完毕后才会获取组件
         m_Player = GetComponentInParent<Player>();
+        if (m_Player == null)
+        {
+            Debug.LogError("Player component not found in parent.");
+            return;
+        }
+
 
         m_MaxHp = m_Player.PlayerData.MaxHealth;        //游戏开始时初始化最大生命值
         m_CurrentHp = m_MaxHp;
@@ -43,6 +64,7 @@ public class HealthBar : MonoBehaviour
         //这个时候再运行此函数。就不会出现某个异步加载的组件还没初始化完毕就需要使用
         UpdateHealthBar();
     }
+
 
 
 
