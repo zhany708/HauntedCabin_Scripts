@@ -1,6 +1,8 @@
 using System;
 using UnityEngine;
 
+
+
 public class Stats : CoreComponent      //用于管理生命，魔力等状态信息
 {
     public event Action OnHealthZero;       //接收方为Death脚本

@@ -38,7 +38,7 @@ public class PlayerDeathState : PlayerState
 
         if (animatorStateInfo.IsName("Death") && animatorStateInfo.normalizedTime >= 0.95f)
         {
-            Debug.Log("Game Over!");
+            //Debug.Log("Game Over!");
 
             //死亡动画播完后进入“闲置”状态（实际上直接退出玩家状态机）
             stateMachine.ChangeState(player.IdleState);

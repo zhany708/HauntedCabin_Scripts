@@ -23,7 +23,6 @@ public class PlayerAttackState : PlayerAbilityState
 
         base.Enter();
 
-
         isAttack = true;
 
         m_Weapon.EnterWeapon();

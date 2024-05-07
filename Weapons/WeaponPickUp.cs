@@ -72,7 +72,7 @@ public class WeaponPickUp : MonoBehaviour
     #region Setters
     public void SetIsPanelOpen(bool isOpen)
     {
-        m_IsPanelOpen=isOpen;
+        m_IsPanelOpen = isOpen;
     }
     #endregion
 }

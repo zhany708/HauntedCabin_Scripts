@@ -27,9 +27,9 @@ public class BasePanel : MonoBehaviour
     }
 
 
-    public float FadeDuration { get; protected set; }
-    public float FadeInAlpha { get; protected set; }
-    public float FadeOutAlpha { get; protected set; }
+    public float FadeDuration { get; protected set; } = 1f;
+    public float FadeInAlpha { get; protected set; } = 1f;
+    public float FadeOutAlpha { get; protected set; } = 0f;
 
 
     protected PlayerInputHandler playerInputHandler;
@@ -49,18 +49,16 @@ public class BasePanel : MonoBehaviour
     {
         //这个脚本跟打字和跳过对话相关
         playerInputHandler = FindObjectOfType<PlayerInputHandler>();     //寻找有PlayerInputHandler组件的物体
-
-
-        FadeDuration = 1f;
-        FadeInAlpha = 1f;
-        FadeOutAlpha = 0f;
     }
 
 
     protected virtual void OnDisable()
     {
-        //从字典中移除，表示界面没打开
-        UIManager.Instance.PanelDict.Remove(panelName);
+        if (UIManager.Instance.PanelDict.ContainsKey(panelName) )
+        {
+            //从字典中移除，表示界面没打开
+            UIManager.Instance.PanelDict.Remove(panelName);
+        }     
     }
 
 
@@ -69,7 +67,7 @@ public class BasePanel : MonoBehaviour
 
     public virtual void OpenPanel(string name)
     {
-        this.panelName = name;
+        panelName = name;
 
         //淡入界面
         Fade(CanvasGroup, FadeInAlpha, FadeDuration, true);
@@ -96,52 +94,48 @@ public class BasePanel : MonoBehaviour
     //用于界面的淡入/淡出（淡入时第四个参数应为真，淡出时为假）
     public virtual void Fade(CanvasGroup targetGroup, float targetAlpha, float duration, bool blocksRaycasts)
     {
-        if(targetGroup != null)
+        if (targetGroup == null)
         {
-            targetGroup.DOFade(targetAlpha, duration).OnComplete(() =>
+            Debug.LogError("CanvasGroup is not found in panel: " + panelName);
+            return;
+        }
+
+
+
+
+        //在淡出的情况下，界面还没完全淡出时就立刻设置阻挡射线
+        if (targetAlpha == FadeOutAlpha)
+        {
+            targetGroup.blocksRaycasts = blocksRaycasts;    //设置是否阻挡射线检测
+        }
+
+
+        targetGroup.DOFade(targetAlpha, duration).OnComplete(() =>
+        {
+            targetGroup.blocksRaycasts = blocksRaycasts;    //设置是否阻挡射线检测
+
+            //在淡入的情况下
+            if (targetAlpha != FadeOutAlpha)
             {
-                targetGroup.blocksRaycasts = blocksRaycasts;      //设置是否阻挡射线检测
+                OnFadeInFinished?.Invoke();
 
-                //界面彻底淡出时
-                if(targetAlpha == FadeOutAlpha)
-                {
-                    OnFadeOutFinished?.Invoke();
-                }
+                isRemoved = false;
 
-                else
-                {
-                    OnFadeInFinished?.Invoke(); 
-                }             
-            });
-        }
-    
-        else
-        {
-            Debug.LogError("CanvasGroup is not found in this panel: " + panelName);
-        }
+                //添加缓存进字典，表示界面正在打开
+                UIManager.Instance.PanelDict[panelName] = this;
+            }
 
+            //淡出时
+            else
+            {
+                OnFadeOutFinished?.Invoke();
 
+                isRemoved = true;
 
-
-        if (targetAlpha == FadeInAlpha && !UIManager.Instance.PanelDict.ContainsKey(panelName))
-        {
-            //Debug.Log("Panel added to the PanelDict: " + panelName);
-
-            //添加缓存进字典，表示界面正在打开
-            UIManager.Instance.PanelDict.Add(panelName, this);
-
-            isRemoved = false;
-        }
-
-        else if (targetAlpha == FadeOutAlpha)
-        {
-            //Debug.Log("Panel removed from the PanelDict: " + panelName);
-
-            //从字典中移除缓存，表示界面没打开
-            UIManager.Instance.PanelDict.Remove(panelName);
-
-            isRemoved = true;
-        }
+                //从字典中移除缓存，表示界面没打开
+                UIManager.Instance.PanelDict.Remove(panelName);
+            }             
+        });
     }
   
 

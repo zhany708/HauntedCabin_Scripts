@@ -38,7 +38,7 @@ public class SoundManager : ManagerTemplate<SoundManager>
 
 
         //初始化音量
-        MusicVolume = 0.5f;
+        MusicVolume = 1f;
         SfxVolume = 1f;
     }
 
@@ -197,7 +197,7 @@ public class SoundManager : ManagerTemplate<SoundManager>
         if (thisClip != null)
         {
             //仅播放一次音效，使用参数中的音量
-            m_SfxSource.PlayOneShot(thisClip, SfxVolume * thisVolume);
+            m_SfxSource.PlayOneShot(thisClip, SfxVolume * thisVolume * RandomVolume() );
         }
     }
 
@@ -207,7 +207,14 @@ public class SoundManager : ManagerTemplate<SoundManager>
         if (thisClip != null)
         {
             //仅播放一次音效，使用参数中的音量
-            thisAudioSource.PlayOneShot(thisClip, SfxVolume * thisVolume);
+            thisAudioSource.PlayOneShot(thisClip, SfxVolume * thisVolume * RandomVolume() );
         }
+    }
+
+
+    //随机音高（98%-103%），这样不会显得音效单调
+    private float RandomVolume()
+    {
+        return UnityEngine.Random.Range(0.98f, 1.03f);
     }
 }

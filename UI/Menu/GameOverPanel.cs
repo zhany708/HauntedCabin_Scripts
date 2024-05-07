@@ -34,8 +34,8 @@ public class GameOverPanel : PanelWithButton
         }
 
         //将按钮和函数绑定起来
-        RestartButton.onClick.AddListener(() => Restart());
-        QuitButton.onClick.AddListener(() => QuitGame());
+        RestartButton.onClick.AddListener(() => OnRestartButtonClick());
+        QuitButton.onClick.AddListener(() => OnQuitButtonClick());
     }
 
     
@@ -43,14 +43,14 @@ public class GameOverPanel : PanelWithButton
     {
         base.OnEnable();
 
-        OnFadeOutFinished += BackToMainMenu;        //彻底淡出时执行返回主菜单的函数
+        OnFadeOutFinished += HandleFadeOutFinished;        //彻底淡出时执行函数
     }
 
     protected override void OnDisable()
     {
         base.OnDisable();
 
-        OnFadeOutFinished -= BackToMainMenu;
+        OnFadeOutFinished -= HandleFadeOutFinished;
     }
     
 
@@ -59,25 +59,13 @@ public class GameOverPanel : PanelWithButton
 
 
 
-    private void Restart()
+    private void OnRestartButtonClick()
     {
         //关闭界面
         Fade(CanvasGroup, FadeOutAlpha, FadeDuration, false);
     }
-
-    //返回主菜单
-    private void BackToMainMenu()
-    {
-        //返回主菜单
-        SceneManager.LoadScene("MainMenu");
-
-        //重置游戏的各种系统
-        EventManager.Instance.ResetGame();
-        EnemyPool.Instance.ResetGame();       
-    }
-
-
-    private void QuitGame()
+   
+    private void OnQuitButtonClick()
     {
         //退出游戏（用于本地游戏包）
         Application.Quit();
@@ -86,5 +74,22 @@ public class GameOverPanel : PanelWithButton
         #if UNITY_EDITOR
         UnityEditor.EditorApplication.isPlaying = false;
         #endif
+    }
+
+
+
+    private void HandleFadeOutFinished()
+    {
+        //返回主菜单
+        SceneManager.LoadScene("MainMenu");
+
+        //重置游戏的各种系统
+        ResetGameSystems();
+    }
+
+    private void ResetGameSystems()
+    {
+        EventManager.Instance.ResetGame();
+        EnemyPool.Instance.ResetGame();
     }
 }

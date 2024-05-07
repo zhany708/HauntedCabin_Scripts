@@ -46,7 +46,7 @@ public class MainMenuPanel : PanelWithButton
         
 
         //播放主界面BGN
-        await SoundManager.Instance.PlayBGMAsync(SoundManager.Instance.AudioClipKeys.MyVeryOwnDeadShip, true, SoundManager.Instance.MusicVolume);
+        await SoundManager.Instance.PlayBGMAsync(SoundManager.Instance.AudioClipKeys.MyVeryOwnDeadShip, true);
     }
 
 

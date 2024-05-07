@@ -9,15 +9,23 @@ public class PickupWeaponPanel : PanelWithButton
     public Button EquipOnSecondary;
     public Button Leave;
 
-    //武器名
-    TextMeshProUGUI m_ItemNameText;
-    //要拾取的武器物体
-    GameObject m_WeaponPrefab;
+    
+    TextMeshProUGUI m_ItemNameText;     //武器名   
+    GameObject m_WeaponPrefab;          //要拾取的武器物体
+   
+    Player m_Player;                    //玩家脚本   
+    WeaponPickUp m_WeaponPickup;        //拾取武器脚本
 
-    //玩家脚本
-    Player m_Player;
-    //拾取武器脚本
-    WeaponPickUp m_WeaponPickup;
+
+    //用于点击按钮函数的枚举
+    private enum ButtonAction
+    {
+        EquipOnPrimary,
+        EquipOnSecondary,
+        Leave
+    }
+
+
 
 
 
@@ -40,9 +48,9 @@ public class PickupWeaponPanel : PanelWithButton
         }
 
         //将按钮和函数绑定起来
-        EquipOnPrimary.onClick.AddListener( () => ButtonAction(EquipOnPrimary.name) );
-        EquipOnSecondary.onClick.AddListener(() => ButtonAction(EquipOnSecondary.name));
-        Leave.onClick.AddListener(() => ButtonAction(Leave.name));       
+        EquipOnPrimary.onClick.AddListener( () => OnButtonClicked(ButtonAction.EquipOnPrimary) );
+        EquipOnSecondary.onClick.AddListener(() => OnButtonClicked(ButtonAction.EquipOnSecondary) );
+        Leave.onClick.AddListener(() => OnButtonClicked(ButtonAction.Leave) );       
     }
 
 
@@ -50,6 +58,7 @@ public class PickupWeaponPanel : PanelWithButton
     {
         base.OnEnable();
 
+        //界面完全淡出后调用此函数
         OnFadeOutFinished += ClosePanel;
     }
 
@@ -79,34 +88,44 @@ public class PickupWeaponPanel : PanelWithButton
         //界面关闭后允许玩家攻击
         playerInputHandler.SetCanDetectAttack(true);
 
-        m_WeaponPickup.SetIsPanelOpen(false);
+       
+        if (m_WeaponPickup != null)
+        {
+            //设置拾取武器脚本里的布尔
+            m_WeaponPickup.SetIsPanelOpen(false);
+        }
     }
 
 
 
-    private void ButtonAction(string action)
+
+    private void DestroyWeaponGameObject()
+    {
+        if (m_WeaponPickup != null)
+        {
+            //删除地上的武器
+            Destroy(m_WeaponPickup.gameObject);
+        }
+    }
+
+
+    
+
+
+
+    private void OnButtonClicked(ButtonAction action)
     {
         switch (action)
         {
-            case "EquipOnPrimary":
-                //装备武器到主武器
-                m_Player.ChangeWeapon(m_WeaponPrefab.name, true);
-
-                //装备完后关闭界面，并删除地上的武器
-                Fade(CanvasGroup, FadeOutAlpha, FadeDuration, false);
-                Destroy(m_WeaponPickup.gameObject);
+            case ButtonAction.EquipOnPrimary:
+                EquipWeapon(true);
                 break;
 
-            case "EquipOnSecondary":
-                //装备武器到副武器
-                m_Player.ChangeWeapon(m_WeaponPrefab.name, false);
-
-                //装备完后关闭界面，并删除地上的武器
-                Fade(CanvasGroup, FadeOutAlpha, FadeDuration, false);
-                Destroy(m_WeaponPickup.gameObject);
+            case ButtonAction.EquipOnSecondary:
+                EquipWeapon(false);
                 break;
 
-            case "Leave":
+            case ButtonAction.Leave:
                 Fade(CanvasGroup, FadeOutAlpha, FadeDuration, false);
                 break;
 
@@ -117,10 +136,25 @@ public class PickupWeaponPanel : PanelWithButton
     }
 
 
+
+    private void EquipWeapon(bool isPrimary)
+    {
+        if (m_Player != null && m_WeaponPrefab != null)
+        {
+            m_Player.ChangeWeapon(m_WeaponPrefab.name, isPrimary);
+
+            //装备完武器后淡出界面
+            Fade(CanvasGroup, FadeOutAlpha, FadeDuration, false);
+
+            //装备完武器后删除地上的武器物体
+            DestroyWeaponGameObject();
+        }
+    }
+
     #region Setters
     public void SetItemName(string itemName)
     {
-        if (itemName != null)
+        if (m_ItemNameText != null && itemName != null)
         {
             m_ItemNameText.text = itemName;
         }

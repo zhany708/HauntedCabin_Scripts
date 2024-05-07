@@ -7,7 +7,7 @@ using UnityEngine.EventSystems;
 public class PanelWithButton : BasePanel        //专门用于有按钮的界面UI
 {
     //用于表示是否有带按钮的界面打开
-    public static bool IsPanelWithButtonOpened {  get; private set; }
+    public static bool IsPanelWithButtonOpened => m_OpenedPanelsWithButton.Count > 0;
 
 
 
@@ -26,12 +26,7 @@ public class PanelWithButton : BasePanel        //专门用于有按钮的界面UI
 
 
 
-    protected override void Awake()
-    {
-        base.Awake();
 
-        IsPanelWithButtonOpened = false;
-    }
 
 
     protected virtual void Update()
@@ -40,7 +35,7 @@ public class PanelWithButton : BasePanel        //专门用于有按钮的界面UI
         if (EventSystem.current != null)
         {
             //如果当前选择的按钮为空（可能因为鼠标点击，界面关闭等）
-            if (EventSystem.current.currentSelectedGameObject == null)
+            if (EventSystem.current.currentSelectedGameObject == null && lastSelectedButton != null)
             {
                 //重新设置上一个选择按钮
                 EventSystem.current.SetSelectedGameObject(lastSelectedButton);
@@ -68,9 +63,6 @@ public class PanelWithButton : BasePanel        //专门用于有按钮的界面UI
 
         //每次界面重新加载后都设置新的按钮给EventSystem
         SetTopPriorityButton();
-
-        //检查当前是否仍然有带按钮的界面打开
-        CheckIsPanelWithButtonOpened();
     }
 
     protected override void OnDisable()
@@ -86,11 +78,19 @@ public class PanelWithButton : BasePanel        //专门用于有按钮的界面UI
         }
 
         SetTopPriorityButton();
-        CheckIsPanelWithButtonOpened();
     }
 
 
 
+
+
+    public override void Fade(CanvasGroup targetGroup, float targetAlpha, float duration, bool blocksRaycasts)
+    {
+        //有按钮的界面在淡入/淡出前，需要提前设置按钮是否可交互，否则会出现在淡出的过程中二次点击的情况
+        targetGroup.interactable = blocksRaycasts;
+
+        base.Fade(targetGroup, targetAlpha, duration, blocksRaycasts);
+    }
 
 
 
@@ -100,7 +100,7 @@ public class PanelWithButton : BasePanel        //专门用于有按钮的界面UI
 
         //PrintList();
 
-        if (m_OpenedPanelsWithButton.Count != 0)
+        if (m_OpenedPanelsWithButton.Count > 0)
         {
             //将最后加进列表的按钮（最近一次打开的界面）设置为上一个选择的按钮
             lastSelectedButton = m_OpenedPanelsWithButton[m_OpenedPanelsWithButton.Count - 1].firstSelectedButton;
@@ -114,21 +114,8 @@ public class PanelWithButton : BasePanel        //专门用于有按钮的界面UI
     }
 
 
-    //通过列表的大小判断当前是否有带按钮的界面打开
-    private void CheckIsPanelWithButtonOpened()
-    { 
-        if (m_OpenedPanelsWithButton.Count != 0)
-        {
-            IsPanelWithButtonOpened = true;
-        }
 
-        else
-        {
-            IsPanelWithButtonOpened = false;
-        }
-    }
-
-
+    /*
     //用于调试
     private void PrintList()
     {
@@ -140,4 +127,5 @@ public class PanelWithButton : BasePanel        //专门用于有按钮的界面UI
             }
         }
     }
+    */
 }

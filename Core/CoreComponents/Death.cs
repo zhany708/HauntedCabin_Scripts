@@ -9,6 +9,13 @@ public class Death : CoreComponent      //如果需要不同的死亡效果，则新建一个脚本
 
     private void OnEnable()
     {
+        if (!combat.gameObject.activeSelf)
+        {
+            //重新激活战斗组件，防止再次加载后无法攻击敌人
+            combat.gameObject.SetActive(true);
+        }
+
+
         Stats.OnHealthZero += Die;    //将函数加进事件
     }
 
