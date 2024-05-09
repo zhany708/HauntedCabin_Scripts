@@ -44,6 +44,7 @@ public class MultiAttackMeleeWeapon : MeleeWeapon
 
         base.EnterWeapon();
 
+        //播放对应的攻击连击的动画
         animator.SetInteger("AttackCounter", CurrentAttackCounter);
     }
 

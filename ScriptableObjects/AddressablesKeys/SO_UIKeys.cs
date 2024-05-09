@@ -8,7 +8,7 @@ public class SO_UIKeys : ScriptableObject
     [Header("Menu")]
     public string MainMenuPanel;              //游戏开始菜单
     public string PauseMenuPanel;           //游戏暂停界面
-    public string GameOverPanel;        //游戏结束界面
+    public string GameLostPanel;        //游戏结束界面
 
 
     //人物相关

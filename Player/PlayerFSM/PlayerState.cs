@@ -52,8 +52,8 @@ public class PlayerState
     protected Vector2 input;        //闲置状态和移动状态需要的向量数值
 
     protected bool isAnimationFinished = false;     //用于检查动画是否播放完毕
-    protected bool isAttack = false;
-    protected bool isHit = false;
+    protected bool isAttack = false;        //表示是否正在攻击
+    protected bool isHit = false;           //表示是否正在受击
 
 
     string m_AnimationBoolName;     //告诉动画器应该播放哪个动画
@@ -81,6 +81,7 @@ public class PlayerState
         player.Core.Animator.SetBool(m_AnimationBoolName, false);        //设置当前状态布尔为false以进入下个状态
     }
 
+
     public virtual void LogicUpdate() 
     {
         input = player.InputHandler.RawMovementInput;   //通过Player脚本调用闲置状态和移动状态需要的向量数值
@@ -92,7 +93,6 @@ public class PlayerState
             stateMachine.ChangeState(player.HitState);
         }
     }
-
 
     public virtual void PhysicsUpdate() 
     {
@@ -113,6 +113,9 @@ public class PlayerState
 
 
     public virtual void AnimationFinishTrigger() => isAnimationFinished = true; 
+
+
+
 
 
     protected void SetMoveAnimation()      //检查玩家是否按下WASD键，从而判断是否播放脚步移动动画

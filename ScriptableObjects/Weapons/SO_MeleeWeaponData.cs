@@ -38,9 +38,9 @@ public struct MeleeWeaponAttackDetails
     public string AttackName;
     //public float MovementSpeed;
 
-    public float DamageAmount;
-    public float KnockbackStrength;
+    public float DamageAmount;              //基础伤害量
+    public float KnockbackStrength;         //击退力度
 
-    public float CameraShakeIntensity;
-    public float CameraShakeDuration;
+    public float CameraShakeIntensity;      //相机震动强度
+    public float CameraShakeDuration;       //相机震动时长
 }

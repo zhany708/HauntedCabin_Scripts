@@ -26,7 +26,7 @@ public class PlayerDeathState : PlayerState
         player.gameObject.SetActive(false);    //取消激活玩家，从而退出玩家状态机
 
         //游戏结束界面不能放在LogicUpdate函数里，防止重复打开多个界面
-        await UIManager.Instance.OpenPanel(UIManager.Instance.UIKeys.GameOverPanel);
+        await UIManager.Instance.OpenPanel(UIManager.Instance.UIKeys.GameLostPanel);
     }
 
 

@@ -34,23 +34,33 @@ public class PickupWeaponPanel : PanelWithButton
         base.Awake();
 
         m_ItemNameText = GetComponentInChildren<TextMeshProUGUI>();
+        if (m_ItemNameText == null)
+        {
+            Debug.LogError("ItemName text is not assigned in the PickupWeaponPanel.");
+            return;
+        }
 
-        //默认按钮为“装备在主武器”按钮
-        firstSelectedButton = EquipOnPrimary.gameObject;       
-    }
 
-    private void Start()
-    {
-        if (EquipOnPrimary == null || EquipOnSecondary == null || Leave == null) 
+        if (EquipOnPrimary == null || EquipOnSecondary == null || Leave == null)
         {
             Debug.LogError("Some buttons are not assigned in the PickupWeaponPanel.");
             return;
         }
 
+
+        //默认按钮为“装备在主武器”按钮（必须放在Awake函数中）
+        firstSelectedButton = EquipOnPrimary.gameObject;
+
+        //设置此界面的淡入值（必须放在Awake函数中）
+        FadeInAlpha = 0.75f;
+    }
+
+    private void Start()
+    {
         //将按钮和函数绑定起来
-        EquipOnPrimary.onClick.AddListener( () => OnButtonClicked(ButtonAction.EquipOnPrimary) );
-        EquipOnSecondary.onClick.AddListener(() => OnButtonClicked(ButtonAction.EquipOnSecondary) );
-        Leave.onClick.AddListener(() => OnButtonClicked(ButtonAction.Leave) );       
+        EquipOnPrimary.onClick.AddListener(() => OnButtonClicked(ButtonAction.EquipOnPrimary));
+        EquipOnSecondary.onClick.AddListener(() => OnButtonClicked(ButtonAction.EquipOnSecondary));
+        Leave.onClick.AddListener(() => OnButtonClicked(ButtonAction.Leave));  
     }
 
 

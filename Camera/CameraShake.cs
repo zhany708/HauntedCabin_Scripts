@@ -2,6 +2,8 @@ using Cinemachine;
 using System.Collections;
 using UnityEngine;
 
+
+
 public class CameraShake : MonoBehaviour
 {
     CinemachineVirtualCamera m_PlayerCamera;

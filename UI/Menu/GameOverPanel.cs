@@ -17,15 +17,6 @@ public class GameOverPanel : PanelWithButton
     {
         base.Awake();
 
-        //默认按钮为“重新开始”按钮
-        firstSelectedButton = RestartButton.gameObject;
-
-        //设置此界面的淡入值
-        FadeInAlpha = 0.75f;
-    }
-
-    private void Start()
-    {
         //检查按钮组件是否存在
         if (RestartButton == null || QuitButton == null)
         {
@@ -33,12 +24,22 @@ public class GameOverPanel : PanelWithButton
             return;
         }
 
-        //将按钮和函数绑定起来
-        RestartButton.onClick.AddListener(() => OnRestartButtonClick());
-        QuitButton.onClick.AddListener(() => OnQuitButtonClick());
+        //默认按钮为“重新开始”按钮
+        firstSelectedButton = RestartButton.gameObject;
+
+
+        //设置此界面的淡入值
+        FadeInAlpha = 0.75f;
     }
 
-    
+    private void Start()
+    {
+        //将按钮和函数绑定起来
+        RestartButton.onClick.AddListener(() => OnRestartButtonClick());
+        QuitButton.onClick.AddListener(() => OnQuitButtonClick());       
+    }
+
+
     protected override void OnEnable()
     {
         base.OnEnable();
@@ -85,11 +86,5 @@ public class GameOverPanel : PanelWithButton
 
         //重置游戏的各种系统
         ResetGameSystems();
-    }
-
-    private void ResetGameSystems()
-    {
-        EventManager.Instance.ResetGame();
-        EnemyPool.Instance.ResetGame();
     }
 }

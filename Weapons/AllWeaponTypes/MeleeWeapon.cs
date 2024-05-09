@@ -30,19 +30,8 @@ public class MeleeWeapon : Weapon
     {
         base.Awake();
 
-        if (WeaponData.GetType() == typeof(SO_MeleeWeaponData))
-        {
-            aggressiveWeaponData = (SO_MeleeWeaponData)WeaponData;     //如果WeaponData与当前AggressiveWeaponData相同，则将当前攻击性武器数据的Reference传给Weapon脚本
-        }
-        else
-        {
-            Debug.LogError("Wrong data for the weapon");
-        }
-
-        cameraShake = FindObjectOfType<CameraShake>();    //找拥有CameraShake脚本的组件
+        InitializeComponents();     //初始化组件
     }
-
-
 
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -60,14 +49,40 @@ public class MeleeWeapon : Weapon
 
 
 
+    private void InitializeComponents()
+    {
+        //如果WeaponData与当前AggressiveWeaponData相同，则将当前攻击性武器数据的Reference传给Weapon脚本
+        if (WeaponData.GetType() == typeof(SO_MeleeWeaponData))
+        {
+            aggressiveWeaponData = (SO_MeleeWeaponData)WeaponData;
+        }
+        else
+        {
+            Debug.LogError("Wrong data for the weapon");
+            enabled = false;    //取消激活当前脚本（不是物体）
+        }
+
+
+        cameraShake = FindObjectOfType<CameraShake>();    //找拥有CameraShake脚本的组件
+        if (cameraShake == null)
+        {
+            Debug.LogError("Cannot find CameraShake component.");
+            return;
+        }
+    }
+
+
+
 
     public void CheckMeleeAttack()     //攻击到敌人时调用此函数
     {
         //Debug.Log("Checking!");
 
-        MeleeWeaponAttackDetails details = aggressiveWeaponData.AttackDetails[CurrentAttackCounter];        //调用攻击性武器中不同连击次数的信息
+        //调用攻击性武器中不同连击次数的信息
+        MeleeWeaponAttackDetails details = aggressiveWeaponData.AttackDetails[CurrentAttackCounter];
 
-        foreach (Idamageable item in detectedDamageables.ToList())      //对每一个有可造成伤害接口的碰撞体生效，加ToList防止敌人死亡后出现Bug（ToList可以复制原始List）
+        //对每一个有可造成伤害接口的碰撞体生效，加ToList防止敌人死亡后出现Bug（ToList可以复制原始List）
+        foreach (Idamageable item in detectedDamageables.ToList())      
         {
             if (cameraShake != null)
             {
@@ -115,8 +130,6 @@ public class MeleeWeapon : Weapon
             detectedKnockbackables.Remove(knockbackable);
         }
     }
-
-
 
     #region Animation Events
     protected override void AnimationActionTrigger()

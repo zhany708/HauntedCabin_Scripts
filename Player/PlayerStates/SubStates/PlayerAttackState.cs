@@ -14,7 +14,7 @@ public class PlayerAttackState : PlayerAbilityState
     {
         m_Weapon = weapon;
 
-        m_Weapon.OnExit += ExitHandler;
+        m_Weapon.OnWeaponExit += ExitHandler;
     }
 
     public override void Enter()

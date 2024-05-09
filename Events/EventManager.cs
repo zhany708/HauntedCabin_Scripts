@@ -88,11 +88,18 @@ public class EventManager : ManagerTemplate<EventManager>
 
 
         m_EventPrefab.transform.parent.position = m_RoomPosition;      //赋值事件触发的房间的坐标给事件的父物体（因为对象池的缘故）
-        m_EventPrefab.GetComponent<Event>().SetDoor(thisDoor);         //将事件发生的房间传过去
-        m_EventPrefab.GetComponent<Event>().SetEventManager(this);     //将当前脚本传给Event脚本
-        m_EventPrefab.GetComponent<Event>().StartEvent();              //开始事件
 
-        //AllEvents.EvilEventKeys.RemoveAt(index);      //开始事件后从列表中移除事件，防止之后重复触发事件
+        Event eventScript = m_EventPrefab.GetComponent<Event>();
+        if (eventScript == null)
+        {
+            Debug.LogError("Cannot get the Event Script from the GameObject.");
+            return;
+        }
+
+        eventScript.SetDoor(thisDoor);         //将事件发生的房间传过去
+        eventScript.StartEvent();              //开始事件
+
+        //需要做的：开始事件后从列表中移除事件，防止之后重复触发事件
     }
 
 

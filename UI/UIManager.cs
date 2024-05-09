@@ -10,8 +10,8 @@ public class UIManager : ManagerTemplate<UIManager>
     [SerializeField]
     public SO_UIKeys UIKeys;
 
-
-    public Dictionary<string, BasePanel> PanelDict = new Dictionary<string, BasePanel>();      //存放已打开界面的字典（里面存储的都是正在打开的界面）
+    //存放已打开界面的字典（里面存储的都是正在打开的界面）
+    public Dictionary<string, BasePanel> PanelDict = new Dictionary<string, BasePanel>();      
 
 
     Transform m_UIRoot;     //用于储存所有的UI（为了美观）
@@ -32,7 +32,7 @@ public class UIManager : ManagerTemplate<UIManager>
         SetupRootGameObject(ref m_UIRoot, "Canvas");
 
         //加载新场景时不删除Canvas总组件
-        //DontDestroyOnLoad(m_UIRoot);
+        DontDestroyOnLoad(m_UIRoot);
     }
 
 
@@ -119,17 +119,8 @@ public class UIManager : ManagerTemplate<UIManager>
             return false;
         }
 
-
-        if (panel.CanvasGroup != null)
-        {
-            panel.Fade(panel.CanvasGroup, panel.FadeOutAlpha, panel.FadeDuration, false);       //如果可以淡出的话优先淡出
-        }
-
-        else
-        {
-            panel.ClosePanel();
-        }
-
+        panel.ClosePanel();
+       
         return true;
     }
 
@@ -153,5 +144,21 @@ public class UIManager : ManagerTemplate<UIManager>
     public void ChangePanelLayer(BasePanel thisPanel)   //改变UI的渲染层级
     {
 
+    }
+
+
+    public void ResetGame()
+    {
+        foreach (Transform child in m_UIRoot)    //在场景中删除所有Canvas下的UI
+        {
+            BasePanel childScript = child.GetComponent<BasePanel>();
+            if (childScript == null)
+            {
+                Debug.LogError("Cannot get the BasePanel script from the: " + child.name);
+                return;
+            }
+
+            childScript.ClosePanel();    
+        }
     }
 }

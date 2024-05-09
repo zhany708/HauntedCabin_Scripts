@@ -1,5 +1,7 @@
 using UnityEngine;
 
+
+
 public class Movement : CoreComponent   //用于管理移动
 {
     public Rigidbody2D Rigidbody2d {  get; private set; }
@@ -7,7 +9,7 @@ public class Movement : CoreComponent   //用于管理移动
     public Vector2 FacingDirection { get; private set; }
 
 
-    Vector2 m_WorkSpace;
+    Vector2 m_WorkSpace;        //用于内部的计算
 
 
 
@@ -21,9 +23,10 @@ public class Movement : CoreComponent   //用于管理移动
 
         Rigidbody2d = GetComponentInParent<Rigidbody2D>();
 
-        if (!Rigidbody2d)
+        if (Rigidbody2d == null)
         {
-            Debug.Log("Rigidbody is missing!");
+            Debug.LogError("Rigidbody is missing in: " + name);
+            return;
         }
     }
 
@@ -32,7 +35,6 @@ public class Movement : CoreComponent   //用于管理移动
 
     //public override void LogicUpdate() { }
 
-    #region Setters
     public void SetVelocityZero()
     {
         m_WorkSpace = Vector2.zero;
@@ -71,9 +73,9 @@ public class Movement : CoreComponent   //用于管理移动
             FacingDirection = m_WorkSpace.normalized;   //设置角色的朝向方向
         }       
     }
-    #endregion
 
-    #region Getters
+
+
     public int GetFlipNum(Vector2 faceDirection, Vector2 currentDirection)      //如果不需要减去当前坐标，则第二个参数用Vector2.Zero
     {
         if (faceDirection != null)
@@ -85,5 +87,4 @@ public class Movement : CoreComponent   //用于管理移动
         }
         return 0;
     }
-    #endregion
 }

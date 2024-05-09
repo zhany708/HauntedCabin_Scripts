@@ -40,7 +40,7 @@ public class BasePanel : MonoBehaviour
     protected string panelName;
 
 
-
+    bool m_IsFading = false;    //表示是否正在淡入/出，用于防止界面正在淡入/出时就删除一些需要的组件
 
 
 
@@ -77,13 +77,10 @@ public class BasePanel : MonoBehaviour
     {
         //Debug.Log("Panel is closed: " + panelName);
 
-        isRemoved = true;
+        isRemoved = true;     
 
-        //隐藏界面
-        gameObject.SetActive(false);
-
-        //销毁物体
-        Destroy(gameObject);
+        //安全销毁物体
+        SafeDestroyPanel();
 
         //释放物体和内存
         UIManager.Instance.ReleasePrefab(panelName);     
@@ -100,19 +97,12 @@ public class BasePanel : MonoBehaviour
             return;
         }
 
-
-
-
-        //在淡出的情况下，界面还没完全淡出时就立刻设置阻挡射线
-        if (targetAlpha == FadeOutAlpha)
-        {
-            targetGroup.blocksRaycasts = blocksRaycasts;    //设置是否阻挡射线检测
-        }
-
+        m_IsFading = true;
 
         targetGroup.DOFade(targetAlpha, duration).OnComplete(() =>
         {
             targetGroup.blocksRaycasts = blocksRaycasts;    //设置是否阻挡射线检测
+            m_IsFading = false;
 
             //在淡入的情况下
             if (targetAlpha != FadeOutAlpha)
@@ -152,28 +142,41 @@ public class BasePanel : MonoBehaviour
         }
     }
 
-
-
-
-    protected IEnumerator TypeText(TextMeshProUGUI textComponent, string fullText, float typeSpeed)
+    protected IEnumerator TypeText(TextMeshProUGUI textComponent, string fullText, float typeSpeed, Action onCompleted = null)
     {
-        textComponent.text = "";     //先清空文本里的文字
+        int totalLength = fullText.Length;      //文本总长度，用于决定打字机何时结束
+        int visibleCount = 0;                   //显示的文字数量
 
-        foreach (char letter in fullText)   //访问文本里的每一个元素（包括字。符号。空格等）
+
+        textComponent.maxVisibleCharacters = 0;  //一开始什么都不显示
+
+        while (visibleCount < totalLength)
         {
-            if (playerInputHandler.IsSpacePressed)       //玩家按下空格后直接显示全部文字
+            if (playerInputHandler.IsSpacePressed)
             {
-                textComponent.text = fullText;
-                break;
+                textComponent.maxVisibleCharacters = totalLength;  //玩家按下空格后，瞬间显示所有文本
+                break;  //退出循环
             }
 
-            textComponent.text += letter;
-            yield return new WaitForSeconds(typeSpeed);     //每当一个字打出来后，等待一段时间再继续运行（打下一个字）
+            //检查是否在标签的开头
+            if (fullText[visibleCount] == '<') 
+            {
+                //跳过整个标签，直到标签的结尾（也就是>符号）。跳过的方式为不更新可以显示的文字数量，但是依然增加visibleCount变量
+                while (visibleCount < totalLength && fullText[visibleCount] != '>')
+                {
+                    visibleCount++;
+                }
+            }
+
+            visibleCount++;  //增加可以显示的文字数量
+            textComponent.maxVisibleCharacters = visibleCount;  //更新可以显示的文字数量
+
+            yield return new WaitForSeconds(typeSpeed);  //等待一段时间后再打下一个字
         }
 
         isTyping = false;
+        onCompleted?.Invoke();      //回调函数，用于某个文本全部显示完后执行一些逻辑
     }
-
 
 
     protected IEnumerator ClosePanelAfterDelay(float delay)      //用于延迟一段时间后自动关闭界面
@@ -184,5 +187,26 @@ public class BasePanel : MonoBehaviour
         {
             ClosePanel();
         }
+    }
+
+
+
+
+    private void SafeDestroyPanel()
+    {
+        if (m_IsFading)     //如果界面正在淡入/出时，则等待淡入/出结束后再删除物体
+        {
+            StartCoroutine(WaitForFadeEnd());
+        }
+        else    //不在淡入/出时立刻删除物体
+        {
+            Destroy(gameObject);
+        }
+    }
+
+    private IEnumerator WaitForFadeEnd()
+    {
+        yield return new WaitWhile(() => m_IsFading);   //一直等待，直到淡入/出结束
+        Destroy(gameObject);
     }
 }

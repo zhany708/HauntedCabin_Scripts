@@ -1,5 +1,5 @@
 using UnityEngine;
-using ZhangYu.Utilities;
+
 
 
 public class EnemyChaseState : EnemyState
@@ -16,9 +16,11 @@ public class EnemyChaseState : EnemyState
     {
         if (enemy.Parameter.Target != null)
         {
-            enemy.EnemyFlip.FlipX( enemy.Movement.GetFlipNum(enemy.Parameter.Target.position, enemy.transform.position) );    //使怪物朝向玩家
+            //使敌人朝向玩家
+            enemy.EnemyFlip.FlipX( enemy.Movement.GetFlipNum(enemy.Parameter.Target.position, enemy.transform.position) );
 
-            m_DistanceToPlayer = Vector2.Distance(enemy.transform.position, enemy.Parameter.Target.position);       //计算敌人与玩家的距离
+            //计算敌人与玩家的距离
+            m_DistanceToPlayer = Vector2.Distance(enemy.transform.position, enemy.Parameter.Target.position);       
         }
 
         base.LogicUpdate();
@@ -39,7 +41,8 @@ public class EnemyChaseState : EnemyState
     {
         base.PhysicsUpdate();
 
-        if (enemy.Parameter.Target && m_DistanceToPlayer > enemyData.StoppingDistance)     //有玩家坐标且与玩家距离大于最小距离时持续追击玩家
+        //有玩家坐标且与玩家距离大于最小距离时持续追击玩家
+        if (enemy.Parameter.Target && m_DistanceToPlayer > enemyData.StoppingDistance)     
         {
             enemy.transform.position = Vector2.MoveTowards(enemy.transform.position, enemy.Parameter.Target.position, enemyData.ChaseSpeed * Time.deltaTime);
         }

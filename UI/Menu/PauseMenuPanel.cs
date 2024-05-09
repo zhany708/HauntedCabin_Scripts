@@ -46,7 +46,6 @@ public class PauseMenuPanel : PanelWithButton       //整个游戏过程中都会用到此界
 
 
 
-
         //检查按钮组件是否存在
         if (ResumeButton == null || MainMenuButton == null || QuitButton == null)
         {
@@ -54,29 +53,29 @@ public class PauseMenuPanel : PanelWithButton       //整个游戏过程中都会用到此界
             return;
         }
 
+        //默认按钮为“恢复”按钮
+        firstSelectedButton = ResumeButton.gameObject;
 
+
+        //设置此界面的淡入值
+        FadeInAlpha = 0.75f;
+        FadeDuration = 0;
+    }
+
+
+    private void Start()
+    {
         //将按钮和函数绑定起来
         ResumeButton.onClick.AddListener(() => Resume());
         MainMenuButton.onClick.AddListener(() => BackToMainMenu());
         QuitButton.onClick.AddListener(() => QuitGame());
 
 
-        //默认按钮为“恢复”按钮
-        firstSelectedButton = ResumeButton.gameObject;
-    }
-
-
-    private void Start()
-    {
         //设置当前界面的名字
         panelName = UIManager.Instance.UIKeys.PauseMenuPanel;
 
         //初始化布尔
-        IsGamePaused = false;
-
-        //设置此界面的淡入值
-        FadeInAlpha = 0.75f;
-        FadeDuration = 0;
+        IsGamePaused = false;        
     }
 
 
@@ -171,8 +170,7 @@ public class PauseMenuPanel : PanelWithButton       //整个游戏过程中都会用到此界
             SceneManager.LoadScene("MainMenu");
 
             //重置游戏的各种系统
-            EventManager.Instance.ResetGame();
-            EnemyPool.Instance.ResetGame();
+            ResetGameSystems();
         }
     }
 

@@ -7,22 +7,21 @@ using ZhangYu.Utilities;
 
 public class Weapon : MonoBehaviour
 {
-    public event Action OnExit;      //接受事件方为PlayerAttackState脚本
+    public event Action OnWeaponExit;      //接受事件方为PlayerAttackState脚本
 
     #region Components
-    //public AudioClip WeaponAudio;     //除非武器有多种攻击音效，否则无需在脚本中声明，可以直接放进AudioSource
-
     public SO_WeaponData WeaponData;
 
 
     protected Animator animator;
-    protected AudioSource audioSource;
+    //protected AudioSource audioSource;        //挂载在武器物体上的播放器
 
     protected Core core;
     protected Player player;
     protected Flip weaponInventoryFlip;
 
-    protected Movement Movement => m_Movement ? m_Movement : core.GetCoreComponent(ref m_Movement);   //检查m_Movement是否为空，不是的话则返回它，是的话则调用GetCoreComponent函数以获取组件
+    //检查m_Movement是否为空，不是的话则返回它，是的话则调用GetCoreComponent函数以获取组件
+    protected Movement Movement => m_Movement ? m_Movement : core.GetCoreComponent(ref m_Movement);   
     private Movement m_Movement;
     #endregion
 
@@ -34,10 +33,14 @@ public class Weapon : MonoBehaviour
     protected virtual void Awake()
     {
         animator = GetComponent<Animator>();
-        audioSource = GetComponent<AudioSource>();
+        //audioSource = GetComponent<AudioSource>();
 
         player = GetComponentInParent<Player>();
-        core = player.GetComponentInChildren<Core>();   //先调用Player父物体，然后再从父物体中寻找Core子物体
+
+        if (player != null )
+        {
+            core = player.GetComponentInChildren<Core>();   //先调用Player父物体，然后再从父物体中寻找Core子物体
+        }       
     }
 
     protected virtual void Start()
@@ -67,7 +70,7 @@ public class Weapon : MonoBehaviour
     {
         animator.SetBool("Attack", false);
 
-        OnExit?.Invoke();
+        OnWeaponExit?.Invoke();
     }
 
 
@@ -101,9 +104,11 @@ public class Weapon : MonoBehaviour
     #endregion
 
     #region Setters
+    /*
     public void SetMousePosition(Vector2 thisPos)
     {
         mousePosition = thisPos;
     }
+    */
     #endregion
 }

@@ -2,7 +2,7 @@ using UnityEngine;
 
 
 
-public class E_EvilTelephone : Event
+public class E_EvilTelephone : Event    //E开头的脚本表示跟事件相关
 {
     Animator m_Animator;
     AudioSource m_AudioSource;
@@ -11,11 +11,19 @@ public class E_EvilTelephone : Event
 
 
 
-    private void Awake()
+    protected override void Awake()
     {
+        base.Awake();
+
         m_Animator = GetComponent<Animator>();
         m_AudioSource = GetComponent<AudioSource>();
         m_Collider = GetComponent<Collider2D>();
+
+        if (m_Animator == null || m_AudioSource == null || m_Collider == null)
+        {
+            Debug.LogError("One or more components are missing on " + gameObject.name);
+            return;
+        }
     }
 
     private void OnEnable()
@@ -31,22 +39,10 @@ public class E_EvilTelephone : Event
     {
         if (other.CompareTag("Player"))
         {
-            m_Animator.SetBool("Ringing", false);       //角色触碰电话后取消震动
-
-            PlayAnswerPhoneSound();     //播放接电话的音效
-
-            PlayerStats playerHealth = other.GetComponentInParent<Player>().GetComponentInChildren<PlayerStats>();    //因为进入触发器的是Core里的Combat，所以先获取父物体，再获取子物体
-
-            if (playerHealth != null)
-            {
-                playerHealth.DecreaseHealth(20);
-                m_Collider.enabled = false;     //玩家受伤后，取消激活碰撞框
-            }
-        }
-
-        FinishEvent();      //结束事件
+            TriggerPlayerInteraction(other);    //跟玩家交互的逻辑
+            FinishEvent();      //结束事件
+        }      
     }
-
 
 
     private void OnDestroy()
@@ -58,6 +54,8 @@ public class E_EvilTelephone : Event
     }
 
 
+
+
     public override void StartEvent()
     {
         m_Animator.SetBool("Ringing", true);
@@ -65,18 +63,28 @@ public class E_EvilTelephone : Event
 
 
 
-
-    private void PlayRingSound()        //用于动画帧事件，播放响铃声
+    private void TriggerPlayerInteraction(Collider2D playerCollider)
     {
-        if (m_AudioSource != null && !m_AudioSource.isPlaying)      //防止重复播放
+        m_Animator.SetBool("Ringing", false);       //角色触碰电话后取消震动
+
+        PlayAnswerPhoneSound();     //播放接电话的音效
+
+        //因为进入触发器的是Core里的Combat，所以先获取父物体，再获取子物体
+        PlayerStats playerHealth = playerCollider.GetComponentInParent<Player>().GetComponentInChildren<PlayerStats>();    
+
+        if (playerHealth != null)
         {
-            SoundManager.Instance.PlaySFXAsyncWithAudioSource(m_AudioSource, EventData.AudioClipNames[0], 0.6f);
+            playerHealth.DecreaseHealth(20);
         }
+
+        m_Collider.enabled = false;     //玩家受伤后，取消激活碰撞框
     }
+
+
 
     private void PlayAnswerPhoneSound()     //播放接电话的音效
     {
-        if (m_AudioSource != null)   
+        if (m_AudioSource != null)
         {
             //先暂停当前的音频
             m_AudioSource.Stop();
@@ -84,4 +92,14 @@ public class E_EvilTelephone : Event
             SoundManager.Instance.PlaySFXAsyncWithAudioSource(m_AudioSource, EventData.AudioClipNames[1], EventData.AudioVolume);
         }
     }
+
+    #region AnimationEvents
+    private void PlayRingSound()        //用于动画帧事件，播放响铃声
+    {
+        if (m_AudioSource != null && !m_AudioSource.isPlaying)      //防止重复播放
+        {
+            SoundManager.Instance.PlaySFXAsyncWithAudioSource(m_AudioSource, EventData.AudioClipNames[0], 0.6f);
+        }
+    }
+    #endregion    
 }
