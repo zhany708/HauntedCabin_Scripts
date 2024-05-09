@@ -135,15 +135,16 @@ public class BasePanel : MonoBehaviour
     protected virtual void DisplayText(TextMeshProUGUI textComponent)        //显示文本
     {
         if (textComponent != null)
-        {
-            isTyping = true;        //表示正在打字（防止正在打字时按空格会关闭UI）
-
+        {          
             StartCoroutine(TypeText(textComponent, textComponent.text, 0.05f) );     //每隔0.05秒打一个字
         }
     }
 
     protected IEnumerator TypeText(TextMeshProUGUI textComponent, string fullText, float typeSpeed, Action onCompleted = null)
     {
+        isTyping = true;        //表示正在打字（防止正在打字时按空格会关闭UI）
+
+
         int totalLength = fullText.Length;      //文本总长度，用于决定打字机何时结束
         int visibleCount = 0;                   //显示的文字数量
 
@@ -186,6 +187,11 @@ public class BasePanel : MonoBehaviour
         if (!isTyping)
         {
             ClosePanel();
+        }
+        else
+        {
+            Debug.LogError("The panel is still typing, but you tried to close it.");
+            yield break;
         }
     }
 

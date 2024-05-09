@@ -7,7 +7,7 @@ using UnityEngine.SceneManagement;
 
 public class UIManager : ManagerTemplate<UIManager>
 {
-    [SerializeField]
+    //[SerializeField]    //强迫编辑器显示一个内部变量
     public SO_UIKeys UIKeys;
 
     //存放已打开界面的字典（里面存储的都是正在打开的界面）

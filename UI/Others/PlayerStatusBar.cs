@@ -81,7 +81,7 @@ public class PlayerStatusBar : BasePanel
     {
         if (m_Player != null)
         {
-            //通过这种方式可以在脚本里更改文本某部分的颜色
+            //通过这种方式可以在脚本里更改文本某部分的颜色（单词前面的括号表示要改变的颜色，后面的括号表示这次改变到此为止）
             StrengthText.text = $"Strength: <color=#FF6B6B>{m_Player.PlayerData.Strength} </color>";
             SpeedText.text = $"Speed: <color=#FF6B6B>{m_Player.PlayerData.Speed} </color>";
             SanityText.text = $"Sanity: <color=#3D88FF>{m_Player.PlayerData.Sanity} </color>";

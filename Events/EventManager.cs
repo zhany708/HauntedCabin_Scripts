@@ -5,7 +5,6 @@ using UnityEngine;
 
 public class EventManager : ManagerTemplate<EventManager>
 {
-    [SerializeField]
     public SO_EventKeys EventKeys;
 
 
