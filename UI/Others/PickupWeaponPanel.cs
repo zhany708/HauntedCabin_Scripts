@@ -50,9 +50,6 @@ public class PickupWeaponPanel : PanelWithButton
 
         //默认按钮为“装备在主武器”按钮（必须放在Awake函数中）
         firstSelectedButton = EquipOnPrimary.gameObject;
-
-        //设置此界面的淡入值（必须放在Awake函数中）
-        FadeInAlpha = 0.75f;
     }
 
     private void Start()

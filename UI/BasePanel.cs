@@ -1,6 +1,7 @@
 using DG.Tweening;
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
@@ -30,6 +31,10 @@ public class BasePanel : MonoBehaviour
     public float FadeDuration { get; protected set; } = 1f;
     public float FadeInAlpha { get; protected set; } = 1f;
     public float FadeOutAlpha { get; protected set; } = 0f;
+
+
+    //储存所有当前界面进行过的协程，防止关闭界面时某些协程仍在继续，占用内存（不加static，从而让每个界面都有一个单独的列表）
+    protected List<Coroutine> generatedCoroutines = new List<Coroutine>();      
 
 
     protected PlayerInputHandler playerInputHandler;
@@ -77,7 +82,9 @@ public class BasePanel : MonoBehaviour
     {
         //Debug.Log("Panel is closed: " + panelName);
 
-        isRemoved = true;     
+        isRemoved = true;
+
+        ClearAllCoroutines();        //清除所有当前界面正在进行的协程
 
         //安全销毁物体
         SafeDestroyPanel();
@@ -196,6 +203,21 @@ public class BasePanel : MonoBehaviour
     }
 
 
+
+
+    protected void ClearAllCoroutines()
+    {
+        foreach (var coroutine in generatedCoroutines)     //检阅列表中的所有协程
+        {
+            if (coroutine != null)      //检查协程是否存在（无论是否正在进行）
+            {
+                StopCoroutine(coroutine);
+                //Debug.Log("One Coroutine is stopped.");
+            }
+        }
+
+        generatedCoroutines.Clear();       //清除列表
+    }
 
 
     private void SafeDestroyPanel()

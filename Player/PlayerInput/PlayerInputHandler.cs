@@ -43,35 +43,14 @@ public class PlayerInputHandler : MonoBehaviour
     #region CallbackContexts
     public void OnMoveInput(InputAction.CallbackContext context)
     {
-        RawMovementInput = context.ReadValue<Vector2>().normalized;   //(0,1) (0,-1) (1,0) (-1,0)四种向量表示方向
+        Vector2 input = context.ReadValue<Vector2>();   //(0,1) (0,-1) (1,0) (-1,0)四种向量表示方向
+        RawMovementInput = input.magnitude > 0 ? input.normalized : Vector2.zero;
     }
 
 
 
     public void OnPrimaryAttackInput(InputAction.CallbackContext context) 
-    {
-        /*
-        if (context.started)    //按下鼠标左键时
-        {
-            AttackInputs[(int)CombatInputs.primary] = true;
-        }
-
-        if (context.canceled)   //松开鼠标左键时
-        {
-            AttackInputs[(int)CombatInputs.primary] = false;
-        }
-        
-
-        if (context.phase == InputActionPhase.Started)
-        {
-            AttackInputs[(int)CombatInputs.primary] = true;
-        }
-        else if (context.phase == InputActionPhase.Canceled)
-        {
-            AttackInputs[(int)CombatInputs.primary] = false;
-        }
-        */
-
+    {       
         if (m_CanDetectAttack)
         {
             AttackInputs[(int)CombatInputs.primary] = context.performed;

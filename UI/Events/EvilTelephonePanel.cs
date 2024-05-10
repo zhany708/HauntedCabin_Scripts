@@ -1,7 +1,8 @@
 using UnityEngine.UI;
 using UnityEngine;
 using TMPro;
-
+using System;
+using System.Collections;
 
 
 
@@ -29,7 +30,7 @@ public class EvilTelephonePanel : PanelWithButton
 
 
 
-    //用于点击按钮函数的枚举
+    //用于按钮函数的枚举
     private enum ButtonAction
     {
         OptionA,
@@ -78,8 +79,18 @@ public class EvilTelephonePanel : PanelWithButton
         base.OnEnable();
 
         SetButtons(false);      //界面刚打开时取消激活所有按钮
-        ResultText.gameObject.SetActive(false);     //界面刚打开时取消激活选项的结果文本
+
+        //界面完全淡出后调用此函数
+        OnFadeOutFinished += ClosePanel;
     }
+
+    protected override void OnDisable()
+    {
+        base.OnDisable();
+        //ClearOngoingCoroutine();
+        OnFadeOutFinished -= ClosePanel;
+    }
+
 
 
 
@@ -90,27 +101,83 @@ public class EvilTelephonePanel : PanelWithButton
         switch (action)
         {
             case ButtonAction.OptionA:
-                //
+                //赋值选项的结果文本
+                ResultText.text = $"???: 'Snacks, my favorite snacks!'\n\nSanity <#3D88FF>+1";
+
+                CommonLogicForOptions();
                 break;
 
             case ButtonAction.OptionB:
-                SetButtons(false);      //取消激活所有按钮
-
+                //赋值选项的结果文本
                 ResultText.text = $"???: 'The little pies can't escape my sight...'\n\nKnowledge <#3D88FF>+1";
-                ResultText.gameObject.SetActive(true);     //赋值文本完毕后激活选项的结果文本
+
+                CommonLogicForOptions();
                 break;
 
             case ButtonAction.OptionC:
-                //
+                //赋值选项的结果文本
+                ResultText.text = $"???: 'Baby, give me a kiss...'\n\nSanity <#3D88FF>-1";
+
+                CommonLogicForOptions();
                 break;
 
-            case ButtonAction.OptionD:
-                //
+            case ButtonAction.OptionD:              
+                //赋值选项的结果文本
+                ResultText.text = $"???: 'Naughty kid must be punished!'\n\nStrength <#FF6B6B>-1";
+
+                CommonLogicForOptions();
                 break;
 
             default:
                 Debug.Log("No Button is pressed.");
                 break;
+        }
+    }
+
+
+
+
+    private void CommonLogicForOptions()        //所有选项的通用逻辑
+    {
+        SetButtons(false);      //取消激活所有按钮
+
+        //先开始结果文本的打字效果
+        Coroutine resultTextCoroutine = StartCoroutine(TypeText(ResultText, ResultText.text, 0.05f, () =>       
+        {
+            //Debug.Log("First Coroutine done!.");
+
+            Coroutine waitForInputCoroutine = StartCoroutine(WaitForPlayerInput(() =>     //等待玩家按空格或点击鼠标
+            {
+                //Debug.Log("Second Coroutine done!.");
+
+                //淡出界面
+                Fade(CanvasGroup, FadeOutAlpha, FadeDuration, false);
+            }));
+
+            generatedCoroutines.Add(waitForInputCoroutine);    //将协程加进列表
+        }));
+
+        generatedCoroutines.Add(resultTextCoroutine);      //将协程加进列表
+    }
+
+
+
+    private IEnumerator WaitForPlayerInput(Action onInputReceived)      //等待玩家按空格或鼠标
+    {
+        bool inputReceived = false;     //表示是否接受到玩家的信号，用于决定是否结束循环
+
+        while (!inputReceived)
+        {
+            //检查玩家是否按下空格或点击鼠标左键
+            if (playerInputHandler.IsSpacePressed || playerInputHandler.AttackInputs[(int)CombatInputs.primary])
+            {
+                inputReceived = true;
+                onInputReceived?.Invoke();
+
+                yield break;
+            }
+
+            yield return null;  //等待到下一帧为止，从而再次检查
         }
     }
 
@@ -127,17 +194,33 @@ public class EvilTelephonePanel : PanelWithButton
 
 
     private void StartTextAnimations()
-    {
-        StartCoroutine(TypeText(EventInfo, EventInfo.text, 0.05f, () =>
+    {       
+        if (EventInfo.text.Length > 0)      //先检查介绍文本是否有字
         {
-            SetButtons(true);       //事件介绍完毕后，激活所有按钮
+            Coroutine eventInfoCoroutine = StartCoroutine(TypeText(EventInfo, EventInfo.text, 0.05f, () =>
+            {
+                SetButtons(true);       //事件介绍完毕后，激活所有按钮
 
-            //同时打字所有选项按钮的文本
-            StartCoroutine(TypeText(m_OptionAText, m_OptionAText.text, 0.05f));
-            StartCoroutine(TypeText(m_OptionBText, m_OptionBText.text, 0.05f));
-            StartCoroutine(TypeText(m_OptionCText, m_OptionCText.text, 0.05f));
-            StartCoroutine(TypeText(m_OptionDText, m_OptionDText.text, 0.05f));
-        }));
+                //同时打字所有选项按钮的文本
+                Coroutine OptionATextCoroutine = StartCoroutine(TypeText(m_OptionAText, m_OptionAText.text, 0.05f));
+                Coroutine OptionBTextCoroutine = StartCoroutine(TypeText(m_OptionBText, m_OptionBText.text, 0.05f));
+                Coroutine OptionCTextCoroutine = StartCoroutine(TypeText(m_OptionCText, m_OptionCText.text, 0.05f));
+                Coroutine OptionDTextCoroutine = StartCoroutine(TypeText(m_OptionDText, m_OptionDText.text, 0.05f));
+
+                generatedCoroutines.Add(OptionATextCoroutine);       //将协程加进列表
+                generatedCoroutines.Add(OptionBTextCoroutine);
+                generatedCoroutines.Add(OptionCTextCoroutine);
+                generatedCoroutines.Add(OptionDTextCoroutine);
+            }));
+
+            generatedCoroutines.Add(eventInfoCoroutine);       //将协程加进列表
+        }
+
+        else
+        {
+            Debug.LogError("EventInfo text is empty.");
+            return;
+        }
     }
 
 
