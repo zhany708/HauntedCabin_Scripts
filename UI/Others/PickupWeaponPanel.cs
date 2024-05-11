@@ -85,7 +85,7 @@ public class PickupWeaponPanel : PanelWithButton
         base.OpenPanel(name);
 
         //界面打开时禁止玩家攻击
-        playerInputHandler.SetCanDetectAttack(false);
+        PlayerInputHandler.Instance.SetCanDetectAttack(false);
     }
 
     public override void ClosePanel()
@@ -93,7 +93,7 @@ public class PickupWeaponPanel : PanelWithButton
         base.ClosePanel();
 
         //界面关闭后允许玩家攻击
-        playerInputHandler.SetCanDetectAttack(true);
+        PlayerInputHandler.Instance.SetCanDetectAttack(true);
 
        
         if (m_WeaponPickup != null)

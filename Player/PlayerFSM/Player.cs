@@ -23,7 +23,6 @@ public class Player : MonoBehaviour
 
 
     public Core Core { get; private set; }
-    public PlayerInputHandler InputHandler { get; private set; }
     public Weapon PrimaryWeapon {  get; private set; }
     public Weapon SecondaryWeapon {  get; private set; }
 
@@ -74,8 +73,6 @@ public class Player : MonoBehaviour
 
     private void Start()
     {
-        InputHandler = GetComponent<PlayerInputHandler>();
-
         m_PlayerFlip = new Flip(transform);
 
         FacingNum = 1;  //游戏开始时初始化FacingNum，否则武器贴图无法正常显示
@@ -184,7 +181,7 @@ public class Player : MonoBehaviour
 
     private void PlayerFlip()
     {
-        FacingNum = InputHandler.ProjectedMousePos.x < transform.position.x ? -1 : 1;     //如果鼠标坐标位于玩家左侧，则翻转玩家
+        FacingNum = PlayerInputHandler.Instance.ProjectedMousePos.x < transform.position.x ? -1 : 1;     //如果鼠标坐标位于玩家左侧，则翻转玩家
 
         m_PlayerFlip.FlipX(FacingNum);
     }
@@ -196,7 +193,7 @@ public class Player : MonoBehaviour
     {
         if (PlayerCamera != null)
         {
-            float mouseScroll = InputHandler.MouseScrollInput.y;    //使用鼠标滚轮信息的y值
+            float mouseScroll = PlayerInputHandler.Instance.MouseScrollInput.y;    //使用鼠标滚轮信息的y值
 
             float newOrthoSize = PlayerCamera.m_Lens.OrthographicSize - mouseScroll * ZoomSpeed;
             newOrthoSize = Mathf.Clamp(newOrthoSize, MinOrthoSize, MaxOrthoSize);       //计算后将新的相机镜片矫正尺寸保持在最大和最小之间

@@ -28,33 +28,34 @@ public class BasePanel : MonoBehaviour
     }
 
 
-    public float FadeDuration { get; protected set; } = 1f;
-    public float FadeInAlpha { get; protected set; } = 1f;
-    public float FadeOutAlpha { get; protected set; } = 0f;
 
 
-    //储存所有当前界面进行过的协程，防止关闭界面时某些协程仍在继续，占用内存（不加static，从而让每个界面都有一个单独的列表）
-    protected List<Coroutine> generatedCoroutines = new List<Coroutine>();      
+
+    //储存所有当前界面进行过的协程，防止删除界面时某些协程仍在继续，占用内存（不加static，从而让每个界面都有一个单独的列表）
+    protected List<Coroutine> generatedCoroutines = new List<Coroutine>();
+    protected List<Tween> generatedDOTweens = new List<Tween>();        //跟上面同理
 
 
-    protected PlayerInputHandler playerInputHandler;
+
+    protected float FadeDuration = 1f;          //默认淡入/出时间
+    protected float FadeInAlpha = 1f;           //默认淡入值
+    protected const float FadeOutAlpha = 0f;    //默认淡出值
+
+
+    protected float typeSpeed = 0.05f;      //默认打字速度（每隔0.05秒打一个字）
+ 
 
     protected bool isTyping = false;        //表示是否正在显示文本
-
     protected bool isRemoved = false;       //表示UI是否被移除
-    protected string panelName;
 
-
-    bool m_IsFading = false;    //表示是否正在淡入/出，用于防止界面正在淡入/出时就删除一些需要的组件
-
+    protected string panelName;             //界面名字
 
 
 
-    protected virtual void Awake() 
-    {
-        //这个脚本跟打字和跳过对话相关
-        playerInputHandler = FindObjectOfType<PlayerInputHandler>();     //寻找有PlayerInputHandler组件的物体
-    }
+
+
+
+    protected virtual void Awake() { }
 
 
     protected virtual void OnDisable()
@@ -84,10 +85,10 @@ public class BasePanel : MonoBehaviour
 
         isRemoved = true;
 
-        ClearAllCoroutines();        //清除所有当前界面正在进行的协程
+        ClearAllCoroutinesAndTweens();        //清除所有当前界面正在进行的协程
 
-        //安全销毁物体
-        SafeDestroyPanel();
+        //销毁物体
+        Destroy(gameObject);
 
         //释放物体和内存
         UIManager.Instance.ReleasePrefab(panelName);     
@@ -104,12 +105,11 @@ public class BasePanel : MonoBehaviour
             return;
         }
 
-        m_IsFading = true;
 
-        targetGroup.DOFade(targetAlpha, duration).OnComplete(() =>
+        
+        Tween fadeTween = targetGroup.DOFade(targetAlpha, duration).OnComplete(() =>
         {
             targetGroup.blocksRaycasts = blocksRaycasts;    //设置是否阻挡射线检测
-            m_IsFading = false;
 
             //在淡入的情况下
             if (targetAlpha != FadeOutAlpha)
@@ -133,21 +133,14 @@ public class BasePanel : MonoBehaviour
                 UIManager.Instance.PanelDict.Remove(panelName);
             }             
         });
+
+        generatedDOTweens.Add(fadeTween);      //将DOTween加进列表
     }
   
 
 
-
-
-    protected virtual void DisplayText(TextMeshProUGUI textComponent)        //显示文本
-    {
-        if (textComponent != null)
-        {          
-            StartCoroutine(TypeText(textComponent, textComponent.text, 0.05f) );     //每隔0.05秒打一个字
-        }
-    }
-
-    protected IEnumerator TypeText(TextMeshProUGUI textComponent, string fullText, float typeSpeed, Action onCompleted = null)
+    //用于打字机效果
+    protected IEnumerator TypeText(TextMeshProUGUI textComponent, string fullText, Action onTypingCompleted = null)
     {
         isTyping = true;        //表示正在打字（防止正在打字时按空格会关闭UI）
 
@@ -160,9 +153,12 @@ public class BasePanel : MonoBehaviour
 
         while (visibleCount < totalLength)
         {
-            if (playerInputHandler.IsSpacePressed)
+            if (PlayerInputHandler.Instance.IsSpacePressed)
             {
                 textComponent.maxVisibleCharacters = totalLength;  //玩家按下空格后，瞬间显示所有文本
+
+                //等待0.5秒再退出，否则如果此函数结束后的下一个函数也需要按空格时，可能会导致按一次空格相应多个函数
+                yield return new WaitForSeconds(0.5f);        
                 break;  //退出循环
             }
 
@@ -183,29 +179,13 @@ public class BasePanel : MonoBehaviour
         }
 
         isTyping = false;
-        onCompleted?.Invoke();      //回调函数，用于某个文本全部显示完后执行一些逻辑
-    }
-
-
-    protected IEnumerator ClosePanelAfterDelay(float delay)      //用于延迟一段时间后自动关闭界面
-    {
-        yield return new WaitForSeconds(delay);
-
-        if (!isTyping)
-        {
-            ClosePanel();
-        }
-        else
-        {
-            Debug.LogError("The panel is still typing, but you tried to close it.");
-            yield break;
-        }
+        onTypingCompleted?.Invoke();      //回调函数，用于某个文本全部显示完后执行一些逻辑
     }
 
 
 
 
-    protected void ClearAllCoroutines()
+    protected void ClearAllCoroutinesAndTweens()    //用于删除界面时检查是否有正在进行的协程和DOTween
     {
         foreach (var coroutine in generatedCoroutines)     //检阅列表中的所有协程
         {
@@ -216,25 +196,16 @@ public class BasePanel : MonoBehaviour
             }
         }
 
+        foreach (var tween in generatedDOTweens)     //检阅列表中的所有协程
+        {
+            if (tween.active)      //检查DOTween是否正在进行
+            {
+                tween.Kill();
+                //Debug.Log("One DOTween is stopped and killed.");
+            }
+        }
+
         generatedCoroutines.Clear();       //清除列表
-    }
-
-
-    private void SafeDestroyPanel()
-    {
-        if (m_IsFading)     //如果界面正在淡入/出时，则等待淡入/出结束后再删除物体
-        {
-            StartCoroutine(WaitForFadeEnd());
-        }
-        else    //不在淡入/出时立刻删除物体
-        {
-            Destroy(gameObject);
-        }
-    }
-
-    private IEnumerator WaitForFadeEnd()
-    {
-        yield return new WaitWhile(() => m_IsFading);   //一直等待，直到淡入/出结束
-        Destroy(gameObject);
+        generatedDOTweens.Clear();       //清除列表
     }
 }

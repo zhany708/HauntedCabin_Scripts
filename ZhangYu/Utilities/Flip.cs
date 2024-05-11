@@ -9,6 +9,9 @@ namespace ZhangYu.Utilities
 
         //int m_FlipNumX;
 
+
+
+
         public Flip(Transform transform)
         {
             m_Transform = transform;
@@ -19,12 +22,14 @@ namespace ZhangYu.Utilities
         {
             //m_FlipNumX = flipNum;
 
-            m_Transform.localScale = new Vector3(Mathf.Abs(m_Transform.localScale.x) * flipNum, m_Transform.localScale.y, m_Transform.localScale.z);      //用于翻转角色
+            //用于翻转物体的X值
+            m_Transform.localScale = new Vector3(Mathf.Abs(m_Transform.localScale.x) * flipNum, m_Transform.localScale.y, m_Transform.localScale.z);      
         }
 
         public void FlipY(int flipNum)
         {
-            m_Transform.localScale = new Vector3(m_Transform.localScale.x, Mathf.Abs(m_Transform.localScale.y) * flipNum, m_Transform.localScale.z);      //用于翻转角色
+            //用于翻转物体的Y值
+            m_Transform.localScale = new Vector3(m_Transform.localScale.x, Mathf.Abs(m_Transform.localScale.y) * flipNum, m_Transform.localScale.z);      
         }
     }
 }

@@ -28,7 +28,7 @@ public class PlayerHitState : PlayerGroundedState
         }
 
         
-        input = player.InputHandler.RawMovementInput;   //通过Player脚本调用闲置状态和移动状态需要的向量数值
+        input = PlayerInputHandler.Instance.RawMovementInput;   //通过Player脚本调用闲置状态和移动状态需要的向量数值
 
 
 

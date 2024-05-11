@@ -111,7 +111,7 @@ namespace ZhangYu.Utilities     //张煜文件夹用于以后所有游戏都可能会用到的函数，
         {
             return m_OverlapTolerance;
         }
-
+        /*
         public Vector2 GetLeftDownPos()
         {
             return m_LeftDownPosition;
@@ -121,6 +121,7 @@ namespace ZhangYu.Utilities     //张煜文件夹用于以后所有游戏都可能会用到的函数，
         {
             return m_RightTopPosition;
         }
+        */
         #endregion
     }
 }

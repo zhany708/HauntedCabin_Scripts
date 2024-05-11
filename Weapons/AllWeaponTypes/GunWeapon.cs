@@ -72,7 +72,7 @@ public class GunWeapon : Weapon
         base.PointToMouse();
 
         //当鼠标位于枪械左侧时，翻转枪械的Y值
-        int flipNum = player.InputHandler.ProjectedMousePos.x < transform.position.x ? -1 : 1;    
+        int flipNum = PlayerInputHandler.Instance.ProjectedMousePos.x < transform.position.x ? -1 : 1;    
 
         m_GunFlip.FlipY(flipNum);
     }

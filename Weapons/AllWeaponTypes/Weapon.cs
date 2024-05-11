@@ -78,7 +78,7 @@ public class Weapon : MonoBehaviour
 
     protected virtual void PointToMouse()
     {
-        mousePosition = (player.InputHandler.ProjectedMousePos - new Vector2(transform.parent.position.x, transform.parent.position.y));    //计算需要朝向鼠标的方向
+        mousePosition = (PlayerInputHandler.Instance.ProjectedMousePos - new Vector2(transform.parent.position.x, transform.parent.position.y));    //计算需要朝向鼠标的方向
 
         transform.parent.right = mousePosition.normalized;   //归一化后，更改武器库的朝向，而不是武器的
         weaponInventoryFlip.FlipX(player.FacingNum);       //实时翻转武器，防止玩家翻转时武器也被翻转

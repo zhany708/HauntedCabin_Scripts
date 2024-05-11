@@ -6,6 +6,9 @@ using UnityEngine.InputSystem;
 
 public class PlayerInputHandler : MonoBehaviour
 {
+    public static PlayerInputHandler Instance { get; private set; }
+
+
     public Vector2 RawMovementInput { get; private set; }       //防止手柄轻微移动时玩家速度缓慢（强制让0-1之间的小数设为1）
     public Vector2 ProjectedMousePos { get; private set; }      //用于持续更新鼠标坐标（即使鼠标静止）
     public Vector2 MouseScrollInput { get; private set; }       //鼠标滚轮的信息
@@ -24,6 +27,20 @@ public class PlayerInputHandler : MonoBehaviour
 
 
     #region Unity Callback Functions
+    private void Awake()
+    {
+        //单例模式
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+        }
+
+        else
+        {
+            Instance = this;
+        }
+    }
+
     private void Start()
     {
         int count = Enum.GetValues(typeof(CombatInputs)).Length;        //返回二，也就是两种攻击武器
@@ -67,7 +84,7 @@ public class PlayerInputHandler : MonoBehaviour
 
 
 
-    public void OnAim(InputAction.CallbackContext context)      //用于读取鼠标坐标
+    public void OnMousePos(InputAction.CallbackContext context)      //用于读取鼠标坐标
     {
         m_MousePos = context.ReadValue<Vector2>();
     }

@@ -19,6 +19,8 @@ public class EvilTelephonePanel : PanelWithButton
     public Button OptionD;
 
 
+    public SO_PlayerData PlayerData;    //玩家的数据
+
 
 
     //按钮的文本组件
@@ -27,6 +29,8 @@ public class EvilTelephonePanel : PanelWithButton
     TextMeshProUGUI m_OptionCText;      
     TextMeshProUGUI m_OptionDText;
 
+
+    PlayerStatusBar m_PlayerStatusBar;      //玩家的状态栏UI
 
 
 
@@ -45,8 +49,6 @@ public class EvilTelephonePanel : PanelWithButton
 
     protected override void Awake()
     {
-        base.Awake();
-
         CheckComponents();      //检查所有组件
 
         //默认按钮为“第四个选项”按钮
@@ -118,6 +120,10 @@ public class EvilTelephonePanel : PanelWithButton
                 //赋值选项的结果文本
                 ResultText.text = $"???: 'Baby, give me a kiss...'\n\nSanity <#3D88FF>-1";
 
+                //改变玩家的属性
+                PlayerData.Sanity--;
+                m_PlayerStatusBar.UpdateStatusUI();
+
                 CommonLogicForOptions();
                 break;
 
@@ -142,11 +148,12 @@ public class EvilTelephonePanel : PanelWithButton
         SetButtons(false);      //取消激活所有按钮
 
         //先开始结果文本的打字效果
-        Coroutine resultTextCoroutine = StartCoroutine(TypeText(ResultText, ResultText.text, 0.05f, () =>       
+        Coroutine resultTextCoroutine = StartCoroutine(TypeText(ResultText, ResultText.text, () =>       
         {
             //Debug.Log("First Coroutine done!.");
 
-            Coroutine waitForInputCoroutine = StartCoroutine(WaitForPlayerInput(() =>     //等待玩家按空格或点击鼠标
+            //等待玩家按空格或点击鼠标
+            Coroutine waitForInputCoroutine = StartCoroutine(Delay.Instance.WaitForPlayerInput(() =>     
             {
                 //Debug.Log("Second Coroutine done!.");
 
@@ -162,24 +169,7 @@ public class EvilTelephonePanel : PanelWithButton
 
 
 
-    private IEnumerator WaitForPlayerInput(Action onInputReceived)      //等待玩家按空格或鼠标
-    {
-        bool inputReceived = false;     //表示是否接受到玩家的信号，用于决定是否结束循环
-
-        while (!inputReceived)
-        {
-            //检查玩家是否按下空格或点击鼠标左键
-            if (playerInputHandler.IsSpacePressed || playerInputHandler.AttackInputs[(int)CombatInputs.primary])
-            {
-                inputReceived = true;
-                onInputReceived?.Invoke();
-
-                yield break;
-            }
-
-            yield return null;  //等待到下一帧为止，从而再次检查
-        }
-    }
+    
 
 
 
@@ -197,15 +187,15 @@ public class EvilTelephonePanel : PanelWithButton
     {       
         if (EventInfo.text.Length > 0)      //先检查介绍文本是否有字
         {
-            Coroutine eventInfoCoroutine = StartCoroutine(TypeText(EventInfo, EventInfo.text, 0.05f, () =>
+            Coroutine eventInfoCoroutine = StartCoroutine(TypeText(EventInfo, EventInfo.text, () =>
             {
                 SetButtons(true);       //事件介绍完毕后，激活所有按钮
 
                 //同时打字所有选项按钮的文本
-                Coroutine OptionATextCoroutine = StartCoroutine(TypeText(m_OptionAText, m_OptionAText.text, 0.05f));
-                Coroutine OptionBTextCoroutine = StartCoroutine(TypeText(m_OptionBText, m_OptionBText.text, 0.05f));
-                Coroutine OptionCTextCoroutine = StartCoroutine(TypeText(m_OptionCText, m_OptionCText.text, 0.05f));
-                Coroutine OptionDTextCoroutine = StartCoroutine(TypeText(m_OptionDText, m_OptionDText.text, 0.05f));
+                Coroutine OptionATextCoroutine = StartCoroutine(TypeText(m_OptionAText, m_OptionAText.text));
+                Coroutine OptionBTextCoroutine = StartCoroutine(TypeText(m_OptionBText, m_OptionBText.text));
+                Coroutine OptionCTextCoroutine = StartCoroutine(TypeText(m_OptionCText, m_OptionCText.text));
+                Coroutine OptionDTextCoroutine = StartCoroutine(TypeText(m_OptionDText, m_OptionDText.text));
 
                 generatedCoroutines.Add(OptionATextCoroutine);       //将协程加进列表
                 generatedCoroutines.Add(OptionBTextCoroutine);
@@ -242,7 +232,11 @@ public class EvilTelephonePanel : PanelWithButton
             return;
         }
 
-        
+        if (PlayerData == null)
+        {
+            Debug.LogError("PlayerData is not assigned in the EvilTelephonePanel.");
+            return;
+        }
 
 
         //获取所有按钮的文本组件
@@ -251,10 +245,20 @@ public class EvilTelephonePanel : PanelWithButton
         m_OptionCText = OptionC.GetComponentInChildren<TextMeshProUGUI>();
         m_OptionDText = OptionD.GetComponentInChildren<TextMeshProUGUI>();
 
+
+        m_PlayerStatusBar = FindObjectOfType<PlayerStatusBar>();    //寻找带有此脚本的物体
+
+
         //检查按钮的文本组件是否存在
         if (m_OptionAText == null || m_OptionBText == null || m_OptionCText == null || m_OptionDText == null)
         {
             Debug.LogError("Some option texts are not assigned on the buttons in the EvilTelephonePanel.");
+            return;
+        }
+
+        if (m_PlayerStatusBar == null)
+        {
+            Debug.LogError("Cannot find any GameObject with component PlayerStatusBar.");
             return;
         }
     }

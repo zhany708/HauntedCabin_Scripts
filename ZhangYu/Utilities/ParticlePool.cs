@@ -8,8 +8,8 @@ public class ParticlePool : MonoBehaviour       //用于子弹，特效等的对象池。生成
     public static ParticlePool Instance {  get; private set; }
 
 
-
-    private Dictionary<string, Queue<GameObject>> m_ParticlePool = new Dictionary<string, Queue<GameObject>>();     //使用字典对不同的物体进行分开存储
+    //使用字典对不同的物体进行分开存储
+    private Dictionary<string, Queue<GameObject>> m_ParticlePool = new Dictionary<string, Queue<GameObject>>();     
 
 
 

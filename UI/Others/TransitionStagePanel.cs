@@ -1,6 +1,6 @@
 using TMPro;
 using UnityEngine;
-using DG.Tweening;
+
 
 
 public class TransitionStagePanel : BasePanel
@@ -23,15 +23,15 @@ public class TransitionStagePanel : BasePanel
 
     private void OnEnable()
     {
-        //彻底淡出后再删除界面，防止DoTween报错
-        OnFadeOutFinished += base.ClosePanel;
+        //彻底淡出后再删除界面
+        OnFadeOutFinished += ClosePanel;
     }
 
     protected override void OnDisable()
     {
         base.OnDisable();
 
-        OnFadeOutFinished -= base.ClosePanel;
+        OnFadeOutFinished -= ClosePanel;
     }
 
 
@@ -44,14 +44,16 @@ public class TransitionStagePanel : BasePanel
 
         Fade(CanvasGroup, FadeInAlpha, FadeDuration, false);     //淡入
 
-        DisplayText(m_TransitionStageText);     //显示文本
-        StartCoroutine(ClosePanelAfterDelay(m_DisplayDuration));     //显示一定时间后自动关闭界面
+        //显示文本
+        Coroutine textCoroutine = StartCoroutine(TypeText(m_TransitionStageText, m_TransitionStageText.text) );
+
+        //显示一定时间后淡出界面
+        Coroutine ClosePanelCoroutine = StartCoroutine(Delay.Instance.DelaySomeTime(m_DisplayDuration, () =>
+        {
+            Fade(CanvasGroup, FadeOutAlpha, FadeDuration, false);     //淡出
+        }));
+
+        generatedCoroutines.Add(textCoroutine);
+        generatedCoroutines.Add(ClosePanelCoroutine);
     }
-
-
-    
-    public override void ClosePanel()
-    {
-        Fade(CanvasGroup, FadeOutAlpha, FadeDuration, false);     //淡出
-    } 
 }

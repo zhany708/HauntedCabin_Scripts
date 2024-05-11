@@ -84,7 +84,7 @@ public class PlayerState
 
     public virtual void LogicUpdate() 
     {
-        input = player.InputHandler.RawMovementInput;   //通过Player脚本调用闲置状态和移动状态需要的向量数值
+        input = PlayerInputHandler.Instance.RawMovementInput;   //通过Player脚本调用闲置状态和移动状态需要的向量数值
 
         SetMoveAnimation();    //判断是否播放脚步移动动画
 
