@@ -149,7 +149,7 @@ public class UIManager : ManagerTemplate<UIManager>
 
     public void ResetGame()
     {
-        foreach (Transform child in m_UIRoot)    //在场景中删除所有Canvas下的UI
+        foreach (Transform child in m_UIRoot)    //在场景中删除所有Canvas下的UI（通过调用ClosePanel进行彻底的删除）
         {
             BasePanel childScript = child.GetComponent<BasePanel>();
             if (childScript == null)

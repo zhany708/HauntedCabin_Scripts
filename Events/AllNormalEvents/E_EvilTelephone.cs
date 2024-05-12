@@ -30,9 +30,14 @@ public class E_EvilTelephone : Event    //E开头的脚本表示跟事件相关
     {
         //每次加载时都重置碰撞框
         m_Collider.enabled = true;
+
+        EvilTelephonePanel.OnResultFinished += FinishEvent;     //UI界面关闭后再执行事件结束逻辑
     }
 
-
+    private void OnDisable()
+    {
+        EvilTelephonePanel.OnResultFinished -= FinishEvent;
+    }
 
 
     private void OnTriggerEnter2D(Collider2D other)
@@ -40,7 +45,6 @@ public class E_EvilTelephone : Event    //E开头的脚本表示跟事件相关
         if (other.CompareTag("Player"))
         {
             TriggerPlayerInteraction(other);    //跟玩家交互的逻辑
-            FinishEvent();      //结束事件
         }      
     }
 
@@ -63,21 +67,15 @@ public class E_EvilTelephone : Event    //E开头的脚本表示跟事件相关
 
 
 
-    private void TriggerPlayerInteraction(Collider2D playerCollider)
+    private async void TriggerPlayerInteraction(Collider2D playerCollider)
     {
         m_Animator.SetBool("Ringing", false);       //角色触碰电话后取消震动
 
         PlayAnswerPhoneSound();     //播放接电话的音效
 
-        //因为进入触发器的是Core里的Combat，所以先获取父物体，再获取子物体
-        PlayerStats playerHealth = playerCollider.GetComponentInParent<Player>().GetComponentInChildren<PlayerStats>();    
+        await UIManager.Instance.OpenPanel(UIManager.Instance.UIKeys.EvilTelephonePanel);   //打开事件界面
 
-        if (playerHealth != null)
-        {
-            playerHealth.DecreaseHealth(20);
-        }
-
-        m_Collider.enabled = false;     //玩家受伤后，取消激活碰撞框
+        m_Collider.enabled = false;     //界面打开后，取消激活碰撞框
     }
 
 

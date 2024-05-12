@@ -15,8 +15,17 @@ public class PlayerStatusBar : BasePanel
     public TextMeshProUGUI SanityText;
     public TextMeshProUGUI KnowledgeText;
 
+    //四个属性的值
+    public static float StrengthValue {  get; private set; }
+    public static float SpeedValue { get; private set; }
+    public static float SanityValue { get; private set; }
+    public static float KnowledgeValue { get; private set; }
+
+
     HealthBar m_PlayerHealthBar;
     Player m_Player;
+
+
 
 
 
@@ -25,7 +34,7 @@ public class PlayerStatusBar : BasePanel
     {
         base.Awake();
 
-        InitializeHealthBar();
+        InitializePlayerStatus();
     }
 
     private void Start()
@@ -41,7 +50,7 @@ public class PlayerStatusBar : BasePanel
 
 
     //初始化血条相关的部分
-    private void InitializeHealthBar()
+    private void InitializePlayerStatus()
     {
         //获取PlayerHealthBar游戏物体
         GameObject playerHealthBarObject = GameObject.Find("PlayerHealthBar");
@@ -72,8 +81,52 @@ public class PlayerStatusBar : BasePanel
             return;
         }
 
+
+        //从PlayerData哪里获取属性值
+        StrengthValue = m_Player.PlayerData.Strength;
+        SpeedValue = m_Player.PlayerData.Speed;
+        SanityValue = m_Player.PlayerData.Sanity;
+        KnowledgeValue = m_Player.PlayerData.Knowledge;
+
         UpdateStatusUI();
     }
+
+
+
+    public void ChangePropertyValue(PlayerProperty property, float changeValue)
+    {
+        switch (property)
+        {
+            case PlayerProperty.Strength:
+                StrengthValue += changeValue;
+                UpdateStatusUI();
+
+                break;
+
+            case PlayerProperty.Speed:
+                SpeedValue += changeValue;
+                UpdateStatusUI();
+
+                break;
+
+            case PlayerProperty.Sanity:
+                SanityValue += changeValue;
+                UpdateStatusUI();
+
+                break;
+
+            case PlayerProperty.Knowledge:
+                KnowledgeValue += changeValue;
+                UpdateStatusUI();
+
+                break;
+
+            default:
+                Debug.Log("The parameter is not one of the PlayerProperty.");
+                break;
+        }
+    }
+
 
 
     //更新玩家的属性UI
@@ -82,10 +135,21 @@ public class PlayerStatusBar : BasePanel
         if (m_Player != null)
         {
             //通过这种方式可以在脚本里更改文本某部分的颜色（单词前面的括号表示要改变的颜色，后面的括号表示这次改变到此为止）
-            StrengthText.text = $"Strength: <color=#FF6B6B>{m_Player.PlayerData.Strength} </color>";
-            SpeedText.text = $"Speed: <color=#FF6B6B>{m_Player.PlayerData.Speed} </color>";
-            SanityText.text = $"Sanity: <color=#3D88FF>{m_Player.PlayerData.Sanity} </color>";
-            KnowledgeText.text = $"Knowledge: <color=#3D88FF>{m_Player.PlayerData.Knowledge} </color>";
+            StrengthText.text = $"Strength: <color=#FF6B6B>{StrengthValue} </color>";
+            SpeedText.text = $"Speed: <color=#FF6B6B>{SpeedValue} </color>";
+            SanityText.text = $"Sanity: <color=#3D88FF>{SanityValue} </color>";
+            KnowledgeText.text = $"Knowledge: <color=#3D88FF>{KnowledgeValue} </color>";
         }
     }
+}
+
+
+
+//用于玩家属性的枚举
+public enum PlayerProperty
+{
+    Strength,
+    Speed,
+    Sanity,
+    Knowledge
 }

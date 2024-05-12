@@ -19,6 +19,7 @@ public class SO_UIKeys : ScriptableObject
     //事件相关
     [Header("Event")]
     public string TransitionStagePanelKey;    //进入二阶段文字
+    public string EvilTelephonePanel;
 
 
     //武器相关

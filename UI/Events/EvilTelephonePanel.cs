@@ -2,14 +2,16 @@ using UnityEngine.UI;
 using UnityEngine;
 using TMPro;
 using System;
-using System.Collections;
 
 
 
 public class EvilTelephonePanel : PanelWithButton
 {
+    public static Action OnResultFinished;      //接受事件方为E_EvilTelephone脚本
+
     public TextMeshProUGUI EventInfo;     //事件背景文本
-    public TextMeshProUGUI ResultText;     //选项结果文本
+    public TextMeshProUGUI ResultText;    //选项结果文本
+    public TextMeshProUGUI TipText;       //提示文本（提示玩家按空格或点击）
 
 
     //四个按钮
@@ -17,9 +19,6 @@ public class EvilTelephonePanel : PanelWithButton
     public Button OptionB;
     public Button OptionC;
     public Button OptionD;
-
-
-    public SO_PlayerData PlayerData;    //玩家的数据
 
 
 
@@ -58,9 +57,6 @@ public class EvilTelephonePanel : PanelWithButton
 
     private void Start()
     {
-        panelName = "Test";
-
-
         //将按钮和函数绑定起来
         OptionA.onClick.AddListener(() => OnButtonClicked(ButtonAction.OptionA));
         OptionB.onClick.AddListener(() => OnButtonClicked(ButtonAction.OptionB));
@@ -80,7 +76,9 @@ public class EvilTelephonePanel : PanelWithButton
     {
         base.OnEnable();
 
-        SetButtons(false);      //界面刚打开时取消激活所有按钮
+        SetButtons(false);      //界面刚打开时取消激活结果文本，提示文本和所有按钮
+        ResultText.gameObject.SetActive(false);
+        TipText.gameObject.SetActive(false);
 
         //界面完全淡出后调用此函数
         OnFadeOutFinished += ClosePanel;
@@ -89,11 +87,24 @@ public class EvilTelephonePanel : PanelWithButton
     protected override void OnDisable()
     {
         base.OnDisable();
-        //ClearOngoingCoroutine();
         OnFadeOutFinished -= ClosePanel;
     }
 
 
+
+
+    public override void ClosePanel()
+    {
+        //延迟0.5秒后再关闭界面，并且执行事件回调
+        Coroutine ClosePanelCoroutine = StartCoroutine(Delay.Instance.DelaySomeTime(0.5f, () =>
+        {
+            base.ClosePanel();
+
+            OnResultFinished?.Invoke();
+        }));
+
+        generatedCoroutines.Add(ClosePanelCoroutine);     //将协程加进列表
+    }
 
 
 
@@ -106,12 +117,18 @@ public class EvilTelephonePanel : PanelWithButton
                 //赋值选项的结果文本
                 ResultText.text = $"???: 'Snacks, my favorite snacks!'\n\nSanity <#3D88FF>+1";
 
+                //改变玩家的属性
+                m_PlayerStatusBar.ChangePropertyValue(PlayerProperty.Sanity, 1f);
+
                 CommonLogicForOptions();
                 break;
 
             case ButtonAction.OptionB:
                 //赋值选项的结果文本
                 ResultText.text = $"???: 'The little pies can't escape my sight...'\n\nKnowledge <#3D88FF>+1";
+
+                //改变玩家的属性
+                m_PlayerStatusBar.ChangePropertyValue(PlayerProperty.Knowledge, 1f);
 
                 CommonLogicForOptions();
                 break;
@@ -121,8 +138,7 @@ public class EvilTelephonePanel : PanelWithButton
                 ResultText.text = $"???: 'Baby, give me a kiss...'\n\nSanity <#3D88FF>-1";
 
                 //改变玩家的属性
-                PlayerData.Sanity--;
-                m_PlayerStatusBar.UpdateStatusUI();
+                m_PlayerStatusBar.ChangePropertyValue(PlayerProperty.Sanity, -1f);
 
                 CommonLogicForOptions();
                 break;
@@ -130,6 +146,9 @@ public class EvilTelephonePanel : PanelWithButton
             case ButtonAction.OptionD:              
                 //赋值选项的结果文本
                 ResultText.text = $"???: 'Naughty kid must be punished!'\n\nStrength <#FF6B6B>-1";
+
+                //改变玩家的属性
+                m_PlayerStatusBar.ChangePropertyValue(PlayerProperty.Strength, -1f);
 
                 CommonLogicForOptions();
                 break;
@@ -146,11 +165,15 @@ public class EvilTelephonePanel : PanelWithButton
     private void CommonLogicForOptions()        //所有选项的通用逻辑
     {
         SetButtons(false);      //取消激活所有按钮
+        ResultText.gameObject.SetActive(true);     //激活结果文本
+
 
         //先开始结果文本的打字效果
         Coroutine resultTextCoroutine = StartCoroutine(TypeText(ResultText, ResultText.text, () =>       
         {
             //Debug.Log("First Coroutine done!.");
+
+            TipText.gameObject.SetActive(true);     //激活提示文本，提醒玩家按空格或点击以继续游戏
 
             //等待玩家按空格或点击鼠标
             Coroutine waitForInputCoroutine = StartCoroutine(Delay.Instance.WaitForPlayerInput(() =>     
@@ -226,15 +249,9 @@ public class EvilTelephonePanel : PanelWithButton
             return;
         }
 
-        if (EventInfo == null || ResultText == null)
+        if (EventInfo == null || ResultText == null || TipText == null)
         {
             Debug.LogError("Some TMP components are not assigned in the EvilTelephonePanel.");
-            return;
-        }
-
-        if (PlayerData == null)
-        {
-            Debug.LogError("PlayerData is not assigned in the EvilTelephonePanel.");
             return;
         }
 

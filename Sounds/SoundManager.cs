@@ -90,7 +90,7 @@ public class SoundManager : ManagerTemplate<SoundManager>
             //´Ó×ÖµäÖĞÒÆ³ıÒôÆµ
             m_AudioDict.Remove(key);
 
-            Debug.Log("AudioClip released and removed from dictionary: " + key);
+            //Debug.Log("AudioClip released and removed from dictionary: " + key);
         }
 
         else

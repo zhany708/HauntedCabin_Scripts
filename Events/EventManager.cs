@@ -8,7 +8,7 @@ public class EventManager : ManagerTemplate<EventManager>
     public SO_EventKeys EventKeys;
 
 
-    public bool IsSecondStage {  get; private set; }
+    public bool IsSecondStage { get; private set; } = false;
 
 
 
@@ -18,9 +18,9 @@ public class EventManager : ManagerTemplate<EventManager>
 
 
 
-    int m_EventCount;                 //生成过多少事件
-    int m_EnterSecondStageCount;      //进入二阶段所需的事件数
-    int m_RandomGeneratedNum;         //随机生成的数（用于新的事件生成的索引）
+    int m_EventCount = 0;                 //生成过多少事件
+    int m_EnterSecondStageCount = 1;      //进入二阶段所需的事件数
+    int m_RandomGeneratedNum = -1;         //随机生成的数（用于新的事件生成的索引）
 
 
 
@@ -33,13 +33,6 @@ public class EventManager : ManagerTemplate<EventManager>
 
     private async void Start()
     {
-        //初始化变量，防止出现Bug
-        m_EventCount = 0;
-        m_EnterSecondStageCount = 1;
-        m_RandomGeneratedNum = -1;
-        IsSecondStage = false;
-
-
         //提前加载进入二阶段的文字，但不实例化   
         if (UIManager.Instance.UIKeys != null && !string.IsNullOrEmpty(UIManager.Instance.UIKeys.TransitionStagePanelKey))
         {
@@ -141,7 +134,7 @@ public class EventManager : ManagerTemplate<EventManager>
     //检查是否进入二阶段
     private void CheckIfTranstionToSecondStage()
     {
-        if (m_EventCount >= m_EnterSecondStageCount)
+        if (m_EventCount >= m_EnterSecondStageCount && !IsSecondStage)   //检查是否触发了足够次数的事件，并且目前不是二阶段
         {
             transform.position = m_RoomPosition;        //将事件管理器的坐标移到当前房间
             m_Animator.SetTrigger("TranstionSecondStage");  //随后播放过渡阶段的动画
