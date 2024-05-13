@@ -100,7 +100,7 @@ public class PlayerState
         if (!PanelWithButton.IsPanelWithButtonOpened)
         {
             //将移动逻辑放在跟状态中，这样玩家无需进入移动状态也可以移动（某些状态需要覆盖此函数，如受击状态）
-            movement.SetVelocity(playerData.MovementVelocity, input);
+            movement.SetVelocity(playerData.MovementVelocity * PlayerStatusBar.GetSpeedAddition(), input);
         }
 
         //否则暂停玩家的移动

@@ -56,14 +56,11 @@ public class MainMenuPanel : PanelWithButton
 
     private async void PlayGame()
     {
-        //载入一楼大厅场景
-        SceneManager.LoadScene("FirstFloor");
+        //打开游戏背景介绍界面
+        await UIManager.Instance.OpenPanel(UIManager.Instance.UIKeys.GameBackgroundPanel);
 
-        //播放一楼BGM
-        await SoundManager.Instance.PlayBGMAsync(SoundManager.Instance.AudioClipKeys.StopForAMoment, true, SoundManager.Instance.MusicVolume);
-
-        //从字典中移除，表示界面没打开
-        UIManager.Instance.PanelDict.Remove(panelName);
+        //淡出当前界面
+        Fade(CanvasGroup, FadeOutAlpha, FadeDuration, false);
     }
 
     private void QuitGame()

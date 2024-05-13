@@ -14,7 +14,7 @@ public class Stats : CoreComponent      //用于管理生命，魔力等状态信息
     protected float currentHealth;
 
     float m_Defense;
-
+    float m_DefenseRate = 0.01f;     //每一点防御对应1%的伤害减免
 
 
 
@@ -41,10 +41,8 @@ public class Stats : CoreComponent      //用于管理生命，魔力等状态信息
     {
         if (currentHealth != 0)      //生命值为0时就不会继续受伤了
         {
-            if (amount > m_Defense)    
-            {
-                currentHealth -= (amount - m_Defense);      //受到的伤害值大于防御力时才会扣血
-            }
+            currentHealth -= (amount * GetDefenseAddition() );      //根据防御力减免受到的伤害
+            
 
             if (currentHealth <= 0)
             {
@@ -55,6 +53,12 @@ public class Stats : CoreComponent      //用于管理生命，魔力等状态信息
                 //Debug.Log("Health is zero!!");
             }
         }
+    }
+
+
+    private float GetDefenseAddition()   //每当扣除血量时都需要调用此函数
+    {
+        return 1 - m_Defense * m_DefenseRate;       //计算伤害减免
     }
 
     #region Getters

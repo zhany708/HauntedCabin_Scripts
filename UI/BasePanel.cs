@@ -7,6 +7,7 @@ using UnityEngine;
 
 
 
+
 public class BasePanel : MonoBehaviour
 {
     public event Action OnFadeInFinished;       //界面完全淡入时调用的事件，接收方为子类
@@ -157,8 +158,8 @@ public class BasePanel : MonoBehaviour
             {
                 textComponent.maxVisibleCharacters = totalLength;  //玩家按下空格后，瞬间显示所有文本
 
-                //等待0.5秒再退出，否则如果此函数结束后的下一个函数也需要按空格时，可能会导致按一次空格相应多个函数
-                yield return new WaitForSeconds(0.5f);        
+                //等待0.15秒再退出，否则如果此函数结束后的下一个函数也需要按空格时，可能会导致按一次空格响应多个函数
+                yield return new WaitForSeconds(0.15f);        
                 break;  //退出循环
             }
 

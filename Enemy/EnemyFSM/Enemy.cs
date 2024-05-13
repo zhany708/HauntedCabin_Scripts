@@ -72,7 +72,7 @@ public class Enemy : MonoBehaviour
     #endregion
 
     #region Variables
-    public bool CanAttack { get ; private set; }        //用于攻击间隔
+    public bool CanAttack { get; private set; } = true;        //用于攻击间隔
 
     //float m_LastHitTime;        //上次受击时间
     bool m_IsReactivate = false;    //判断敌人是否为重新激活
@@ -95,7 +95,7 @@ public class Enemy : MonoBehaviour
         DeathState = new EnemyDeathState(this, StateMachine, enemyData, "Death");       
     }
 
-    protected virtual void Start()      //只在第一帧运行前运行这个函数
+    protected virtual void Start()      //只在第一帧运行前运行一次这个函数
     {
         m_Death = GetComponentInChildren<EnemyDeath>();
 
@@ -144,7 +144,7 @@ public class Enemy : MonoBehaviour
         }
 
 
-        CanAttack = true;   //游戏开始时将可攻击设置为true
+        CanAttack = true;   //重新激活时将可攻击设置为true
         AttackTimer.OnTimerDone += SetCanAttackTrue;        //触发事件，使敌人可以重新攻击
 
 
@@ -156,11 +156,11 @@ public class Enemy : MonoBehaviour
 
     private void OnDisable()
     {
-        Movement.Rigidbody2d.constraints = RigidbodyConstraints2D.FreezeRotation;   //重新激活敌人后只冻结Z轴的旋转，因为敌人死亡时被禁止所有移动
         Movement.SetVelocityZero();     //取消激活后将刚体速度重置，防止报错
-        Combat.SetIsHit(false);     //敌人死亡后设置Combat中的受击布尔为false，防止重新激活后直接进入受击状态
 
-        m_IsReactivate = true;
+        Combat.SetIsHit(false);  //敌人死亡后设置Combat中的受击布尔为false，以便及时进入死亡状态，且防止重新激活后直接进入受击状态
+
+        m_IsReactivate = true;      //表示已经重新激活
 
         AttackTimer.OnTimerDone -= SetCanAttackTrue;
     }
@@ -208,13 +208,6 @@ public class Enemy : MonoBehaviour
         {
             Parameter.Target = other.transform;     //储存玩家的位置信息
         }
-
-        /*
-        else if ( (other.gameObject.CompareTag("Furniture") || other.gameObject.CompareTag("Wall") ) && StateMachine.CurrentState == PatrolState)
-        {
-            StateMachine.ChangeState(IdleState);        //当地人巡逻时，与家具或墙触发碰撞时切换成闲置状态    
-        }
-        */
     }
 
     private void OnTriggerExit2D(Collider2D other)
@@ -225,15 +218,6 @@ public class Enemy : MonoBehaviour
         }
     }
 
-    /*
-    private void OnCollisionEnter2D(Collision2D other)
-    {
-        if ( (other.gameObject.CompareTag("Furniture") || other.gameObject.CompareTag("Wall") ) && StateMachine.CurrentState == PatrolState)
-        {
-            StateMachine.ChangeState(IdleState);        //当地人巡逻时，与家具或墙触发碰撞时切换成闲置状态    
-        }
-    }
-    */
 
     private void OnDrawGizmos()
     {

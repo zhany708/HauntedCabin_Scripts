@@ -2,7 +2,7 @@ using UnityEngine.UI;
 using UnityEngine;
 using TMPro;
 using System;
-
+using Lean.Localization;
 
 
 public class EvilTelephonePanel : PanelWithButton
@@ -20,6 +20,11 @@ public class EvilTelephonePanel : PanelWithButton
     public Button OptionC;
     public Button OptionD;
 
+    //用于四个结果的文本（从Lean Localization那调用时需要的string）
+    public string ResultA_PhraseKey;
+    public string ResultB_PhraseKey;
+    public string ResultC_PhraseKey;
+    public string ResultD_PhraseKey;
 
 
     //按钮的文本组件
@@ -62,32 +67,23 @@ public class EvilTelephonePanel : PanelWithButton
         OptionB.onClick.AddListener(() => OnButtonClicked(ButtonAction.OptionB));
         OptionC.onClick.AddListener(() => OnButtonClicked(ButtonAction.OptionC));
         OptionD.onClick.AddListener(() => OnButtonClicked(ButtonAction.OptionD));
-
-
-        //在使用打字机前提前更改文本的部分颜色（需要更改多个单词时可以在后面再次调用.Replace，无须再创建新的string变量）
-        string preparedText = EventInfo.text.Replace("answer", "<color=red>answer</color>");
-        EventInfo.text = preparedText;
-
-        StartTextAnimations();
     }
 
 
     protected override void OnEnable()
     {
         base.OnEnable();
-
-        SetButtons(false);      //界面刚打开时取消激活结果文本，提示文本和所有按钮
-        ResultText.gameObject.SetActive(false);
-        TipText.gameObject.SetActive(false);
-
         //界面完全淡出后调用此函数
         OnFadeOutFinished += ClosePanel;
+
+        OnFadeInFinished += StartTextAnimations;    //界面完全淡入后调用此函数
     }
 
     protected override void OnDisable()
     {
         base.OnDisable();
         OnFadeOutFinished -= ClosePanel;
+        OnFadeInFinished -= StartTextAnimations;
     }
 
 
@@ -115,7 +111,7 @@ public class EvilTelephonePanel : PanelWithButton
         {
             case ButtonAction.OptionA:
                 //赋值选项的结果文本
-                ResultText.text = $"???: 'Snacks, my favorite snacks!'\n\nSanity <#3D88FF>+1";
+                SetLocalizedText(ResultA_PhraseKey);
 
                 //改变玩家的属性
                 m_PlayerStatusBar.ChangePropertyValue(PlayerProperty.Sanity, 1f);
@@ -125,7 +121,7 @@ public class EvilTelephonePanel : PanelWithButton
 
             case ButtonAction.OptionB:
                 //赋值选项的结果文本
-                ResultText.text = $"???: 'The little pies can't escape my sight...'\n\nKnowledge <#3D88FF>+1";
+                SetLocalizedText(ResultB_PhraseKey);
 
                 //改变玩家的属性
                 m_PlayerStatusBar.ChangePropertyValue(PlayerProperty.Knowledge, 1f);
@@ -135,7 +131,7 @@ public class EvilTelephonePanel : PanelWithButton
 
             case ButtonAction.OptionC:
                 //赋值选项的结果文本
-                ResultText.text = $"???: 'Baby, give me a kiss...'\n\nSanity <#3D88FF>-1";
+                SetLocalizedText(ResultC_PhraseKey);
 
                 //改变玩家的属性
                 m_PlayerStatusBar.ChangePropertyValue(PlayerProperty.Sanity, -1f);
@@ -143,9 +139,9 @@ public class EvilTelephonePanel : PanelWithButton
                 CommonLogicForOptions();
                 break;
 
-            case ButtonAction.OptionD:              
+            case ButtonAction.OptionD:
                 //赋值选项的结果文本
-                ResultText.text = $"???: 'Naughty kid must be punished!'\n\nStrength <#FF6B6B>-1";
+                SetLocalizedText(ResultD_PhraseKey);
 
                 //改变玩家的属性
                 m_PlayerStatusBar.ChangePropertyValue(PlayerProperty.Strength, -1f);
@@ -194,7 +190,13 @@ public class EvilTelephonePanel : PanelWithButton
 
     
 
-
+    private void SetLocalizedText(string phraseKey)
+    {
+        if (LeanLocalization.CurrentLanguages != null && ResultText != null)
+        {
+            ResultText.text = LeanLocalization.GetTranslationText(phraseKey);   //根据当前语言赋值文本
+        }
+    }
 
 
     private void SetButtons(bool isActive)
@@ -210,6 +212,8 @@ public class EvilTelephonePanel : PanelWithButton
     {       
         if (EventInfo.text.Length > 0)      //先检查介绍文本是否有字
         {
+            EventInfo.gameObject.SetActive(true);       //激活事件介绍文本
+
             Coroutine eventInfoCoroutine = StartCoroutine(TypeText(EventInfo, EventInfo.text, () =>
             {
                 SetButtons(true);       //事件介绍完毕后，激活所有按钮
@@ -252,6 +256,12 @@ public class EvilTelephonePanel : PanelWithButton
         if (EventInfo == null || ResultText == null || TipText == null)
         {
             Debug.LogError("Some TMP components are not assigned in the EvilTelephonePanel.");
+            return;
+        }
+
+        if (ResultA_PhraseKey == "" || ResultB_PhraseKey == "" || ResultC_PhraseKey == "" || ResultD_PhraseKey == "")
+        {
+            Debug.LogError("Some Lean Localization phrase keys are not written in the EvilTelephonePanel.");
             return;
         }
 

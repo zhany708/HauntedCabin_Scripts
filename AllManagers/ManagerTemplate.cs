@@ -98,15 +98,7 @@ public abstract class ManagerTemplate<T> : MonoBehaviour where T : Component
     }
 
 
-    //将管理器设置为AllManagers的子物体
-    public void SetParent(Transform thisParent)
-    {
-        //检测当前物体的父物体是否为空
-        if (gameObject.transform.parent == null)
-        {
-            gameObject.transform.parent = thisParent;           
-        }      
-    }
+
 
 
     //设置脚本中跟物体的坐标

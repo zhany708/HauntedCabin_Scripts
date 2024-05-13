@@ -1,3 +1,4 @@
+using Lean.Localization;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -21,6 +22,13 @@ public class PlayerStatusBar : BasePanel
     public static float SanityValue { get; private set; }
     public static float KnowledgeValue { get; private set; }
 
+    //四个属性对应的翻译文本的string
+    public string StrengthPhraseKey;
+    public string SpeedPhraseKey;
+    public string SanityPhraseKey;
+    public string KnowledgePhraseKey;
+
+
 
     HealthBar m_PlayerHealthBar;
     Player m_Player;
@@ -34,8 +42,9 @@ public class PlayerStatusBar : BasePanel
     {
         base.Awake();
 
-        InitializePlayerStatus();
-    }
+        CheckComponents();              //检查公有组件是否都存在
+        InitializePlayerStatus();       //初始化
+    }   
 
     private void Start()
     {
@@ -45,6 +54,8 @@ public class PlayerStatusBar : BasePanel
             Debug.LogError("Some Status Text is not assigned.");
             return;
         }
+
+        UpdateStatusUI();       //进入游戏前更新显示的数值
     }
 
 
@@ -87,8 +98,6 @@ public class PlayerStatusBar : BasePanel
         SpeedValue = m_Player.PlayerData.Speed;
         SanityValue = m_Player.PlayerData.Sanity;
         KnowledgeValue = m_Player.PlayerData.Knowledge;
-
-        UpdateStatusUI();
     }
 
 
@@ -134,12 +143,47 @@ public class PlayerStatusBar : BasePanel
     {
         if (m_Player != null)
         {
-            //通过这种方式可以在脚本里更改文本某部分的颜色（单词前面的括号表示要改变的颜色，后面的括号表示这次改变到此为止）
-            StrengthText.text = $"Strength: <color=#FF6B6B>{StrengthValue} </color>";
-            SpeedText.text = $"Speed: <color=#FF6B6B>{SpeedValue} </color>";
-            SanityText.text = $"Sanity: <color=#3D88FF>{SanityValue} </color>";
-            KnowledgeText.text = $"Knowledge: <color=#3D88FF>{KnowledgeValue} </color>";
+            //获取翻译的文本组件
+            string strengthFormat = LeanLocalization.GetTranslationText(StrengthPhraseKey);
+            string speedFormat = LeanLocalization.GetTranslationText(SpeedPhraseKey);
+            string sanityFormat = LeanLocalization.GetTranslationText(SanityPhraseKey);
+            string knowledgeFormat = LeanLocalization.GetTranslationText(KnowledgePhraseKey);
+
+            //赋值所有属性的数值
+            StrengthText.text = string.Format(strengthFormat, StrengthValue);
+            SpeedText.text = string.Format(speedFormat, SpeedValue);
+            SanityText.text = string.Format(sanityFormat, SanityValue);
+            KnowledgeText.text = string.Format(knowledgeFormat, KnowledgeValue);
         }
+    }
+
+
+
+    private void CheckComponents()
+    {
+        if (StrengthText == null || SpeedText == null || SanityText == null || KnowledgeText == null)
+        {
+            Debug.LogError("Some TMP components are not assigned in the PlayerStatusBar.");
+            return;
+        }
+
+        if (StrengthPhraseKey == "" || SpeedPhraseKey == "" || SanityPhraseKey == "" || KnowledgePhraseKey == "")
+        {
+            Debug.LogError("Some Lean Localization phrase keys are not written in the PlayerStatusBar.");
+            return;
+        }
+    }
+
+
+
+    public static float GetStrengthAddition()   //每当玩家造成伤害时都需要调用此函数
+    {
+        return 1 + StrengthValue * 0.05f;       //每一点力量对应5%的伤害加成
+    }
+
+    public static float GetSpeedAddition()   //每当玩家移动时都需要调用此函数
+    {
+        return 1 + SpeedValue * 0.05f;       //每一点速度对应5%的移速加成
     }
 }
 

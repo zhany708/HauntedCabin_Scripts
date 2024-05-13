@@ -49,6 +49,10 @@ public class Delay : MonoBehaviour      //用于处理延迟相关的脚本
             if (PlayerInputHandler.Instance.IsSpacePressed || PlayerInputHandler.Instance.AttackInputs[(int)CombatInputs.primary])
             {
                 inputReceived = true;
+
+                //等待0.15秒再调用回调，否则如果此函数结束后的下一个函数也需要按空格时，可能会导致按一次空格响应多个函数
+                yield return new WaitForSeconds(0.15f);
+
                 onInputReceived?.Invoke();
 
                 yield break;

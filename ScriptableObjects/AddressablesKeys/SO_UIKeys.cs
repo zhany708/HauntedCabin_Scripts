@@ -11,6 +11,11 @@ public class SO_UIKeys : ScriptableObject
     public string GameLostPanel;        //游戏结束界面
 
 
+    //剧本相关
+    [Header("ScreenPlay")]
+    public string GameBackgroundPanel;
+
+
     //人物相关
     [Header("Player")]
     public string PlayerStatusBarKey;         //玩家状态栏。在HealthBar脚本里初始化

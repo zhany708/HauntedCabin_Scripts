@@ -54,7 +54,8 @@ public class PlayerBullet : MonoBehaviour
 
         if (damageable != null)
         {
-            damageable.Damage(m_Gun.GunData.AttackDetail.DamageAmount);
+            //对被击中的物体造成伤害
+            damageable.Damage(m_Gun.GunData.AttackDetail.DamageAmount * PlayerStatusBar.GetStrengthAddition() );
             //damageable.GetHit(m_AttackDirection);
         }
 
