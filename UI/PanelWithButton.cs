@@ -94,7 +94,7 @@ public class PanelWithButton : BasePanel        //专门用于有按钮的界面UI
 
 
 
-    private void SetTopPriorityButton()
+    protected virtual void SetTopPriorityButton()
     {
         //Debug.Log("The size of the OpenedPanelsWithButton List is : " + m_OpenedPanelsWithButton.Count);
 

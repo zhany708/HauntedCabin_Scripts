@@ -1,3 +1,4 @@
+using Lean.Localization;
 using System.Collections;
 using UnityEngine;
 
@@ -6,6 +7,11 @@ public class WeaponPickUp : MonoBehaviour
 {
     //public SO_WeaponKeys WeaponKeys;
     public GameObject WeaponPreFab;
+
+    public string WeaponPhraseKey;      //从Lean Localization那调用时需要的string
+
+
+
 
 
     PickupWeaponPanel weaponPickupPanel;
@@ -16,6 +22,22 @@ public class WeaponPickUp : MonoBehaviour
 
 
 
+
+
+    private void Awake()
+    {
+        if (WeaponPreFab == null)
+        {
+            Debug.LogError("Weapon prefab is not assigned in the WeaponPickUp script.");
+            return;
+        }
+
+        if (WeaponPhraseKey == "")
+        {
+            Debug.LogError("WeaponPhraseKey is not written in the WeaponPickUp script.");
+            return;
+        }
+    }
 
     private async void Start()
     {
@@ -33,12 +55,13 @@ public class WeaponPickUp : MonoBehaviour
 
 
 
-
-
     private void OnTriggerEnter2D(Collider2D other)
     {
         ProcessWeaponPickup(other);
     }
+
+
+
 
 
 
@@ -56,7 +79,7 @@ public class WeaponPickUp : MonoBehaviour
             if (weaponPickupPanel != null)
             {
                 //将武器名字赋值给UI，用于显示
-                weaponPickupPanel.SetItemName(WeaponPreFab.name);
+                SetLocalizedText(WeaponPhraseKey);
 
                 //将角色脚本和武器物体传递给UI，用于不同的按钮功能
                 weaponPickupPanel.SetPlayerAndWeapon(player, WeaponPreFab, this);
@@ -68,6 +91,14 @@ public class WeaponPickUp : MonoBehaviour
     }
 
 
+    private void SetLocalizedText(string phraseKey)
+    {
+        if (LeanLocalization.CurrentLanguages != null)
+        {
+            //根据当前语言赋值文本给拾取武器界面
+            weaponPickupPanel.SetItemName(LeanLocalization.GetTranslationText(phraseKey) );     
+        }
+    }
 
     #region Setters
     public void SetIsPanelOpen(bool isOpen)

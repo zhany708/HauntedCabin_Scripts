@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class TransitionStagePanel : BasePanel
 {
-    TextMeshProUGUI m_TransitionStageText;      //文本组件
+    public TextMeshProUGUI TransitionStageText;      //文本组件
 
     float m_DisplayDuration = 5f;
 
@@ -17,14 +17,18 @@ public class TransitionStagePanel : BasePanel
     {
         base.Awake();
 
-        m_TransitionStageText = GetComponentInChildren<TextMeshProUGUI>();
+        if (TransitionStageText == null )
+        {
+            Debug.LogError("TransitionStageText component is not assigned in the TransitionStagePanel.");
+            return;
+        }
     }
 
 
     private void OnEnable()
-    {
-        //彻底淡出后再删除界面
-        OnFadeOutFinished += ClosePanel;
+    {       
+        OnFadeOutFinished += ClosePanel;            //彻底淡出后再删除界面
+        OnFadeInFinished += StartTextAnimations;    //彻底淡入后再开始打字
     }
 
     protected override void OnDisable()
@@ -32,6 +36,7 @@ public class TransitionStagePanel : BasePanel
         base.OnDisable();
 
         OnFadeOutFinished -= ClosePanel;
+        OnFadeInFinished -= StartTextAnimations;
     }
 
 
@@ -40,12 +45,19 @@ public class TransitionStagePanel : BasePanel
 
     public override void OpenPanel(string name)
     {
-        base.OpenPanel(name);
+        panelName = name;
 
-        Fade(CanvasGroup, FadeInAlpha, FadeDuration, false);     //淡入
+        Fade(CanvasGroup, FadeInAlpha, FadeDuration, false);     //淡入（没有射线阻挡）       
+    }
+
+
+
+    private void StartTextAnimations()
+    {
+        TransitionStageText.gameObject.SetActive(true);       //激活文本组件
 
         //显示文本
-        Coroutine textCoroutine = StartCoroutine(TypeText(m_TransitionStageText, m_TransitionStageText.text) );
+        Coroutine textCoroutine = StartCoroutine(TypeText(TransitionStageText, TransitionStageText.text));
 
         //显示一定时间后淡出界面
         Coroutine ClosePanelCoroutine = StartCoroutine(Delay.Instance.DelaySomeTime(m_DisplayDuration, () =>

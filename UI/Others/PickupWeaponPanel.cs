@@ -80,22 +80,10 @@ public class PickupWeaponPanel : PanelWithButton
 
 
 
-    public override void OpenPanel(string name)
-    {
-        base.OpenPanel(name);
-
-        //界面打开时禁止玩家攻击
-        PlayerInputHandler.Instance.SetCanDetectAttack(false);
-    }
-
     public override void ClosePanel()
     {
         base.ClosePanel();
 
-        //界面关闭后允许玩家攻击
-        PlayerInputHandler.Instance.SetCanDetectAttack(true);
-
-       
         if (m_WeaponPickup != null)
         {
             //设置拾取武器脚本里的布尔

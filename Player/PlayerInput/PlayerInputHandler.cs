@@ -20,7 +20,6 @@ public class PlayerInputHandler : MonoBehaviour
 
     Vector2 m_MousePos;
 
-    bool m_CanDetectAttack = true;   //决定是否检测鼠标按键（需要交互UI时取消检测）
 
 
 
@@ -68,18 +67,12 @@ public class PlayerInputHandler : MonoBehaviour
 
     public void OnPrimaryAttackInput(InputAction.CallbackContext context) 
     {       
-        if (m_CanDetectAttack)
-        {
-            AttackInputs[(int)CombatInputs.primary] = context.performed;
-        }   
+        AttackInputs[(int)CombatInputs.primary] = context.performed;       
     }
 
     public void OnSecondaryAttackInput(InputAction.CallbackContext context)
-    {
-        if (m_CanDetectAttack)
-        {
-            AttackInputs[(int)CombatInputs.secondary] = context.performed;
-        }
+    {      
+        AttackInputs[(int)CombatInputs.secondary] = context.performed;      
     }
 
 
@@ -110,11 +103,6 @@ public class PlayerInputHandler : MonoBehaviour
     #endregion
 
     #region Setters
-    public void SetCanDetectAttack(bool canDetectAttack)
-    {
-        m_CanDetectAttack = canDetectAttack;
-    }
-
     /*
     public void ResetAttackInputs()
     {
