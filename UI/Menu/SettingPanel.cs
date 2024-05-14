@@ -1,6 +1,7 @@
 using Lean.Localization;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 
 
@@ -10,8 +11,9 @@ public class SettingPanel : PanelWithButton
 {
     public TMP_Dropdown Dropdown;       //下拉列表
     public TMP_Text LabelText;          //下拉列表中显示当前选项的文本
+    public Button CloseButton;          //用于关闭界面的按钮
 
-    public LeanLocalization Localization;       //翻译处理器的引用
+    LeanLocalization m_Localization;       //翻译处理器的引用
 
 
 
@@ -21,19 +23,20 @@ public class SettingPanel : PanelWithButton
 
     protected override void Awake()
     {
-        if (Dropdown == null || LabelText == null)
+        if (Dropdown == null || LabelText == null || CloseButton == null)
         {
             Debug.LogError("Some TMP components are not assigned in the SettingPanel.");
             return;
         }
 
-        if (Localization == null)
+
+        m_Localization = FindObjectOfType<LeanLocalization>();  //寻找翻译组件
+
+        if (m_Localization == null)
         {
             Debug.LogError("LeanLocalization component is not assigned in the SettingPanel.");
             return;
         }
-
-        panelName = "test";     //需要做的：记得删掉
     }
 
     private void Start()
@@ -41,10 +44,24 @@ public class SettingPanel : PanelWithButton
         PopulateDropdown();     //根据拥有的语言填充下拉菜单
 
         Dropdown.onValueChanged.AddListener(ChangeLanguage);    //将函数绑定到下拉菜单
+        CloseButton.onClick.AddListener(() => Fade(CanvasGroup, FadeOutAlpha, FadeDuration, false) );   //将函数绑定到按钮
     }
 
-    protected override void Update() { }    //这两个函数都不需要调用父类里的逻辑，所以重写
-    protected override void SetTopPriorityButton() { }
+
+    protected override void OnEnable()
+    {
+        base.OnEnable();
+        //界面完全淡出后调用此函数
+        OnFadeOutFinished += ClosePanel;
+    }
+
+    protected override void OnDisable()
+    {
+        base.OnDisable();
+        OnFadeOutFinished -= ClosePanel;
+    }
+
+
 
 
 
@@ -56,25 +73,16 @@ public class SettingPanel : PanelWithButton
 
         foreach (var languageDict in LeanLocalization.CurrentLanguages)
         {
-            string language = languageDict.Key;     //根据value从字典那获取key
+            string language = languageDict.Key;     //根据value从字典那获取key         
 
-            switch (language)       //让文本直接显示那个语言，从而让玩家可以更快识别
-            {
-                case "Chinese":
-                    language = "中文";
-                    break;
-
-                default:
-                    language = "English";
-                    break;
-            }
-
-            Dropdown.options.Add(new TMP_Dropdown.OptionData(language) );       //创建新的字符串给下拉菜单
+            //转换语言后，创建新的字符串给下拉菜单
+            Dropdown.options.Add(new TMP_Dropdown.OptionData(LanguageTransform(language)) );      
         }
 
-        //设置当前语言对应的值
-        Dropdown.value = Dropdown.options.FindIndex(option => option.text == Localization.CurrentLanguage);
-        LabelText.text = Localization.CurrentLanguage;      //给Label赋值当前的语言，用于显示当前下拉菜单正在选择的值
+        //转换语言后，设置当前语言对应的值
+        Dropdown.value = Dropdown.options.FindIndex(option => option.text == LanguageTransform(m_Localization.CurrentLanguage) );
+        //转换语言后，给Label赋值当前的语言，用于显示当前下拉菜单正在选择的值
+        LabelText.text = LanguageTransform(m_Localization.CurrentLanguage);      
     }
 
 
@@ -82,18 +90,29 @@ public class SettingPanel : PanelWithButton
     {
         string selectedLanguage = Dropdown.options[index].text;     //根据下拉菜单的值获取对应的文本的字符串
 
-        switch (selectedLanguage)       ////由于文本直接显示那个语言，所以需要转换一下再赋值
+        //转换语言后，切换到字符串对应的语言
+        m_Localization.SetCurrentLanguage(LanguageTransform(selectedLanguage) );
+    }
+
+
+    //让文本直接显示那个语言，从而让玩家可以更快识别；或者转换回来
+    private string LanguageTransform(string selectedLanguage)
+    {
+        switch (selectedLanguage)
         {
+            case "Chinese":
+                selectedLanguage = "中文";
+                break;
+
             case "中文":
                 selectedLanguage = "Chinese";
                 break;
 
             default:
-                selectedLanguage = "English";
+                selectedLanguage = "English";       //默认返回English
                 break;
         }
 
-
-        Localization.SetCurrentLanguage(selectedLanguage);          //切换到字符串对应的语言
+        return selectedLanguage;
     }
 }

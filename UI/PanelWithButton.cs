@@ -12,7 +12,7 @@ public class PanelWithButton : BasePanel        //专门用于有按钮的界面UI
 
 
     //打开界面后让EventSystem第一个选择的按钮
-    protected GameObject firstSelectedButton;
+    protected GameObject firstSelectedButton = null;
 
     //上一个选择的按钮
     protected GameObject lastSelectedButton;

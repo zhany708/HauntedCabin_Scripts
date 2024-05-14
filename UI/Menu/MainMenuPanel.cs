@@ -1,13 +1,13 @@
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 
 
 public class MainMenuPanel : PanelWithButton
 {
-    public Button PlayButton;
-    public Button QuitButton;
+    public Button PlayButton;       //开始游戏按钮
+    public Button SettingButton;    //设置界面按钮
+    public Button QuitButton;       //关闭游戏按钮
 
 
 
@@ -20,7 +20,7 @@ public class MainMenuPanel : PanelWithButton
         base.Awake();
 
         //检查按钮组件是否存在
-        if (PlayButton == null || QuitButton == null)
+        if (PlayButton == null || SettingButton == null || QuitButton == null)
         {
             Debug.LogError("Some buttons are not assigned in the MainMenuPanel.");
             return;
@@ -35,6 +35,7 @@ public class MainMenuPanel : PanelWithButton
     {
         //将按钮和函数绑定起来
         PlayButton.onClick.AddListener(() => PlayGame());
+        SettingButton.onClick.AddListener(() => OpenSettingPanel());
         QuitButton.onClick.AddListener(() => QuitGame());
 
         
@@ -61,6 +62,12 @@ public class MainMenuPanel : PanelWithButton
 
         //淡出当前界面
         Fade(CanvasGroup, FadeOutAlpha, FadeDuration, false);
+    }
+
+    private async void OpenSettingPanel()
+    {
+        //打开游戏设置界面
+        await UIManager.Instance.OpenPanel(UIManager.Instance.UIKeys.SettingPanel);
     }
 
     private void QuitGame()
