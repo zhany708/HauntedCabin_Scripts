@@ -7,14 +7,18 @@ public class SO_UIKeys : ScriptableObject
     //菜单相关
     [Header("Menu")]
     public string MainMenuPanel;        //游戏开始菜单
-    public string SettingPanel;         //游戏开始菜单
+    public string SettingPanel;         //游戏设置界面
     public string PauseMenuPanel;       //游戏暂停界面
-    public string GameLostPanel;        //游戏结束界面
+    public string GameLostPanel;        //游戏失败界面
+    public string GameWinningPanel;     //游戏胜利界面
+
+    public string TaskPanel;                //游戏任务界面
 
 
     //剧本相关
     [Header("ScreenPlay")]
-    public string GameBackgroundPanel;
+    public string GameBackgroundPanel;      //游戏底层剧本界面
+    
 
 
     //人物相关
@@ -25,7 +29,7 @@ public class SO_UIKeys : ScriptableObject
     //事件相关
     [Header("Event")]
     public string TransitionStagePanelKey;    //进入二阶段文字
-    public string EvilTelephonePanel;
+    public string EvilTelephonePanel;         //《电话铃声》事件界面
 
 
     //武器相关

@@ -57,6 +57,8 @@ public class Enemy : MonoBehaviour
     private EnemyDeath m_Death;
     */
 
+    public DoorController DoorController { get; private set; }      //用于敌人死亡状态中增加DoorController脚本中敌人死亡计数的整数
+
     public Timer AttackTimer { get; private set; }
     public RandomPosition PatrolRandomPos { get; private set; }
     public Flip EnemyFlip { get; private set; }
@@ -65,10 +67,6 @@ public class Enemy : MonoBehaviour
 
     [SerializeField]
     protected SO_EnemyData enemyData;
-
-
-
-    EnemyDeath m_Death;
     #endregion
 
     #region Variables
@@ -97,8 +95,6 @@ public class Enemy : MonoBehaviour
 
     protected virtual void Start()      //只在第一帧运行前运行一次这个函数
     {
-        m_Death = GetComponentInChildren<EnemyDeath>();
-
         StateMachine.Initialize(IdleState);     //初始化状态为闲置
     }
 
@@ -186,13 +182,14 @@ public class Enemy : MonoBehaviour
     #endregion
 
     #region Animation Event Functions
-    private void DestroyEnemyAfterDeath()      //用于动画事件，摧毁物体
+    private void DeathLogicForAnimation()      //用于动画事件，摧毁物体
     {
         if (transform.parent != null)
         {
-            if (m_Death.DoorController != null)
+            //检查游戏是否已经结束，如果结束则无需再进行计数
+            if (DoorController != null && !EnvironmentManager.Instance.IsGameOver)
             {
-                m_Death.DoorController.CheckIfOpenDoors();     //判断是否满足开门条件
+                DoorController.IncrementEnemyCount();     //增加敌人计数器的计数
             }
             
             EnemyPool.Instance.PushObject(transform.parent.gameObject);      //将敌人的父物体放回池中，也将放回父物体的所有子物体
@@ -237,6 +234,11 @@ public class Enemy : MonoBehaviour
 
     #region Setters
     //设置成员变量
+    public void SetDoorController(DoorController door)
+    {
+        DoorController = door;
+    }
+
     public void SetCanAttack(bool isTrue)
     {
         CanAttack = isTrue;

@@ -117,7 +117,7 @@ public class EnemyPool : MonoBehaviour       //ÓÃÓÚÉú³ÉµĞÈËµÄ¶ÔÏó³Ø£¬Éú³É³öÀ´µÄË
 
 
 
-    public void ResetGame()
+    public void ResetGame()     //ÖØÖÃÓÎÏ·£¨ÔÚ¼ÓÔØÆäËû³¡¾°Ç°µ÷ÓÃ´Ëº¯Êı£©
     {
         //ÔÚ³¡¾°ÖĞÈ¡Ïû¼¤»îËùÓĞµĞÈË
         foreach (Transform child in transform)    
@@ -128,6 +128,30 @@ public class EnemyPool : MonoBehaviour       //ÓÃÓÚÉú³ÉµĞÈËµÄ¶ÔÏó³Ø£¬Éú³É³öÀ´µÄË
                 {
                     //ÕâÀï±ØĞë·Å»Ø³ØÖĞ£¬²»ÄÜµ¥´¿µÄÈ¡Ïû¼¤»î¡£·ñÔòÔÚµĞÈË´æ»îÊ±ÖØÖÃÓÎÏ·ºó£¬½«²»»áÖØ¸´Ê¹ÓÃÖ®Ç°Éú³É¹ıµÄµĞÈËÎïÌå
                     PushObject(child2.gameObject);      //½«µĞÈË½Å±¾µÄ¸¸ÎïÌå·Å»Ø³ØÖĞ£¬Ò²½«·Å»Ø¸¸ÎïÌåµÄËùÓĞ×ÓÎïÌå
+                }
+            }
+        }
+    }
+
+    public void EndGame()     //½áÊøÓÎÏ·£¨ÔÚÍæ¼ÒÊ¤ÀûÊ±µ÷ÓÃ´Ëº¯Êı£©
+    {
+        //ÔÚ³¡¾°ÖĞÈÃËùÓĞ¼¤»îµÄµĞÈË½øÈëËÀÍö×´Ì¬
+        foreach (Transform child in transform)
+        {
+            foreach (Transform child2 in child)     //¼ìË÷Ã¿Ò»¸ö×ÓÎïÌåµÄ×ÓÎïÌå
+            {
+                //¼ì²éÎïÌåÊÇ·ñÓĞµĞÈË±êÇ©£¬ÇÒ´¦ÓÚ¼¤»î×´Ì¬
+                if (child2.CompareTag("Enemy") && child2.gameObject.activeSelf)
+                {
+                    Enemy enemyScript = child2.GetComponentInChildren<Enemy>();     //´Ó×ÓÎïÌåÄÇ»ñÈ¡µĞÈË½Å±¾
+
+                    if (enemyScript == null)
+                    {
+                        Debug.LogError("Cannot get the Enemy script from the children Objects.");
+                        return;
+                    }
+
+                    enemyScript.StateMachine.ChangeState(enemyScript.DeathState);   //Ç¿ĞĞÈÃµĞÈË½øÈëËÀÍö×´Ì¬                 
                 }
             }
         }

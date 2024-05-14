@@ -4,7 +4,7 @@ using UnityEngine.SceneManagement;
 
 
 
-public class GameOverPanel : PanelWithButton
+public class GameLostPanel : PanelWithButton
 {
     public Button RestartButton;
     public Button QuitButton;
@@ -15,8 +15,6 @@ public class GameOverPanel : PanelWithButton
 
     protected override void Awake()
     {
-        base.Awake();
-
         //检查按钮组件是否存在
         if (RestartButton == null || QuitButton == null)
         {
@@ -26,10 +24,6 @@ public class GameOverPanel : PanelWithButton
 
         //默认按钮为“重新开始”按钮
         firstSelectedButton = RestartButton.gameObject;
-
-
-        //设置此界面的淡入值
-        FadeInAlpha = 0.75f;
     }
 
     private void Start()

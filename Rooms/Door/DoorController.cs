@@ -15,10 +15,9 @@ public class DoorController : MonoBehaviour
     public EventManager EventManagerAtDoor {  get; private set; }
 
 
-    public int EnemyCount {  get; private set; }
-    public bool HasGeneratedEvent { get; private set; }
-    public bool HasDeactivateEvent { get; private set; }
-    public bool IsRoomClean { get; private set; }     //表示房间中怪物是否清理干净
+    public int EnemyCount { get; private set; } = 0;
+    public bool HasGeneratedEvent { get; private set; } = false;
+    public bool HasDeactivateEvent { get; private set; } = false;
 
 
 
@@ -32,7 +31,7 @@ public class DoorController : MonoBehaviour
     const float m_PhysicsCheckingYPos = 4f;
 
 
-    bool m_IsRootRoom;
+    bool m_IsRootRoom = false;
 
 
 
@@ -68,18 +67,8 @@ public class DoorController : MonoBehaviour
     {
         if (m_MainRoom.GetType() == typeof(RootRoomController))     //检查当前房间是否为初始板块
         {
-            IsRoomClean = true;
             m_IsRootRoom = true;        
         }
-        else
-        {
-            IsRoomClean = false;
-        }
-
-
-        HasGeneratedEvent = false;
-        HasDeactivateEvent = false;
-        EnemyCount = 0;
 
         //自动给所有此脚本中的的层级赋值
         FurnitureLayerMask = LayerMask.GetMask("Furniture");
@@ -94,41 +83,32 @@ public class DoorController : MonoBehaviour
         {
             RoomTrigger.enabled = false;    //玩家进入房间后取消激活门的触发器，防止玩家反复进出房间导致二次生成事件或敌人
 
-            //检查房间是否清理完毕
-            if (!IsRoomClean)
+            //检查是否为初始房间
+            if (!m_IsRootRoom)    
             {
-                CloseDoors();
-
-                //检查是否为初始房间
-                if (!m_IsRootRoom)    
+                //游戏处于第一阶段时
+                if (!EventManagerAtDoor.IsSecondStage)
                 {
-                    //游戏处于第一阶段时
-                    if (!EventManagerAtDoor.IsSecondStage)
+                    //检查该房间是否已经生成过事件，如果没有则生成
+                    if (!HasGeneratedEvent)
                     {
-                        //检查是否已经生成过事件，如果没有生成过则继续
-                        if (!HasGeneratedEvent)
-                        {
-                            //Debug.Log("An event has generated here: " + transform.position);
-                            EventManagerAtDoor.GenerateRandomEvent(transform.position, this);   //第一阶段时生成事件
+                        CloseDoors();     //关门
 
-                            //房间生成过一次事件后就不会再生成了，因此在这里设置之后，其他地方无需重置布尔值
-                            HasGeneratedEvent = true;
+                        //Debug.Log("An event has generated here: " + transform.position);
+                        EventManagerAtDoor.GenerateRandomEvent(transform.position, this);   //生成事件
 
-                            //如果房间没有怪物需要生成，则生成事件后就干净了
-                            if (EnemyObjects.Length == 0)
-                            {
-                                IsRoomClean = true;
-                            }
-                        }                    
-                    }
-
-                    //游戏处于第二阶段时
-                    else
-                    {
-                        GenerateEnemy();    //只有进入二阶段后才会生成敌人
-                    }
+                        //房间生成过一次事件后就不会再生成了，因此在这里设置之后，其他地方无需重置布尔值
+                        HasGeneratedEvent = true;
+                    }                    
                 }
-            }              
+
+                //游戏处于第二阶段时
+                else
+                {
+                    CloseDoors();       //关门
+                    GenerateEnemy();    //只有进入二阶段后才会生成敌人
+                }
+            }                       
         }
     }
 
@@ -138,8 +118,8 @@ public class DoorController : MonoBehaviour
     {
         foreach(Animator animator in DoorAnimators)
         {
-            animator.SetBool("IsOpen", isOpen);
-            animator.SetBool("IsClose", !isOpen);
+            animator.SetBool("isOpen", isOpen);
+            animator.SetBool("isClose", !isOpen);
         }
     }
 
@@ -158,7 +138,6 @@ public class DoorController : MonoBehaviour
         {
             if (EnemyCount >= EnemyObjects.Length)
             {
-                IsRoomClean = true;
                 OpenDoors();
             }
         }
@@ -193,10 +172,10 @@ public class DoorController : MonoBehaviour
                 {
                     enemyScript.ResetLocalPos();
                 }
- 
+
 
                 //设置门控制器的脚本
-                enemyObject.GetComponentInChildren<EnemyDeath>().SetDoorController(this);
+                enemyScript.SetDoorController(this);
 
                 //生成敌人后重置生命，否则重新激活的敌人生命依然为0
                 enemyObject.GetComponentInChildren<Stats>().SetCurrentHealth(enemyObject.GetComponentInChildren<Stats>().MaxHealth);    
@@ -253,6 +232,9 @@ public class DoorController : MonoBehaviour
     public void IncrementEnemyCount()
     {
         EnemyCount++;
+        CheckIfOpenDoors();     //增加计数后判断是否满足开门条件
+
+        EnvironmentManager.Instance.IncrementKilledEnemyCount();      //增加记录杀死的敌人数量的整数
     }
 
 
