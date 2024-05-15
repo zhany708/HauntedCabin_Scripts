@@ -20,17 +20,8 @@ public class PlayerHitState : PlayerGroundedState
     }
 
     public override void LogicUpdate()
-    {
-        //检查玩家是否死亡
-        if (playerStats.GetCurrentHealth() <= 0)
-        {
-            stateMachine.ChangeState(player.DeathState);
-        }
-
-        
+    {               
         input = PlayerInputHandler.Instance.RawMovementInput;   //通过Player脚本调用闲置状态和移动状态需要的向量数值
-
-
 
         animatorStateInfo = core.Animator.GetCurrentAnimatorStateInfo(0);       //获取当前动画
 

@@ -107,7 +107,7 @@ public class EventManager : ManagerTemplate<EventManager>
             }         
         }
         
-
+        /*
         //用Addressables释放事件
         if (m_EventPrefab != null)
         {
@@ -118,13 +118,14 @@ public class EventManager : ManagerTemplate<EventManager>
                 eventName = eventName.Substring(0, eventName.Length - 7);
             }
 
-            ReleasePrefab(eventName);
+            ReleasePrefab(eventName);       //通过Addressables释放内存
         }
 
         else
         {
             Debug.LogError("Event prefab reference is null, cannot release resources.");
         }  
+        */
     }
 
 

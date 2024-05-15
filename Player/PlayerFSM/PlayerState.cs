@@ -88,7 +88,14 @@ public class PlayerState
 
         SetMoveAnimation();    //判断是否播放脚步移动动画
 
-        if (combat.IsHit && !isHit && !isAttack)    //检查是否进入受击状态
+
+        //检查玩家是否死亡（不能放在受击状态里判断，因为玩家攻击时不会进入受击状态）
+        if (playerStats.GetCurrentHealth() <= 0)
+        {
+            stateMachine.ChangeState(player.DeathState);
+        }     
+
+        else if (combat.IsHit && !isHit && !isAttack)    //检查是否进入受击状态
         {
             stateMachine.ChangeState(player.HitState);
         }

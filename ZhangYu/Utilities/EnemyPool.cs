@@ -97,11 +97,11 @@ public class EnemyPool : MonoBehaviour       //ÓÃÓÚÉú³ÉµĞÈËµÄ¶ÔÏó³Ø£¬Éú³É³öÀ´µÄË
 
             if (!m_EnemyPool.ContainsKey(name))
             {
-                //Èç¹û³ØÖĞÃ»ÓĞÎïÌå£¬Ôò´´½¨Ò»¸ö²¢¼Ó½øÈ¥
+                //Èç¹û³ØÖĞÃ»ÓĞÎïÌå£¬Ôò´´½¨Ò»¸öÏàÓ¦µÄ¶ÓÁĞ
                 m_EnemyPool[name] = new Queue<GameObject>();
             }
 
-            m_EnemyPool[name].Enqueue(obj);
+            m_EnemyPool[name].Enqueue(obj);     //½«´´½¨ºÃµÄÎïÌå¼Ó½ø×Öµä
 
             //´´½¨ÍêºóÈ¡Ïû¼¤»î
             obj.SetActive(false);

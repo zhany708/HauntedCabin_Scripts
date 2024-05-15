@@ -6,18 +6,19 @@ using ZhangYu.Utilities;
 
 public class DoorController : MonoBehaviour
 {
-    public Animator[] DoorAnimators;
-    public GameObject[] EnemyObjects;
-    public LayerMask FurnitureLayerMask;
+    public Animator[] DoorAnimators;        //当前房间内所有门的动画器
+    public GameObject[] EnemyObjects;       //当前房间内所有会生成的敌人
+    public LayerMask FurnitureLayerMask;    //家具的Layer
+
+    public Vector2 EnemySpawnPosNegativeOffset = Vector2.zero;     //敌人生成的负坐标范围（最左边和最下边的范围，x和y都是负数）
+    public Vector2 EnemySpawnPosPositiveOffset = Vector2.zero;     //敌人生成的正坐标范围（最右边和最上边的范围，x和y都是正数）
+
     public Collider2D RoomTrigger {  get; private set; }
 
 
-    public EventManager EventManagerAtDoor {  get; private set; }
-
-
-    public int EnemyCount { get; private set; } = 0;
-    public bool HasGeneratedEvent { get; private set; } = false;
-    public bool HasDeactivateEvent { get; private set; } = false;
+    public int KilledEnemyCount { get; private set; } = 0;          //表示当前房间内击杀了多少敌人
+    public bool HasGeneratedEvent { get; private set; } = false;    //表示当前房间是否生成过事件
+    public bool HasDeactivateEvent { get; private set; } = false;   //表示当前房间是否销毁了生成的事件
 
 
 
@@ -31,8 +32,8 @@ public class DoorController : MonoBehaviour
     const float m_PhysicsCheckingYPos = 4f;
 
 
-    bool m_IsRootRoom = false;
-
+    bool m_IsRootRoom = false;              //表示当前门所在的房间是否为初始房间
+    bool m_HasGeneratedEnemy = false;       //表示当前房间是否生成过敌人
 
 
 
@@ -46,18 +47,12 @@ public class DoorController : MonoBehaviour
         RoomTrigger = GetComponent<Collider2D>();
 
         m_MainRoom = GetComponentInParent<RootRoomController>();
-        EventManagerAtDoor = FindObjectOfType<EventManager>();      //寻找事件管理器
-
-        /*  当需要房间的两个点时再使用这两个变量
-        LeftDownPatrolPoint = new Vector2(m_MainRoom.transform.position.x - 5, m_MainRoom.transform.position.y - 2);
-        RightTopPatrolPoint = new Vector2(m_MainRoom.transform.position.x + 5, m_MainRoom.transform.position.y + 2);
-        */
 
         if (EnemyObjects.Length != 0)   //如果房间有怪物
         {
-            //敌人生成的x范围为房间坐标的x加减5.5；生成的y范围为房间坐标的y加1.5，减3.5
-            Vector2 leftDownPos = new Vector2(m_MainRoom.transform.position.x - 5.5f, m_MainRoom.transform.position.y - 3.5f);
-            Vector2 rightTopPos = new Vector2(m_MainRoom.transform.position.x + 5.5f, m_MainRoom.transform.position.y + 1.5f);
+            //敌人生成的x范围为房间坐标的x加变量中的值；生成的y范围为房间坐标的y加变量中的值
+            Vector2 leftDownPos = new Vector2(m_MainRoom.transform.position.x + EnemySpawnPosNegativeOffset.x, m_MainRoom.transform.position.y + EnemySpawnPosNegativeOffset.y);
+            Vector2 rightTopPos = new Vector2(m_MainRoom.transform.position.x + EnemySpawnPosPositiveOffset.x, m_MainRoom.transform.position.y + EnemySpawnPosPositiveOffset.y);
 
             m_EnemySpwanPos = new RandomPosition(leftDownPos, rightTopPos, 1f);
         }
@@ -87,7 +82,7 @@ public class DoorController : MonoBehaviour
             if (!m_IsRootRoom)    
             {
                 //游戏处于第一阶段时
-                if (!EventManagerAtDoor.IsSecondStage)
+                if (!EventManager.Instance.IsSecondStage)
                 {
                     //检查该房间是否已经生成过事件，如果没有则生成
                     if (!HasGeneratedEvent)
@@ -95,7 +90,7 @@ public class DoorController : MonoBehaviour
                         CloseDoors();     //关门
 
                         //Debug.Log("An event has generated here: " + transform.position);
-                        EventManagerAtDoor.GenerateRandomEvent(transform.position, this);   //生成事件
+                        EventManager.Instance.GenerateRandomEvent(transform.position, this);   //生成事件
 
                         //房间生成过一次事件后就不会再生成了，因此在这里设置之后，其他地方无需重置布尔值
                         HasGeneratedEvent = true;
@@ -105,8 +100,13 @@ public class DoorController : MonoBehaviour
                 //游戏处于第二阶段时
                 else
                 {
-                    CloseDoors();       //关门
-                    GenerateEnemy();    //只有进入二阶段后才会生成敌人
+                    if (!m_HasGeneratedEnemy)       //如果房间没生成过敌人，则生成
+                    {
+                        CloseDoors();       //关门
+                        GenerateEnemy();    //生成敌人
+
+                        m_HasGeneratedEnemy = true;     //普通房间生成过一次敌人后就不会再生成了
+                    }                   
                 }
             }                       
         }
@@ -114,7 +114,7 @@ public class DoorController : MonoBehaviour
 
 
     //用于设置门的动画器
-    private void SetDoorState(bool isOpen)
+    private void SetDoorAnimation(bool isOpen)
     {
         foreach(Animator animator in DoorAnimators)
         {
@@ -123,20 +123,20 @@ public class DoorController : MonoBehaviour
         }
     }
 
-    public void OpenDoors() => SetDoorState(true);
+    public void OpenDoors() => SetDoorAnimation(true);
 
-    private void CloseDoors() => SetDoorState(false);
-
-
+    private void CloseDoors() => SetDoorAnimation(false);
 
 
 
 
-    public void CheckIfOpenDoors()      //敌人死亡时调用
+
+
+    public void CheckIfOpenDoors()      //敌人死亡时调用，检查是否达到开门的条件（即房间内所有敌人都死亡）
     {
-        if (EnemyObjects.Length != 0)   //如果房间有怪物
+        if (EnemyObjects.Length != 0)   //先检查房间是否有敌人
         {
-            if (EnemyCount >= EnemyObjects.Length)
+            if (KilledEnemyCount >= EnemyObjects.Length)
             {
                 OpenDoors();
             }
@@ -231,21 +231,13 @@ public class DoorController : MonoBehaviour
 
     public void IncrementEnemyCount()
     {
-        EnemyCount++;
+        KilledEnemyCount++;
         CheckIfOpenDoors();     //增加计数后判断是否满足开门条件
 
         EnvironmentManager.Instance.IncrementKilledEnemyCount();      //增加记录杀死的敌人数量的整数
     }
 
-
     #region Setters
-    /*
-    public void SetHasGeneratedEvent(bool isTrue)
-    {
-        HasGeneratedEvent = isTrue;
-    }
-    */
-
     public void SetHasDeactivateEvent(bool isTrue)
     {
         HasDeactivateEvent = isTrue;

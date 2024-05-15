@@ -88,7 +88,13 @@ public class EnemyState
 
     public virtual void LogicUpdate()
     {
-        if (enemyCombat.IsHit && !isHit)
+        //先判断是否死亡（不能放在受击状态中判断，因为敌人攻击时不会进入受击状态）
+        if (enemyStats.GetCurrentHealth() <= 0)
+        {
+            stateMachine.ChangeState(enemy.DeathState);
+        }
+
+        else if (enemyCombat.IsHit && !isHit)
         {
             stateMachine.ChangeState(enemy.HitState);
         }

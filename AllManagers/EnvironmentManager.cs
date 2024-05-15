@@ -2,15 +2,16 @@ using System;
 using UnityEngine;
 
 
-public class EnvironmentManager : ManagerTemplate<EnvironmentManager>     //用于处理游戏过程中的一些动态变化（比如在某个地方生成某个新东西）
+//用于处理游戏过程中的一些动态变化（比如在某个地方生成某个新东西）
+public class EnvironmentManager : ManagerTemplate<EnvironmentManager>     
 {
     public event Action OnEnemyKilled;       //接收方为TaskPanel
 
 
     public GameObject BlockDoorBarrel;      //挡住玩家进入门的障碍物
 
-    public int KilledEnemyCount { get; private set; } = 0;   //表示杀死过多少敌人
-    public int RequiredEnemyCount { get; private set; } = 1;        //表示需要杀死多少敌人，游戏才胜利
+    public int KilledEnemyCount { get; private set; } = 0;     //表示杀死过多少敌人
+    public int RequiredEnemyCount { get; private set; } = 6;   //表示需要杀死多少敌人，游戏才胜利
     public bool IsGameOver { get; private set; } = false;
 
 

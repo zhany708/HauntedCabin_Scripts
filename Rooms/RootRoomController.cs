@@ -127,7 +127,7 @@ public class RootRoomController : MonoBehaviour
                 //如果房间生成过事件，且还没取消激活该事件时
                 if (m_DoorInsideThisRoom.HasGeneratedEvent && !m_DoorInsideThisRoom.HasDeactivateEvent)     
                 {
-                    m_DoorInsideThisRoom.EventManagerAtDoor.DeactivateEventObject();        //玩家离开房间后销毁事件物体
+                    EventManager.Instance.DeactivateEventObject();        //玩家离开房间后销毁事件物体
                     m_DoorInsideThisRoom.SetHasDeactivateEvent(true);                                                                            
                 }
             }             
