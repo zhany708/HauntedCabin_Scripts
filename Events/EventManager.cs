@@ -6,7 +6,7 @@ using UnityEngine;
 public class EventManager : ManagerTemplate<EventManager>
 {
     public SO_EventKeys EventKeys;
-
+    public int EnterSecondStageCount;      //进入二阶段所需的事件数
 
     public bool IsSecondStage { get; private set; } = false;
 
@@ -16,11 +16,11 @@ public class EventManager : ManagerTemplate<EventManager>
     GameObject m_EventPrefab;       //事件预制件
     Vector2 m_RoomPosition;
 
-
-
-    int m_EventCount = 0;                 //生成过多少事件
-    int m_EnterSecondStageCount = 1;      //进入二阶段所需的事件数
+    int m_EventCount = 0;                 //生成过多少事件  
     int m_RandomGeneratedNum = -1;         //随机生成的数（用于新的事件生成的索引）
+
+
+
 
 
 
@@ -29,19 +29,26 @@ public class EventManager : ManagerTemplate<EventManager>
         base.Awake();
 
         m_Animator = GetComponent<Animator>();
+
+        if (EnterSecondStageCount <= 0)
+        {
+            Debug.LogError("The event counts for entering second stage cannot less or equal to 0.");
+            return;
+        }
     }
 
     private async void Start()
     {
-        //提前加载进入二阶段的文字，但不实例化   
-        if (UIManager.Instance.UIKeys != null && !string.IsNullOrEmpty(UIManager.Instance.UIKeys.TransitionStagePanelKey))
+        //提前加载剧本背景，但不实例化   
+        if (UIManager.Instance.UIKeys != null && !string.IsNullOrEmpty(UIManager.Instance.UIKeys.HellsCallPanel))
         {
-            await UIManager.Instance.InitPanel(UIManager.Instance.UIKeys.TransitionStagePanelKey);
+            await UIManager.Instance.InitPanel(UIManager.Instance.UIKeys.HellsCallPanel);
         }
 
         else
         {
             Debug.LogError("UIKeys not set or TransitionStagePanelKey is empty.");
+            return;
         }
     }
 
@@ -135,7 +142,7 @@ public class EventManager : ManagerTemplate<EventManager>
     //检查是否进入二阶段
     private void CheckIfTranstionToSecondStage()
     {
-        if (m_EventCount >= m_EnterSecondStageCount && !IsSecondStage)   //检查是否触发了足够次数的事件，并且目前不是二阶段
+        if (m_EventCount >= EnterSecondStageCount && !IsSecondStage)   //检查是否触发了足够次数的事件，并且目前不是二阶段
         {
             transform.position = m_RoomPosition;        //将事件管理器的坐标移到当前房间
             m_Animator.SetTrigger("TranstionSecondStage");  //随后播放过渡阶段的动画
@@ -147,15 +154,15 @@ public class EventManager : ManagerTemplate<EventManager>
     #region AnimationEvents
     private async void DisplayTransitionStageText()       //用于阶段动画中决定何时显示文字
     {
-        //显示转阶段文字
-        if (UIManager.Instance.UIKeys != null && !string.IsNullOrEmpty(UIManager.Instance.UIKeys.TransitionStagePanelKey))
+        //打开剧本背景界面
+        if (UIManager.Instance.UIKeys != null && !string.IsNullOrEmpty(UIManager.Instance.UIKeys.HellsCallPanel))
         {
-            await UIManager.Instance.OpenPanel(UIManager.Instance.UIKeys.TransitionStagePanelKey);
+            await UIManager.Instance.OpenPanel(UIManager.Instance.UIKeys.HellsCallPanel);   //打开剧本背景界面
         }
 
         else
         {
-            Debug.LogError("UIKeys not set or TransitionStagePanelKey is empty.");
+            Debug.LogError("UIKeys not set or HellsCallPanel key is empty.");
         }
     }
     #endregion

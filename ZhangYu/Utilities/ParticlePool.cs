@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 
 
@@ -9,7 +10,7 @@ public class ParticlePool : MonoBehaviour       //用于子弹，特效等的对象池。生成
 
 
     //使用字典对不同的物体进行分开存储
-    private Dictionary<string, Queue<GameObject>> m_ParticlePool = new Dictionary<string, Queue<GameObject>>();     
+    private Dictionary<string, Queue<GameObject>> m_ParticlePoolDict = new Dictionary<string, Queue<GameObject>>();     
 
 
 
@@ -36,13 +37,13 @@ public class ParticlePool : MonoBehaviour       //用于子弹，特效等的对象池。生成
     public GameObject GetObject(GameObject prefab)
     {
         //检查池中有没有物体，没有的话则新建一个并加进去
-        if (!m_ParticlePool.TryGetValue(prefab.name, out var queue) || queue.Count == 0)
+        if (!m_ParticlePoolDict.TryGetValue(prefab.name, out var queue) || queue.Count == 0)
         {
             var newObject = CreateNewObject(prefab);
             PushObject(newObject);
         }
 
-        var obj = m_ParticlePool[prefab.name].Dequeue();
+        var obj = m_ParticlePoolDict[prefab.name].Dequeue();
         obj.SetActive(true);
 
         return obj;
@@ -87,16 +88,24 @@ public class ParticlePool : MonoBehaviour       //用于子弹，特效等的对象池。生成
     {
         if (obj != null)
         {
-            //去掉物体名字的后缀
-            string name = obj.name.Replace("(Clone)", "").Trim();
+            //获取物体名字
+            string name = obj.name;
 
-            if (!m_ParticlePool.ContainsKey(name))
+            if (name.EndsWith("(Clone)"))
             {
-                //如果池中没有物体，则创建一个并加进去
-                m_ParticlePool[name] = new Queue<GameObject>();
+                //检查是否有“克隆”后缀，如果有的话减去后缀。（Clone）刚好有7个字符
+                name = name.Substring(0, name.Length - 7);
             }
 
-            m_ParticlePool[name].Enqueue(obj);
+
+
+            if (!m_ParticlePoolDict.ContainsKey(name))
+            {
+                //如果池中没有物体，则创建一个并加进去
+                m_ParticlePoolDict[name] = new Queue<GameObject>();
+            }
+
+            m_ParticlePoolDict[name].Enqueue(obj);
 
             //创建完后取消激活
             obj.SetActive(false);

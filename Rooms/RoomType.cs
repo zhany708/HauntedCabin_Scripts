@@ -33,15 +33,13 @@ public enum DoorFlags   //通过Bit Flag判断房间的种类
 
 
 
-
-
 [System.Serializable]
 public class RoomType : MonoBehaviour
 {
     Transform m_Doors;      //Doors子物体
 
     DoorFlags m_DoorFlags;
-
+    
 
 
     /* X轴180翻转上下，Y轴180翻转左右，Z轴180同时翻转上下和左右
@@ -174,9 +172,5 @@ public class RoomType : MonoBehaviour
     {
         return m_DoorFlags;
     }
-    #endregion
-
-    #region Setters
-
     #endregion
 }

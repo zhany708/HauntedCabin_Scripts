@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using UnityEngine;
 using ZhangYu.Utilities;
 
@@ -8,29 +7,22 @@ public class DoorController : MonoBehaviour
 {
     public Animator[] DoorAnimators;        //当前房间内所有门的动画器
     public GameObject[] EnemyObjects;       //当前房间内所有会生成的敌人
-    public LayerMask FurnitureLayerMask;    //家具的Layer
-
     public Vector2 EnemySpawnPosNegativeOffset = Vector2.zero;     //敌人生成的负坐标范围（最左边和最下边的范围，x和y都是负数）
     public Vector2 EnemySpawnPosPositiveOffset = Vector2.zero;     //敌人生成的正坐标范围（最右边和最上边的范围，x和y都是正数）
 
-    public Collider2D RoomTrigger {  get; private set; }
-
-
+    public Collider2D RoomTrigger { get; private set; }
+    public LayerMask FurnitureLayerMask { get; private set; }    //家具的Layer
+    public RandomPosition EnemySpwanPos { get; private set; }
     public int KilledEnemyCount { get; private set; } = 0;          //表示当前房间内击杀了多少敌人
     public bool HasGeneratedEvent { get; private set; } = false;    //表示当前房间是否生成过事件
-    public bool HasDeactivateEvent { get; private set; } = false;   //表示当前房间是否销毁了生成的事件
 
+    //运用Physics2D检查重复坐标时需要的X和Y的值（火蝙蝠Y轴上有0.5的偏差，因为坐标点位于脚底）
+    public float PhysicsCheckingXPos { get; private set; } = 2f;
+    public float PhysicsCheckingYPos { get; private set; } = 4f;
 
 
 
     RootRoomController m_MainRoom; 
-    RandomPosition m_EnemySpwanPos;
-
-
-    //运用Physics2D检查重复坐标时需要的X和Y的值（火蝙蝠Y轴上有0.5的偏差，因为坐标点位于脚底）
-    const float m_PhysicsCheckingXPos = 2f;
-    const float m_PhysicsCheckingYPos = 4f;
-
 
     bool m_IsRootRoom = false;              //表示当前门所在的房间是否为初始房间
     bool m_HasGeneratedEnemy = false;       //表示当前房间是否生成过敌人
@@ -54,7 +46,7 @@ public class DoorController : MonoBehaviour
             Vector2 leftDownPos = new Vector2(m_MainRoom.transform.position.x + EnemySpawnPosNegativeOffset.x, m_MainRoom.transform.position.y + EnemySpawnPosNegativeOffset.y);
             Vector2 rightTopPos = new Vector2(m_MainRoom.transform.position.x + EnemySpawnPosPositiveOffset.x, m_MainRoom.transform.position.y + EnemySpawnPosPositiveOffset.y);
 
-            m_EnemySpwanPos = new RandomPosition(leftDownPos, rightTopPos, 1f);
+            EnemySpwanPos = new RandomPosition(leftDownPos, rightTopPos, 1f);
         }
     }
 
@@ -103,7 +95,7 @@ public class DoorController : MonoBehaviour
                     if (!m_HasGeneratedEnemy)       //如果房间没生成过敌人，则生成
                     {
                         CloseDoors();       //关门
-                        GenerateEnemy();    //生成敌人
+                        EnvironmentManager.Instance.GenerateEnemy(this);    //生成敌人
 
                         m_HasGeneratedEnemy = true;     //普通房间生成过一次敌人后就不会再生成了
                     }                   
@@ -145,90 +137,6 @@ public class DoorController : MonoBehaviour
 
 
 
-
-    //生成敌人后，用Physics2D.Oberlap检测怪物即将生成的坐标是否跟家具重合，如果重合则重新生成坐标
-    private void GenerateEnemy()
-    {
-        if (EnemyObjects.Length != 0)   //如果房间有怪物
-        {
-            List<Vector2> enemySpawnList = m_EnemySpwanPos.GenerateMultiRandomPos(EnemyObjects.Length);     //根据怪物数量生成随机坐标list
-
-            //生成完坐标列表后。检查列表中是否有跟家具重合的坐标
-            CheckIfCollideFurniture(enemySpawnList);
-           
-
-
-            for (int i = 0; i < EnemyObjects.Length; i++)
-            {
-                //这里的enemy物体是敌人的跟物体（包含巡逻坐标的），在生成的同时赋予物体生成坐标
-                GameObject enemyObject = EnemyPool.Instance.GetObject(EnemyObjects[i], enemySpawnList[i]);     //从敌人对象池中生成敌人
-
-                //Debug.Log("The enemy spawn position is : " + enemySpawnList[i]);
-
-                //生成完后重置敌人脚本绑定的物体的本地（相对于父物体）坐标。因为敌人从对象池重新生成后，本地坐标会继承死亡前的本地坐标
-                Enemy enemyScript = enemyObject.GetComponentInChildren<Enemy>();
-
-                if (enemyScript != null)
-                {
-                    enemyScript.ResetLocalPos();
-                }
-
-
-                //设置门控制器的脚本
-                enemyScript.SetDoorController(this);
-
-                //生成敌人后重置生命，否则重新激活的敌人生命依然为0
-                enemyObject.GetComponentInChildren<Stats>().SetCurrentHealth(enemyObject.GetComponentInChildren<Stats>().MaxHealth);    
-            }
-        }
-    }
-
-
-    //检查列表中的所有坐标处是否有家具
-    private void CheckIfCollideFurniture(List<Vector2> enemySpawnPosList)
-    {       
-        Vector2 checkSize = new Vector2(m_PhysicsCheckingXPos, m_PhysicsCheckingYPos);      //物理检测的大小
-
-        float adaptiveTolerance = m_EnemySpwanPos.GetOverlapTolerance();        //获取检查重复的距离
-        int attemptCount = 0;       //用于防止进入无限循环的变量
-
-
-        while (attemptCount < 100)      //确保不超过最大尝试次数
-        {
-            bool isOverlap = false;
-
-            for (int i = 0; i < enemySpawnPosList.Count; i++)
-            {
-                if (!IsPositionEmpty(enemySpawnPosList[i], checkSize))
-                {
-                    enemySpawnPosList[i] = m_EnemySpwanPos.GenerateNonOverlappingPosition(enemySpawnPosList);
-
-                    m_EnemySpwanPos.SetOverlapTolerance(adaptiveTolerance);     //设置新的检查重复的距离
-
-                    isOverlap = true;  //设置布尔以继续检查
-                }
-            }
-
-            if (!isOverlap) break;  //当没有重复时则退出循环
-
-            attemptCount++;
-            adaptiveTolerance -= 0.1f;  //如果实在难以生成不会重复的坐标的话，减少检查重复的距离
-        }
-
-    }
-
-
-    //运用物理函数检查要生成的坐标是否有家具
-    private bool IsPositionEmpty(Vector2 positionToCheck, Vector2 checkSize)
-    {
-        //第一个参数为中心点，第二个参数为长方形大小（沿着中心各延申一半），第三个参数为角度，第四个参数为检测的目标层级
-        Collider2D overlapCheck = Physics2D.OverlapBox(positionToCheck, checkSize, 0f, FurnitureLayerMask);
-        return overlapCheck == null;
-    }
-
-
-
-
     public void IncrementEnemyCount()
     {
         KilledEnemyCount++;
@@ -236,12 +144,4 @@ public class DoorController : MonoBehaviour
 
         EnvironmentManager.Instance.IncrementKilledEnemyCount();      //增加记录杀死的敌人数量的整数
     }
-
-    #region Setters
-    public void SetHasDeactivateEvent(bool isTrue)
-    {
-        HasDeactivateEvent = isTrue;
-    }
-    
-    #endregion
 }

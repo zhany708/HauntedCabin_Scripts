@@ -18,7 +18,7 @@ public class SO_UIKeys : ScriptableObject
     //剧本相关
     [Header("ScreenPlay")]
     public string GameBackgroundPanel;      //游戏底层剧本界面
-    
+    public string HellsCallPanel;           //地域的呼唤剧本背景界面
 
 
     //人物相关

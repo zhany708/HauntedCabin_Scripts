@@ -66,7 +66,17 @@ public abstract class ManagerTemplate<T> : MonoBehaviour where T : Component
             }
         }
 
-        return panelPrefab;
+
+        if (panelPrefab != null)
+        {
+            return panelPrefab;
+        }
+        
+        else
+        {
+            Debug.LogError($"Loaded prefab is null: {name}");
+            return null;
+        }
     }
 
 

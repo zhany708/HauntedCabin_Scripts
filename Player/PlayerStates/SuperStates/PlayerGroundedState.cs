@@ -9,8 +9,8 @@ public class PlayerGroundedState : PlayerState
     {
         base.LogicUpdate();
 
-        //游戏没有暂停，且没有带按钮的界面打开时才能进行攻击
-        if (!PauseMenuPanel.IsGamePaused && !PanelWithButton.IsPanelWithButtonOpened)
+        //只有当玩家允许攻击时，才能进入攻击状态
+        if (BasePanel.IsPlayerAttackable)
         {
             //检查是否进入攻击状态
             if (PlayerInputHandler.Instance.AttackInputs[(int)CombatInputs.primary] && stateMachine.currentState != player.PrimaryAttackState)        //按下鼠标左键时，进入主武器攻击状态

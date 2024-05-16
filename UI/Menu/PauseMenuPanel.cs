@@ -9,15 +9,15 @@ public class PauseMenuPanel : PanelWithButton       //整个游戏过程中都会用到此界
 {
     public static PauseMenuPanel Instance { get; private set; }
 
+    
+
     public Button ResumeButton;
     public Button MainMenuButton;
     public Button QuitButton;
 
 
-    //加static就无需获得此脚本的引用即可调用此变量
-    public static bool IsGamePaused {  get; private set; }
 
-
+    bool m_IsGamePaused = false;       //表示游戏是否处于暂停状态
 
 
 
@@ -72,10 +72,7 @@ public class PauseMenuPanel : PanelWithButton       //整个游戏过程中都会用到此界
 
 
         //设置当前界面的名字
-        panelName = UIManager.Instance.UIKeys.PauseMenuPanel;
-
-        //初始化布尔
-        IsGamePaused = false;        
+        panelName = UIManager.Instance.UIKeys.PauseMenuPanel;      
     }
 
 
@@ -93,7 +90,7 @@ public class PauseMenuPanel : PanelWithButton       //整个游戏过程中都会用到此界
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             //游戏暂停时
-            if (IsGamePaused)
+            if (m_IsGamePaused)
             {
                 Resume();
             }
@@ -134,7 +131,8 @@ public class PauseMenuPanel : PanelWithButton       //整个游戏过程中都会用到此界
         //恢复游戏的时间流逝
         Time.timeScale = 1f;
         
-        IsGamePaused = false;
+        m_IsGamePaused = false;
+        SetBothMoveableAndAttackable(true);     //允许玩家移动和攻击
     }
 
 
@@ -147,7 +145,8 @@ public class PauseMenuPanel : PanelWithButton       //整个游戏过程中都会用到此界
         //暂停游戏的时间流逝
         Time.timeScale = 0f;        
 
-        IsGamePaused = true;
+        m_IsGamePaused = true;
+        SetBothMoveableAndAttackable(false);    //不允许玩家移动和攻击
     }
 
 

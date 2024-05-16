@@ -28,7 +28,7 @@ public class TransitionStagePanel : BasePanel
     private void OnEnable()
     {       
         OnFadeOutFinished += ClosePanel;            //彻底淡出后再删除界面，并且打开任务界面
-        OnFadeOutFinished += OpenTaskPanel;
+        OnFadeOutFinished += OpenScreenPlayBackgroundPanel;
 
         OnFadeInFinished += StartTextAnimations;    //彻底淡入后再开始打字
     }
@@ -38,7 +38,7 @@ public class TransitionStagePanel : BasePanel
         base.OnDisable();
 
         OnFadeOutFinished -= ClosePanel;
-        OnFadeOutFinished -= OpenTaskPanel;
+        OnFadeOutFinished -= OpenScreenPlayBackgroundPanel;
 
         OnFadeInFinished -= StartTextAnimations;
     }
@@ -53,6 +53,8 @@ public class TransitionStagePanel : BasePanel
 
         Fade(CanvasGroup, FadeInAlpha, FadeDuration, false);     //淡入（没有射线阻挡）       
     }
+
+
 
 
 
@@ -73,8 +75,10 @@ public class TransitionStagePanel : BasePanel
         generatedCoroutines.Add(ClosePanelCoroutine);
     }
 
-    private async void OpenTaskPanel()        //打开任务界面
+
+
+    private async void OpenScreenPlayBackgroundPanel()        
     {
-        await UIManager.Instance.OpenPanel(UIManager.Instance.UIKeys.TaskPanel);
+        await UIManager.Instance.OpenPanel(UIManager.Instance.UIKeys.HellsCallPanel);   //打开剧本背景界面
     }
 }

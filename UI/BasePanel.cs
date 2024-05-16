@@ -14,6 +14,9 @@ public class BasePanel : MonoBehaviour
     public event Action OnFadeOutFinished;       //界面完全淡出时调用的事件，接收方为子类
 
 
+    public static bool IsPlayerMoveable { get; protected set; } = true;     //是否允许玩家移动
+    public static bool IsPlayerAttackable { get; protected set; } = true;   //是否允许玩家攻击
+
 
     private CanvasGroup m_CanvasGroup;
     public CanvasGroup CanvasGroup      //Lazy Loading（只在需要使用组件时才加载组件（而不是在Awake函数里默认加载），节省内存）
@@ -208,5 +211,13 @@ public class BasePanel : MonoBehaviour
 
         generatedCoroutines.Clear();       //清除列表
         generatedDOTweens.Clear();       //清除列表
+    }
+
+
+
+    protected void SetBothMoveableAndAttackable(bool isTrue)    //设置是否允许玩家移动和攻击
+    {
+        IsPlayerMoveable = isTrue;
+        IsPlayerAttackable = isTrue;
     }
 }

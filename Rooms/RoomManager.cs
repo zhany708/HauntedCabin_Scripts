@@ -7,7 +7,7 @@ using UnityEngine;
 public class RoomManager : ManagerTemplate<RoomManager>
 {
     public SO_RoomKeys RoomKeys;
-    public LayerMask roomLayerMask;         //房间的图层
+    public LayerMask RoomLayerMask;         //房间的图层
     
 
     //储存加载过的房间的坐标和物体，用于检查是否有连接的门
@@ -23,8 +23,9 @@ public class RoomManager : ManagerTemplate<RoomManager>
     //随机生成的数（用于新的房间生成的索引）
     int m_RandomGeneratedNum = -1;          
 
-    //表示当前房间
-    Transform m_CurrentRoomTransform;
+    
+    Transform m_CurrentRoomTransform;   //表示当前房间
+
 
     //所有生成的房间的父物体（为了整洁美观）
     Transform m_AllRooms;
@@ -65,33 +66,30 @@ public class RoomManager : ManagerTemplate<RoomManager>
 
 
 
-
-
-
     //生成房间
     public void GenerateRoom(Transform currentRoom, RoomType currentRoomType)
     {
         m_CurrentRoomTransform = currentRoom;
         DoorFlags currentDoorFlags = currentRoomType.GetDoorFlags();
 
-        GenerateRoomInDirection(currentRoom, (currentDoorFlags & DoorFlags.Left) != 0, new Vector2(-17f, 0), "RightDoor");
-        GenerateRoomInDirection(currentRoom, (currentDoorFlags & DoorFlags.Right) != 0, new Vector2(17f, 0), "LeftDoor");
-        GenerateRoomInDirection(currentRoom, (currentDoorFlags & DoorFlags.Up) != 0, new Vector2(0, 10.7f), "DownDoor");
-        GenerateRoomInDirection(currentRoom, (currentDoorFlags & DoorFlags.Down) != 0, new Vector2(0, -10.7f), "UpDoor");
+        GenerateRoomInDirection((currentDoorFlags & DoorFlags.Left) != 0, new Vector2(-17f, 0), "RightDoor");
+        GenerateRoomInDirection((currentDoorFlags & DoorFlags.Right) != 0, new Vector2(17f, 0), "LeftDoor");
+        GenerateRoomInDirection((currentDoorFlags & DoorFlags.Up) != 0, new Vector2(0, 10.7f), "DownDoor");
+        GenerateRoomInDirection((currentDoorFlags & DoorFlags.Down) != 0, new Vector2(0, -10.7f), "UpDoor");
     }
 
-    private void GenerateRoomInDirection(Transform currentRoomTransform, bool hasDoor, Vector2 offset, string neededDoorName)
+    private void GenerateRoomInDirection(bool hasDoor, Vector2 offset, string neededDoorName)
     {
 
         if (hasDoor)
         {
-            Vector2 newRoomPos = (Vector2)currentRoomTransform.position + offset;
+            Vector2 newRoomPos = (Vector2)m_CurrentRoomTransform.position + offset;
 
             //如果超出限制墙壁，则返回
-            if (CheckIfBreakMaximumPos(currentRoomTransform, newRoomPos)) return;
+            if (CheckIfBreakMaximumPos(m_CurrentRoomTransform, newRoomPos)) return;
 
 
-            if (CanGenerateRoomAtPosition(currentRoomTransform.position, offset))
+            if (CanGenerateRoomAtPosition(m_CurrentRoomTransform.position, offset))
             {
                 //如果目标位置为空，则生成房间
                 GenerateSuitableRoom(newRoomPos, neededDoorName);
@@ -100,7 +98,7 @@ public class RoomManager : ManagerTemplate<RoomManager>
             else
             {
                 //当目标生成位置已经有房间时，检查那个房间是否有连接当前房间的门，没有的话就放障碍物阻止玩家通过
-                CheckRequiredDoorAtOverlapPosition(newRoomPos, currentRoomTransform, neededDoorName);
+                CheckRequiredDoorAtOverlapPosition(m_CurrentRoomTransform, newRoomPos, neededDoorName);
 
                 //Debug.Log("Cannot generate room at this repeated position: " + newRoomPos);
             }
@@ -112,11 +110,11 @@ public class RoomManager : ManagerTemplate<RoomManager>
     private bool IsPositionEmpty(Vector2 positionToCheck, Vector2 roomSize)
     {
         //第一个参数为中心点，第二个参数为正方形大小，第三个参数为角度，第四个参数为检测的目标层级
-        Collider2D overlapCheck = Physics2D.OverlapBox(positionToCheck, roomSize, 0f, roomLayerMask);
+        Collider2D overlapCheck = Physics2D.OverlapBox(positionToCheck, roomSize, 0f, RoomLayerMask);
         return overlapCheck == null;
     }
 
-
+    //检测是否可以在目标位置生成房间
     private bool CanGenerateRoomAtPosition(Vector2 currentRoomPos, Vector2 offset)
     {
         Vector2 newRoomPos = currentRoomPos + offset;
@@ -129,8 +127,24 @@ public class RoomManager : ManagerTemplate<RoomManager>
     }
 
 
+
+    /*
+    //检查当前房间是否连接周围的房间（玩家每进入一个房间时都需要调用此函数）
+    public void CheckIfConnectSurroundingRooms(Transform thisRoomTransform)       
+    {
+        //检查当前房间是否连接左边的房间
+        CheckRequiredDoorAtOverlapPosition(thisRoomTransform, (Vector2)thisRoomTransform.position + new Vector2(-17f, 0), "RightDoor");
+        //检查当前房间是否连接右边的房间
+        CheckRequiredDoorAtOverlapPosition(thisRoomTransform, (Vector2)thisRoomTransform.position + new Vector2(17f, 0), "LeftDoor");
+        //检查当前房间是否连接上面的房间
+        CheckRequiredDoorAtOverlapPosition(thisRoomTransform, (Vector2)thisRoomTransform.position + new Vector2(0, 10.7f), "DownDoor");
+        //检查当前房间是否连接下面的房间
+        CheckRequiredDoorAtOverlapPosition(thisRoomTransform, (Vector2)thisRoomTransform.position + new Vector2(0, -10.7f), "UpDoor");
+    }
+    */
+
     //检查参数中坐标对应的房间是否有连接当前房间的门
-    private void CheckRequiredDoorAtOverlapPosition(Vector2 checkPos, Transform currentRoomTransform, string neededDoorName)
+    private void CheckRequiredDoorAtOverlapPosition(Transform currentRoomTransform, Vector2 checkPos, string neededDoorName)
     {
         if (GeneratedRoomDict.ContainsKey(checkPos))
         {
@@ -141,7 +155,8 @@ public class RoomManager : ManagerTemplate<RoomManager>
             //检查能否获取字典对应的坐标的房间物体
             if (GeneratedRoomDict.TryGetValue(checkPos, out repeatedRoom))
             {
-                RoomType repeatedRoomType = repeatedRoom.GetComponent<RoomType>();
+                RoomType repeatedRoomType = repeatedRoom.GetComponent<RoomType>();  //获取房间物体上挂载的房间类型脚本
+                
 
                 //检查重复坐标的房间是否有连接此房间的门，如果没有则生成障碍物防止玩家穿过门
                 if (!HasRequiredDoor(repeatedRoomType, neededDoorName))

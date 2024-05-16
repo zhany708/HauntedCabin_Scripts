@@ -1,7 +1,7 @@
-using DG.Tweening;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+
 
 
 public class RootRoomController : MonoBehaviour
@@ -97,8 +97,10 @@ public class RootRoomController : MonoBehaviour
             //房间周围生成过一次房间后就不会再生成了
             if (!m_HasGeneratedRoom)
             {
-                m_RoomManager.GenerateRoom(transform, m_RoomType);  //当玩家进入房间时，在当前房间周围生成新的房间
-            }         
+                m_RoomManager.GenerateRoom(transform, m_RoomType);  //在当前房间周围生成新的房间
+            }
+
+            //RoomManager.Instance.CheckIfConnectSurroundingRooms(transform);  //每当玩家进入房间时，检查当前房间是否连接周围的房间
         }
     }
 
@@ -118,18 +120,9 @@ public class RootRoomController : MonoBehaviour
             }
             
 
-
-
             if (m_DoorInsideThisRoom != null)
             {
-                m_DoorInsideThisRoom.RoomTrigger.enabled = true;    //玩家离开房间后重新激活门的触发器，从而让玩家之后再进入时生成敌人
-
-                //如果房间生成过事件，且还没取消激活该事件时
-                if (m_DoorInsideThisRoom.HasGeneratedEvent && !m_DoorInsideThisRoom.HasDeactivateEvent)     
-                {
-                    EventManager.Instance.DeactivateEventObject();        //玩家离开房间后销毁事件物体
-                    m_DoorInsideThisRoom.SetHasDeactivateEvent(true);                                                                            
-                }
+                m_DoorInsideThisRoom.RoomTrigger.enabled = true;    //玩家离开房间后重新激活门的触发器，从而让玩家之后再进入时生成敌人             
             }             
         }
     }

@@ -103,8 +103,8 @@ public class PlayerState
 
     public virtual void PhysicsUpdate() 
     {
-        //只有当没有带按钮的界面打开时，才允许玩家移动
-        if (!PanelWithButton.IsPanelWithButtonOpened)
+        //只有当玩家可以移动，才允许玩家移动
+        if (BasePanel.IsPlayerMoveable)
         {
             //将移动逻辑放在跟状态中，这样玩家无需进入移动状态也可以移动（某些状态需要覆盖此函数，如受击状态）
             movement.SetVelocity(playerData.MovementVelocity * PlayerStatusBar.GetSpeedAddition(), input);

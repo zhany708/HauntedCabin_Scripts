@@ -40,6 +40,8 @@ public abstract class Event : MonoBehaviour
             Debug.LogError("DoorController not set for " + gameObject.name);
             return;
         }
+
+        EventManager.Instance.DeactivateEventObject();        //将事件物体放回池中
     }
 
 

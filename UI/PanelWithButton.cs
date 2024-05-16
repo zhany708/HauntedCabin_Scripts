@@ -6,8 +6,7 @@ using UnityEngine.EventSystems;
 
 public class PanelWithButton : BasePanel        //专门用于有按钮的界面UI
 {
-    //用于表示是否有带按钮的界面打开
-    public static bool IsPanelWithButtonOpened => m_OpenedPanelsWithButton.Count > 0;
+    
 
 
 
@@ -23,14 +22,15 @@ public class PanelWithButton : BasePanel        //专门用于有按钮的界面UI
 
 
 
-
+    //用于表示是否有带按钮的界面打开
+    bool m_IsPanelWithButtonOpened => m_OpenedPanelsWithButton.Count > 0;
 
 
 
 
 
     protected virtual void Update()
-    {
+    {      
         //先检查事件系统是否为空
         if (EventSystem.current != null)
         {
@@ -111,6 +111,9 @@ public class PanelWithButton : BasePanel        //专门用于有按钮的界面UI
             //重置事件系统里的当前选择按钮
             EventSystem.current.SetSelectedGameObject(lastSelectedButton);
         }
+
+        //根据是否有带按钮的界面打开来决定是否允许玩家移动和攻击
+        SetBothMoveableAndAttackable(!m_IsPanelWithButtonOpened);
     }
 
 
