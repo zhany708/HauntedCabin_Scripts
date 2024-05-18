@@ -14,7 +14,7 @@ public class EventManager : ManagerTemplate<EventManager>
 
     Animator m_Animator;
     GameObject m_EventPrefab;       //事件预制件
-    Vector2 m_RoomPosition;
+    Vector2 m_RoomPosition;         //表示事件发生的房间的坐标
 
     int m_EventCount = 0;                 //生成过多少事件  
     int m_RandomGeneratedNum = -1;         //随机生成的数（用于新的事件生成的索引）
@@ -23,7 +23,7 @@ public class EventManager : ManagerTemplate<EventManager>
 
 
 
-
+    #region Unity内部函数循环
     protected override void Awake()
     {
         base.Awake();
@@ -51,11 +51,10 @@ public class EventManager : ManagerTemplate<EventManager>
             return;
         }
     }
-
- 
-
+    #endregion
 
 
+    #region 事件相关
     public async void GenerateRandomEvent(Vector2 position, DoorController thisDoor)
     {
         m_RoomPosition = position;
@@ -134,8 +133,7 @@ public class EventManager : ManagerTemplate<EventManager>
         }  
         */
     }
-
-
+    #endregion
 
 
 
@@ -144,12 +142,13 @@ public class EventManager : ManagerTemplate<EventManager>
     {
         if (m_EventCount >= EnterSecondStageCount && !IsSecondStage)   //检查是否触发了足够次数的事件，并且目前不是二阶段
         {
-            transform.position = m_RoomPosition;        //将事件管理器的坐标移到当前房间
+            transform.position = m_RoomPosition;            //将事件管理器的坐标移到当前房间
             m_Animator.SetTrigger("TranstionSecondStage");  //随后播放过渡阶段的动画
 
             IsSecondStage = true;
         }
     }
+
 
     #region AnimationEvents
     private async void DisplayTransitionStageText()       //用于阶段动画中决定何时显示文字
@@ -167,12 +166,8 @@ public class EventManager : ManagerTemplate<EventManager>
     }
     #endregion
 
+
     #region Setters 
-    public void SetIsSecondStage(bool isTrue)
-    {
-        IsSecondStage = isTrue;
-    }
-    
     public void IncrementEventCount()
     {
         m_EventCount++;

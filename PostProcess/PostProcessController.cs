@@ -6,8 +6,20 @@ using UnityEngine.Rendering.PostProcessing;
 
 public class PostProcessController : MonoBehaviour
 {
+    //更改颜色滤镜相关   
+    public Color OrangeFilter = new Color(250, 107, 58);   //橙色
+    public Color RedFilter = new Color(214, 53, 56);       //红色
+
+    float m_FireEffectFrequency = 3.0f;                    //颜色转变频率
+    float m_Timer = 0f;     //用于颜色转变
+
+
+
+
     PostProcessVolume m_PostProcessVolume;
-    ColorGrading m_ColorGrading;
+    ColorGrading m_ColorGrading;                //颜色处理相关
+    Vignette m_Vignette;                        //屏幕聚焦相关（比如模拟手电筒，只让玩家看到周围一小块面积）
+
 
 
 
@@ -21,10 +33,10 @@ public class PostProcessController : MonoBehaviour
         
         if (m_PostProcessVolume != null )
         {
-            //尝试获取调整颜色的组件，没有获取到的话则报错
-            if (!m_PostProcessVolume.profile.TryGetSettings(out m_ColorGrading))
+            //尝试获取所有组件，有一个没有获取到的话则报错
+            if (!m_PostProcessVolume.profile.TryGetSettings(out m_ColorGrading) || !m_PostProcessVolume.profile.TryGetSettings(out m_Vignette))
             {
-                Debug.LogError("The PostProcess volume doesn't has a color grading component.");
+                Debug.LogError("Some components are not assigned in the PostProcess volume.");
             }
         }
 
@@ -34,8 +46,18 @@ public class PostProcessController : MonoBehaviour
         }
     }
 
+    private void Update()
+    {
+        //FireEffect();
+    }
 
 
+
+
+
+
+    #region ColorGrading相关
+    //调整明亮度
     public void AdjustBrightness(float newBrightness, float duration)
     {
         if (m_ColorGrading != null)
@@ -76,4 +98,24 @@ public class PostProcessController : MonoBehaviour
             Debug.LogError("The Color grading component component is missing.");
         }
     }
+    #endregion
+
+
+    #region Vignette相关
+    private void FireEffect()       //通过调整颜色滤镜来模拟玩家被火焰包围
+    {
+        if (m_Vignette != null)
+        {
+            //更新计时器
+            m_Timer += Time.deltaTime * m_FireEffectFrequency;
+
+            //根据频率在红色和橙色之间转换
+            float t = Mathf.Sin(m_Timer) * 0.5f + 0.5f;
+            Color currentColor = Color.Lerp(OrangeFilter, RedFilter, t);
+
+            //赋值新的颜色
+            m_Vignette.color.Override(currentColor);
+        }
+    }
+    #endregion
 }

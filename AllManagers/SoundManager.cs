@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using System;
 
 
+
 public class SoundManager : ManagerTemplate<SoundManager>
 {
     public SO_AudioClipKeys AudioClipKeys;
@@ -14,8 +15,8 @@ public class SoundManager : ManagerTemplate<SoundManager>
 
 
 
-    AudioSource m_MusicSource;  //用于BGM
-    AudioSource m_SfxSource;    //用于音效
+    AudioSource m_MusicSource;  //用于BGM的播放器
+    AudioSource m_SfxSource;    //用于音效的播放器
 
     //由于音频管理器加载的文件类型是音频，不是游戏物体，所以需要有自己的字典
     Dictionary<string, AudioClip> m_AudioDict;
@@ -24,7 +25,7 @@ public class SoundManager : ManagerTemplate<SoundManager>
 
 
 
-
+    #region Unity内部函数循环
     protected override void Awake()
     {
         base.Awake();
@@ -41,12 +42,10 @@ public class SoundManager : ManagerTemplate<SoundManager>
         MusicVolume = 1f;
         SfxVolume = 1f;
     }
+    #endregion
 
 
-
-
-
-
+    #region 资源加载相关
     //使用Addressables加载音频
     private async Task<AudioClip> LoadClipAsync(string name)
     {
@@ -98,9 +97,10 @@ public class SoundManager : ManagerTemplate<SoundManager>
             Debug.LogError("This AudioClip is not loaded yet, cannot release: " + key);
         }
     }
+    #endregion
 
 
-
+    #region BGM相关
     //公共函数，用于外部调用播放BGM
     public async Task PlayBGMAsync(string clipName, bool isLoop, float thisVolume = 1f)
     {
@@ -133,17 +133,10 @@ public class SoundManager : ManagerTemplate<SoundManager>
         m_MusicSource.volume = MusicVolume * thisVolume;
         m_MusicSource.Play();
     }
+    #endregion
 
 
-
-
-
-
-
-
-
-
-
+    #region 音效相关
     //公共函数，用于外部调用播放音效
     public async void PlaySFXAsync(string clipName, float thisVolume = 1f)     //播放武器攻击音效
     {
@@ -217,4 +210,5 @@ public class SoundManager : ManagerTemplate<SoundManager>
     {
         return UnityEngine.Random.Range(0.98f, 1.03f);
     }
+    #endregion
 }

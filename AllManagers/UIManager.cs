@@ -20,10 +20,10 @@ public class UIManager : ManagerTemplate<UIManager>
 
 
 
-    
 
 
 
+    #region Unity内部函数循环
     protected override void Awake()
     {
         base.Awake();
@@ -51,12 +51,10 @@ public class UIManager : ManagerTemplate<UIManager>
             await SoundManager.Instance.PlayBGMAsync(SoundManager.Instance.AudioClipKeys.StopForAMoment, true);
         }
     }
-
-    
-
+    #endregion
 
 
-
+    #region 界面相关
     //打开界面
     public async Task OpenPanel(string name)
     {
@@ -141,10 +139,13 @@ public class UIManager : ManagerTemplate<UIManager>
 
 
 
-    public void ChangePanelLayer(BasePanel thisPanel)   //改变UI的渲染层级
+    public void ChangePanelLayer(BasePanel thisPanel)   //改变界面的渲染层级
     {
 
     }
+    #endregion
+
+
 
 
     public void ResetGame()

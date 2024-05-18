@@ -1,4 +1,3 @@
-using System.Collections;
 using UnityEngine;
 
 
@@ -12,7 +11,7 @@ public class Combat : CoreComponent, Idamageable, IKnockbackable    //用于管理受
     public bool IsHit {  get; private set; }
 
     /*
-    //用于受击时的精灵图变白效果的材质
+    //用于受击时的精灵图变白效果的Shader
     public Material FlashMaterial;
 
     SpriteRenderer m_SpriteRenderer;
@@ -82,7 +81,6 @@ public class Combat : CoreComponent, Idamageable, IKnockbackable    //用于管理受
         StartCoroutine(DoFlash());
     }
 
-
     private IEnumerator DoFlash()
     {
         m_IsFlashing = true;
@@ -96,6 +94,7 @@ public class Combat : CoreComponent, Idamageable, IKnockbackable    //用于管理受
         m_IsFlashing = false;
     }
     */
+
     #region Setters
     public void SetIsHit(bool isTrue)
     {
