@@ -13,9 +13,9 @@ public class PlayerStats : Stats
 
 
 
-    public override void DecreaseHealth(float amount)
+    public override void DecreaseHealth(float amount, bool doesIgnoreDefense)
     {
-        base.DecreaseHealth(amount);
+        base.DecreaseHealth(amount, doesIgnoreDefense);
 
         m_PlayerHealthBar.SetCurrentHealth(currentHealth);      //调用血条脚本中的更新生命值函数
     }
@@ -26,5 +26,4 @@ public class PlayerStats : Stats
 
         m_PlayerHealthBar.SetCurrentHealth(currentHealth);
     }
-
 }

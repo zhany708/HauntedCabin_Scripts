@@ -19,7 +19,7 @@ public class BasePanel : MonoBehaviour
 
 
     private CanvasGroup m_CanvasGroup;
-    public CanvasGroup CanvasGroup      //Lazy Loading（只在需要使用组件时才加载组件（而不是在Awake函数里默认加载），节省内存）
+    public CanvasGroup CanvasGroup      //Lazy Load（只在需要使用组件时才加载组件（而不是在Awake函数里默认加载），节省内存）
     {
         get
         {

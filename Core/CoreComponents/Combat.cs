@@ -42,13 +42,13 @@ public class Combat : CoreComponent, Idamageable, IKnockbackable    //用于管理受
         m_HitResistance = core.HitResistance;   //从Core那里获得参数
     }
 
-    public void Damage(float amount)
+    public void Damage(float amount, bool doesIgnoreDefense)
     {
         IsHit = true;
 
 
         //Debug.Log(core.transform.parent.name + " Damaged!");
-        Stats.DecreaseHealth(amount);
+        Stats.DecreaseHealth(amount, doesIgnoreDefense);
 
         particleManager.StartParticleWithRandomRotation(m_DamageParticles);   //造成伤害时在受击物体周围生成特效
     }

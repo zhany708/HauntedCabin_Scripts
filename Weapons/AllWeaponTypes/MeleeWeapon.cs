@@ -89,8 +89,8 @@ public class MeleeWeapon : Weapon
                 cameraShake.ShakeCamera(details.CameraShakeIntensity, details.CameraShakeDuration);     //调用相机震动脚本
             }
 
-            item.Damage(details.DamageAmount * PlayerStatusBar.GetStrengthAddition() );      //对被检测到碰撞体造成伤害
-            //item.GetHit(Movement.FacingDirection);      //使被检测碰撞体面向玩家
+            //对被检测到碰撞体造成伤害（伤害受玩家力量和敌人防御影响）
+            item.Damage(details.DamageAmount * PlayerStatusBar.GetStrengthAddition(), false);      
         }
 
         foreach (IKnockbackable item in detectedKnockbackables.ToList())
