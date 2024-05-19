@@ -4,6 +4,7 @@ using UnityEngine;
 using ZhangYu.Utilities;
 
 
+
 public class Stats : CoreComponent      //用于管理生命，魔力等状态信息
 {
     public event Action OnHealthZero;       //接收方为Death脚本
@@ -66,7 +67,7 @@ public class Stats : CoreComponent      //用于管理生命，魔力等状态信息
     }
 
 
-    //生命随时间流逝（60除以第三个参数决定了每多少秒掉一次血）
+    //生命随时间流逝（第一个参数为持续时间。第二个为伤害值，第三个为频率）
     public IEnumerator HealthDrain(float duration, float damageAmount, float frequency)        
     {
         Timer timer = new Timer(duration);

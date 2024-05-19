@@ -33,6 +33,7 @@ public class ScreenplayManager : ManagerTemplate<ScreenplayManager>
     {
         if (PlayerStats != null)
         {
+            //持续x秒，每次掉x点血，频率为x
             m_HealthDrainCoroutine = StartCoroutine(PlayerStats.HealthDrain(60f, 10f, 12f));
         }        
     }
