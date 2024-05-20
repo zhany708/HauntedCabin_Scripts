@@ -1,65 +1,42 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using System.Threading.Tasks;
 
 
 
 
-public class ScreenplayManager : ManagerTemplate<ScreenplayManager>
+public class ScreenplayManager : ManagerTemplate<ScreenplayManager>     //用于管理剧本相关的逻辑的
 {
-    public PlayerStats PlayerStats      //Lazy load
+    public SO_ScreenplayKeys ScreenplayKeys;
+
+
+
+
+
+
+    public async Task OpenScreenplay(string name)       //打开剧本
     {
-        get
+        //异步加载，随后检查是否加载成功
+        GameObject screenPlayPrefab = await LoadPrefabAsync(name);
+        if (screenPlayPrefab == null)
         {
-            if (m_PlayerStats == null)
-            {
-                m_PlayerStats = FindObjectOfType<PlayerStats>();
-            }
-            return m_PlayerStats;
+            Debug.LogError("Failed to load screenplay prefab: " + name);
+            return;
         }
-    }
-    private PlayerStats m_PlayerStats;
 
 
-
-    Coroutine m_HealthDrainCoroutine;
-
-
-
-
-
-
-    private void Start()
-    {
-        if (PlayerStats != null)
+        //异步加载后生成物体并获取物体身上的组件（物体位于初始坐标，且无旋转）
+        GameObject screenPlayObject = GameObject.Instantiate(screenPlayPrefab, Vector3.zero, Quaternion.identity);
+        BaseScreenplay screenPlay = screenPlayObject.GetComponent<BaseScreenplay>();
+        if (screenPlay != null)
         {
-            //持续x秒，每次掉x点血，频率为x
-            m_HealthDrainCoroutine = StartCoroutine(PlayerStats.HealthDrain(60f, 10f, 12f));
-        }        
-    }
+            //获取组件后，开始剧本
+            screenPlay.StartScreenplay();
+        }
 
-
-    private void OnEnable()
-    {
-        PlayerStats.OnHealthZero += DestroyCoroutine;       //玩家死亡时停止协程
-    }
-
-    private void OnDisable()
-    {
-        PlayerStats.OnHealthZero -= DestroyCoroutine;
-    }
-
-
-
-
-
-
-    private void DestroyCoroutine()     //停止协程
-    {
-        if (m_HealthDrainCoroutine != null)
+        else
         {
-            Debug.Log("Coroutine stopped!!");
-            StopCoroutine(m_HealthDrainCoroutine);
+            Debug.LogError("No BaseScreenplay component found on gameobject: " + name);
+            return;
         }
     }
 }

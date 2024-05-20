@@ -151,17 +151,17 @@ public class EventManager : ManagerTemplate<EventManager>
 
 
     #region AnimationEvents
-    private async void DisplayTransitionStageText()       //用于阶段动画中决定何时显示文字
+    private async void DisplayTransitionStageText()       //用于阶段动画中决定何时生成剧本物体
     {
-        //打开剧本背景界面
-        if (UIManager.Instance.UIKeys != null && !string.IsNullOrEmpty(UIManager.Instance.UIKeys.HellsCallPanel))
+        //打开剧本
+        if (ScreenplayManager.Instance.ScreenplayKeys != null && !string.IsNullOrEmpty(ScreenplayManager.Instance.ScreenplayKeys.HellsCall))
         {
-            await UIManager.Instance.OpenPanel(UIManager.Instance.UIKeys.HellsCallPanel);   //打开剧本背景界面
+            await ScreenplayManager.Instance.OpenScreenplay(ScreenplayManager.Instance.ScreenplayKeys.HellsCall);
         }
 
         else
         {
-            Debug.LogError("UIKeys not set or HellsCallPanel key is empty.");
+            Debug.LogError("ScreenplayKeys not set or HellsCall key is empty.");
         }
     }
     #endregion
