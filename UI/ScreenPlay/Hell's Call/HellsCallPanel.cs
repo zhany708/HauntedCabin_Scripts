@@ -12,6 +12,22 @@ public class HellsCallPanel : BasePanel
     public TextMeshProUGUI TipText;             //提示文本
 
 
+    public HellsCall HellsCall     //Lazy load
+    {
+        get
+        {
+            if (m_HellsCall == null)
+            {
+                m_HellsCall = FindObjectOfType<HellsCall>();
+            }
+            return m_HellsCall;
+        }
+    }
+    private HellsCall m_HellsCall;
+
+
+
+
 
 
 
@@ -33,7 +49,8 @@ public class HellsCallPanel : BasePanel
     private void OnEnable()
     {
         
-        OnFadeOutFinished += ClosePanel;        //界面完全淡出后调用此函数
+        OnFadeOutFinished += ClosePanel;        //界面完全淡出后调用的函数
+        OnFadeOutFinished += StartHealthDrain;
 
         OnFadeInFinished += StartTextAnimations;    //界面完全淡入后调用此函数
     }
@@ -42,6 +59,7 @@ public class HellsCallPanel : BasePanel
     {
         base.OnDisable();
         OnFadeOutFinished -= ClosePanel;
+        OnFadeOutFinished -= StartHealthDrain;
         OnFadeInFinished -= StartTextAnimations;
     }
 
@@ -93,5 +111,15 @@ public class HellsCallPanel : BasePanel
         }));
 
         generatedCoroutines.Add(firstPartTextCoroutine);      //将协程加进列表
+    }
+
+
+
+    private void StartHealthDrain()     //开始持续掉血
+    {
+        if (HellsCall != null)
+        {
+            HellsCall.StartHealthDrain();
+        }
     }
 }
