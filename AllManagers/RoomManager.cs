@@ -8,6 +8,7 @@ public class RoomManager : ManagerTemplate<RoomManager>
 {
     public SO_RoomKeys RoomKeys;
     public LayerMask RoomLayerMask;         //房间的图层
+    public GameObject BlockDoorBarrel;      //挡住玩家进入门的障碍物
 
     //限制墙壁的大小，可根据难度的不同调整
     public float MaximumXPos = 35f;
@@ -52,6 +53,12 @@ public class RoomManager : ManagerTemplate<RoomManager>
         {
             Debug.LogError("Some components are not correctly assigned in the RoomManager");
             return;          
+        }
+
+        if (BlockDoorBarrel == null)
+        {
+            Debug.LogError("BlockDoorBarrel is not assigned in the RoomManager.");
+            return;
         }
 
 
@@ -271,7 +278,7 @@ public class RoomManager : ManagerTemplate<RoomManager>
                 if (!HasRequiredDoor(targetRoomType, neededDoorName))
                 {
                     //在指定的门前生成障碍物
-                    EnvironmentManager.Instance.GenerateBarrelToBlockDoor(currentRoomTransform, (Vector2)currentRoomTransform.position + blockObjectPos);
+                    EnvironmentManager.Instance.GenerateObjectWithParent(BlockDoorBarrel, currentRoomTransform, (Vector2)currentRoomTransform.position + blockObjectPos);
                 }
             }
         }
@@ -325,16 +332,18 @@ public class RoomManager : ManagerTemplate<RoomManager>
         {
             //Debug.Log("Cannot generate new room at this position: " + newRoomPos);
 
+            //生成木桶，用于阻止玩家穿过门
             Vector2 blockObjectPos = newRoomPos.x <= 0 ? m_BlockLeftDoor : m_BlockRightDoor;
-            EnvironmentManager.Instance.GenerateBarrelToBlockDoor(currentRoomTransform, (Vector2)currentRoomTransform.position + blockObjectPos);
+            EnvironmentManager.Instance.GenerateObjectWithParent(BlockDoorBarrel, currentRoomTransform, (Vector2)currentRoomTransform.position + blockObjectPos);
 
             return true;
         }
 
         else if (Mathf.Abs(newRoomPos.y) >= MaximumYPos)
         {
+            //生成木桶，用于阻止玩家穿过门
             Vector2 blockObjectPos = newRoomPos.y <= 0 ? m_BlockDownDoor : m_BlockUpDoor;
-            EnvironmentManager.Instance.GenerateBarrelToBlockDoor(currentRoomTransform, (Vector2)currentRoomTransform.position + blockObjectPos);
+            EnvironmentManager.Instance.GenerateObjectWithParent(BlockDoorBarrel, currentRoomTransform, (Vector2)currentRoomTransform.position + blockObjectPos);
 
             return true;
         }

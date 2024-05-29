@@ -10,8 +10,6 @@ public class EnvironmentManager : ManagerTemplate<EnvironmentManager>
     public event Action OnEnemyKilled;       //接收方为TaskPanel
 
 
-    public GameObject BlockDoorBarrel;      //挡住玩家进入门的障碍物
-
     public int KilledEnemyCount { get; private set; } = 0;     //表示杀死过多少敌人
     public int RequiredEnemyCount { get; private set; } = 6;   //表示需要杀死多少敌人，游戏才胜利
     public bool IsGameOver { get; private set; } = false;
@@ -29,22 +27,16 @@ public class EnvironmentManager : ManagerTemplate<EnvironmentManager>
     protected override void Awake()
     {
         base.Awake();
-
-        if (BlockDoorBarrel == null)
-        {
-            Debug.LogError("BlockDoorBarrel is not assigned in the EnvironmentManager.");
-            return;
-        }
     }
 
 
 
 
 
-    //生成木桶，用于阻止玩家穿过门（将这种游戏中的动态变化放进一个Manager中，从而让其他脚本专注于其他的事）
-    public void GenerateBarrelToBlockDoor(Transform parentTransform, Vector2 generatedPos)
+    //生成物体，同时将参数中的Transform设置为物体的父物体     需要做的：用对象池生成物体
+    public void GenerateObjectWithParent(GameObject generatedObject, Transform parentTransform, Vector2 generatedPos)
     {
-        Instantiate(BlockDoorBarrel, generatedPos, Quaternion.identity, parentTransform);
+        Instantiate(generatedObject, generatedPos, Quaternion.identity, parentTransform);
 
         //尝试从父物体那里获取脚本组件
         RootRoomController parentObject = parentTransform.GetComponent<RootRoomController>();

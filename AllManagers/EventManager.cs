@@ -149,6 +149,7 @@ public class EventManager : ManagerTemplate<EventManager>
         }
     }
 
+    
 
     #region AnimationEvents
     private async void DisplayTransitionStageText()       //用于阶段动画中决定何时生成剧本物体
@@ -185,6 +186,14 @@ public class EventManager : ManagerTemplate<EventManager>
             m_EventCount = 0;
             IsSecondStage = false;
         }
+    }
+    #endregion
+
+
+    #region Getters
+    public Vector2 GetRoomPosWhereEnterSecondStage()        //获取触发进入二阶段的房间
+    {
+        return m_RoomPosition;
     }
     #endregion
 }

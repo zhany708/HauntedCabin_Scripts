@@ -1,13 +1,13 @@
-using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq.Expressions;
 using UnityEngine;
 
 
 
 public class HellsCall : BaseScreenplay
 {
+    public GameObject RitualStone;      //祷告石物体
+
+
     public PlayerStats PlayerStats      //Lazy load
     {
         get
@@ -37,7 +37,10 @@ public class HellsCall : BaseScreenplay
 
     private void OnDisable()
     {
-        PlayerStats.OnHealthZero -= DestroyCoroutine;
+        if (PlayerStats != null)
+        {
+            PlayerStats.OnHealthZero -= DestroyCoroutine;
+        }
     }
 
    
@@ -46,8 +49,9 @@ public class HellsCall : BaseScreenplay
 
     public async override void StartScreenplay()
     {
-
-        await UIManager.Instance.OpenPanel(UIManager.Instance.UIKeys.HellsCallPanel);   //打开剧本背景界面       
+        await UIManager.Instance.OpenPanel(UIManager.Instance.UIKeys.HellsCallPanel);   //打开剧本背景界面
+                                                                         
+        GenerateRitualStones();     //生成祷告石
     }
 
 
@@ -59,8 +63,8 @@ public class HellsCall : BaseScreenplay
     {
         if (PlayerStats != null)
         {
-            //持续x秒，每次掉x点血，频率为x
-            m_HealthDrainCoroutine = StartCoroutine(PlayerStats.HealthDrain(60f, 10f, 12f));
+            //持续10秒，每次掉5点血，每5秒掉一次
+            m_HealthDrainCoroutine = StartCoroutine(PlayerStats.HealthDrain(10f, 5f, 12f));
         }
     }
 
@@ -76,18 +80,37 @@ public class HellsCall : BaseScreenplay
 
 
 
-    public void GenerateMagicStones()       //在随机房间生成祷告石
+    public void GenerateRitualStones()       //在随机房间生成祷告石
     {
         int roomNum = RoomManager.Instance.GeneratedRoomDict.Count;     //表示当前有多少房间
 
         if (roomNum <= m_StoneNum)      //房间数量不足以生成所有祷告石时
         {
-
+            //需要做的：在后续房间生成后强行生成祷告石
         }
 
         else
         {
-            int randomNum = UnityEngine.Random.Range(0, roomNum);       //随机房间索引
+            List<Vector2> tempRoomPos = new List<Vector2>();    //用于储存所有房间字典里的坐标
+
+            // 将字典里的所有坐标储存在列表中
+            foreach (var room in RoomManager.Instance.GeneratedRoomDict.Keys)
+            {
+                tempRoomPos.Add(room);
+            }
+
+            tempRoomPos.Remove(EventManager.Instance.GetRoomPosWhereEnterSecondStage() );   //移除触发进入二阶段的房间的坐标，防止玩家立刻获得祷告石
+
+            //将所需的祷告石全部生成出来
+            for (int i = 0; i < m_StoneNum; i++)
+            {
+                int randomNum = UnityEngine.Random.Range(0, tempRoomPos.Count); //随机房间索引
+                Vector2 selectedRoomPos = tempRoomPos[randomNum];               //获取随机选择的房间的坐标
+                tempRoomPos.RemoveAt(randomNum);                                //移除已选择的房间以防止重复
+
+                // 在选中的房间生成祷告石
+                EnvironmentManager.Instance.GenerateObjectWithParent(RitualStone, RoomManager.Instance.GeneratedRoomDict[selectedRoomPos].transform, selectedRoomPos);
+            }
         }
     }
 }
