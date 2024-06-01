@@ -6,6 +6,10 @@ using UnityEngine;
 
 public class RoomManager : ManagerTemplate<RoomManager>
 {
+    public delegate void RoomGeneratedHandler(Vector2 roomPosition);        //delegate是用于限制引用事件的函数的参数（这里是必须有Vector2参数）
+    public event RoomGeneratedHandler OnRoomGenerated;                      //使用上面的限制的事件
+
+
     public SO_RoomKeys RoomKeys;
     public LayerMask RoomLayerMask;         //房间的图层
     public GameObject BlockDoorBarrel;      //挡住玩家进入门的障碍物
@@ -177,6 +181,9 @@ public class RoomManager : ManagerTemplate<RoomManager>
                 {
                     Debug.LogError("Tried to set this room has generated rooms, but cannot get the RootRoomController: " + currentRoomTransform.name);
                 }
+
+                //触发事件
+                OnRoomGenerated?.Invoke(newRoomPos);    //将新房间的坐标连接到事件
             }
 
             else

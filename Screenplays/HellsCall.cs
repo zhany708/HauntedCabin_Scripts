@@ -25,14 +25,16 @@ public class HellsCall : BaseScreenplay
 
     Coroutine m_HealthDrainCoroutine;
 
-    int m_StoneNum = 2;     //祷告石的数量
-
+    bool m_NeedGenerateStone = false;   //判断是否需要生成祷告石
+    public int m_NeededStoneNum = 2;    //需要生成的祷告石的数量
+    int m_GeneratedStoneNum = 0;        //表示当前生成了多少祷告石
 
 
 
     private void OnEnable()
     {
         PlayerStats.OnHealthZero += DestroyCoroutine;       //玩家死亡时停止协程
+        RoomManager.Instance.OnRoomGenerated += GenerateStoneAtSingleRoom;      //新生成房间时，调用此函数
     }
 
     private void OnDisable()
@@ -41,6 +43,8 @@ public class HellsCall : BaseScreenplay
         {
             PlayerStats.OnHealthZero -= DestroyCoroutine;
         }
+
+        RoomManager.Instance.OnRoomGenerated += GenerateStoneAtSingleRoom;
     }
 
    
@@ -79,38 +83,65 @@ public class HellsCall : BaseScreenplay
 
 
 
-
+    //尝试生成所有的祷告石（整个剧本只调用一次）
     public void GenerateRitualStones()       //在随机房间生成祷告石
     {
-        int roomNum = RoomManager.Instance.GeneratedRoomDict.Count;     //表示当前有多少房间
+        List<Vector2> tempRoomPos = new List<Vector2>();    //用于储存所有房间字典里的坐标
 
-        if (roomNum <= m_StoneNum)      //房间数量不足以生成所有祷告石时
+        //将字典里的所有坐标储存在列表中
+        foreach (var room in RoomManager.Instance.GeneratedRoomDict.Keys)
+        {
+            tempRoomPos.Add(room);
+        }
+
+        tempRoomPos.Remove(EventManager.Instance.GetRoomPosWhereEnterSecondStage());   //移除触发进入二阶段的房间的坐标，防止玩家立刻获得祷告石
+
+
+        //判断房间数量是否足够生成所有祷告石
+        if (tempRoomPos.Count <= m_NeededStoneNum)      //房间数量不足以生成所有祷告石时
         {
             //需要做的：在后续房间生成后强行生成祷告石
+            GenerateSeveralStones(tempRoomPos.Count, tempRoomPos);      //能生成多少祷告石，就生成多少
+
+            m_NeedGenerateStone = true;
         }
 
         else
         {
-            List<Vector2> tempRoomPos = new List<Vector2>();    //用于储存所有房间字典里的坐标
+            GenerateSeveralStones(m_NeededStoneNum, tempRoomPos);       //生成所有祷告石
+        }
+    }
 
-            // 将字典里的所有坐标储存在列表中
-            foreach (var room in RoomManager.Instance.GeneratedRoomDict.Keys)
-            {
-                tempRoomPos.Add(room);
-            }
+    private void GenerateSeveralStones(int generatedNum, List<Vector2> roomPosList)     //生成参数中的数量的祷告石
+    {
+        //将所需的祷告石全部生成出来
+        for (int i = 0; i < generatedNum; i++)
+        {
+            int randomNum = UnityEngine.Random.Range(0, roomPosList.Count); //随机房间索引
+            Vector2 selectedRoomPos = roomPosList[randomNum];               //获取随机选择的房间的坐标
+            roomPosList.RemoveAt(randomNum);                                //移除已选择的房间以防止重复
 
-            tempRoomPos.Remove(EventManager.Instance.GetRoomPosWhereEnterSecondStage() );   //移除触发进入二阶段的房间的坐标，防止玩家立刻获得祷告石
+            //在选中的房间生成祷告石
+            EnvironmentManager.Instance.GenerateObjectWithParent(RitualStone, RoomManager.Instance.GeneratedRoomDict[selectedRoomPos].transform, selectedRoomPos);
 
-            //将所需的祷告石全部生成出来
-            for (int i = 0; i < m_StoneNum; i++)
-            {
-                int randomNum = UnityEngine.Random.Range(0, tempRoomPos.Count); //随机房间索引
-                Vector2 selectedRoomPos = tempRoomPos[randomNum];               //获取随机选择的房间的坐标
-                tempRoomPos.RemoveAt(randomNum);                                //移除已选择的房间以防止重复
+            m_GeneratedStoneNum++;      //增加祷告石计数
+        }
+    }
 
-                // 在选中的房间生成祷告石
-                EnvironmentManager.Instance.GenerateObjectWithParent(RitualStone, RoomManager.Instance.GeneratedRoomDict[selectedRoomPos].transform, selectedRoomPos);
-            }
+    //在单独的房间生成祷告石
+    private void GenerateStoneAtSingleRoom(Vector2 roomPos)
+    {
+        if (m_NeedGenerateStone)
+        {
+            //在参数中的房间生成祷告石
+            EnvironmentManager.Instance.GenerateObjectWithParent(RitualStone, RoomManager.Instance.GeneratedRoomDict[roomPos].transform, roomPos);
+
+            m_GeneratedStoneNum++;      //增加祷告石计数
+        }        
+
+        if (m_GeneratedStoneNum >= m_NeededStoneNum)        //判断是否已经生成了足够的祷告石
+        {
+            m_NeedGenerateStone = false;
         }
     }
 }
