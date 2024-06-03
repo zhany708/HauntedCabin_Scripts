@@ -10,13 +10,16 @@ public class RoomManager : ManagerTemplate<RoomManager>
     public event RoomGeneratedHandler OnRoomGenerated;                      //使用上面的限制的事件
 
 
-    public SO_RoomKeys RoomKeys;
+    public SO_RoomKeys RoomKeys;            //生成房间需要的所有房间名
     public LayerMask RoomLayerMask;         //房间的图层
     public GameObject BlockDoorBarrel;      //挡住玩家进入门的障碍物
 
     //限制墙壁的大小，可根据难度的不同调整
     public float MaximumXPos = 35f;
     public float MaximumYPos = 35f;
+
+    public const float RoomLength = 17f;        //房间的长
+    public const float RoomWidth = 10.7f;       //房间的宽
 
     //储存加载过的房间的坐标和物体，用于检查是否有连接的门
     public Dictionary<Vector2, GameObject> GeneratedRoomDict { get; private set; } = new Dictionary<Vector2, GameObject>();
@@ -85,10 +88,10 @@ public class RoomManager : ManagerTemplate<RoomManager>
     {
         DoorFlags currentDoorFlags = currentRoomType.GetDoorFlags();
 
-        GenerateRoomInDirection( currentRoomTransform, (currentDoorFlags & DoorFlags.Left) != 0, new Vector2(-17f, 0), "RightDoor");
-        GenerateRoomInDirection( currentRoomTransform, (currentDoorFlags & DoorFlags.Right) != 0, new Vector2(17f, 0), "LeftDoor");
-        GenerateRoomInDirection( currentRoomTransform, (currentDoorFlags & DoorFlags.Up) != 0, new Vector2(0, 10.7f), "DownDoor");
-        GenerateRoomInDirection( currentRoomTransform, (currentDoorFlags & DoorFlags.Down) != 0, new Vector2(0, -10.7f), "UpDoor");
+        GenerateRoomInDirection( currentRoomTransform, (currentDoorFlags & DoorFlags.Left) != 0, new Vector2(-RoomLength, 0), "RightDoor");
+        GenerateRoomInDirection( currentRoomTransform, (currentDoorFlags & DoorFlags.Right) != 0, new Vector2(RoomLength, 0), "LeftDoor");
+        GenerateRoomInDirection( currentRoomTransform, (currentDoorFlags & DoorFlags.Up) != 0, new Vector2(0, RoomWidth), "DownDoor");
+        GenerateRoomInDirection( currentRoomTransform, (currentDoorFlags & DoorFlags.Down) != 0, new Vector2(0, -RoomWidth), "UpDoor");
     }
 
     private void GenerateRoomInDirection(Transform currentRoomTransform, bool hasDoor, Vector2 offset, string neededDoorName)
@@ -122,10 +125,10 @@ public class RoomManager : ManagerTemplate<RoomManager>
     {
         GameObject newRoom = null;
         bool isRoomPlaced = false;
-        int attemptCount = 0;
+        int attemptCount = 0;           //表示尝试了多少次
         const int maxAttempts = 50;     //最大尝试次数
 
-        while (!isRoomPlaced && attemptCount < maxAttempts)     //生成房间次数大于50次后强制返回，防止出现无限循环
+        while (!isRoomPlaced && attemptCount <= maxAttempts)     //生成房间次数大于50次后强制返回，防止出现无限循环
         {
             attemptCount++;
 
