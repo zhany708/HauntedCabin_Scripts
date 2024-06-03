@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class HellsCall : BaseScreenplay<HellsCall>
 {
-    public GameObject RitualStone;      //µ»¸æÊ¯ÎïÌå
+    public GameObject RitualStone;      //ï¿½ï¿½ï¿½ï¿½Ê¯ï¿½ï¿½ï¿½ï¿½
 
 
     public PlayerStats PlayerStats      //Lazy load
@@ -23,17 +23,17 @@ public class HellsCall : BaseScreenplay<HellsCall>
 
 
 
-    Coroutine m_HealthDrainCoroutine;       //Íæ¼Ò³ÖÐøµôÑªµÄÐ­³Ì
+    Coroutine m_HealthDrainCoroutine;       //ï¿½ï¿½Ò³ï¿½ï¿½ï¿½ï¿½ï¿½Ñªï¿½ï¿½Ð­ï¿½ï¿½
 
-    List<Vector2> m_TempRoomPos = new List<Vector2>();    //ÓÃÓÚ´¢´æËùÓÐ·¿¼ä×ÖµäÀïµÄ×ø±ê
+    List<Vector2> m_TempRoomPos = new List<Vector2>();    //ï¿½ï¿½ï¿½Ú´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð·ï¿½ï¿½ï¿½ï¿½Öµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 
     string m_RitualRoomName = "RitualRoom";
 
-    bool m_NeedGenerateStone = false;   //ÅÐ¶ÏÊÇ·ñÐèÒªÉú³Éµ»¸æÊ¯
-    bool m_CanStartRitual = false;      //ÅÐ¶ÏÊÇ·ñ¿ÉÒÔ¿ªÊ¼ÒÇÊ½
+    bool m_NeedGenerateStone = false;   //ï¿½Ð¶ï¿½ï¿½Ç·ï¿½ï¿½ï¿½Òªï¿½ï¿½ï¿½Éµï¿½ï¿½ï¿½Ê¯
+    bool m_CanStartRitual = false;      //ï¿½Ð¶ï¿½ï¿½Ç·ï¿½ï¿½ï¿½Ô¿ï¿½Ê¼ï¿½ï¿½Ê½
 
-    public int m_NeededStoneNum = 2;    //ÐèÒªÉú³ÉµÄµ»¸æÊ¯µÄÊýÁ¿
-    int m_GeneratedStoneNum = 0;        //±íÊ¾µ±Ç°Éú³ÉÁË¶àÉÙµ»¸æÊ¯
+    public int m_NeededStoneNum = 2;    //ï¿½ï¿½Òªï¿½ï¿½ï¿½ÉµÄµï¿½ï¿½ï¿½Ê¯ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+    int m_GeneratedStoneNum = 0;        //ï¿½ï¿½Ê¾ï¿½ï¿½Ç°ï¿½ï¿½ï¿½ï¿½ï¿½Ë¶ï¿½ï¿½Ùµï¿½ï¿½ï¿½Ê¯
 
 
 
@@ -43,8 +43,8 @@ public class HellsCall : BaseScreenplay<HellsCall>
 
     private void OnEnable()
     {
-        PlayerStats.OnHealthZero += DestroyCoroutine;       //Íæ¼ÒËÀÍöÊ±Í£Ö¹Ð­³Ì
-        RoomManager.Instance.OnRoomGenerated += GenerateStoneAtSingleRoom;      //ÐÂÉú³É·¿¼äÊ±£¬µ÷ÓÃ´Ëº¯Êý
+        PlayerStats.OnHealthZero += DestroyCoroutine;       //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê±Í£Ö¹Ð­ï¿½ï¿½
+        RoomManager.Instance.OnRoomGenerated += GenerateStoneAtSingleRoom;      //ï¿½ï¿½ï¿½ï¿½ï¿½É·ï¿½ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½ï¿½Ã´Ëºï¿½ï¿½ï¿½
     }
 
     private void OnDisable()
@@ -59,7 +59,7 @@ public class HellsCall : BaseScreenplay<HellsCall>
 
     private void OnDestroy()
     {
-        //½«ÒÇÊ½·¿µÄÃû×Ö´ÓÁÐ±íÖÐÒÆ³ý£¬ÒòÎªScriptObjectµÄ¼ÇÂ¼²»»áËæ×ÅÓÎÏ·½áÊø¶øÏûÊ§
+        //ï¿½ï¿½ï¿½ï¿½Ê½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö´ï¿½ï¿½Ð±ï¿½ï¿½ï¿½ï¿½Æ³ï¿½ï¿½ï¿½ï¿½ï¿½ÎªScriptObjectï¿½Ä¼ï¿½Â¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ï·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê§
         RoomManager.Instance.RoomKeys.FirstFloorRoomKeys.Remove(m_RitualRoomName);
     }
 
@@ -67,27 +67,27 @@ public class HellsCall : BaseScreenplay<HellsCall>
 
     public async override void StartScreenplay()
     {
-        await UIManager.Instance.OpenPanel(UIManager.Instance.UIKeys.HellsCallPanel);   //´ò¿ª¾ç±¾±³¾°½çÃæ
+        await UIManager.Instance.OpenPanel(UIManager.Instance.UIKeys.HellsCallPanel);   //ï¿½ò¿ª¾ç±¾ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
                                                                          
-        GenerateRitualStones();     //Éú³Éµ»¸æÊ¯                                                                                                                                                                                                                                                                                                                                                                                                   666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666
-        GenerateRitualRoom();       //Éú³ÉÒÇÊ½·¿
+        GenerateRitualStones();     //ï¿½ï¿½ï¿½Éµï¿½ï¿½ï¿½Ê¯                                                                                                                                                                                                                                                                                                                                                                                                   666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666
+        GenerateRitualRoom();       //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê½ï¿½ï¿½
     }
 
 
 
 
 
-    #region Íæ¼Ò³ÖÐøµôÑªÏà¹Ø
-    public void StartHealthDrain()      //¿ªÊ¼³ÖÐøµôÑª
+    #region ï¿½ï¿½Ò³ï¿½ï¿½ï¿½ï¿½ï¿½Ñªï¿½ï¿½ï¿½
+    public void StartHealthDrain()      //ï¿½ï¿½Ê¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ñª
     {
         if (PlayerStats != null)
         {
-            //³ÖÐø10Ãë£¬Ã¿´Îµô5µãÑª£¬Ã¿5ÃëµôÒ»´Î
+            //ï¿½ï¿½ï¿½ï¿½10ï¿½ë£¬Ã¿ï¿½Îµï¿½5ï¿½ï¿½Ñªï¿½ï¿½Ã¿5ï¿½ï¿½ï¿½Ò»ï¿½ï¿½
             m_HealthDrainCoroutine = StartCoroutine(PlayerStats.HealthDrain(10f, 5f, 12f));
         }
     }
 
-    private void DestroyCoroutine()     //Í£Ö¹Ð­³Ì
+    private void DestroyCoroutine()     //Í£Ö¹Ð­ï¿½ï¿½
     {
         if (m_HealthDrainCoroutine != null)
         {
@@ -100,39 +100,39 @@ public class HellsCall : BaseScreenplay<HellsCall>
 
     private void AddAllRoomPosIntoList()
     {
-        //½«×ÖµäÀïµÄËùÓÐ×ø±ê´¢´æÔÚÁÐ±íÖÐ
+        //ï¿½ï¿½ï¿½Öµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ê´¢ï¿½ï¿½ï¿½ï¿½ï¿½Ð±ï¿½ï¿½ï¿½
         foreach (var room in RoomManager.Instance.GeneratedRoomDict.Keys)
         {
             m_TempRoomPos.Add(room);
         }
 
-        m_TempRoomPos.Remove(EventManager.Instance.GetRoomPosWhereEnterSecondStage());   //ÒÆ³ý´¥·¢½øÈë¶þ½×¶ÎµÄ·¿¼äµÄ×ø±ê£¬·ÀÖ¹Íæ¼ÒÁ¢¿Ì»ñµÃµ»¸æÊ¯
+        m_TempRoomPos.Remove(EventManager.Instance.GetRoomPosWhereEnterSecondStage());   //ï¿½Æ³ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½×¶ÎµÄ·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ê£¬ï¿½ï¿½Ö¹ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ì»ï¿½Ãµï¿½ï¿½ï¿½Ê¯
     }
     
 
 
-    #region ÒÇÊ½·¿Ïà¹Ø
-    private void GenerateRitualRoom()       //Éú³ÉÒÇÊ½·¿£¨Õû¸öµØÍ¼Ö»ÓÐÒ»¸ö£©
+    #region ï¿½ï¿½Ê½ï¿½ï¿½ï¿½ï¿½ï¿½
+    private void GenerateRitualRoom()       //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í¼Ö»ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½
     {
-        //Ò»ÐÐ¿ÉÒÔÉú³ÉµÄ·¿¼äÊýÁ¿¡£FloorToIntº¯ÊýÓÃÓÚ½«½á¹ûÏòÏÂÈ¡Õû£¨ÎÞÂÛÐ¡Êý²¿·ÖÓÐ¶à´ó£©
+        //Ò»ï¿½Ð¿ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÉµÄ·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½FloorToIntï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ú½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð¶ï¿½ï¿½
         int allowedRoomNumOnRow = Mathf.FloorToInt(RoomManager.Instance.MaximumXPos * 2 / RoomManager.RoomLength ) + 1;
-        //Ò»ÁÐ¿ÉÒÔÉú³ÉµÄ·¿¼äÊýÁ¿
+        //Ò»ï¿½Ð¿ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÉµÄ·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
         int allowedRoomNumOnColumn = Mathf.FloorToInt(RoomManager.Instance.MaximumYPos * 2 / RoomManager.RoomWidth) + 1;
 
-        int maxAllowedRoomNum = allowedRoomNumOnRow * allowedRoomNumOnColumn;       //Ò»Â¥¿ÉÒÔÉú³ÉµÄ×î´ó·¿¼äÊý£¨µ±Ç°Îª35£©
+        int maxAllowedRoomNum = allowedRoomNumOnRow * allowedRoomNumOnColumn;       //Ò»Â¥ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Éµï¿½ï¿½ï¿½ó·¿¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç°Îª35ï¿½ï¿½
 
 
-        //µ±Ã»ÓÐÐÂµÄ·¿¼ä¿ÉÒÔÉú³ÉÊ±
+        //ï¿½ï¿½Ã»ï¿½ï¿½ï¿½ÂµÄ·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê±
         if (RoomManager.Instance.GeneratedRoomDict.Count >= maxAllowedRoomNum)
         {
             AddAllRoomPosIntoList();
 
-            Vector2 selectedRoomPos = GenerateSuitableRandomRoomPos();     //Ëæ»úÑ¡ÔñµÄ·¿¼äµÄ×ø±ê
-            GameObject deletedRoom = null;                                 //´´½¨×ø±ê¶ÔÓ¦µÄ·¿¼ä
+            Vector2 selectedRoomPos = GenerateSuitableRandomRoomPos();     //ï¿½ï¿½ï¿½Ñ¡ï¿½ï¿½Ä·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+            GameObject deletedRoom = null;                                 //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ó¦ï¿½Ä·ï¿½ï¿½ï¿½
 
-            if (RoomManager.Instance.GeneratedRoomDict.TryGetValue(selectedRoomPos, out deletedRoom) )   //³¢ÊÔ´Ó×ÖµäÖÐ»ñÈ¡¶ÔÓ¦µÄ·¿¼ä
+            if (RoomManager.Instance.GeneratedRoomDict.TryGetValue(selectedRoomPos, out deletedRoom) )   //ï¿½ï¿½ï¿½Ô´ï¿½ï¿½Öµï¿½ï¿½Ð»ï¿½È¡ï¿½ï¿½Ó¦ï¿½Ä·ï¿½ï¿½ï¿½
             {
-                Destroy(deletedRoom);       //É¾³ýËæ»ú×ø±ê¶ÔÓ¦µÄ·¿¼ä£¬Ëæºó½«ÒÇÊ½·¿Éú³ÉÔÚÕâÀï
+                Destroy(deletedRoom);       //É¾ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ó¦ï¿½Ä·ï¿½ï¿½ä£¬ï¿½ï¿½ï¿½ï¿½ï¿½Ê½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
             }
 
             else
@@ -143,85 +143,91 @@ public class HellsCall : BaseScreenplay<HellsCall>
 
         else
         {
-            RoomManager.Instance.RoomKeys.FirstFloorRoomKeys.Add(m_RitualRoomName);       //½«ÒÇÊ½·¿µÄÃû×Ö¼Ó½øÁÐ±í£¬ÒÔ±ãºóÐø¿ÉÒÔÉú³É
+            RoomManager.Instance.RoomKeys.FirstFloorRoomKeys.Add(m_RitualRoomName);       //ï¿½ï¿½ï¿½ï¿½Ê½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö¼Ó½ï¿½ï¿½Ð±ï¿½ï¿½ï¿½ï¿½Ô±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
         }
     }
 
-    private Vector2 GenerateSuitableRandomRoomPos()    //Éú³ÉºÏÊÊµÄËæ»ú·¿¼ä×ø±ê£¨ÒòÎªÄ³Ð©·¿¼ä²»¿É¸ü¸Ä£©
+    private Vector2 GenerateSuitableRandomRoomPos()    //ï¿½ï¿½ï¿½Éºï¿½ï¿½Êµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ê£¨ï¿½ï¿½ÎªÄ³Ð©ï¿½ï¿½ï¿½ä²»ï¿½É¸ï¿½ï¿½Ä£ï¿½
     {
-        List<Vector2> importantRoomPos = new List<Vector2>();    //ÓÃÓÚ´¢´æËùÓÐ²»¿É¸ü¸ÄµÄ·¿¼ä×ø±ê£¨±ÈÈç³õÊ¼·¿¼äµÈ£©
+        List<Vector2> importantRoomPos = new List<Vector2>();    //ï¿½ï¿½ï¿½Ú´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð²ï¿½ï¿½É¸ï¿½ï¿½ÄµÄ·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ê£¨ï¿½ï¿½ï¿½ï¿½ï¿½Ê¼ï¿½ï¿½ï¿½ï¿½È£ï¿½
 
-        importantRoomPos.Add(Vector2.zero);     //½«Èë¿Ú´óÌÃÌí¼Ó½øÁÐ±í    ºóÃæÒª×öµÄ£ºÌí¼ÓÆäÓàµÄÒ»Â¥³õÊ¼°å¿é
+        importantRoomPos.Add(Vector2.zero);     //ï¿½ï¿½ï¿½ï¿½Ú´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ó½ï¿½ï¿½Ð±ï¿½    ï¿½ï¿½ï¿½ï¿½Òªï¿½ï¿½ï¿½Ä£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ò»Â¥ï¿½ï¿½Ê¼ï¿½ï¿½ï¿½
 
 
-        Vector2 selectedRoomPos = Vector2.zero;     //ÓÃÓÚ´¢´æËæ»úÑ¡Ôñµ½µÄ·¿¼äµÄ×ø±ê
-        int attemptCount = 0;                       //±íÊ¾³¢ÊÔÁË¶àÉÙ´Î
-        const int maxAttemptCount = 50;             //×î´ó³¢ÊÔ´ÎÊý
+        Vector2 selectedRoomPos = Vector2.zero;     //ï¿½ï¿½ï¿½Ú´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ñ¡ï¿½ñµ½µÄ·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+        int attemptCount = 0;                       //ï¿½ï¿½Ê¾ï¿½ï¿½ï¿½ï¿½ï¿½Ë¶ï¿½ï¿½Ù´ï¿½
+        const int maxAttemptCount = 50;             //ï¿½ï¿½ï¿½ï¿½Ô´ï¿½ï¿½ï¿½
 
-        //Ö»ÒªËæ»úµ½²»¿É¸ü¸ÄµÄ·¿¼ä×ø±ê£¬¾ÍÖØÐÂ»ñÈ¡Ëæ»úË÷Òý
+        //Ö»Òªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½É¸ï¿½ï¿½ÄµÄ·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ê£¬ï¿½ï¿½ï¿½ï¿½ï¿½Â»ï¿½È¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
         while (importantRoomPos.Contains(selectedRoomPos) && attemptCount <= maxAttemptCount)
         {
-            int randomNum = Random.Range(0, m_TempRoomPos.Count);   //Ëæ»ú·¿¼äË÷Òý
-            selectedRoomPos = m_TempRoomPos[randomNum];     //»ñÈ¡Ëæ»úÑ¡ÔñµÄ·¿¼äµÄ×ø±ê
+            int randomNum = Random.Range(0, m_TempRoomPos.Count);   //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+            selectedRoomPos = m_TempRoomPos[randomNum];     //ï¿½ï¿½È¡ï¿½ï¿½ï¿½Ñ¡ï¿½ï¿½Ä·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 
-            attemptCount++;     //Ôö¼Ó³¢ÊÔ¼ÆÊý
+            attemptCount++;     //ï¿½ï¿½ï¿½Ó³ï¿½ï¿½Ô¼ï¿½ï¿½ï¿½
         }
+
+        if (attemptCount > maxAttemptCount)        //Report error if attempCount exceed the maximun allowed counts
+        {
+            Debug.LogError("Failed to generate a suitable random room position after " + maxAttemptCount + " attempts!");
+        }
+
 
         return selectedRoomPos;
     }
     #endregion
 
 
-    #region µ»¸æÊ¯Ïà¹Ø
-    //³¢ÊÔÉú³ÉËùÓÐµÄµ»¸æÊ¯£¨Õû¸ö¾ç±¾Ö»µ÷ÓÃÒ»´Î£©
-    public void GenerateRitualStones()       //ÔÚËæ»ú·¿¼äÉú³Éµ»¸æÊ¯
+    #region ï¿½ï¿½ï¿½ï¿½Ê¯ï¿½ï¿½ï¿½
+    //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÐµÄµï¿½ï¿½ï¿½Ê¯ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ç±¾Ö»ï¿½ï¿½ï¿½ï¿½Ò»ï¿½Î£ï¿½
+    public void GenerateRitualStones()       //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Éµï¿½ï¿½ï¿½Ê¯
     {
-        AddAllRoomPosIntoList();    //½«×ÖµäÀïµÄËùÓÐ×ø±ê´¢´æÔÚÁÐ±íÖÐ
+        AddAllRoomPosIntoList();    //ï¿½ï¿½ï¿½Öµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ê´¢ï¿½ï¿½ï¿½ï¿½ï¿½Ð±ï¿½ï¿½ï¿½
 
 
-        //ÅÐ¶Ï·¿¼äÊýÁ¿ÊÇ·ñ×ã¹»Éú³ÉËùÓÐµ»¸æÊ¯
-        if (m_TempRoomPos.Count <= m_NeededStoneNum)      //·¿¼äÊýÁ¿²»×ãÒÔÉú³ÉËùÓÐµ»¸æÊ¯Ê±
+        //ï¿½Ð¶Ï·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç·ï¿½ï¿½ã¹»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ðµï¿½ï¿½ï¿½Ê¯
+        if (m_TempRoomPos.Count <= m_NeededStoneNum)      //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ðµï¿½ï¿½ï¿½Ê¯Ê±
         {
-            //ÐèÒª×öµÄ£ºÔÚºóÐø·¿¼äÉú³ÉºóÇ¿ÐÐÉú³Éµ»¸æÊ¯
-            GenerateSeveralStones(m_TempRoomPos.Count, m_TempRoomPos);      //ÄÜÉú³É¶àÉÙµ»¸æÊ¯£¬¾ÍÉú³É¶àÉÙ
+            //ï¿½ï¿½Òªï¿½ï¿½ï¿½Ä£ï¿½ï¿½Úºï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Éºï¿½Ç¿ï¿½ï¿½ï¿½ï¿½ï¿½Éµï¿½ï¿½ï¿½Ê¯
+            GenerateSeveralStones(m_TempRoomPos.Count, m_TempRoomPos);      //ï¿½ï¿½ï¿½ï¿½ï¿½É¶ï¿½ï¿½Ùµï¿½ï¿½ï¿½Ê¯ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½É¶ï¿½ï¿½ï¿½
 
             m_NeedGenerateStone = true;
         }
 
         else
         {
-            GenerateSeveralStones(m_NeededStoneNum, m_TempRoomPos);       //Éú³ÉËùÓÐµ»¸æÊ¯
+            GenerateSeveralStones(m_NeededStoneNum, m_TempRoomPos);       //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ðµï¿½ï¿½ï¿½Ê¯
         }
     }
 
-    private void GenerateSeveralStones(int generatedNum, List<Vector2> roomPosList)     //Éú³É²ÎÊýÖÐµÄÊýÁ¿µÄµ»¸æÊ¯
+    private void GenerateSeveralStones(int generatedNum, List<Vector2> roomPosList)     //ï¿½ï¿½ï¿½É²ï¿½ï¿½ï¿½ï¿½Ðµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Äµï¿½ï¿½ï¿½Ê¯
     {
-        //½«ËùÐèµÄµ»¸æÊ¯È«²¿Éú³É³öÀ´
+        //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Äµï¿½ï¿½ï¿½Ê¯È«ï¿½ï¿½ï¿½ï¿½ï¿½É³ï¿½ï¿½ï¿½
         for (int i = 0; i < generatedNum; i++)
         {
-            int randomNum = Random.Range(0, roomPosList.Count); //Ëæ»ú·¿¼äË÷Òý
-            Vector2 selectedRoomPos = roomPosList[randomNum];               //»ñÈ¡Ëæ»úÑ¡ÔñµÄ·¿¼äµÄ×ø±ê
-            roomPosList.RemoveAt(randomNum);                                //ÒÆ³ýÒÑÑ¡ÔñµÄ·¿¼äÒÔ·ÀÖ¹ÖØ¸´
+            int randomNum = Random.Range(0, roomPosList.Count); //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+            Vector2 selectedRoomPos = roomPosList[randomNum];               //ï¿½ï¿½È¡ï¿½ï¿½ï¿½Ñ¡ï¿½ï¿½Ä·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+            roomPosList.RemoveAt(randomNum);                                //ï¿½Æ³ï¿½ï¿½ï¿½Ñ¡ï¿½ï¿½Ä·ï¿½ï¿½ï¿½ï¿½Ô·ï¿½Ö¹ï¿½Ø¸ï¿½
 
-            //ÔÚÑ¡ÖÐµÄ·¿¼äÉú³Éµ»¸æÊ¯
+            //ï¿½ï¿½Ñ¡ï¿½ÐµÄ·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Éµï¿½ï¿½ï¿½Ê¯
             EnvironmentManager.Instance.GenerateObjectWithParent(RitualStone, RoomManager.Instance.GeneratedRoomDict[selectedRoomPos].transform, selectedRoomPos);
 
-            m_GeneratedStoneNum++;      //Ôö¼Óµ»¸æÊ¯¼ÆÊý
+            m_GeneratedStoneNum++;      //ï¿½ï¿½ï¿½Óµï¿½ï¿½ï¿½Ê¯ï¿½ï¿½ï¿½ï¿½
         }
     }
 
-    //ÔÚµ¥¶ÀµÄ·¿¼äÉú³Éµ»¸æÊ¯
+    //ï¿½Úµï¿½ï¿½ï¿½ï¿½Ä·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Éµï¿½ï¿½ï¿½Ê¯
     private void GenerateStoneAtSingleRoom(Vector2 roomPos)
     {
         if (m_NeedGenerateStone)
         {
-            //ÔÚ²ÎÊýÖÐµÄ·¿¼äÉú³Éµ»¸æÊ¯
+            //ï¿½Ú²ï¿½ï¿½ï¿½ï¿½ÐµÄ·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Éµï¿½ï¿½ï¿½Ê¯
             EnvironmentManager.Instance.GenerateObjectWithParent(RitualStone, RoomManager.Instance.GeneratedRoomDict[roomPos].transform, roomPos);
 
-            m_GeneratedStoneNum++;      //Ôö¼Óµ»¸æÊ¯¼ÆÊý
+            m_GeneratedStoneNum++;      //ï¿½ï¿½ï¿½Óµï¿½ï¿½ï¿½Ê¯ï¿½ï¿½ï¿½ï¿½
         }        
 
-        if (m_GeneratedStoneNum >= m_NeededStoneNum)        //ÅÐ¶ÏÊÇ·ñÒÑ¾­Éú³ÉÁË×ã¹»µÄµ»¸æÊ¯
+        if (m_GeneratedStoneNum >= m_NeededStoneNum)        //ï¿½Ð¶ï¿½ï¿½Ç·ï¿½ï¿½Ñ¾ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ã¹»ï¿½Äµï¿½ï¿½ï¿½Ê¯
         {
             m_NeedGenerateStone = false;
         }
