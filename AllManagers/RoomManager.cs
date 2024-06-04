@@ -84,7 +84,7 @@ public class RoomManager : ManagerTemplate<RoomManager>
 
     #region 房间生成函数
     //生成房间
-    public void GenerateRoom(Transform currentRoomTransform, RoomType currentRoomType)
+    public void GenerateRoomAround(Transform currentRoomTransform, RoomType currentRoomType)
     {
         DoorFlags currentDoorFlags = currentRoomType.GetDoorFlags();
 
@@ -108,7 +108,7 @@ public class RoomManager : ManagerTemplate<RoomManager>
             if (CanGenerateRoomAtPosition(currentRoomTransform.position, offset))
             {
                 //如果目标位置为空，则生成房间
-                GenerateSuitableRoom(currentRoomTransform, newRoomPos, neededDoorName);
+                GenerateRandomRoom(currentRoomTransform, newRoomPos, neededDoorName);
             }
 
             else
@@ -121,7 +121,7 @@ public class RoomManager : ManagerTemplate<RoomManager>
         }
     }
 
-    private async void GenerateSuitableRoom(Transform currentRoomTransform, Vector2 newRoomPos, string neededDoorName)
+    private async void GenerateRandomRoom(Transform currentRoomTransform, Vector2 newRoomPos, string neededDoorName)
     {
         GameObject newRoom = null;
         bool isRoomPlaced = false;
@@ -138,7 +138,7 @@ public class RoomManager : ManagerTemplate<RoomManager>
             //确认随机索引后尝试异步加载房间
             try
             {
-                GameObject loadedRoom = await LoadPrefabAsync(RoomKeys.FirstFloorRoomKeys[m_RandomGeneratedNum]);       //异步加载事件
+                GameObject loadedRoom = await LoadPrefabAsync(RoomKeys.FirstFloorRoomKeys[m_RandomGeneratedNum]);       //异步加载房间
                 if (loadedRoom != null)
                 {
                     //如果因为场景加载等原因导致房间跟物体被删除过，就重新获取
@@ -199,6 +199,37 @@ public class RoomManager : ManagerTemplate<RoomManager>
         if (!isRoomPlaced)        //如果超过最大尝试次数后依然没有合适的房间，则实施一些功能
         {
             Debug.Log("Failed to place a suitable room after " + maxAttempts + " attempts!");
+        }
+    }
+
+    public async void GenerateRoomAtThisPos(Vector2 newRoomPos, string roomKey)     //将房间生成在参数中的坐标处，不检查门是否连接
+    {
+        //尝试异步加载房间
+        try
+        {
+            GameObject loadedRoom = await LoadPrefabAsync(roomKey);       //异步加载房间
+            if (loadedRoom != null)
+            {
+                //如果因为场景加载等原因导致房间跟物体被删除过，就重新获取
+                if (m_AllRooms == null)
+                {
+                    //赋值房间跟物体给脚本
+                    SetupRootGameObject(ref m_AllRooms, "AllRooms");
+                }
+
+                //加载成功后，将房间生成出来
+                GameObject newRoom = Instantiate(loadedRoom, newRoomPos, Quaternion.identity, m_AllRooms);
+            }
+
+            else
+            {
+                Debug.LogError("Failed to load room: " + roomKey);
+            }
+        }
+
+        catch (Exception ex)
+        {
+            Debug.LogError("Error loading room: " + ex.Message);
         }
     }
     #endregion
@@ -359,6 +390,20 @@ public class RoomManager : ManagerTemplate<RoomManager>
         }
 
         return false;
+    }
+    #endregion
+
+
+    #region 房间规格函数
+    public int MaxAllowedRoomNum()
+    {
+        //一行可以生成的房间数量。FloorToInt函数用于将结果向下取整（无论小数部分有多大）
+        int allowedRoomNumOnRow = Mathf.FloorToInt(MaximumXPos * 2 / RoomLength) + 1;
+        //一列可以生成的房间数量
+        int allowedRoomNumOnColumn = Mathf.FloorToInt(MaximumYPos * 2 / RoomWidth) + 1;
+
+        int maxAllowedRoomNum = allowedRoomNumOnRow * allowedRoomNumOnColumn;       //一楼可以生成的最大房间数（当前为35）
+        return maxAllowedRoomNum;
     }
     #endregion
 }

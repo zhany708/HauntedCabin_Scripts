@@ -97,7 +97,7 @@ public class RootRoomController : MonoBehaviour
             //房间周围生成过一次房间后就不会再生成了
             if (!m_HasGeneratedRoom)
             {
-                m_RoomManager.GenerateRoom(transform, m_RoomType);  //在当前房间周围生成新的房间
+                m_RoomManager.GenerateRoomAround(transform, m_RoomType);  //在当前房间周围生成新的房间
             }
 
             RoomManager.Instance.CheckIfConnectSurroundingRooms(transform);  //每当玩家进入房间时，检查当前房间是否连接周围的房间

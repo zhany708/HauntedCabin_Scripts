@@ -21,30 +21,32 @@ public class HellsCall : BaseScreenplay<HellsCall>
     }
     private PlayerStats m_PlayerStats;
 
+    public string RitualRoomName { get; private set; } = "RitualRoom";      //加进Key里的仪式房的名字
+
 
 
     Coroutine m_HealthDrainCoroutine;       //玩家持续掉血的协程
 
     List<Vector2> m_TempRoomPos = new List<Vector2>();    //用于储存所有房间字典里的坐标
 
-    string m_RitualRoomName = "RitualRoom";
 
     bool m_NeedGenerateStone = false;   //判断是否需要生成祷告石
     bool m_CanStartRitual = false;      //判断是否可以开始仪式
 
     public int m_NeededStoneNum = 2;    //需要生成的祷告石的数量
     int m_GeneratedStoneNum = 0;        //表示当前生成了多少祷告石
+    int m_MaxAllowedRoomNum = 0;        //一楼可以生成的最大房间数
 
 
 
 
 
-
-
+    #region Unity内部函数
     private void OnEnable()
     {
-        PlayerStats.OnHealthZero += DestroyCoroutine;       //玩家死亡时停止协程
-        RoomManager.Instance.OnRoomGenerated += GenerateStoneAtSingleRoom;      //新生成房间时，调用此函数
+        PlayerStats.OnHealthZero += DestroyCoroutine;       //玩家死亡时停止持续掉血的协程
+        RoomManager.Instance.OnRoomGenerated += GenerateStoneAtSingleRoom;      //新生成房间时，检查是否生成祷告石
+        //RoomManager.Instance.OnRoomGenerated += CheckRitualRoomGeneration;      //新生成房间时，检查是否需要生成仪式房
     }
 
     private void OnDisable()
@@ -54,15 +56,19 @@ public class HellsCall : BaseScreenplay<HellsCall>
             PlayerStats.OnHealthZero -= DestroyCoroutine;
         }
 
-        RoomManager.Instance.OnRoomGenerated += GenerateStoneAtSingleRoom;
+        RoomManager.Instance.OnRoomGenerated -= GenerateStoneAtSingleRoom;
+        RoomManager.Instance.OnRoomGenerated -= CheckRitualRoomGeneration;
     }
 
     private void OnDestroy()
     {
         //将仪式房的名字从列表中移除，因为ScriptObject的记录不会随着游戏结束而消失
-        RoomManager.Instance.RoomKeys.FirstFloorRoomKeys.Remove(m_RitualRoomName);
+        if (RoomManager.Instance.RoomKeys.FirstFloorRoomKeys.Contains(RitualRoomName) )
+        {
+            RoomManager.Instance.RoomKeys.FirstFloorRoomKeys.Remove(RitualRoomName);
+        }      
     }
-
+    #endregion
 
 
     public async override void StartScreenplay()
@@ -114,16 +120,11 @@ public class HellsCall : BaseScreenplay<HellsCall>
     #region 仪式房相关
     private void GenerateRitualRoom()       //生成仪式房（整个地图只有一个）
     {
-        //一行可以生成的房间数量。FloorToInt函数用于将结果向下取整（无论小数部分有多大）
-        int allowedRoomNumOnRow = Mathf.FloorToInt(RoomManager.Instance.MaximumXPos * 2 / RoomManager.RoomLength ) + 1;
-        //一列可以生成的房间数量
-        int allowedRoomNumOnColumn = Mathf.FloorToInt(RoomManager.Instance.MaximumYPos * 2 / RoomManager.RoomWidth) + 1;
-
-        int maxAllowedRoomNum = allowedRoomNumOnRow * allowedRoomNumOnColumn;       //一楼可以生成的最大房间数（当前为35）
+        int m_MaxAllowedRoomNum = RoomManager.Instance.MaxAllowedRoomNum();       //一楼可以生成的最大房间数（当前为35）
 
 
         //当没有新的房间可以生成时
-        if (RoomManager.Instance.GeneratedRoomDict.Count >= maxAllowedRoomNum)
+        if (RoomManager.Instance.GeneratedRoomDict.Count >= m_MaxAllowedRoomNum)
         {
             AddAllRoomPosIntoList();
 
@@ -132,7 +133,9 @@ public class HellsCall : BaseScreenplay<HellsCall>
 
             if (RoomManager.Instance.GeneratedRoomDict.TryGetValue(selectedRoomPos, out deletedRoom))   //尝试从字典中获取对应的房间
             {
-                Destroy(deletedRoom);       //删除随机坐标对应的房间，随后将仪式房生成在这里
+                Destroy(deletedRoom);       //删除随机坐标对应的房间
+
+                RoomManager.Instance.GenerateRoomAtThisPos(selectedRoomPos, RitualRoomName);    //将仪式房生成在这里
             }
 
             else
@@ -143,9 +146,35 @@ public class HellsCall : BaseScreenplay<HellsCall>
 
         else
         {
-            RoomManager.Instance.RoomKeys.FirstFloorRoomKeys.Add(m_RitualRoomName);       //将仪式房的名字加进列表，以便后续可以生成
+            //将检查仪式房的函数绑定到房间管理器中的事件
+            RoomManager.Instance.OnRoomGenerated += CheckRitualRoomGeneration;      //新生成房间时，检查是否需要生成仪式房
+
+            RoomManager.Instance.RoomKeys.FirstFloorRoomKeys.Add(RitualRoomName);       //将仪式房的名字加进列表，以便后续可以生成
         }
     }
+
+    private void CheckRitualRoomGeneration(Vector2 roomPos)        //检查仪式房是否已经生成
+    {
+        //当生成了最后一个房间后，仪式房还没有出现时
+        if (m_MaxAllowedRoomNum - RoomManager.Instance.GeneratedRoomDict.Count <= 0 && RoomManager.Instance.RoomKeys.FirstFloorRoomKeys.Contains(RitualRoomName))
+        {
+            //删除最后的房间，将仪式房生成在这里
+            GameObject deletedRoom = null;               //最后一个房间物体
+
+            if (RoomManager.Instance.GeneratedRoomDict.TryGetValue(roomPos, out deletedRoom))   //尝试从字典中获取对应的房间
+            {
+                Destroy(deletedRoom);       //删除最后的房间
+
+                RoomManager.Instance.GenerateRoomAtThisPos(roomPos, RitualRoomName);    //将仪式房生成在这里
+            }
+
+            else
+            {
+                Debug.LogError("A room has generated here, but cannot get the corresponding gameobject: " + roomPos);
+            }
+        }
+    }
+
 
     private Vector2 GenerateSuitableRandomRoomPos()    //生成合适的随机房间坐标（因为某些房间不可更改）
     {
@@ -167,11 +196,10 @@ public class HellsCall : BaseScreenplay<HellsCall>
             attemptCount++;     //增加尝试计数
         }
 
-        if (attemptCount > maxAttemptCount)        //Report error if attempCount exceed the maximun allowed counts
+        if (attemptCount > maxAttemptCount)        //超过最大尝试次数（没有成功生成随机坐标）后报错
         {
             Debug.LogError("Failed to generate a suitable random room position after " + maxAttemptCount + " attempts!");
         }
-
 
         return selectedRoomPos;
     }
@@ -188,10 +216,9 @@ public class HellsCall : BaseScreenplay<HellsCall>
         //判断房间数量是否足够生成所有祷告石
         if (m_TempRoomPos.Count <= m_NeededStoneNum)      //房间数量不足以生成所有祷告石时
         {
-            //需要做的：在后续房间生成后强行生成祷告石
             GenerateSeveralStones(m_TempRoomPos.Count, m_TempRoomPos);      //能生成多少祷告石，就生成多少
 
-            m_NeedGenerateStone = true;
+            m_NeedGenerateStone = true;     //在后续房间生成后强行生成祷告石
         }
 
         else
@@ -206,8 +233,8 @@ public class HellsCall : BaseScreenplay<HellsCall>
         for (int i = 0; i < generatedNum; i++)
         {
             int randomNum = Random.Range(0, roomPosList.Count);     //随机房间索引
-            Vector2 selectedRoomPos = roomPosList[randomNum];               //获取随机选择的房间的坐标
-            roomPosList.RemoveAt(randomNum);                                //移除已选择的房间以防止重复
+            Vector2 selectedRoomPos = roomPosList[randomNum];       //获取随机选择的房间的坐标
+            roomPosList.RemoveAt(randomNum);                        //移除已选择的房间以防止重复
 
             //在选中的房间生成祷告石
             EnvironmentManager.Instance.GenerateObjectWithParent(RitualStone, RoomManager.Instance.GeneratedRoomDict[selectedRoomPos].transform, selectedRoomPos);
