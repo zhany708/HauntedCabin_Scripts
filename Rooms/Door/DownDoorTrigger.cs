@@ -1,7 +1,7 @@
 using UnityEngine;
 
 
-public class DownDoorTrigger : SideDoorController        //ÓÃÓÚÏÂ²àÃÅµÄ×ÓÎïÌå
+public class DownDoorTrigger : SideDoorController        //ç”¨äºä¸‹ä¾§é—¨çš„å­ç‰©ä½“
 {
 
 

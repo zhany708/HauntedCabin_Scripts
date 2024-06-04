@@ -1,7 +1,7 @@
 using UnityEngine;
 
 
-//ÓÃÓÚ´«ËÍ½ÇÉ«µÄ½Å±¾£¬·ÅÔÚ²àÃÅµÄ×ÓÎïÌåÉÏ
+//ç”¨äºä¼ é€è§’è‰²çš„è„šæœ¬ï¼Œæ”¾åœ¨ä¾§é—¨çš„å­ç‰©ä½“ä¸Š
 public class TeleportController : MonoBehaviour
 {
     public enum DoorType { Up, Down, Left, Right }
@@ -22,7 +22,7 @@ public class TeleportController : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            //»ñÈ¡Íæ¼Ò×é¼ş
+            //è·å–ç©å®¶ç»„ä»¶
             Player player = other.GetComponentInParent<Player>();
 
             if (player != null)
@@ -35,25 +35,25 @@ public class TeleportController : MonoBehaviour
     }
 
 
-    //¸ù¾İÃÅµÄÀàĞÍ¼ÆËã½ÇÉ«µÄË²ÒÆ¾àÀë
+    //æ ¹æ®é—¨çš„ç±»å‹è®¡ç®—è§’è‰²çš„ç¬ç§»è·ç¦»
     private Vector2 CalculateTeleportPosition(Vector2 playerPosition)
     {
         switch (doorType)
         {
             case DoorType.Up:
-                return new Vector2(playerPosition.x, transform.position.y + UpOffset);      //±£³Ö½ÇÉ«×ø±êµÄXÖáÇ°ºó²»±ä
+                return new Vector2(playerPosition.x, transform.position.y + UpOffset);      //ä¿æŒè§’è‰²åæ ‡çš„Xè½´å‰åä¸å˜
 
             case DoorType.Down:
                 return new Vector2(playerPosition.x, transform.position.y - DownOffset);
 
             case DoorType.Left:
-                return new Vector2(transform.position.x - LeftAndRightOffset, playerPosition.y);        //±£³Ö½ÇÉ«×ø±êµÄYÖáÇ°ºó²»±ä
+                return new Vector2(transform.position.x - LeftAndRightOffset, playerPosition.y);        //ä¿æŒè§’è‰²åæ ‡çš„Yè½´å‰åä¸å˜
 
             case DoorType.Right:
                 return new Vector2(transform.position.x + LeftAndRightOffset, playerPosition.y);
 
             default:
-                return playerPosition;  //Ä¬ÈÏ·µ»ØÔ­Ê¼Î»ÖÃ£¬·ÀÖ¹±¨´í
+                return playerPosition;  //é»˜è®¤è¿”å›åŸå§‹ä½ç½®ï¼Œé˜²æ­¢æŠ¥é”™
         }
     }
 

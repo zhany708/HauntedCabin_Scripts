@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 
 
-public class PauseMenuPanel : PanelWithButton       //Õû¸öÓÎÏ·¹ı³ÌÖĞ¶¼»áÓÃµ½´Ë½çÃæ
+public class PauseMenuPanel : PanelWithButton       //æ•´ä¸ªæ¸¸æˆè¿‡ç¨‹ä¸­éƒ½ä¼šç”¨åˆ°æ­¤ç•Œé¢
 {
     public static PauseMenuPanel Instance { get; private set; }
 
@@ -17,7 +17,7 @@ public class PauseMenuPanel : PanelWithButton       //Õû¸öÓÎÏ·¹ı³ÌÖĞ¶¼»áÓÃµ½´Ë½ç
 
 
 
-    bool m_IsGamePaused = false;       //±íÊ¾ÓÎÏ·ÊÇ·ñ´¦ÓÚÔİÍ£×´Ì¬
+    bool m_IsGamePaused = false;       //è¡¨ç¤ºæ¸¸æˆæ˜¯å¦å¤„äºæš‚åœçŠ¶æ€
 
 
 
@@ -27,7 +27,7 @@ public class PauseMenuPanel : PanelWithButton       //Õû¸öÓÎÏ·¹ı³ÌÖĞ¶¼»áÓÃµ½´Ë½ç
     {
         base.Awake();
 
-        //µ¥ÀıÄ£Ê½
+        //å•ä¾‹æ¨¡å¼
         if (Instance != null && Instance != this)
         {
             Destroy(gameObject);
@@ -37,7 +37,7 @@ public class PauseMenuPanel : PanelWithButton       //Õû¸öÓÎÏ·¹ı³ÌÖĞ¶¼»áÓÃµ½´Ë½ç
         {
             Instance = this;
 
-            //Ö»ÓĞÔÚÃ»ÓĞ¸¸ÎïÌåÊ±²ÅÔËĞĞ·ÀÉ¾º¯Êı£¬·ñÔò»á³öÏÖÌáĞÑ
+            //åªæœ‰åœ¨æ²¡æœ‰çˆ¶ç‰©ä½“æ—¶æ‰è¿è¡Œé˜²åˆ å‡½æ•°ï¼Œå¦åˆ™ä¼šå‡ºç°æé†’
             if (gameObject.transform.parent == null)
             {
                 DontDestroyOnLoad(gameObject);
@@ -46,18 +46,18 @@ public class PauseMenuPanel : PanelWithButton       //Õû¸öÓÎÏ·¹ı³ÌÖĞ¶¼»áÓÃµ½´Ë½ç
 
 
 
-        //¼ì²é°´Å¥×é¼şÊÇ·ñ´æÔÚ
+        //æ£€æŸ¥æŒ‰é’®ç»„ä»¶æ˜¯å¦å­˜åœ¨
         if (ResumeButton == null || MainMenuButton == null || QuitButton == null)
         {
             Debug.LogError("Some buttons are not assigned in the PauseMenuPanel.");
             return;
         }
 
-        //Ä¬ÈÏ°´Å¥Îª¡°»Ö¸´¡±°´Å¥
+        //é»˜è®¤æŒ‰é’®ä¸ºâ€œæ¢å¤â€æŒ‰é’®
         firstSelectedButton = ResumeButton.gameObject;
 
 
-        //ÉèÖÃ´Ë½çÃæµÄµ­ÈëÖµ
+        //è®¾ç½®æ­¤ç•Œé¢çš„æ·¡å…¥å€¼
         FadeInAlpha = 0.75f;
         FadeDuration = 0;
     }
@@ -65,20 +65,20 @@ public class PauseMenuPanel : PanelWithButton       //Õû¸öÓÎÏ·¹ı³ÌÖĞ¶¼»áÓÃµ½´Ë½ç
 
     private void Start()
     {
-        //½«°´Å¥ºÍº¯Êı°ó¶¨ÆğÀ´
+        //å°†æŒ‰é’®å’Œå‡½æ•°ç»‘å®šèµ·æ¥
         ResumeButton.onClick.AddListener(() => Resume());
         MainMenuButton.onClick.AddListener(() => BackToMainMenu());
         QuitButton.onClick.AddListener(() => QuitGame());
 
 
-        //ÉèÖÃµ±Ç°½çÃæµÄÃû×Ö
+        //è®¾ç½®å½“å‰ç•Œé¢çš„åå­—
         panelName = UIManager.Instance.UIKeys.PauseMenuPanel;      
     }
 
 
     protected override void Update()
     {
-        //µ±½çÃæ´ò¿ªÊ±²Åµ÷ÓÃ¸¸ÀàµÄUpdateº¯Êı
+        //å½“ç•Œé¢æ‰“å¼€æ—¶æ‰è°ƒç”¨çˆ¶ç±»çš„Updateå‡½æ•°
         if (CanvasGroup.alpha == FadeInAlpha)
         {
             base.Update();
@@ -86,16 +86,16 @@ public class PauseMenuPanel : PanelWithButton       //Õû¸öÓÎÏ·¹ı³ÌÖĞ¶¼»áÓÃµ½´Ë½ç
         }
 
 
-        //³ÖĞø¼ì²éÍæ¼ÒÊÇ·ñ°´ÏÂEsc£¬ÔÚÔİÍ£¹ı³ÌÖĞ°´ÏÂµÄ»°Ôò»Ö¸´ÓÎÏ·£¬·ñÔò¾ÍÔİÍ£ÓÎÏ·
+        //æŒç»­æ£€æŸ¥ç©å®¶æ˜¯å¦æŒ‰ä¸‹Escï¼Œåœ¨æš‚åœè¿‡ç¨‹ä¸­æŒ‰ä¸‹çš„è¯åˆ™æ¢å¤æ¸¸æˆï¼Œå¦åˆ™å°±æš‚åœæ¸¸æˆ
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            //ÓÎÏ·ÔİÍ£Ê±
+            //æ¸¸æˆæš‚åœæ—¶
             if (m_IsGamePaused)
             {
                 Resume();
             }
 
-            //ÓÎÏ·Õı³£Ê±
+            //æ¸¸æˆæ­£å¸¸æ—¶
             else
             {
                 Pause();
@@ -103,7 +103,7 @@ public class PauseMenuPanel : PanelWithButton       //Õû¸öÓÎÏ·¹ı³ÌÖĞ¶¼»áÓÃµ½´Ë½ç
         }                  
     }
 
-    //ÖØĞ´º¯Êı£¬ÒòÎª´Ë½çÃæÓÎÏ·¿ªÊ¼Ê±¾Í´æÔÚ
+    //é‡å†™å‡½æ•°ï¼Œå› ä¸ºæ­¤ç•Œé¢æ¸¸æˆå¼€å§‹æ—¶å°±å­˜åœ¨
     protected override void OnEnable() 
     {
         OnFadeInFinished += base.OnEnable;
@@ -122,65 +122,65 @@ public class PauseMenuPanel : PanelWithButton       //Õû¸öÓÎÏ·¹ı³ÌÖĞ¶¼»áÓÃµ½´Ë½ç
 
 
 
-    //»Ö¸´ÓÎÏ·
+    //æ¢å¤æ¸¸æˆ
     private void Resume()
     {
-        //¹Ø±Õ½çÃæ
+        //å…³é—­ç•Œé¢
         Fade(CanvasGroup, FadeOutAlpha, FadeDuration, false);
 
-        //»Ö¸´ÓÎÏ·µÄÊ±¼äÁ÷ÊÅ
+        //æ¢å¤æ¸¸æˆçš„æ—¶é—´æµé€
         Time.timeScale = 1f;
         
         m_IsGamePaused = false;
-        SetBothMoveableAndAttackable(true);     //ÔÊĞíÍæ¼ÒÒÆ¶¯ºÍ¹¥»÷
+        SetBothMoveableAndAttackable(true);     //å…è®¸ç©å®¶ç§»åŠ¨å’Œæ”»å‡»
     }
 
 
-    //ÔİÍ£ÓÎÏ·
+    //æš‚åœæ¸¸æˆ
     private void Pause()
     {
-        //´ò¿ª½çÃæ
+        //æ‰“å¼€ç•Œé¢
         Fade(CanvasGroup, FadeInAlpha, FadeDuration, true);
 
-        //ÔİÍ£ÓÎÏ·µÄÊ±¼äÁ÷ÊÅ
+        //æš‚åœæ¸¸æˆçš„æ—¶é—´æµé€
         Time.timeScale = 0f;        
 
         m_IsGamePaused = true;
-        SetBothMoveableAndAttackable(false);    //²»ÔÊĞíÍæ¼ÒÒÆ¶¯ºÍ¹¥»÷
+        SetBothMoveableAndAttackable(false);    //ä¸å…è®¸ç©å®¶ç§»åŠ¨å’Œæ”»å‡»
     }
 
 
-    //·µ»ØÖ÷²Ëµ¥
+    //è¿”å›ä¸»èœå•
     private void BackToMainMenu()
     {
-        //ÏÈ»Ö¸´ÓÎÏ·£¬Ëæºó·µ»ØÖ÷²Ëµ¥
+        //å…ˆæ¢å¤æ¸¸æˆï¼Œéšåè¿”å›ä¸»èœå•
         Resume();
 
-        //·µ»ØÖ÷½çÃæ³¡¾°
+        //è¿”å›ä¸»ç•Œé¢åœºæ™¯
         if (SceneManager.GetActiveScene().name == "MainMenu")
         {
-            //ÓÎÏ·¿ªÊ¼Ê±¼ÓÔØ¿ªÊ¼½çÃæ
+            //æ¸¸æˆå¼€å§‹æ—¶åŠ è½½å¼€å§‹ç•Œé¢
             Debug.Log("You are already in the Main Menu!");
         }
 
         else
         {
-            //²»ÔÚÖ÷²Ëµ¥Ê±£¬Ôò·µ»ØÖ÷²Ëµ¥
+            //ä¸åœ¨ä¸»èœå•æ—¶ï¼Œåˆ™è¿”å›ä¸»èœå•
             SceneManager.LoadScene("MainMenu");
 
-            //ÖØÖÃÓÎÏ·µÄ¸÷ÖÖÏµÍ³
+            //é‡ç½®æ¸¸æˆçš„å„ç§ç³»ç»Ÿ
             ResetGameSystems();
         }
     }
 
 
-    //ÍË³öÓÎÏ·
+    //é€€å‡ºæ¸¸æˆ
     private void QuitGame()
     {
-        //ÍË³öÓÎÏ·£¨ÓÃÓÚ±¾µØÓÎÏ·°ü£©
+        //é€€å‡ºæ¸¸æˆï¼ˆç”¨äºæœ¬åœ°æ¸¸æˆåŒ…ï¼‰
         Application.Quit();
 
-        //ÔÚUnity±à¼­Æ÷ÄÚÍË³öÓÎÍæÄ£Ê½
+        //åœ¨Unityç¼–è¾‘å™¨å†…é€€å‡ºæ¸¸ç©æ¨¡å¼
         #if UNITY_EDITOR
         UnityEditor.EditorApplication.isPlaying = false;
         #endif

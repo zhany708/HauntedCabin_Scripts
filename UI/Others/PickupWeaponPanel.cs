@@ -10,14 +10,14 @@ public class PickupWeaponPanel : PanelWithButton
     public Button Leave;
 
     
-    TextMeshProUGUI m_ItemNameText;     //ÎäÆ÷Ãû   
-    GameObject m_WeaponPrefab;          //ÒªÊ°È¡µÄÎäÆ÷ÎïÌå
+    TextMeshProUGUI m_ItemNameText;     //æ­¦å™¨å   
+    GameObject m_WeaponPrefab;          //è¦æ‹¾å–çš„æ­¦å™¨ç‰©ä½“
    
-    Player m_Player;                    //Íæ¼Ò½Å±¾   
-    WeaponPickUp m_WeaponPickup;        //Ê°È¡ÎäÆ÷½Å±¾
+    Player m_Player;                    //ç©å®¶è„šæœ¬   
+    WeaponPickUp m_WeaponPickup;        //æ‹¾å–æ­¦å™¨è„šæœ¬
 
 
-    //ÓÃÓÚµã»÷°´Å¥º¯ÊıµÄÃ¶¾Ù
+    //ç”¨äºç‚¹å‡»æŒ‰é’®å‡½æ•°çš„æšä¸¾
     private enum ButtonAction
     {
         EquipOnPrimary,
@@ -48,13 +48,13 @@ public class PickupWeaponPanel : PanelWithButton
         }
 
 
-        //Ä¬ÈÏ°´Å¥Îª¡°×°±¸ÔÚÖ÷ÎäÆ÷¡±°´Å¥£¨±ØĞë·ÅÔÚAwakeº¯ÊıÖĞ£©
+        //é»˜è®¤æŒ‰é’®ä¸ºâ€œè£…å¤‡åœ¨ä¸»æ­¦å™¨â€æŒ‰é’®ï¼ˆå¿…é¡»æ”¾åœ¨Awakeå‡½æ•°ä¸­ï¼‰
         firstSelectedButton = EquipOnPrimary.gameObject;
     }
 
     private void Start()
     {
-        //½«°´Å¥ºÍº¯Êı°ó¶¨ÆğÀ´
+        //å°†æŒ‰é’®å’Œå‡½æ•°ç»‘å®šèµ·æ¥
         EquipOnPrimary.onClick.AddListener(() => OnButtonClicked(ButtonAction.EquipOnPrimary));
         EquipOnSecondary.onClick.AddListener(() => OnButtonClicked(ButtonAction.EquipOnSecondary));
         Leave.onClick.AddListener(() => OnButtonClicked(ButtonAction.Leave));  
@@ -65,7 +65,7 @@ public class PickupWeaponPanel : PanelWithButton
     {
         base.OnEnable();
 
-        //½çÃæÍêÈ«µ­³öºóµ÷ÓÃ´Ëº¯Êı
+        //ç•Œé¢å®Œå…¨æ·¡å‡ºåè°ƒç”¨æ­¤å‡½æ•°
         OnFadeOutFinished += ClosePanel;
     }
 
@@ -86,7 +86,7 @@ public class PickupWeaponPanel : PanelWithButton
 
         if (m_WeaponPickup != null)
         {
-            //ÉèÖÃÊ°È¡ÎäÆ÷½Å±¾ÀïµÄ²¼¶û
+            //è®¾ç½®æ‹¾å–æ­¦å™¨è„šæœ¬é‡Œçš„å¸ƒå°”
             m_WeaponPickup.SetIsPanelOpen(false);
         }
     }
@@ -98,7 +98,7 @@ public class PickupWeaponPanel : PanelWithButton
     {
         if (m_WeaponPickup != null)
         {
-            //É¾³ıµØÉÏµÄÎäÆ÷
+            //åˆ é™¤åœ°ä¸Šçš„æ­¦å™¨
             Destroy(m_WeaponPickup.gameObject);
         }
     }
@@ -138,10 +138,10 @@ public class PickupWeaponPanel : PanelWithButton
         {
             m_Player.ChangeWeapon(m_WeaponPrefab.name, isPrimary);
 
-            //×°±¸ÍêÎäÆ÷ºóµ­³ö½çÃæ
+            //è£…å¤‡å®Œæ­¦å™¨åæ·¡å‡ºç•Œé¢
             Fade(CanvasGroup, FadeOutAlpha, FadeDuration, false);
 
-            //×°±¸ÍêÎäÆ÷ºóÉ¾³ıµØÉÏµÄÎäÆ÷ÎïÌå
+            //è£…å¤‡å®Œæ­¦å™¨ååˆ é™¤åœ°ä¸Šçš„æ­¦å™¨ç‰©ä½“
             DestroyWeaponGameObject();
         }
     }
@@ -157,7 +157,7 @@ public class PickupWeaponPanel : PanelWithButton
 
     public void SetPlayerAndWeapon(Player thisPlayer, GameObject thisWeapon, WeaponPickUp thisWeaponPickup)
     {
-        //´«µİÕâĞ©½Å±¾ÓÃÓÚ×°±¸ÎäÆ÷ºÍÏú»ÙµØÉÏµÄÎäÆ÷
+        //ä¼ é€’è¿™äº›è„šæœ¬ç”¨äºè£…å¤‡æ­¦å™¨å’Œé”€æ¯åœ°ä¸Šçš„æ­¦å™¨
         m_Player = thisPlayer;
         m_WeaponPrefab = thisWeapon;
         m_WeaponPickup = thisWeaponPickup;

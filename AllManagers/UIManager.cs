@@ -7,14 +7,14 @@ using UnityEngine.SceneManagement;
 
 public class UIManager : ManagerTemplate<UIManager>
 {
-    //[SerializeField]    //Ç¿ÆÈ±à¼­Æ÷ÏÔÊ¾Ò»¸öÄÚ²¿±äÁ¿
+    //[SerializeField]    //å¼ºè¿«ç¼–è¾‘å™¨æ˜¾ç¤ºä¸€ä¸ªå†…éƒ¨å˜é‡
     public SO_UIKeys UIKeys;
 
-    //´æ·ÅÒÑ´ò¿ª½çÃæµÄ×Öµä£¨ÀïÃæ´æ´¢µÄ¶¼ÊÇÕıÔÚ´ò¿ªµÄ½çÃæ£©
+    //å­˜æ”¾å·²æ‰“å¼€ç•Œé¢çš„å­—å…¸ï¼ˆé‡Œé¢å­˜å‚¨çš„éƒ½æ˜¯æ­£åœ¨æ‰“å¼€çš„ç•Œé¢ï¼‰
     public Dictionary<string, BasePanel> PanelDict = new Dictionary<string, BasePanel>();      
 
 
-    Transform m_UIRoot;     //ÓÃÓÚ´¢´æËùÓĞµÄUI£¨ÎªÁËÃÀ¹Û£©
+    Transform m_UIRoot;     //ç”¨äºå‚¨å­˜æ‰€æœ‰çš„UIï¼ˆä¸ºäº†ç¾è§‚ï¼‰
 
 
 
@@ -23,49 +23,49 @@ public class UIManager : ManagerTemplate<UIManager>
 
 
 
-    #region UnityÄÚ²¿º¯ÊıÑ­»·
+    #region Unityå†…éƒ¨å‡½æ•°å¾ªç¯
     protected override void Awake()
     {
         base.Awake();
 
-        //Ñ°ÕÒ»­²¼¸úÎïÌå£¬Ã»ÓĞµÄ»°¾Í´´½¨Ò»¸ö
+        //å¯»æ‰¾ç”»å¸ƒè·Ÿç‰©ä½“ï¼Œæ²¡æœ‰çš„è¯å°±åˆ›å»ºä¸€ä¸ª
         SetupRootGameObject(ref m_UIRoot, "Canvas");
 
-        //¼ÓÔØĞÂ³¡¾°Ê±²»É¾³ıCanvas×Ü×é¼ş
+        //åŠ è½½æ–°åœºæ™¯æ—¶ä¸åˆ é™¤Canvasæ€»ç»„ä»¶
         DontDestroyOnLoad(m_UIRoot);
     }
 
 
     private async void Start()
     {
-        //¼ì²éÊÇ·ñ´¦ÓÚ³¡¾°0£¨Ö÷²Ëµ¥£©
+        //æ£€æŸ¥æ˜¯å¦å¤„äºåœºæ™¯0ï¼ˆä¸»èœå•ï¼‰
         if (SceneManager.GetActiveScene().name == "MainMenu")
         {
-            //ÓÎÏ·¿ªÊ¼Ê±¼ÓÔØ¿ªÊ¼½çÃæ
+            //æ¸¸æˆå¼€å§‹æ—¶åŠ è½½å¼€å§‹ç•Œé¢
             //await OpenPanel(UIKeys.MainMenuPanel);
         }
 
         else
         {
-            //²»ÔÚÖ÷²Ëµ¥Ê±£¬Ôò²¥·ÅÒ»Â¥BGM
+            //ä¸åœ¨ä¸»èœå•æ—¶ï¼Œåˆ™æ’­æ”¾ä¸€æ¥¼BGM
             await SoundManager.Instance.PlayBGMAsync(SoundManager.Instance.AudioClipKeys.StopForAMoment, true);
         }
     }
     #endregion
 
 
-    #region ½çÃæÏà¹Ø
-    //´ò¿ª½çÃæ
+    #region ç•Œé¢ç›¸å…³
+    //æ‰“å¼€ç•Œé¢
     public async Task OpenPanel(string name)
     {
-        //Èç¹û½çÃæÒÑ¾­´ò¿ª£¬Ôò±¨´í
+        //å¦‚æœç•Œé¢å·²ç»æ‰“å¼€ï¼Œåˆ™æŠ¥é”™
         if (PanelDict.ContainsKey(name))
         {
             Debug.LogError("This panel is already opened: " + name);
             return;
         }
 
-        //Òì²½¼ÓÔØ£¬Ëæºó¼ì²éÊÇ·ñ¼ÓÔØ³É¹¦
+        //å¼‚æ­¥åŠ è½½ï¼Œéšåæ£€æŸ¥æ˜¯å¦åŠ è½½æˆåŠŸ
         GameObject panelPrefab = await LoadPrefabAsync(name);
         if (panelPrefab == null)
         {
@@ -74,19 +74,19 @@ public class UIManager : ManagerTemplate<UIManager>
         }
 
 
-        //Èç¹ûÒòÎª³¡¾°¼ÓÔØµÈÔ­Òòµ¼ÖÂ»­²¼¸úÎïÌå±»É¾³ı¹ı£¬¾ÍÖØĞÂ»ñÈ¡
+        //å¦‚æœå› ä¸ºåœºæ™¯åŠ è½½ç­‰åŸå› å¯¼è‡´ç”»å¸ƒè·Ÿç‰©ä½“è¢«åˆ é™¤è¿‡ï¼Œå°±é‡æ–°è·å–
         if (m_UIRoot == null)
         {
-            //Ñ°ÕÒ»­²¼¸úÎïÌå£¬Ã»ÓĞµÄ»°¾Í´´½¨Ò»¸ö
+            //å¯»æ‰¾ç”»å¸ƒè·Ÿç‰©ä½“ï¼Œæ²¡æœ‰çš„è¯å°±åˆ›å»ºä¸€ä¸ª
             SetupRootGameObject(ref m_UIRoot, "Canvas");
         }
 
-        //Òì²½¼ÓÔØºóÉú³ÉÎïÌå²¢»ñÈ¡ÎïÌåÉíÉÏµÄ×é¼ş
+        //å¼‚æ­¥åŠ è½½åç”Ÿæˆç‰©ä½“å¹¶è·å–ç‰©ä½“èº«ä¸Šçš„ç»„ä»¶
         GameObject panelObject = GameObject.Instantiate(panelPrefab, m_UIRoot, false);
         BasePanel panel = panelObject.GetComponent<BasePanel>();
         if (panel != null)
         {
-            //»ñÈ¡×é¼şºó£¬´ò¿ª½çÃæ
+            //è·å–ç»„ä»¶åï¼Œæ‰“å¼€ç•Œé¢
             panel.OpenPanel(name);
         }
 
@@ -99,19 +99,19 @@ public class UIManager : ManagerTemplate<UIManager>
 
         if (!PanelDict.ContainsKey(name))
         {
-            //½«½çÃæ¼Ó½ø´¢´æÕıÔÚ´ò¿ª½çÃæµÄ×Öµä
+            //å°†ç•Œé¢åŠ è¿›å‚¨å­˜æ­£åœ¨æ‰“å¼€ç•Œé¢çš„å­—å…¸
             PanelDict.Add(name, panel);
         }         
     }
 
 
 
-    //¹Ø±Õ½çÃæ
+    //å…³é—­ç•Œé¢
     public bool ClosePanel(string name)
     {
         BasePanel panel = null;
 
-        if (!PanelDict.TryGetValue (name, out panel))     //¼ì²é½çÃæÊÇ·ñÒÑ´ò¿ª£¬Ã»´ò¿ªµÄ»°Ôò±¨´í
+        if (!PanelDict.TryGetValue (name, out panel))     //æ£€æŸ¥ç•Œé¢æ˜¯å¦å·²æ‰“å¼€ï¼Œæ²¡æ‰“å¼€çš„è¯åˆ™æŠ¥é”™
         {
             Debug.LogError("This panel is not opened yet: " + name);
             return false;
@@ -124,7 +124,7 @@ public class UIManager : ManagerTemplate<UIManager>
 
 
 
-    //ÌáÇ°¼ÓÔØ½çÃæ£¨ÌáÇ°½«Ô¤ÖÆ¼ş·ÅÈë×Öµä£¬·ÀÖ¹¿¨¶Ù£©(¸ú´ò¿ª½çÃæº¯Êı¼¸ºõÒ»Ä£Ò»Ñù£¬Ö»ÊÇÉÙÁËÉú³É²¢´ò¿ª½çÃæµÄ²½Öè)
+    //æå‰åŠ è½½ç•Œé¢ï¼ˆæå‰å°†é¢„åˆ¶ä»¶æ”¾å…¥å­—å…¸ï¼Œé˜²æ­¢å¡é¡¿ï¼‰(è·Ÿæ‰“å¼€ç•Œé¢å‡½æ•°å‡ ä¹ä¸€æ¨¡ä¸€æ ·ï¼Œåªæ˜¯å°‘äº†ç”Ÿæˆå¹¶æ‰“å¼€ç•Œé¢çš„æ­¥éª¤)
     public async Task InitPanel(string name)
     {
         if (PanelDict.ContainsKey(name))
@@ -139,7 +139,7 @@ public class UIManager : ManagerTemplate<UIManager>
 
 
 
-    public void ChangePanelLayer(BasePanel thisPanel)   //¸Ä±ä½çÃæµÄäÖÈ¾²ã¼¶
+    public void ChangePanelLayer(BasePanel thisPanel)   //æ”¹å˜ç•Œé¢çš„æ¸²æŸ“å±‚çº§
     {
 
     }
@@ -150,7 +150,7 @@ public class UIManager : ManagerTemplate<UIManager>
 
     public void ResetGame()
     {
-        foreach (Transform child in m_UIRoot)    //ÔÚ³¡¾°ÖĞÉ¾³ıËùÓĞCanvasÏÂµÄUI£¨Í¨¹ıµ÷ÓÃClosePanel½øĞĞ³¹µ×µÄÉ¾³ı£©
+        foreach (Transform child in m_UIRoot)    //åœ¨åœºæ™¯ä¸­åˆ é™¤æ‰€æœ‰Canvasä¸‹çš„UIï¼ˆé€šè¿‡è°ƒç”¨ClosePanelè¿›è¡Œå½»åº•çš„åˆ é™¤ï¼‰
         {
             BasePanel childScript = child.GetComponent<BasePanel>();
             if (childScript == null)

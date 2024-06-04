@@ -6,10 +6,10 @@ using UnityEngine;
 
 public class HellsCallPanel : BasePanel
 {
-    public TextMeshProUGUI TitleText;           //¾ç±¾±êÌâÎÄ±¾
-    public TextMeshProUGUI FirstPartText;       //µÚÒ»¶ÎÎÄ±¾
-    public TextMeshProUGUI SecondPartText;      //µÚ¶ş¶ÎÎÄ±¾  
-    public TextMeshProUGUI TipText;             //ÌáÊ¾ÎÄ±¾
+    public TextMeshProUGUI TitleText;           //å‰§æœ¬æ ‡é¢˜æ–‡æœ¬
+    public TextMeshProUGUI FirstPartText;       //ç¬¬ä¸€æ®µæ–‡æœ¬
+    public TextMeshProUGUI SecondPartText;      //ç¬¬äºŒæ®µæ–‡æœ¬  
+    public TextMeshProUGUI TipText;             //æç¤ºæ–‡æœ¬
 
 
     public HellsCall HellsCall     //Lazy load
@@ -42,17 +42,17 @@ public class HellsCallPanel : BasePanel
 
     private void Update()
     {
-        SetBothMoveableAndAttackable(false);        //½çÃæ´ò¿ªÊ±½ûÖ¹Íæ¼ÒÒÆ¶¯ºÍ¹¥»÷
+        SetBothMoveableAndAttackable(false);        //ç•Œé¢æ‰“å¼€æ—¶ç¦æ­¢ç©å®¶ç§»åŠ¨å’Œæ”»å‡»
     }
 
 
     private void OnEnable()
     {
         
-        OnFadeOutFinished += ClosePanel;        //½çÃæÍêÈ«µ­³öºóµ÷ÓÃµÄº¯Êı
+        OnFadeOutFinished += ClosePanel;        //ç•Œé¢å®Œå…¨æ·¡å‡ºåè°ƒç”¨çš„å‡½æ•°
         OnFadeOutFinished += StartHealthDrain;
 
-        OnFadeInFinished += StartTextAnimations;    //½çÃæÍêÈ«µ­Èëºóµ÷ÓÃ´Ëº¯Êı
+        OnFadeInFinished += StartTextAnimations;    //ç•Œé¢å®Œå…¨æ·¡å…¥åè°ƒç”¨æ­¤å‡½æ•°
     }
 
     protected override void OnDisable()
@@ -69,9 +69,9 @@ public class HellsCallPanel : BasePanel
     {
         base.ClosePanel();
 
-        await UIManager.Instance.OpenPanel(UIManager.Instance.UIKeys.TaskPanel);        //´ò¿ªÈÎÎñ½çÃæ
+        await UIManager.Instance.OpenPanel(UIManager.Instance.UIKeys.TaskPanel);        //æ‰“å¼€ä»»åŠ¡ç•Œé¢
 
-        SetBothMoveableAndAttackable(true);    //½«ÓÎÏ·»Ö¸´»ØÀ´
+        SetBothMoveableAndAttackable(true);    //å°†æ¸¸æˆæ¢å¤å›æ¥
     }
     
 
@@ -79,43 +79,43 @@ public class HellsCallPanel : BasePanel
 
     private void StartTextAnimations()
     {
-        FirstPartText.gameObject.SetActive(true);       //¼¤»îµÚÒ»¶ÎÎÄ±¾
+        FirstPartText.gameObject.SetActive(true);       //æ¿€æ´»ç¬¬ä¸€æ®µæ–‡æœ¬
 
-        //ÏÈ¿ªÊ¼µÚÒ»¶ÎÎÄ±¾µÄ´ò×ÖĞ§¹û
+        //å…ˆå¼€å§‹ç¬¬ä¸€æ®µæ–‡æœ¬çš„æ‰“å­—æ•ˆæœ
         Coroutine firstPartTextCoroutine = StartCoroutine(TypeText(FirstPartText, FirstPartText.text, () =>
         {
-            //µÈ´ı0.5Ãë
+            //ç­‰å¾…0.5ç§’
             Coroutine delayCoroutine = StartCoroutine(Delay.Instance.DelaySomeTime(0.5f, () =>
             {
-                SecondPartText.gameObject.SetActive(true);      //¼¤»îµÚ¶ş¶ÎÎÄ±¾           
+                SecondPartText.gameObject.SetActive(true);      //æ¿€æ´»ç¬¬äºŒæ®µæ–‡æœ¬           
 
-                //È»ºó¿ªÊ¼µÚ¶ş¶ÎÎÄ±¾µÄ´ò×ÖĞ§¹û
+                //ç„¶åå¼€å§‹ç¬¬äºŒæ®µæ–‡æœ¬çš„æ‰“å­—æ•ˆæœ
                 Coroutine secondPartTextCoroutine = StartCoroutine(TypeText(SecondPartText, SecondPartText.text, () =>
                 {
-                    TipText.gameObject.SetActive(true);     //¼¤»îÌáÊ¾ÎÄ±¾
+                    TipText.gameObject.SetActive(true);     //æ¿€æ´»æç¤ºæ–‡æœ¬
 
-                    //µÈ´ıÍæ¼Ò°´¿Õ¸ñ»òµã»÷Êó±ê
+                    //ç­‰å¾…ç©å®¶æŒ‰ç©ºæ ¼æˆ–ç‚¹å‡»é¼ æ ‡
                     Coroutine waitForInputCoroutine = StartCoroutine(Delay.Instance.WaitForPlayerInput(() =>
                     {
-                        //µ­³ö½çÃæ
+                        //æ·¡å‡ºç•Œé¢
                         Fade(CanvasGroup, FadeOutAlpha, FadeDuration, false);
                     }));
 
-                    generatedCoroutines.Add(waitForInputCoroutine);   //½«Ğ­³Ì¼Ó½øÁĞ±í
+                    generatedCoroutines.Add(waitForInputCoroutine);   //å°†åç¨‹åŠ è¿›åˆ—è¡¨
                 }));
 
-                generatedCoroutines.Add(secondPartTextCoroutine);   //½«Ğ­³Ì¼Ó½øÁĞ±í
+                generatedCoroutines.Add(secondPartTextCoroutine);   //å°†åç¨‹åŠ è¿›åˆ—è¡¨
             }));
 
-            generatedCoroutines.Add(delayCoroutine);        //½«Ğ­³Ì¼Ó½øÁĞ±í
+            generatedCoroutines.Add(delayCoroutine);        //å°†åç¨‹åŠ è¿›åˆ—è¡¨
         }));
 
-        generatedCoroutines.Add(firstPartTextCoroutine);      //½«Ğ­³Ì¼Ó½øÁĞ±í
+        generatedCoroutines.Add(firstPartTextCoroutine);      //å°†åç¨‹åŠ è¿›åˆ—è¡¨
     }
 
 
 
-    private void StartHealthDrain()     //¿ªÊ¼³ÖĞøµôÑª
+    private void StartHealthDrain()     //å¼€å§‹æŒç»­æ‰è¡€
     {
         if (HellsCall != null)
         {

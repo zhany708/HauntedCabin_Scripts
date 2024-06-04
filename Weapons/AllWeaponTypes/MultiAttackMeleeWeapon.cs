@@ -21,17 +21,17 @@ public class MultiAttackMeleeWeapon : MeleeWeapon
     {
         base.Update();
 
-        m_AttackCounterResetTimer.Tick();   //³ÖĞø¶Ô¼ÆÊ±Æ÷½øĞĞ¼ÆÊ±
+        m_AttackCounterResetTimer.Tick();   //æŒç»­å¯¹è®¡æ—¶å™¨è¿›è¡Œè®¡æ—¶
     }
 
     protected void OnEnable()
     {
-        m_AttackCounterResetTimer.OnTimerDone += ResetAttackCounter;    //´¥·¢ÊÂ¼ş£¨¼ÆÊ±Æ÷µ½´ïÄ¿±êÊ±¼ä£©Ê±ÖØÖÃÁ¬»÷
+        m_AttackCounterResetTimer.OnTimerDone += ResetAttackCounter;    //è§¦å‘äº‹ä»¶ï¼ˆè®¡æ—¶å™¨åˆ°è¾¾ç›®æ ‡æ—¶é—´ï¼‰æ—¶é‡ç½®è¿å‡»
     }
 
     protected void OnDisable()
     {
-        m_AttackCounterResetTimer.OnTimerDone -= ResetAttackCounter;    //´¥·¢ÊÂ¼ş£¨¼ÆÊ±Æ÷µ½´ïÄ¿±êÊ±¼ä£©Ê±ÖØÖÃÁ¬»÷
+        m_AttackCounterResetTimer.OnTimerDone -= ResetAttackCounter;    //è§¦å‘äº‹ä»¶ï¼ˆè®¡æ—¶å™¨åˆ°è¾¾ç›®æ ‡æ—¶é—´ï¼‰æ—¶é‡ç½®è¿å‡»
     }
 
 
@@ -40,11 +40,11 @@ public class MultiAttackMeleeWeapon : MeleeWeapon
 
     public override void EnterWeapon()
     {
-        m_AttackCounterResetTimer.StopTimer();      //¹¥»÷×´Ì¬ÖĞÔİÍ£¼ÆÊ±Æ÷£¬·ÀÖ¹¹¥»÷¶¯»­»¹Ã»½áÊø¾ÍÖØÖÃÁ¬»÷
+        m_AttackCounterResetTimer.StopTimer();      //æ”»å‡»çŠ¶æ€ä¸­æš‚åœè®¡æ—¶å™¨ï¼Œé˜²æ­¢æ”»å‡»åŠ¨ç”»è¿˜æ²¡ç»“æŸå°±é‡ç½®è¿å‡»
 
         base.EnterWeapon();
 
-        //²¥·Å¶ÔÓ¦µÄ¹¥»÷Á¬»÷µÄ¶¯»­
+        //æ’­æ”¾å¯¹åº”çš„æ”»å‡»è¿å‡»çš„åŠ¨ç”»
         animator.SetInteger("AttackCounter", CurrentAttackCounter);
     }
 
@@ -52,11 +52,11 @@ public class MultiAttackMeleeWeapon : MeleeWeapon
     {
         base.ExitWeapon();
 
-        CurrentAttackCounter++;    //Ôö¼Ó¹¥»÷¼ÆÊıÒÔÈÃÍæ¼Ò½øĞĞ¶şÁ¬»÷
-        m_AttackCounterResetTimer.StartTimer();      //¹¥»÷½áÊøºó¿ªÊ¼¼ÆÊ±Æ÷
+        CurrentAttackCounter++;    //å¢åŠ æ”»å‡»è®¡æ•°ä»¥è®©ç©å®¶è¿›è¡ŒäºŒè¿å‡»
+        m_AttackCounterResetTimer.StartTimer();      //æ”»å‡»ç»“æŸåå¼€å§‹è®¡æ—¶å™¨
     }
 
 
 
-    protected void ResetAttackCounter() => CurrentAttackCounter = 0;     //ÖØÖÃÁ¬»÷Êı
+    protected void ResetAttackCounter() => CurrentAttackCounter = 0;     //é‡ç½®è¿å‡»æ•°
 }

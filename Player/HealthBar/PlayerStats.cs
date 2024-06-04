@@ -7,7 +7,7 @@ public class PlayerStats : Stats
     {
         base.Awake();
 
-        m_PlayerHealthBar = GetComponentInChildren<HealthBar>();      //»ñÈ¡ÑªÌõ×é¼şµÄÑªÌõ»º³å½Å±¾
+        m_PlayerHealthBar = GetComponentInChildren<HealthBar>();      //è·å–è¡€æ¡ç»„ä»¶çš„è¡€æ¡ç¼“å†²è„šæœ¬
     }
 
 
@@ -17,7 +17,7 @@ public class PlayerStats : Stats
     {
         base.DecreaseHealth(amount, doesIgnoreDefense);
 
-        m_PlayerHealthBar.SetCurrentHealth(currentHealth);      //µ÷ÓÃÑªÌõ½Å±¾ÖĞµÄ¸üĞÂÉúÃüÖµº¯Êı
+        m_PlayerHealthBar.SetCurrentHealth(currentHealth);      //è°ƒç”¨è¡€æ¡è„šæœ¬ä¸­çš„æ›´æ–°ç”Ÿå‘½å€¼å‡½æ•°
     }
 
     public override void IncreaseHealth(float amount)

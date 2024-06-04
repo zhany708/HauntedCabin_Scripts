@@ -6,17 +6,17 @@ public class SO_GunData : SO_WeaponData
 {
     [SerializeField] private GunAttackDetails m_AttackDetail;
 
-    public GunAttackDetails AttackDetail { get => m_AttackDetail; private set => m_AttackDetail = value; }      //ÓÃÓÚÆäËû½Å±¾µ÷ÓÃ´Ë½Å±¾ÖĞµÄË½ÓĞ±äÁ¿
+    public GunAttackDetails AttackDetail { get => m_AttackDetail; private set => m_AttackDetail = value; }      //ç”¨äºå…¶ä»–è„šæœ¬è°ƒç”¨æ­¤è„šæœ¬ä¸­çš„ç§æœ‰å˜é‡
 }
 
 
 
-[System.Serializable]       //ÓÃÓÚÔÚUnityÖĞÏÔÊ¾ÇÒµ÷ÕûÒÔÏÂ²ÎÊı
+[System.Serializable]       //ç”¨äºåœ¨Unityä¸­æ˜¾ç¤ºä¸”è°ƒæ•´ä»¥ä¸‹å‚æ•°
 public struct GunAttackDetails
 {
     public float DamageAmount;
 
     public float KnockbackStrength;
 
-    //public float AttackCooldownTime;      //¹¥»÷¼ä¸ôÊ±¼ä
+    //public float AttackCooldownTime;      //æ”»å‡»é—´éš”æ—¶é—´
 }

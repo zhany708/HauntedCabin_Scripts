@@ -12,10 +12,10 @@ public class EnemyAttackState : EnemyState
     {
         base.Enter();
 
-        enemy.AttackTimer.StopTimer();     //¹¥»÷ÆÚ¼äÍ£Ö¹¼ÆÊ±
+        enemy.AttackTimer.StopTimer();     //æ”»å‡»æœŸé—´åœæ­¢è®¡æ—¶
     }
 
-    public override void LogicUpdate()      //ÖØĞ´Âß¼­º¯Êı£¬Ê¹µĞÈË²»»áÔÚ¹¥»÷×´Ì¬ÖĞ½øÈëÊÜ»÷×´Ì¬
+    public override void LogicUpdate()      //é‡å†™é€»è¾‘å‡½æ•°ï¼Œä½¿æ•Œäººä¸ä¼šåœ¨æ”»å‡»çŠ¶æ€ä¸­è¿›å…¥å—å‡»çŠ¶æ€
     {
         if (core.AnimatorInfo.IsName("Attack") && core.AnimatorInfo.normalizedTime >= 0.95f)
         {
@@ -27,8 +27,8 @@ public class EnemyAttackState : EnemyState
     {
         base.Exit();
 
-        enemyCombat.SetIsHit(false);     //Èç¹ûÃ»ÓĞÕâĞĞ´úÂë£¬ÄÇÃ´µĞÈËÔÚ¹¥»÷×´Ì¬ÖĞ±»»÷ÖĞµÄ»°£¬»áÇ¿ÖÆÔÚ¹¥»÷×´Ì¬½áÊøºó½øÈëÊÜ»÷×´Ì¬
+        enemyCombat.SetIsHit(false);     //å¦‚æœæ²¡æœ‰è¿™è¡Œä»£ç ï¼Œé‚£ä¹ˆæ•Œäººåœ¨æ”»å‡»çŠ¶æ€ä¸­è¢«å‡»ä¸­çš„è¯ï¼Œä¼šå¼ºåˆ¶åœ¨æ”»å‡»çŠ¶æ€ç»“æŸåè¿›å…¥å—å‡»çŠ¶æ€
         enemy.SetCanAttack(false);
-        enemy.AttackTimer.StartTimer();     //¹¥»÷½áÊøºó¿ªÊ¼¼ÆÊ±
+        enemy.AttackTimer.StartTimer();     //æ”»å‡»ç»“æŸåå¼€å§‹è®¡æ—¶
     }
 }

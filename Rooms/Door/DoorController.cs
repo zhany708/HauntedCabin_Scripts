@@ -5,18 +5,18 @@ using ZhangYu.Utilities;
 
 public class DoorController : MonoBehaviour
 {
-    public Animator[] DoorAnimators;        //µ±Ç°·¿¼äÄÚËùÓĞÃÅµÄ¶¯»­Æ÷
-    public GameObject[] EnemyObjects;       //µ±Ç°·¿¼äÄÚËùÓĞ»áÉú³ÉµÄµĞÈË
-    public Vector2 EnemySpawnPosNegativeOffset = Vector2.zero;     //µĞÈËÉú³ÉµÄ¸º×ø±ê·¶Î§£¨×î×ó±ßºÍ×îÏÂ±ßµÄ·¶Î§£¬xºÍy¶¼ÊÇ¸ºÊı£©
-    public Vector2 EnemySpawnPosPositiveOffset = Vector2.zero;     //µĞÈËÉú³ÉµÄÕı×ø±ê·¶Î§£¨×îÓÒ±ßºÍ×îÉÏ±ßµÄ·¶Î§£¬xºÍy¶¼ÊÇÕıÊı£©
+    public Animator[] DoorAnimators;        //å½“å‰æˆ¿é—´å†…æ‰€æœ‰é—¨çš„åŠ¨ç”»å™¨
+    public GameObject[] EnemyObjects;       //å½“å‰æˆ¿é—´å†…æ‰€æœ‰ä¼šç”Ÿæˆçš„æ•Œäºº
+    public Vector2 EnemySpawnPosNegativeOffset = Vector2.zero;     //æ•Œäººç”Ÿæˆçš„è´Ÿåæ ‡èŒƒå›´ï¼ˆæœ€å·¦è¾¹å’Œæœ€ä¸‹è¾¹çš„èŒƒå›´ï¼Œxå’Œyéƒ½æ˜¯è´Ÿæ•°ï¼‰
+    public Vector2 EnemySpawnPosPositiveOffset = Vector2.zero;     //æ•Œäººç”Ÿæˆçš„æ­£åæ ‡èŒƒå›´ï¼ˆæœ€å³è¾¹å’Œæœ€ä¸Šè¾¹çš„èŒƒå›´ï¼Œxå’Œyéƒ½æ˜¯æ­£æ•°ï¼‰
 
     public Collider2D RoomTrigger { get; private set; }
-    public LayerMask FurnitureLayerMask { get; private set; }    //¼Ò¾ßµÄLayer
+    public LayerMask FurnitureLayerMask { get; private set; }    //å®¶å…·çš„Layer
     public RandomPosition EnemySpwanPos { get; private set; }
-    public int KilledEnemyCount { get; private set; } = 0;          //±íÊ¾µ±Ç°·¿¼äÄÚ»÷É±ÁË¶àÉÙµĞÈË
-    public bool HasGeneratedEvent { get; private set; } = false;    //±íÊ¾µ±Ç°·¿¼äÊÇ·ñÉú³É¹ıÊÂ¼ş
+    public int KilledEnemyCount { get; private set; } = 0;          //è¡¨ç¤ºå½“å‰æˆ¿é—´å†…å‡»æ€äº†å¤šå°‘æ•Œäºº
+    public bool HasGeneratedEvent { get; private set; } = false;    //è¡¨ç¤ºå½“å‰æˆ¿é—´æ˜¯å¦ç”Ÿæˆè¿‡äº‹ä»¶
 
-    //ÔËÓÃPhysics2D¼ì²éÖØ¸´×ø±êÊ±ĞèÒªµÄXºÍYµÄÖµ£¨»ğòùòğYÖáÉÏÓĞ0.5µÄÆ«²î£¬ÒòÎª×ø±êµãÎ»ÓÚ½Åµ×£©
+    //è¿ç”¨Physics2Dæ£€æŸ¥é‡å¤åæ ‡æ—¶éœ€è¦çš„Xå’ŒYçš„å€¼ï¼ˆç«è™è Yè½´ä¸Šæœ‰0.5çš„åå·®ï¼Œå› ä¸ºåæ ‡ç‚¹ä½äºè„šåº•ï¼‰
     public float PhysicsCheckingXPos { get; private set; } = 2f;
     public float PhysicsCheckingYPos { get; private set; } = 4f;
 
@@ -24,8 +24,8 @@ public class DoorController : MonoBehaviour
 
     RootRoomController m_MainRoom; 
 
-    bool m_IsRootRoom = false;              //±íÊ¾µ±Ç°ÃÅËùÔÚµÄ·¿¼äÊÇ·ñÎª³õÊ¼·¿¼ä
-    bool m_HasGeneratedEnemy = false;       //±íÊ¾µ±Ç°·¿¼äÊÇ·ñÉú³É¹ıµĞÈË
+    bool m_IsRootRoom = false;              //è¡¨ç¤ºå½“å‰é—¨æ‰€åœ¨çš„æˆ¿é—´æ˜¯å¦ä¸ºåˆå§‹æˆ¿é—´
+    bool m_HasGeneratedEnemy = false;       //è¡¨ç¤ºå½“å‰æˆ¿é—´æ˜¯å¦ç”Ÿæˆè¿‡æ•Œäºº
 
 
 
@@ -40,9 +40,9 @@ public class DoorController : MonoBehaviour
 
         m_MainRoom = GetComponentInParent<RootRoomController>();
 
-        if (EnemyObjects.Length != 0)   //Èç¹û·¿¼äÓĞ¹ÖÎï
+        if (EnemyObjects.Length != 0)   //å¦‚æœæˆ¿é—´æœ‰æ€ªç‰©
         {
-            //µĞÈËÉú³ÉµÄx·¶Î§Îª·¿¼ä×ø±êµÄx¼Ó±äÁ¿ÖĞµÄÖµ£»Éú³ÉµÄy·¶Î§Îª·¿¼ä×ø±êµÄy¼Ó±äÁ¿ÖĞµÄÖµ
+            //æ•Œäººç”Ÿæˆçš„xèŒƒå›´ä¸ºæˆ¿é—´åæ ‡çš„xåŠ å˜é‡ä¸­çš„å€¼ï¼›ç”Ÿæˆçš„yèŒƒå›´ä¸ºæˆ¿é—´åæ ‡çš„yåŠ å˜é‡ä¸­çš„å€¼
             Vector2 leftDownPos = new Vector2(m_MainRoom.transform.position.x + EnemySpawnPosNegativeOffset.x, m_MainRoom.transform.position.y + EnemySpawnPosNegativeOffset.y);
             Vector2 rightTopPos = new Vector2(m_MainRoom.transform.position.x + EnemySpawnPosPositiveOffset.x, m_MainRoom.transform.position.y + EnemySpawnPosPositiveOffset.y);
 
@@ -52,12 +52,12 @@ public class DoorController : MonoBehaviour
 
     private void Start()
     {
-        if (m_MainRoom.GetType() == typeof(RootRoomController))     //¼ì²éµ±Ç°·¿¼äÊÇ·ñÎª³õÊ¼°å¿é
+        if (m_MainRoom.GetType() == typeof(RootRoomController))     //æ£€æŸ¥å½“å‰æˆ¿é—´æ˜¯å¦ä¸ºåˆå§‹æ¿å—
         {
             m_IsRootRoom = true;        
         }
 
-        //×Ô¶¯¸øËùÓĞ´Ë½Å±¾ÖĞµÄµÄ²ã¼¶¸³Öµ
+        //è‡ªåŠ¨ç»™æ‰€æœ‰æ­¤è„šæœ¬ä¸­çš„çš„å±‚çº§èµ‹å€¼
         FurnitureLayerMask = LayerMask.GetMask("Furniture");
     }
 
@@ -68,36 +68,36 @@ public class DoorController : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            RoomTrigger.enabled = false;    //Íæ¼Ò½øÈë·¿¼äºóÈ¡Ïû¼¤»îÃÅµÄ´¥·¢Æ÷£¬·ÀÖ¹Íæ¼Ò·´¸´½ø³ö·¿¼äµ¼ÖÂ¶ş´ÎÉú³ÉÊÂ¼ş»òµĞÈË
+            RoomTrigger.enabled = false;    //ç©å®¶è¿›å…¥æˆ¿é—´åå–æ¶ˆæ¿€æ´»é—¨çš„è§¦å‘å™¨ï¼Œé˜²æ­¢ç©å®¶åå¤è¿›å‡ºæˆ¿é—´å¯¼è‡´äºŒæ¬¡ç”Ÿæˆäº‹ä»¶æˆ–æ•Œäºº
 
-            //¼ì²éÊÇ·ñÎª³õÊ¼·¿¼ä
+            //æ£€æŸ¥æ˜¯å¦ä¸ºåˆå§‹æˆ¿é—´
             if (!m_IsRootRoom)    
             {
-                //ÓÎÏ·´¦ÓÚµÚÒ»½×¶ÎÊ±
+                //æ¸¸æˆå¤„äºç¬¬ä¸€é˜¶æ®µæ—¶
                 if (!EventManager.Instance.IsSecondStage)
                 {
-                    //¼ì²é¸Ã·¿¼äÊÇ·ñÒÑ¾­Éú³É¹ıÊÂ¼ş£¬Èç¹ûÃ»ÓĞÔòÉú³É
+                    //æ£€æŸ¥è¯¥æˆ¿é—´æ˜¯å¦å·²ç»ç”Ÿæˆè¿‡äº‹ä»¶ï¼Œå¦‚æœæ²¡æœ‰åˆ™ç”Ÿæˆ
                     if (!HasGeneratedEvent)
                     {
-                        CloseDoors();     //¹ØÃÅ
+                        CloseDoors();     //å…³é—¨
 
                         //Debug.Log("An event has generated here: " + transform.position);
-                        EventManager.Instance.GenerateRandomEvent(transform.position, this);   //Éú³ÉÊÂ¼ş
+                        EventManager.Instance.GenerateRandomEvent(transform.position, this);   //ç”Ÿæˆäº‹ä»¶
 
-                        //·¿¼äÉú³É¹ıÒ»´ÎÊÂ¼şºó¾Í²»»áÔÙÉú³ÉÁË£¬Òò´ËÔÚÕâÀïÉèÖÃÖ®ºó£¬ÆäËûµØ·½ÎŞĞèÖØÖÃ²¼¶ûÖµ
+                        //æˆ¿é—´ç”Ÿæˆè¿‡ä¸€æ¬¡äº‹ä»¶åå°±ä¸ä¼šå†ç”Ÿæˆäº†ï¼Œå› æ­¤åœ¨è¿™é‡Œè®¾ç½®ä¹‹åï¼Œå…¶ä»–åœ°æ–¹æ— éœ€é‡ç½®å¸ƒå°”å€¼
                         HasGeneratedEvent = true;
                     }                    
                 }
 
-                //ÓÎÏ·´¦ÓÚµÚ¶ş½×¶ÎÊ±
+                //æ¸¸æˆå¤„äºç¬¬äºŒé˜¶æ®µæ—¶
                 else
                 {
-                    if (!m_HasGeneratedEnemy)       //Èç¹û·¿¼äÃ»Éú³É¹ıµĞÈË£¬ÔòÉú³É
+                    if (!m_HasGeneratedEnemy)       //å¦‚æœæˆ¿é—´æ²¡ç”Ÿæˆè¿‡æ•Œäººï¼Œåˆ™ç”Ÿæˆ
                     {
-                        CloseDoors();       //¹ØÃÅ
-                        EnvironmentManager.Instance.GenerateEnemy(this);    //Éú³ÉµĞÈË
+                        CloseDoors();       //å…³é—¨
+                        EnvironmentManager.Instance.GenerateEnemy(this);    //ç”Ÿæˆæ•Œäºº
 
-                        m_HasGeneratedEnemy = true;     //ÆÕÍ¨·¿¼äÉú³É¹ıÒ»´ÎµĞÈËºó¾Í²»»áÔÙÉú³ÉÁË
+                        m_HasGeneratedEnemy = true;     //æ™®é€šæˆ¿é—´ç”Ÿæˆè¿‡ä¸€æ¬¡æ•Œäººåå°±ä¸ä¼šå†ç”Ÿæˆäº†
                     }                   
                 }
             }                       
@@ -105,7 +105,7 @@ public class DoorController : MonoBehaviour
     }
 
 
-    //ÓÃÓÚÉèÖÃÃÅµÄ¶¯»­Æ÷
+    //ç”¨äºè®¾ç½®é—¨çš„åŠ¨ç”»å™¨
     private void SetDoorAnimation(bool isOpen)
     {
         foreach(Animator animator in DoorAnimators)
@@ -124,9 +124,9 @@ public class DoorController : MonoBehaviour
 
 
 
-    public void CheckIfOpenDoors()      //µĞÈËËÀÍöÊ±µ÷ÓÃ£¬¼ì²éÊÇ·ñ´ïµ½¿ªÃÅµÄÌõ¼ş£¨¼´·¿¼äÄÚËùÓĞµĞÈË¶¼ËÀÍö£©
+    public void CheckIfOpenDoors()      //æ•Œäººæ­»äº¡æ—¶è°ƒç”¨ï¼Œæ£€æŸ¥æ˜¯å¦è¾¾åˆ°å¼€é—¨çš„æ¡ä»¶ï¼ˆå³æˆ¿é—´å†…æ‰€æœ‰æ•Œäººéƒ½æ­»äº¡ï¼‰
     {
-        if (EnemyObjects.Length != 0)   //ÏÈ¼ì²é·¿¼äÊÇ·ñÓĞµĞÈË
+        if (EnemyObjects.Length != 0)   //å…ˆæ£€æŸ¥æˆ¿é—´æ˜¯å¦æœ‰æ•Œäºº
         {
             if (KilledEnemyCount >= EnemyObjects.Length)
             {
@@ -140,8 +140,8 @@ public class DoorController : MonoBehaviour
     public void IncrementEnemyCount()
     {
         KilledEnemyCount++;
-        CheckIfOpenDoors();     //Ôö¼Ó¼ÆÊıºóÅĞ¶ÏÊÇ·ñÂú×ã¿ªÃÅÌõ¼ş
+        CheckIfOpenDoors();     //å¢åŠ è®¡æ•°ååˆ¤æ–­æ˜¯å¦æ»¡è¶³å¼€é—¨æ¡ä»¶
 
-        EnvironmentManager.Instance.IncrementKilledEnemyCount();      //Ôö¼Ó¼ÇÂ¼É±ËÀµÄµĞÈËÊıÁ¿µÄÕûÊı
+        EnvironmentManager.Instance.IncrementKilledEnemyCount();      //å¢åŠ è®°å½•æ€æ­»çš„æ•Œäººæ•°é‡çš„æ•´æ•°
     }
 }

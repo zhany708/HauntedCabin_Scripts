@@ -3,7 +3,7 @@ using UnityEngine;
 
 
 
-public class EnemyPool : MonoBehaviour       //ÓÃÓÚÉú³ÉµĞÈËµÄ¶ÔÏó³Ø£¬Éú³É³öÀ´µÄËùÓĞµĞÈË¶¼·ÅÔÚ×ÓÎïÌå
+public class EnemyPool : MonoBehaviour       //ç”¨äºç”Ÿæˆæ•Œäººçš„å¯¹è±¡æ± ï¼Œç”Ÿæˆå‡ºæ¥çš„æ‰€æœ‰æ•Œäººéƒ½æ”¾åœ¨å­ç‰©ä½“
 {
     public static EnemyPool Instance { get; private set; }
 
@@ -19,7 +19,7 @@ public class EnemyPool : MonoBehaviour       //ÓÃÓÚÉú³ÉµĞÈËµÄ¶ÔÏó³Ø£¬Éú³É³öÀ´µÄË
 
     private void Awake()
     {
-        //µ¥ÀıÄ£Ê½
+        //å•ä¾‹æ¨¡å¼
         if (Instance != null && Instance != this)
         {
             Destroy(gameObject);
@@ -33,10 +33,10 @@ public class EnemyPool : MonoBehaviour       //ÓÃÓÚÉú³ÉµĞÈËµÄ¶ÔÏó³Ø£¬Éú³É³öÀ´µÄË
 
 
 
-    //»ñÈ¡ÎïÌå£¬µÚ¶ş¸ö²ÎÊıÎªµĞÈËµÄÉú³É×ø±ê
+    //è·å–ç‰©ä½“ï¼Œç¬¬äºŒä¸ªå‚æ•°ä¸ºæ•Œäººçš„ç”Ÿæˆåæ ‡
     public GameObject GetObject(GameObject prefab, Vector2 spawnPos)
     {
-        //¼ì²é³ØÖĞÓĞÃ»ÓĞÎïÌå£¬Ã»ÓĞµÄ»°ÔòĞÂ½¨Ò»¸ö²¢¼Ó½øÈ¥
+        //æ£€æŸ¥æ± ä¸­æœ‰æ²¡æœ‰ç‰©ä½“ï¼Œæ²¡æœ‰çš„è¯åˆ™æ–°å»ºä¸€ä¸ªå¹¶åŠ è¿›å»
         if (!m_EnemyPool.TryGetValue(prefab.name, out var queue) || queue.Count == 0)
         {
             var newObject = CreateNewObject(prefab, spawnPos);
@@ -45,7 +45,7 @@ public class EnemyPool : MonoBehaviour       //ÓÃÓÚÉú³ÉµĞÈËµÄ¶ÔÏó³Ø£¬Éú³É³öÀ´µÄË
 
         var obj = m_EnemyPool[prefab.name].Dequeue();
 
-        //ÔÚÎïÌå¼¤»îÇ°¸³Óè×ø±ê¸øµĞÈËµÄ¸úÎïÌå£¬ÕâÑù²ÅÄÜÕıÈ·µÄ³õÊ¼»¯Éú³ÉÑ²ÂßµãµÄ½Å±¾
+        //åœ¨ç‰©ä½“æ¿€æ´»å‰èµ‹äºˆåæ ‡ç»™æ•Œäººçš„è·Ÿç‰©ä½“ï¼Œè¿™æ ·æ‰èƒ½æ­£ç¡®çš„åˆå§‹åŒ–ç”Ÿæˆå·¡é€»ç‚¹çš„è„šæœ¬
         obj.transform.position = spawnPos;
 
         obj.SetActive(true);
@@ -57,24 +57,24 @@ public class EnemyPool : MonoBehaviour       //ÓÃÓÚÉú³ÉµĞÈËµÄ¶ÔÏó³Ø£¬Éú³É³öÀ´µÄË
 
     private GameObject CreateNewObject(GameObject prefab, Vector2 spawnPos)
     {
-        //ÏÈÕÒÓÃÀ´´æ·ÅÃ¿ÀàµĞÈËµÄ¸¸ÎïÌå£¬ËæºóÔÙ´´½¨
+        //å…ˆæ‰¾ç”¨æ¥å­˜æ”¾æ¯ç±»æ•Œäººçš„çˆ¶ç‰©ä½“ï¼Œéšåå†åˆ›å»º
         GameObject childContainer = FindOrCreateChildContainer(prefab.name);
         GameObject obj = Instantiate(prefab, spawnPos, Quaternion.identity, childContainer.transform);
 
         return obj;
     }
 
-    //ÓÃÓÚÑ°ÕÒ»ò´´½¨×ÓÎïÌåµÄ¸¸ÎïÌå£¨ÎªÁËÕû½àÃÀ¹Û£©
+    //ç”¨äºå¯»æ‰¾æˆ–åˆ›å»ºå­ç‰©ä½“çš„çˆ¶ç‰©ä½“ï¼ˆä¸ºäº†æ•´æ´ç¾è§‚ï¼‰
     private GameObject FindOrCreateChildContainer(string name)
     {
-        //ÏÈ³¢ÊÔÔÚµ±Ç°ÎïÌåµÄ×ÓÎïÌåÖĞÑ°ÕÒ²ÎÊıÖĞµÄÃû×ÖµÄÎïÌå
+        //å…ˆå°è¯•åœ¨å½“å‰ç‰©ä½“çš„å­ç‰©ä½“ä¸­å¯»æ‰¾å‚æ•°ä¸­çš„åå­—çš„ç‰©ä½“
         Transform childTransform = transform.Find(name);
 
         if (childTransform == null)
         {
             GameObject child = new GameObject(name);
 
-            //½«Ã¿ÖÖÀàĞÍµÄµĞÈËµÄ¸¸ÎïÌåÉèÖÃÎªµ±Ç°ÎïÌåµÄ×ÓÎïÌå
+            //å°†æ¯ç§ç±»å‹çš„æ•Œäººçš„çˆ¶ç‰©ä½“è®¾ç½®ä¸ºå½“å‰ç‰©ä½“çš„å­ç‰©ä½“
             child.transform.SetParent(transform);
 
             return child;
@@ -87,26 +87,26 @@ public class EnemyPool : MonoBehaviour       //ÓÃÓÚÉú³ÉµĞÈËµÄ¶ÔÏó³Ø£¬Éú³É³öÀ´µÄË
 
 
 
-    //´¢´æÎïÌå
+    //å‚¨å­˜ç‰©ä½“
     public bool PushObject(GameObject obj)
     {
         if (obj != null)
         {
-            //È¥µôÎïÌåÃû×ÖµÄºó×º
+            //å»æ‰ç‰©ä½“åå­—çš„åç¼€
             string name = obj.name.Replace("(Clone)", "").Trim();
 
             if (!m_EnemyPool.ContainsKey(name))
             {
-                //Èç¹û³ØÖĞÃ»ÓĞÎïÌå£¬Ôò´´½¨Ò»¸öÏàÓ¦µÄ¶ÓÁĞ
+                //å¦‚æœæ± ä¸­æ²¡æœ‰ç‰©ä½“ï¼Œåˆ™åˆ›å»ºä¸€ä¸ªç›¸åº”çš„é˜Ÿåˆ—
                 m_EnemyPool[name] = new Queue<GameObject>();
             }
 
-            m_EnemyPool[name].Enqueue(obj);     //½«´´½¨ºÃµÄÎïÌå¼Ó½ø×Öµä
+            m_EnemyPool[name].Enqueue(obj);     //å°†åˆ›å»ºå¥½çš„ç‰©ä½“åŠ è¿›å­—å…¸
 
-            //´´½¨ÍêºóÈ¡Ïû¼¤»î
+            //åˆ›å»ºå®Œåå–æ¶ˆæ¿€æ´»
             obj.SetActive(false);
 
-            //ËæºóÉèÖÃ¸¸ÎïÌå
+            //éšåè®¾ç½®çˆ¶ç‰©ä½“
             obj.transform.SetParent(FindOrCreateChildContainer(name).transform);
 
             return true;
@@ -117,33 +117,33 @@ public class EnemyPool : MonoBehaviour       //ÓÃÓÚÉú³ÉµĞÈËµÄ¶ÔÏó³Ø£¬Éú³É³öÀ´µÄË
 
 
 
-    public void ResetGame()     //ÖØÖÃÓÎÏ·£¨ÔÚ¼ÓÔØÆäËû³¡¾°Ç°µ÷ÓÃ´Ëº¯Êı£©
+    public void ResetGame()     //é‡ç½®æ¸¸æˆï¼ˆåœ¨åŠ è½½å…¶ä»–åœºæ™¯å‰è°ƒç”¨æ­¤å‡½æ•°ï¼‰
     {
-        //ÔÚ³¡¾°ÖĞÈ¡Ïû¼¤»îËùÓĞµĞÈË
+        //åœ¨åœºæ™¯ä¸­å–æ¶ˆæ¿€æ´»æ‰€æœ‰æ•Œäºº
         foreach (Transform child in transform)    
         {
-            foreach (Transform child2 in child)     //¼ìË÷Ã¿Ò»¸ö×ÓÎïÌåµÄ×ÓÎïÌå
+            foreach (Transform child2 in child)     //æ£€ç´¢æ¯ä¸€ä¸ªå­ç‰©ä½“çš„å­ç‰©ä½“
             {
                 if (child2.CompareTag("Enemy"))
                 {
-                    //ÕâÀï±ØĞë·Å»Ø³ØÖĞ£¬²»ÄÜµ¥´¿µÄÈ¡Ïû¼¤»î¡£·ñÔòÔÚµĞÈË´æ»îÊ±ÖØÖÃÓÎÏ·ºó£¬½«²»»áÖØ¸´Ê¹ÓÃÖ®Ç°Éú³É¹ıµÄµĞÈËÎïÌå
-                    PushObject(child2.gameObject);      //½«µĞÈË½Å±¾µÄ¸¸ÎïÌå·Å»Ø³ØÖĞ£¬Ò²½«·Å»Ø¸¸ÎïÌåµÄËùÓĞ×ÓÎïÌå
+                    //è¿™é‡Œå¿…é¡»æ”¾å›æ± ä¸­ï¼Œä¸èƒ½å•çº¯çš„å–æ¶ˆæ¿€æ´»ã€‚å¦åˆ™åœ¨æ•Œäººå­˜æ´»æ—¶é‡ç½®æ¸¸æˆåï¼Œå°†ä¸ä¼šé‡å¤ä½¿ç”¨ä¹‹å‰ç”Ÿæˆè¿‡çš„æ•Œäººç‰©ä½“
+                    PushObject(child2.gameObject);      //å°†æ•Œäººè„šæœ¬çš„çˆ¶ç‰©ä½“æ”¾å›æ± ä¸­ï¼Œä¹Ÿå°†æ”¾å›çˆ¶ç‰©ä½“çš„æ‰€æœ‰å­ç‰©ä½“
                 }
             }
         }
     }
 
-    public void EndGame()     //½áÊøÓÎÏ·£¨ÔÚÍæ¼ÒÊ¤ÀûÊ±µ÷ÓÃ´Ëº¯Êı£©
+    public void EndGame()     //ç»“æŸæ¸¸æˆï¼ˆåœ¨ç©å®¶èƒœåˆ©æ—¶è°ƒç”¨æ­¤å‡½æ•°ï¼‰
     {
-        //ÔÚ³¡¾°ÖĞÈÃËùÓĞ¼¤»îµÄµĞÈË½øÈëËÀÍö×´Ì¬
+        //åœ¨åœºæ™¯ä¸­è®©æ‰€æœ‰æ¿€æ´»çš„æ•Œäººè¿›å…¥æ­»äº¡çŠ¶æ€
         foreach (Transform child in transform)
         {
-            foreach (Transform child2 in child)     //¼ìË÷Ã¿Ò»¸ö×ÓÎïÌåµÄ×ÓÎïÌå
+            foreach (Transform child2 in child)     //æ£€ç´¢æ¯ä¸€ä¸ªå­ç‰©ä½“çš„å­ç‰©ä½“
             {
-                //¼ì²éÎïÌåÊÇ·ñÓĞµĞÈË±êÇ©£¬ÇÒ´¦ÓÚ¼¤»î×´Ì¬
+                //æ£€æŸ¥ç‰©ä½“æ˜¯å¦æœ‰æ•Œäººæ ‡ç­¾ï¼Œä¸”å¤„äºæ¿€æ´»çŠ¶æ€
                 if (child2.CompareTag("Enemy") && child2.gameObject.activeSelf)
                 {
-                    Enemy enemyScript = child2.GetComponentInChildren<Enemy>();     //´Ó×ÓÎïÌåÄÇ»ñÈ¡µĞÈË½Å±¾
+                    Enemy enemyScript = child2.GetComponentInChildren<Enemy>();     //ä»å­ç‰©ä½“é‚£è·å–æ•Œäººè„šæœ¬
 
                     if (enemyScript == null)
                     {
@@ -151,7 +151,7 @@ public class EnemyPool : MonoBehaviour       //ÓÃÓÚÉú³ÉµĞÈËµÄ¶ÔÏó³Ø£¬Éú³É³öÀ´µÄË
                         return;
                     }
 
-                    enemyScript.StateMachine.ChangeState(enemyScript.DeathState);   //Ç¿ĞĞÈÃµĞÈË½øÈëËÀÍö×´Ì¬                 
+                    enemyScript.StateMachine.ChangeState(enemyScript.DeathState);   //å¼ºè¡Œè®©æ•Œäººè¿›å…¥æ­»äº¡çŠ¶æ€                 
                 }
             }
         }

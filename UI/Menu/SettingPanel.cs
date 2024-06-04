@@ -6,14 +6,14 @@ using UnityEngine.UI;
 
 
 
-//ËäÈ»¸Ã½çÃæÖ»ÓĞÏÂÀ­ÁĞ±í£¬µ«ÊÇÎªÁË·ÀÖ¹Íæ¼Ò´ò¿ª½çÃæºó×ÔÓÉ×Ô¶¯ºÍ¹¥»÷£¬ËùÒÔ¼Ì³Ğ×ÔPanelWithButton
+//è™½ç„¶è¯¥ç•Œé¢åªæœ‰ä¸‹æ‹‰åˆ—è¡¨ï¼Œä½†æ˜¯ä¸ºäº†é˜²æ­¢ç©å®¶æ‰“å¼€ç•Œé¢åè‡ªç”±è‡ªåŠ¨å’Œæ”»å‡»ï¼Œæ‰€ä»¥ç»§æ‰¿è‡ªPanelWithButton
 public class SettingPanel : PanelWithButton     
 {
-    public TMP_Dropdown Dropdown;       //ÏÂÀ­ÁĞ±í
-    public TMP_Text LabelText;          //ÏÂÀ­ÁĞ±íÖĞÏÔÊ¾µ±Ç°Ñ¡ÏîµÄÎÄ±¾
-    public Button CloseButton;          //ÓÃÓÚ¹Ø±Õ½çÃæµÄ°´Å¥
+    public TMP_Dropdown Dropdown;       //ä¸‹æ‹‰åˆ—è¡¨
+    public TMP_Text LabelText;          //ä¸‹æ‹‰åˆ—è¡¨ä¸­æ˜¾ç¤ºå½“å‰é€‰é¡¹çš„æ–‡æœ¬
+    public Button CloseButton;          //ç”¨äºå…³é—­ç•Œé¢çš„æŒ‰é’®
 
-    LeanLocalization m_Localization;       //·­Òë´¦ÀíÆ÷µÄÒıÓÃ
+    LeanLocalization m_Localization;       //ç¿»è¯‘å¤„ç†å™¨çš„å¼•ç”¨
 
 
 
@@ -30,7 +30,7 @@ public class SettingPanel : PanelWithButton
         }
 
 
-        m_Localization = FindObjectOfType<LeanLocalization>();  //Ñ°ÕÒ·­Òë×é¼ş
+        m_Localization = FindObjectOfType<LeanLocalization>();  //å¯»æ‰¾ç¿»è¯‘ç»„ä»¶
 
         if (m_Localization == null)
         {
@@ -41,17 +41,17 @@ public class SettingPanel : PanelWithButton
 
     private void Start()
     {
-        PopulateDropdown();     //¸ù¾İÓµÓĞµÄÓïÑÔÌî³äÏÂÀ­²Ëµ¥
+        PopulateDropdown();     //æ ¹æ®æ‹¥æœ‰çš„è¯­è¨€å¡«å……ä¸‹æ‹‰èœå•
 
-        Dropdown.onValueChanged.AddListener(ChangeLanguage);    //½«º¯Êı°ó¶¨µ½ÏÂÀ­²Ëµ¥
-        CloseButton.onClick.AddListener(() => Fade(CanvasGroup, FadeOutAlpha, FadeDuration, false) );   //½«º¯Êı°ó¶¨µ½°´Å¥
+        Dropdown.onValueChanged.AddListener(ChangeLanguage);    //å°†å‡½æ•°ç»‘å®šåˆ°ä¸‹æ‹‰èœå•
+        CloseButton.onClick.AddListener(() => Fade(CanvasGroup, FadeOutAlpha, FadeDuration, false) );   //å°†å‡½æ•°ç»‘å®šåˆ°æŒ‰é’®
     }
 
 
     protected override void OnEnable()
     {
         base.OnEnable();
-        //½çÃæÍêÈ«µ­³öºóµ÷ÓÃ´Ëº¯Êı
+        //ç•Œé¢å®Œå…¨æ·¡å‡ºåè°ƒç”¨æ­¤å‡½æ•°
         OnFadeOutFinished += ClosePanel;
     }
 
@@ -67,49 +67,49 @@ public class SettingPanel : PanelWithButton
 
 
 
-    private void PopulateDropdown()     //¸ù¾İÓµÓĞµÄÓïÑÔÌî³äÏÂÀ­²Ëµ¥
+    private void PopulateDropdown()     //æ ¹æ®æ‹¥æœ‰çš„è¯­è¨€å¡«å……ä¸‹æ‹‰èœå•
     {
-        Dropdown.ClearOptions();    //ÏÈÇå¿ÕËùÓĞÔ­±¾µÄÑ¡Ïî
+        Dropdown.ClearOptions();    //å…ˆæ¸…ç©ºæ‰€æœ‰åŸæœ¬çš„é€‰é¡¹
 
         foreach (var languageDict in LeanLocalization.CurrentLanguages)
         {
-            string language = languageDict.Key;     //¸ù¾İvalue´Ó×ÖµäÄÇ»ñÈ¡key         
+            string language = languageDict.Key;     //æ ¹æ®valueä»å­—å…¸é‚£è·å–key         
 
-            //×ª»»ÓïÑÔºó£¬´´½¨ĞÂµÄ×Ö·û´®¸øÏÂÀ­²Ëµ¥
+            //è½¬æ¢è¯­è¨€åï¼Œåˆ›å»ºæ–°çš„å­—ç¬¦ä¸²ç»™ä¸‹æ‹‰èœå•
             Dropdown.options.Add(new TMP_Dropdown.OptionData(LanguageTransform(language)) );      
         }
 
-        //×ª»»ÓïÑÔºó£¬ÉèÖÃµ±Ç°ÓïÑÔ¶ÔÓ¦µÄÖµ
+        //è½¬æ¢è¯­è¨€åï¼Œè®¾ç½®å½“å‰è¯­è¨€å¯¹åº”çš„å€¼
         Dropdown.value = Dropdown.options.FindIndex(option => option.text == LanguageTransform(m_Localization.CurrentLanguage) );
-        //×ª»»ÓïÑÔºó£¬¸øLabel¸³Öµµ±Ç°µÄÓïÑÔ£¬ÓÃÓÚÏÔÊ¾µ±Ç°ÏÂÀ­²Ëµ¥ÕıÔÚÑ¡ÔñµÄÖµ
+        //è½¬æ¢è¯­è¨€åï¼Œç»™Labelèµ‹å€¼å½“å‰çš„è¯­è¨€ï¼Œç”¨äºæ˜¾ç¤ºå½“å‰ä¸‹æ‹‰èœå•æ­£åœ¨é€‰æ‹©çš„å€¼
         LabelText.text = LanguageTransform(m_Localization.CurrentLanguage);      
     }
 
 
     private void ChangeLanguage(int index)
     {
-        string selectedLanguage = Dropdown.options[index].text;     //¸ù¾İÏÂÀ­²Ëµ¥µÄÖµ»ñÈ¡¶ÔÓ¦µÄÎÄ±¾µÄ×Ö·û´®
+        string selectedLanguage = Dropdown.options[index].text;     //æ ¹æ®ä¸‹æ‹‰èœå•çš„å€¼è·å–å¯¹åº”çš„æ–‡æœ¬çš„å­—ç¬¦ä¸²
 
-        //×ª»»ÓïÑÔºó£¬ÇĞ»»µ½×Ö·û´®¶ÔÓ¦µÄÓïÑÔ
+        //è½¬æ¢è¯­è¨€åï¼Œåˆ‡æ¢åˆ°å­—ç¬¦ä¸²å¯¹åº”çš„è¯­è¨€
         m_Localization.SetCurrentLanguage(LanguageTransform(selectedLanguage) );
     }
 
 
-    //ÈÃÎÄ±¾Ö±½ÓÏÔÊ¾ÄÇ¸öÓïÑÔ£¬´Ó¶øÈÃÍæ¼Ò¿ÉÒÔ¸ü¿ìÊ¶±ğ£»»òÕß×ª»»»ØÀ´
+    //è®©æ–‡æœ¬ç›´æ¥æ˜¾ç¤ºé‚£ä¸ªè¯­è¨€ï¼Œä»è€Œè®©ç©å®¶å¯ä»¥æ›´å¿«è¯†åˆ«ï¼›æˆ–è€…è½¬æ¢å›æ¥
     private string LanguageTransform(string selectedLanguage)
     {
         switch (selectedLanguage)
         {
             case "Chinese":
-                selectedLanguage = "ÖĞÎÄ";
+                selectedLanguage = "ä¸­æ–‡";
                 break;
 
-            case "ÖĞÎÄ":
+            case "ä¸­æ–‡":
                 selectedLanguage = "Chinese";
                 break;
 
             default:
-                selectedLanguage = "English";       //Ä¬ÈÏ·µ»ØEnglish
+                selectedLanguage = "English";       //é»˜è®¤è¿”å›English
                 break;
         }
 

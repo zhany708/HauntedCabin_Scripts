@@ -6,10 +6,10 @@ using UnityEngine.SceneManagement;
 
 public class GameBackgroundPanel : BasePanel
 {
-    public TextMeshProUGUI FirstPartText;       //µÚÒ»¶ÎÎÄ±¾
-    public TextMeshProUGUI SecondPartText;      //µÚ¶ş¶ÎÎÄ±¾
-    public TextMeshProUGUI LastPartText;        //×îºóÒ»¶ÎÎÄ±¾
-    public TextMeshProUGUI TipText;             //ÌáÊ¾ÎÄ±¾
+    public TextMeshProUGUI FirstPartText;       //ç¬¬ä¸€æ®µæ–‡æœ¬
+    public TextMeshProUGUI SecondPartText;      //ç¬¬äºŒæ®µæ–‡æœ¬
+    public TextMeshProUGUI LastPartText;        //æœ€åä¸€æ®µæ–‡æœ¬
+    public TextMeshProUGUI TipText;             //æç¤ºæ–‡æœ¬
 
 
 
@@ -26,11 +26,11 @@ public class GameBackgroundPanel : BasePanel
 
     private void OnEnable()
     {
-        //½çÃæÍêÈ«µ­³öºóµ÷ÓÃÒÔÏÂº¯Êı
+        //ç•Œé¢å®Œå…¨æ·¡å‡ºåè°ƒç”¨ä»¥ä¸‹å‡½æ•°
         OnFadeOutFinished += ClosePanel;
         OnFadeOutFinished += PlayGame;
 
-        OnFadeInFinished += StartTextAnimations;    //½çÃæÍêÈ«µ­Èëºóµ÷ÓÃ´Ëº¯Êı
+        OnFadeInFinished += StartTextAnimations;    //ç•Œé¢å®Œå…¨æ·¡å…¥åè°ƒç”¨æ­¤å‡½æ•°
     }
 
     protected override void OnDisable()
@@ -45,12 +45,12 @@ public class GameBackgroundPanel : BasePanel
 
 
 
-    private async void PlayGame()   //¿ªÊ¼ÓÎÏ·
+    private async void PlayGame()   //å¼€å§‹æ¸¸æˆ
     {
-        //ÔØÈëÒ»Â¥´óÌü³¡¾°
+        //è½½å…¥ä¸€æ¥¼å¤§å…åœºæ™¯
         SceneManager.LoadScene("FirstFloor");
 
-        //²¥·ÅÒ»Â¥BGM
+        //æ’­æ”¾ä¸€æ¥¼BGM
         await SoundManager.Instance.PlayBGMAsync(SoundManager.Instance.AudioClipKeys.StopForAMoment, true, SoundManager.Instance.MusicVolume);
     }
 
@@ -58,59 +58,59 @@ public class GameBackgroundPanel : BasePanel
 
     private void StartTextAnimations()
     {
-        FirstPartText.gameObject.SetActive(true);       //¼¤»îµÚÒ»¶ÎÎÄ±¾
+        FirstPartText.gameObject.SetActive(true);       //æ¿€æ´»ç¬¬ä¸€æ®µæ–‡æœ¬
 
-        //ÏÈ¿ªÊ¼µÚÒ»¶ÎÎÄ±¾µÄ´ò×ÖĞ§¹û
+        //å…ˆå¼€å§‹ç¬¬ä¸€æ®µæ–‡æœ¬çš„æ‰“å­—æ•ˆæœ
         Coroutine firstPartTextCoroutine = StartCoroutine(TypeText(FirstPartText, FirstPartText.text, () =>
         {
-            TipText.gameObject.SetActive(true);     //¼¤»îÌáÊ¾ÎÄ±¾£¬ÌáĞÑÍæ¼Ò°´¿Õ¸ñ»òµã»÷ÒÔ¼ÌĞøÓÎÏ·
+            TipText.gameObject.SetActive(true);     //æ¿€æ´»æç¤ºæ–‡æœ¬ï¼Œæé†’ç©å®¶æŒ‰ç©ºæ ¼æˆ–ç‚¹å‡»ä»¥ç»§ç»­æ¸¸æˆ
 
-            //µÈ´ıÍæ¼Ò°´¿Õ¸ñ»òµã»÷Êó±ê
+            //ç­‰å¾…ç©å®¶æŒ‰ç©ºæ ¼æˆ–ç‚¹å‡»é¼ æ ‡
             Coroutine firstWaitForInputCoroutine = StartCoroutine(Delay.Instance.WaitForPlayerInput(() =>
             {
-                SecondPartText.gameObject.SetActive(true);      //¼¤»îµÚ¶ş¶ÎÎÄ±¾
-                TipText.gameObject.SetActive(false);     //È¡Ïû¼¤»îÌáÊ¾ÎÄ±¾
+                SecondPartText.gameObject.SetActive(true);      //æ¿€æ´»ç¬¬äºŒæ®µæ–‡æœ¬
+                TipText.gameObject.SetActive(false);     //å–æ¶ˆæ¿€æ´»æç¤ºæ–‡æœ¬
 
 
-                //È»ºó¿ªÊ¼µÚ¶ş¶ÎÎÄ±¾µÄ´ò×ÖĞ§¹û
+                //ç„¶åå¼€å§‹ç¬¬äºŒæ®µæ–‡æœ¬çš„æ‰“å­—æ•ˆæœ
                 Coroutine secondPartTextCoroutine = StartCoroutine(TypeText(SecondPartText, SecondPartText.text, () =>
                 {
-                    //µÈ´ı1Ãë
+                    //ç­‰å¾…1ç§’
                     Coroutine delayCoroutine = StartCoroutine(Delay.Instance.DelaySomeTime(1f, () =>
                     {
-                        LastPartText.gameObject.SetActive(true);      //¼¤»î×îºóÒ»¶ÎÎÄ±¾
+                        LastPartText.gameObject.SetActive(true);      //æ¿€æ´»æœ€åä¸€æ®µæ–‡æœ¬
 
 
-                        //È»ºó¿ªÊ¼×îºóÒ»¶ÎÎÄ±¾µÄ´ò×ÖĞ§¹û
+                        //ç„¶åå¼€å§‹æœ€åä¸€æ®µæ–‡æœ¬çš„æ‰“å­—æ•ˆæœ
                         Coroutine lastPartCoroutine = StartCoroutine(TypeText(LastPartText, LastPartText.text, () =>
                         {
-                            TipText.gameObject.SetActive(true);     //¼¤»îÌáÊ¾ÎÄ±¾
+                            TipText.gameObject.SetActive(true);     //æ¿€æ´»æç¤ºæ–‡æœ¬
 
-                            //µÈ´ıÍæ¼Ò°´¿Õ¸ñ»òµã»÷Êó±ê
+                            //ç­‰å¾…ç©å®¶æŒ‰ç©ºæ ¼æˆ–ç‚¹å‡»é¼ æ ‡
                             Coroutine lastWaitForInputCoroutine = StartCoroutine(Delay.Instance.WaitForPlayerInput(() =>
                             {
                                 //Debug.Log("Last Coroutine done!.");
 
-                                //µ­³ö½çÃæ
+                                //æ·¡å‡ºç•Œé¢
                                 Fade(CanvasGroup, FadeOutAlpha, FadeDuration, false);
                             }));
 
-                            generatedCoroutines.Add(lastWaitForInputCoroutine);    //½«Ğ­³Ì¼Ó½øÁĞ±í
+                            generatedCoroutines.Add(lastWaitForInputCoroutine);    //å°†åç¨‹åŠ è¿›åˆ—è¡¨
                         }));
 
-                        generatedCoroutines.Add(lastPartCoroutine);    //½«Ğ­³Ì¼Ó½øÁĞ±í
+                        generatedCoroutines.Add(lastPartCoroutine);    //å°†åç¨‹åŠ è¿›åˆ—è¡¨
                     }));
 
-                    generatedCoroutines.Add(delayCoroutine);    //½«Ğ­³Ì¼Ó½øÁĞ±í
+                    generatedCoroutines.Add(delayCoroutine);    //å°†åç¨‹åŠ è¿›åˆ—è¡¨
                 }));
 
-                generatedCoroutines.Add(secondPartTextCoroutine);   //½«Ğ­³Ì¼Ó½øÁĞ±í
+                generatedCoroutines.Add(secondPartTextCoroutine);   //å°†åç¨‹åŠ è¿›åˆ—è¡¨
 
             }));
 
-            generatedCoroutines.Add(firstWaitForInputCoroutine);    //½«Ğ­³Ì¼Ó½øÁĞ±í
+            generatedCoroutines.Add(firstWaitForInputCoroutine);    //å°†åç¨‹åŠ è¿›åˆ—è¡¨
         }));
 
-        generatedCoroutines.Add(firstPartTextCoroutine);      //½«Ğ­³Ì¼Ó½øÁĞ±í
+        generatedCoroutines.Add(firstPartTextCoroutine);      //å°†åç¨‹åŠ è¿›åˆ—è¡¨
     }
 }

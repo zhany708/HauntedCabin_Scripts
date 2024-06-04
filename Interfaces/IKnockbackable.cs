@@ -2,7 +2,7 @@ using UnityEngine;
 
 
 
-public interface IKnockbackable     //ÓÃÓÚËùÓĞ¿ÉÒÔ±»»÷ÍËµÄÎïÌå
+public interface IKnockbackable     //ç”¨äºæ‰€æœ‰å¯ä»¥è¢«å‡»é€€çš„ç‰©ä½“
 {
-    void KnockBack(float strength, Vector2 direction);      //±»»÷ÍË
+    void KnockBack(float strength, Vector2 direction);      //è¢«å‡»é€€
 }

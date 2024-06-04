@@ -9,20 +9,20 @@ public class PlayerGroundedState : PlayerState
     {
         base.LogicUpdate();
 
-        //Ö»ÓĞµ±Íæ¼ÒÔÊĞí¹¥»÷Ê±£¬²ÅÄÜ½øÈë¹¥»÷×´Ì¬
+        //åªæœ‰å½“ç©å®¶å…è®¸æ”»å‡»æ—¶ï¼Œæ‰èƒ½è¿›å…¥æ”»å‡»çŠ¶æ€
         if (BasePanel.IsPlayerAttackable)
         {
-            //¼ì²éÊÇ·ñ½øÈë¹¥»÷×´Ì¬
-            if (PlayerInputHandler.Instance.AttackInputs[(int)CombatInputs.primary] && stateMachine.currentState != player.PrimaryAttackState)        //°´ÏÂÊó±ê×ó¼üÊ±£¬½øÈëÖ÷ÎäÆ÷¹¥»÷×´Ì¬
+            //æ£€æŸ¥æ˜¯å¦è¿›å…¥æ”»å‡»çŠ¶æ€
+            if (PlayerInputHandler.Instance.AttackInputs[(int)CombatInputs.primary] && stateMachine.currentState != player.PrimaryAttackState)        //æŒ‰ä¸‹é¼ æ ‡å·¦é”®æ—¶ï¼Œè¿›å…¥ä¸»æ­¦å™¨æ”»å‡»çŠ¶æ€
             {
-                player.MakeSpriteVisible(player.PrimaryWeapon.transform.gameObject, true);      //ÏÔÊ¾µ±Ç°×°±¸µÄÖ÷ÎäÆ÷
-                player.MakeSpriteVisible(player.SecondaryWeapon.transform.gameObject, false);   //Òş²Øµ±Ç°×°±¸µÄÖ÷ÎäÆ÷
+                player.MakeSpriteVisible(player.PrimaryWeapon.transform.gameObject, true);      //æ˜¾ç¤ºå½“å‰è£…å¤‡çš„ä¸»æ­¦å™¨
+                player.MakeSpriteVisible(player.SecondaryWeapon.transform.gameObject, false);   //éšè—å½“å‰è£…å¤‡çš„ä¸»æ­¦å™¨
 
                 stateMachine.ChangeState(player.PrimaryAttackState);
             }
 
 
-            else if (PlayerInputHandler.Instance.AttackInputs[(int)CombatInputs.secondary] && stateMachine.currentState != player.SecondaryAttackState)     //°´ÏÂÊó±êÓÒ¼üÊ±£¬½øÈë¸±ÎäÆ÷¹¥»÷×´Ì¬
+            else if (PlayerInputHandler.Instance.AttackInputs[(int)CombatInputs.secondary] && stateMachine.currentState != player.SecondaryAttackState)     //æŒ‰ä¸‹é¼ æ ‡å³é”®æ—¶ï¼Œè¿›å…¥å‰¯æ­¦å™¨æ”»å‡»çŠ¶æ€
             {
                 player.MakeSpriteVisible(player.PrimaryWeapon.transform.gameObject, false);
                 player.MakeSpriteVisible(player.SecondaryWeapon.transform.gameObject, true);

@@ -2,7 +2,7 @@ using UnityEngine;
 
 
 
-public class BaseScreenplay<T> : MonoBehaviour where T : Component         //ËùÓĞ¾ç±¾µÄµ×²ãÂß¼­£¨¹²Í¬µã£©
+public class BaseScreenplay<T> : MonoBehaviour where T : Component         //æ‰€æœ‰å‰§æœ¬çš„åº•å±‚é€»è¾‘ï¼ˆå…±åŒç‚¹ï¼‰
 {
     public static T Instance { get; private set; }
 
@@ -12,7 +12,7 @@ public class BaseScreenplay<T> : MonoBehaviour where T : Component         //ËùÓ
 
     protected virtual void Awake()
     {
-        //µ¥ÀıÄ£Ê½
+        //å•ä¾‹æ¨¡å¼
         if (Instance != null && Instance != this as T)
         {
             Destroy(gameObject);
@@ -22,7 +22,7 @@ public class BaseScreenplay<T> : MonoBehaviour where T : Component         //ËùÓ
         {
             Instance = this as T;
 
-            //Ö»ÓĞÔÚÃ»ÓĞ¸¸ÎïÌåÊ±²ÅÔËĞĞ·ÀÉ¾º¯Êı£¬·ñÔò»á³öÏÖÌáĞÑ
+            //åªæœ‰åœ¨æ²¡æœ‰çˆ¶ç‰©ä½“æ—¶æ‰è¿è¡Œé˜²åˆ å‡½æ•°ï¼Œå¦åˆ™ä¼šå‡ºç°æé†’
             if (gameObject.transform.parent == null)
             {
                 DontDestroyOnLoad(gameObject);
@@ -32,23 +32,23 @@ public class BaseScreenplay<T> : MonoBehaviour where T : Component         //ËùÓ
 
     private void Start()
     {
-        StartScreenplay();      //¿ªÊ¼¾ç±¾Setup
+        StartScreenplay();      //å¼€å§‹å‰§æœ¬Setup
     }
 
 
-    public virtual void StartScreenplay()       //¾ç±¾¿ªÊ¼£¨¾ç±¾µÄSetup£¬±ÈÈçÉú³ÉÒ»Ğ©¶«Î÷µÈ£©
+    public virtual void StartScreenplay()       //å‰§æœ¬å¼€å§‹ï¼ˆå‰§æœ¬çš„Setupï¼Œæ¯”å¦‚ç”Ÿæˆä¸€äº›ä¸œè¥¿ç­‰ï¼‰
     {
 
     }
 
 
 
-    private void Victory()     //Ê¤ÀûÏà¹ØµÄÂß¼­
+    private void Victory()     //èƒœåˆ©ç›¸å…³çš„é€»è¾‘
     {
 
     }
 
-    private void Lose()        //Ê§°ÜÏà¹ØµÄÂß¼­
+    private void Lose()        //å¤±è´¥ç›¸å…³çš„é€»è¾‘
     {
 
     }

@@ -22,7 +22,7 @@ public class PlayerAbilityState : PlayerState
 
         if (isAbilityDone)
         {
-            stateMachine.ChangeState(player.IdleState);     //¹¥»÷½áÊøºó½øÈëÏĞÖÃ×´Ì¬
+            stateMachine.ChangeState(player.IdleState);     //æ”»å‡»ç»“æŸåè¿›å…¥é—²ç½®çŠ¶æ€
         }
     }
 }

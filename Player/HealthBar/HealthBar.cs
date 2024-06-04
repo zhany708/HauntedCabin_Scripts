@@ -7,16 +7,16 @@ using UnityEngine.UI;
 public class HealthBar : MonoBehaviour
 {
     Image m_HpImage;
-    Image m_HpEffectImage;     //ÑªÁ¿»º³åÍ¼Æ¬
+    Image m_HpEffectImage;     //è¡€é‡ç¼“å†²å›¾ç‰‡
 
     Player m_Player;
 
 
     float m_MaxHp;
     float m_CurrentHp;
-    float m_BuffTime = 0.5f;    //»º³åÊ±¼ä
+    float m_BuffTime = 0.5f;    //ç¼“å†²æ—¶é—´
 
-    Coroutine m_UpdateCoroutine;    //·ÀÖ¹ÉÏÒ»ÂÖĞ­³Ì»¹Ã»½áÊø¾Í¿ªÊ¼ĞÂµÄĞ­³Ì£¨¿ÛÑª£©
+    Coroutine m_UpdateCoroutine;    //é˜²æ­¢ä¸Šä¸€è½®åç¨‹è¿˜æ²¡ç»“æŸå°±å¼€å§‹æ–°çš„åç¨‹ï¼ˆæ‰£è¡€ï¼‰
 
 
 
@@ -34,13 +34,13 @@ public class HealthBar : MonoBehaviour
 
 
 
-    //ÒòÎªĞèÒªÒì²½¼ÓÔØUI¡£ËùÒÔÊ¹ÓÃasync£¨Èç¹û²»Ê¹ÓÃµÄ»°£¬¿ÉÄÜ»á³öÏÖ»¹Ã»¼ÓÔØÍê¾Í½Ó×ÅÅÜÏÂÃæµÄ´úÂëµÄÇé¿ö£©
+    //å› ä¸ºéœ€è¦å¼‚æ­¥åŠ è½½UIã€‚æ‰€ä»¥ä½¿ç”¨asyncï¼ˆå¦‚æœä¸ä½¿ç”¨çš„è¯ï¼Œå¯èƒ½ä¼šå‡ºç°è¿˜æ²¡åŠ è½½å®Œå°±æ¥ç€è·‘ä¸‹é¢çš„ä»£ç çš„æƒ…å†µï¼‰
     private async Task InitializeHealthBarAsync()   
     {
-        //¼ì²éUIKeysÊÇ·ñÎª¿ÕÇÒÒª¼ÓÔØµÄÃû×ÖÊÇ·ñ´æÔÚ£¬ËæºóµÈ´ıUI¼ÓÔØÍê±Ï
+        //æ£€æŸ¥UIKeysæ˜¯å¦ä¸ºç©ºä¸”è¦åŠ è½½çš„åå­—æ˜¯å¦å­˜åœ¨ï¼Œéšåç­‰å¾…UIåŠ è½½å®Œæ¯•
         if (UIManager.Instance.UIKeys != null && !string.IsNullOrEmpty(UIManager.Instance.UIKeys.PlayerStatusBarKey))
         {
-            await UIManager.Instance.OpenPanel(UIManager.Instance.UIKeys.PlayerStatusBarKey);    //ÏÔÊ¾Íæ¼Ò×´Ì¬À¸
+            await UIManager.Instance.OpenPanel(UIManager.Instance.UIKeys.PlayerStatusBarKey);    //æ˜¾ç¤ºç©å®¶çŠ¶æ€æ 
         }
 
         else
@@ -49,7 +49,7 @@ public class HealthBar : MonoBehaviour
         }
 
 
-        //UI¼ÓÔØÍê±Ïºó²Å»á»ñÈ¡×é¼ş
+        //UIåŠ è½½å®Œæ¯•åæ‰ä¼šè·å–ç»„ä»¶
         m_Player = GetComponentInParent<Player>();
         if (m_Player == null)
         {
@@ -58,10 +58,10 @@ public class HealthBar : MonoBehaviour
         }
 
 
-        m_MaxHp = m_Player.PlayerData.MaxHealth;        //ÓÎÏ·¿ªÊ¼Ê±³õÊ¼»¯×î´óÉúÃüÖµ
+        m_MaxHp = m_Player.PlayerData.MaxHealth;        //æ¸¸æˆå¼€å§‹æ—¶åˆå§‹åŒ–æœ€å¤§ç”Ÿå‘½å€¼
         m_CurrentHp = m_MaxHp;
 
-        //Õâ¸öÊ±ºòÔÙÔËĞĞ´Ëº¯Êı¡£¾Í²»»á³öÏÖÄ³¸öÒì²½¼ÓÔØµÄ×é¼ş»¹Ã»³õÊ¼»¯Íê±Ï¾ÍĞèÒªÊ¹ÓÃ
+        //è¿™ä¸ªæ—¶å€™å†è¿è¡Œæ­¤å‡½æ•°ã€‚å°±ä¸ä¼šå‡ºç°æŸä¸ªå¼‚æ­¥åŠ è½½çš„ç»„ä»¶è¿˜æ²¡åˆå§‹åŒ–å®Œæ¯•å°±éœ€è¦ä½¿ç”¨
         UpdateHealthBar();
     }
 
@@ -71,14 +71,14 @@ public class HealthBar : MonoBehaviour
 
     public void SetCurrentHealth(float health)
     {
-        m_CurrentHp = Mathf.Clamp(health, 0f, m_MaxHp);     //·µ»ØµÄÖµÏŞÖÆÔÚ0ºÍÑªÁ¿ÉÏÏŞÖ®¼ä
+        m_CurrentHp = Mathf.Clamp(health, 0f, m_MaxHp);     //è¿”å›çš„å€¼é™åˆ¶åœ¨0å’Œè¡€é‡ä¸Šé™ä¹‹é—´
         UpdateHealthBar();
     }
 
 
     private void UpdateHealthBar()
     {
-        //Ê¹ÓÃ×é¼şÇ°¼ì²éÊÇ·ñÎª¿Õ
+        //ä½¿ç”¨ç»„ä»¶å‰æ£€æŸ¥æ˜¯å¦ä¸ºç©º
         if (m_HpImage == null || m_HpEffectImage == null)
         {
             Debug.LogError("Health bar images are not set.");
@@ -90,7 +90,7 @@ public class HealthBar : MonoBehaviour
 
         if (m_UpdateCoroutine != null)      
         {
-            StopCoroutine(m_UpdateCoroutine);     //Èç¹ûĞ­³ÌÕıÔÚ½øĞĞ£¬ÔòÍ£Ö¹ËüÈ»ºó¿ªÊ¼ĞÂµÄĞ­³Ì£¬±£Ö¤Ö»ÓĞÒ»¸öĞ­³Ì´æÔÚ
+            StopCoroutine(m_UpdateCoroutine);     //å¦‚æœåç¨‹æ­£åœ¨è¿›è¡Œï¼Œåˆ™åœæ­¢å®ƒç„¶åå¼€å§‹æ–°çš„åç¨‹ï¼Œä¿è¯åªæœ‰ä¸€ä¸ªåç¨‹å­˜åœ¨
         }
 
         m_UpdateCoroutine = StartCoroutine(UpdateHpEffect());
@@ -102,18 +102,18 @@ public class HealthBar : MonoBehaviour
 
     private IEnumerator UpdateHpEffect()
     {
-        float effectLength = m_HpEffectImage.fillAmount - m_HpImage.fillAmount;     //»º³åµÄÑªÁ¿
-        float elapsedTime = 0f;     //ÓÃÓÚÈ·±£»º³åÊ±¼äÔÚ0.5ÃëÄÚ
+        float effectLength = m_HpEffectImage.fillAmount - m_HpImage.fillAmount;     //ç¼“å†²çš„è¡€é‡
+        float elapsedTime = 0f;     //ç”¨äºç¡®ä¿ç¼“å†²æ—¶é—´åœ¨0.5ç§’å†…
 
         while (elapsedTime < m_BuffTime && effectLength != 0f)
         {
             elapsedTime += Time.deltaTime;
-            m_HpEffectImage.fillAmount = Mathf.Lerp(m_HpImage.fillAmount + effectLength, m_HpImage.fillAmount, elapsedTime/m_BuffTime);   //·µ»ØÖµ¸ù¾İµÚÈı¸ö²ÎÊı¾ö¶¨£¬ 0Ôò·µ»Ø²ÎÊıÒ»£¬1Ôò·µ»Ø²ÎÊı¶ş£¬0.5Ôò·µ»ØÖĞµã
+            m_HpEffectImage.fillAmount = Mathf.Lerp(m_HpImage.fillAmount + effectLength, m_HpImage.fillAmount, elapsedTime/m_BuffTime);   //è¿”å›å€¼æ ¹æ®ç¬¬ä¸‰ä¸ªå‚æ•°å†³å®šï¼Œ 0åˆ™è¿”å›å‚æ•°ä¸€ï¼Œ1åˆ™è¿”å›å‚æ•°äºŒï¼Œ0.5åˆ™è¿”å›ä¸­ç‚¹
 
-            yield return null;      //µÈ´ıÒ»Ö¡µÄÊ±¼ä
+            yield return null;      //ç­‰å¾…ä¸€å¸§çš„æ—¶é—´
         }
 
-        m_HpEffectImage.fillAmount = m_HpImage.fillAmount;      //·ÀÖ¹»º³åÑªÌõ³¬¹ıºìÉ«ÑªÌõ
+        m_HpEffectImage.fillAmount = m_HpImage.fillAmount;      //é˜²æ­¢ç¼“å†²è¡€æ¡è¶…è¿‡çº¢è‰²è¡€æ¡
     }
 
 

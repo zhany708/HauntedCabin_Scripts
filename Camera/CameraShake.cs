@@ -24,19 +24,19 @@ public class CameraShake : MonoBehaviour
 
         if (m_PlayerCamera != null)
         {
-            m_VirtualCameraNoise = m_PlayerCamera.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>();     //µ÷ÓÃÕğ¶¯×é¼ş
+            m_VirtualCameraNoise = m_PlayerCamera.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>();     //è°ƒç”¨éœ‡åŠ¨ç»„ä»¶
         }
     }
 
 
-    public void ShakeCamera(float intensity, float duration)    //Õğ¶¯º¯Êı
+    public void ShakeCamera(float intensity, float duration)    //éœ‡åŠ¨å‡½æ•°
     {
-        if (m_VirtualCameraNoise != null && !m_IsShake)     //Ö»ÓĞ²»ÔÚÕğ¶¯Ê±²Å»á¿ªÊ¼Õğ¶¯
+        if (m_VirtualCameraNoise != null && !m_IsShake)     //åªæœ‰ä¸åœ¨éœ‡åŠ¨æ—¶æ‰ä¼šå¼€å§‹éœ‡åŠ¨
         {
             m_Intensity = intensity;
             m_IsShake = true;
 
-            m_VirtualCameraNoise.ReSeed();      //Ã¿´Î¿ªÊ¼Õğ¶¯Ç°ĞŞ¸ÄËæ»úÖÖ×Ó£¬Ê¹Ã¿´ÎÕğ¶¯·½Ïò¶¼²»Ò»Ñù
+            m_VirtualCameraNoise.ReSeed();      //æ¯æ¬¡å¼€å§‹éœ‡åŠ¨å‰ä¿®æ”¹éšæœºç§å­ï¼Œä½¿æ¯æ¬¡éœ‡åŠ¨æ–¹å‘éƒ½ä¸ä¸€æ ·
             m_VirtualCameraNoise.m_AmplitudeGain = m_Intensity;
             StartCoroutine(StopShake(duration));
         }
@@ -49,11 +49,11 @@ public class CameraShake : MonoBehaviour
         while (elapsed < duration)
         {
             elapsed += Time.deltaTime;
-            m_VirtualCameraNoise.m_AmplitudeGain = Mathf.Lerp(m_Intensity, 0f, elapsed / duration);     //Ê¹Õğ¶¯Ç¿¶ÈÖğ½¥½µµÍ£¬¶ø²»ÊÇÍ»È»±ä³É0
+            m_VirtualCameraNoise.m_AmplitudeGain = Mathf.Lerp(m_Intensity, 0f, elapsed / duration);     //ä½¿éœ‡åŠ¨å¼ºåº¦é€æ¸é™ä½ï¼Œè€Œä¸æ˜¯çªç„¶å˜æˆ0
             yield return null;
         }
 
-        m_VirtualCameraNoise.m_AmplitudeGain = 0f;      //³ÖĞøÊ±¼ä½áÊøºóÈ¡ÏûÕğ¶¯
+        m_VirtualCameraNoise.m_AmplitudeGain = 0f;      //æŒç»­æ—¶é—´ç»“æŸåå–æ¶ˆéœ‡åŠ¨
 
         m_IsShake = false;
     }

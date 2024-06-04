@@ -22,13 +22,13 @@ namespace ZhangYu.Utilities
         {
             //m_FlipNumX = flipNum;
 
-            //ÓÃÓÚ·­×ªÎïÌåµÄXÖµ
+            //ç”¨äºŽç¿»è½¬ç‰©ä½“çš„Xå€¼
             m_Transform.localScale = new Vector3(Mathf.Abs(m_Transform.localScale.x) * flipNum, m_Transform.localScale.y, m_Transform.localScale.z);      
         }
 
         public void FlipY(int flipNum)
         {
-            //ÓÃÓÚ·­×ªÎïÌåµÄYÖµ
+            //ç”¨äºŽç¿»è½¬ç‰©ä½“çš„Yå€¼
             m_Transform.localScale = new Vector3(m_Transform.localScale.x, Mathf.Abs(m_Transform.localScale.y) * flipNum, m_Transform.localScale.z);      
         }
     }

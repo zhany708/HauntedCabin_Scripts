@@ -10,7 +10,7 @@ public class FireBat : Enemy
     {
         base.Start();
 
-        AttackState = new FireBatAttackState(this, StateMachine, enemyData, "Attack");    //½«ÆÕÍ¨¹¥»÷×´Ì¬¸Ä³É»ğòùòğ¹¥»÷×´Ì¬
+        AttackState = new FireBatAttackState(this, StateMachine, enemyData, "Attack");    //å°†æ™®é€šæ”»å‡»çŠ¶æ€æ”¹æˆç«è™è æ”»å‡»çŠ¶æ€
     }
 
 
@@ -20,26 +20,26 @@ public class FireBat : Enemy
     {
         if (target != null)
         {
-            //´¢´æ²ÎÊıµÄÁÙÊ±×ø±ê£¬·ÀÖ¹º¯ÊıÔËĞĞÆÚ¼ä²ÎÊıÏûÊ§
+            //å‚¨å­˜å‚æ•°çš„ä¸´æ—¶åæ ‡ï¼Œé˜²æ­¢å‡½æ•°è¿è¡ŒæœŸé—´å‚æ•°æ¶ˆå¤±
             Vector3 tempPos = target.position;
 
 
-            Vector2 attackX = transform.localScale.x >= 0 ? Vector2.right : Vector2.left;      //¸ù¾İ¶¯»­²ÎÊıMoveXÅĞ¶ÏµĞÈË³¯Ïò
-            float deviation = 0.2f;     //Æ«Àë²ÎÊı£¨Æ«Àë×ì²¿¶àÉÙ£©
-            Vector2 attackPosition = Movement.Rigidbody2d.position + Vector2.up * 0.8f + attackX * deviation;       //»ğÇòÉú³ÉÎ»ÖÃÔÚyÖáÉÏÓ¦Î»ÓÚÍ·²¿£¬xÖáÉÏÓ¦Æ«ÀëµĞÈËµÄÎ»ÖÃ£¨×ì²¿·¢Éä£©
+            Vector2 attackX = transform.localScale.x >= 0 ? Vector2.right : Vector2.left;      //æ ¹æ®åŠ¨ç”»å‚æ•°MoveXåˆ¤æ–­æ•Œäººæœå‘
+            float deviation = 0.2f;     //åç¦»å‚æ•°ï¼ˆåç¦»å˜´éƒ¨å¤šå°‘ï¼‰
+            Vector2 attackPosition = Movement.Rigidbody2d.position + Vector2.up * 0.8f + attackX * deviation;       //ç«çƒç”Ÿæˆä½ç½®åœ¨yè½´ä¸Šåº”ä½äºå¤´éƒ¨ï¼Œxè½´ä¸Šåº”åç¦»æ•Œäººçš„ä½ç½®ï¼ˆå˜´éƒ¨å‘å°„ï¼‰
 
 
-            float angle = Mathf.Atan2((tempPos.y + 0.5f - attackPosition.y), (tempPos.x - attackPosition.x)) * Mathf.Rad2Deg;      //¼ÆËã»ğÇòÓëÍæ¼ÒÖĞĞÄÖ®¼äµÄ¼Ğ½Ç
+            float angle = Mathf.Atan2((tempPos.y + 0.5f - attackPosition.y), (tempPos.x - attackPosition.x)) * Mathf.Rad2Deg;      //è®¡ç®—ç«çƒä¸ç©å®¶ä¸­å¿ƒä¹‹é—´çš„å¤¹è§’
 
-            //Éú³É»ğÇò£¬²¢ÉèÖÃ×ø±êºÍĞı×ª
+            //ç”Ÿæˆç«çƒï¼Œå¹¶è®¾ç½®åæ ‡å’Œæ—‹è½¬
             GameObject FireBallObject = ParticlePool.Instance.GetObject(FireBallPrefab);
             FireBallObject.transform.position = attackPosition;
             FireBallObject.transform.rotation = Quaternion.Euler(0, 0, angle);
 
 
 
-            EnemyBullet fireBall = FireBallObject.GetComponent<EnemyBullet>();        //µ÷ÓÃ»ğÇò½Å±¾
-            fireBall.SetSpeed(tempPos + Vector3.up * 0.5f - FireBallObject.transform.position);        //³¯½ÇÉ«ÖĞĞÄ·½Ïò·¢Éä»ğÇò
+            EnemyBullet fireBall = FireBallObject.GetComponent<EnemyBullet>();        //è°ƒç”¨ç«çƒè„šæœ¬
+            fireBall.SetSpeed(tempPos + Vector3.up * 0.5f - FireBallObject.transform.position);        //æœè§’è‰²ä¸­å¿ƒæ–¹å‘å‘å°„ç«çƒ
         }       
     }
 }

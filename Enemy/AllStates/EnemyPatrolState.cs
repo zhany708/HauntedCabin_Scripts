@@ -3,15 +3,15 @@ using UnityEngine;
 
 public class EnemyPatrolState : EnemyState
 {
-    //»ñÈ¡¼Ò¾ßÍ¼²ã
+    //è·å–å®¶å…·å›¾å±‚
     LayerMask m_FurnitureLayerMask = LayerMask.GetMask("Furniture");
 
 
-    Vector2 m_RandomPosition;       //Ëæ»úÉú³ÉµÄ×ø±ê
-    float m_PatrolTimer;    //ÓÃÓÚÑ²ÂßµÄ¼ÆÊ±Æ÷
+    Vector2 m_RandomPosition;       //éšæœºç”Ÿæˆçš„åæ ‡
+    float m_PatrolTimer;    //ç”¨äºå·¡é€»çš„è®¡æ—¶å™¨
 
 
-    //ÔËÓÃPhysics2D¼ì²éÖØ¸´×ø±êÊ±ĞèÒªµÄXºÍYµÄÖµ£¨»ğòùòğYÖáÉÏÓĞ0.5µÄÆ«²î£¬ÒòÎª×ø±êµãÎ»ÓÚ½Åµ×£©
+    //è¿ç”¨Physics2Dæ£€æŸ¥é‡å¤åæ ‡æ—¶éœ€è¦çš„Xå’ŒYçš„å€¼ï¼ˆç«è™è Yè½´ä¸Šæœ‰0.5çš„åå·®ï¼Œå› ä¸ºåæ ‡ç‚¹ä½äºè„šåº•ï¼‰
     const float m_PhysicsCheckingXPos = 2f;
     const float m_PhysicsCheckingYPos = 4f;
 
@@ -27,10 +27,10 @@ public class EnemyPatrolState : EnemyState
     {
         base.Enter();
 
-        //Éú³ÉËæ»ú×ø±ê
+        //ç”Ÿæˆéšæœºåæ ‡
         m_RandomPosition = enemy.PatrolRandomPos.GenerateSingleRandomPos();
 
-        //Éú³ÉÍêºó£¬È·±£×ø±êÃ»ÓĞÅö×²µ½¼Ò¾ß
+        //ç”Ÿæˆå®Œåï¼Œç¡®ä¿åæ ‡æ²¡æœ‰ç¢°æ’åˆ°å®¶å…·
         EnsurePositionIsValid();
     }
 
@@ -40,14 +40,14 @@ public class EnemyPatrolState : EnemyState
 
         m_PatrolTimer += Time.deltaTime;
 
-        enemy.EnemyFlip.FlipX(enemyMovement.GetFlipNum(m_RandomPosition, enemy.transform.position) );  //³¯ÏòÑ²ÂßµãµÄ·½Ïò
+        enemy.EnemyFlip.FlipX(enemyMovement.GetFlipNum(m_RandomPosition, enemy.transform.position) );  //æœå‘å·¡é€»ç‚¹çš„æ–¹å‘
 
         if (enemy.Parameter.Target != null)     // && !enemy.CheckOutside())
         {
-            stateMachine.ChangeState(enemy.ChaseState);     //Ñ²ÂßÊ±Èç¹û¼ì²âµ½Íæ¼ÒÔòÇĞ»»Îª×·»÷×´Ì¬
+            stateMachine.ChangeState(enemy.ChaseState);     //å·¡é€»æ—¶å¦‚æœæ£€æµ‹åˆ°ç©å®¶åˆ™åˆ‡æ¢ä¸ºè¿½å‡»çŠ¶æ€
         }
 
-        //µ±¾àÀëÄ¿±êÑ²Âßµã×ã¹»½üÊ±£»»òÕßÈç¹û5ÃëºóµĞÈËÈÔÃ»ÓĞµ½´ïÑ²Âßµã£¨¿¨×¡ÁË£©£¬Ôò×ª»»³ÉÏĞÖÃ×´Ì¬
+        //å½“è·ç¦»ç›®æ ‡å·¡é€»ç‚¹è¶³å¤Ÿè¿‘æ—¶ï¼›æˆ–è€…å¦‚æœ5ç§’åæ•Œäººä»æ²¡æœ‰åˆ°è¾¾å·¡é€»ç‚¹ï¼ˆå¡ä½äº†ï¼‰ï¼Œåˆ™è½¬æ¢æˆé—²ç½®çŠ¶æ€
         else if (Vector2.Distance(enemy.transform.position, m_RandomPosition) <= 0.1f || m_PatrolTimer >= 5f)
         {
             stateMachine.ChangeState(enemy.IdleState);
@@ -60,7 +60,7 @@ public class EnemyPatrolState : EnemyState
 
         if (m_RandomPosition != null)
         {
-            //ÒÆ¶¯µ½Ä¿±êµã
+            //ç§»åŠ¨åˆ°ç›®æ ‡ç‚¹
             enemy.transform.position = Vector2.MoveTowards(enemy.transform.position, m_RandomPosition, enemyData.MoveSpeed * Time.deltaTime);
         }
     }
@@ -69,7 +69,7 @@ public class EnemyPatrolState : EnemyState
     {
         base.Exit();
 
-        m_PatrolTimer = 0f;     //ÍË³öÊ±½«¼ÆÊ±Æ÷ÇåÁã
+        m_PatrolTimer = 0f;     //é€€å‡ºæ—¶å°†è®¡æ—¶å™¨æ¸…é›¶
     }
 
 
@@ -78,10 +78,10 @@ public class EnemyPatrolState : EnemyState
 
 
 
-    //È·±£×ø±ê´¦Ã»ÓĞÅö×²µ½¼Ò¾ß
+    //ç¡®ä¿åæ ‡å¤„æ²¡æœ‰ç¢°æ’åˆ°å®¶å…·
     private void EnsurePositionIsValid()
     {
-        //ÓÃÓÚ·ÀÖ¹ÎŞÏŞÑ­»·µÄ±äÁ¿£¬×î¶àÑ­»·100´Î
+        //ç”¨äºé˜²æ­¢æ— é™å¾ªç¯çš„å˜é‡ï¼Œæœ€å¤šå¾ªç¯100æ¬¡
         int attemptCount = 0;
 
         while (!IsPositionEmpty(m_RandomPosition) && attemptCount < 100)
@@ -90,7 +90,7 @@ public class EnemyPatrolState : EnemyState
             attemptCount++;
         }
 
-        //³¬¹ı×î´óÑ­»·ÊıÁ¿ºóÒÀÈ»Ã»ÓĞÉú³É³öºÏÊÊµÄ×ø±êÊ±£¬Ôò±¨´í
+        //è¶…è¿‡æœ€å¤§å¾ªç¯æ•°é‡åä¾ç„¶æ²¡æœ‰ç”Ÿæˆå‡ºåˆé€‚çš„åæ ‡æ—¶ï¼Œåˆ™æŠ¥é”™
         if (attemptCount >= 100)
         {
             Debug.LogError("Failed to find a valid patrol position after 100 attempts.");
@@ -98,10 +98,10 @@ public class EnemyPatrolState : EnemyState
     }
 
 
-    //ÔËÓÃÎïÀíº¯Êı¼ì²éÒªÉú³ÉµÄ×ø±êÊÇ·ñÓĞ¼Ò¾ß
+    //è¿ç”¨ç‰©ç†å‡½æ•°æ£€æŸ¥è¦ç”Ÿæˆçš„åæ ‡æ˜¯å¦æœ‰å®¶å…·
     private bool IsPositionEmpty(Vector2 position)
     {
-        //µÚÒ»¸ö²ÎÊıÎªÖĞĞÄµã£¬µÚ¶ş¸ö²ÎÊıÎª³¤·½ĞÎ´óĞ¡£¨ÑØ×ÅÖĞĞÄ¸÷ÑÓÉêÒ»°ë£©£¬µÚÈı¸ö²ÎÊıÎª½Ç¶È£¬µÚËÄ¸ö²ÎÊıÎª¼ì²âµÄÄ¿±ê²ã¼¶
+        //ç¬¬ä¸€ä¸ªå‚æ•°ä¸ºä¸­å¿ƒç‚¹ï¼Œç¬¬äºŒä¸ªå‚æ•°ä¸ºé•¿æ–¹å½¢å¤§å°ï¼ˆæ²¿ç€ä¸­å¿ƒå„å»¶ç”³ä¸€åŠï¼‰ï¼Œç¬¬ä¸‰ä¸ªå‚æ•°ä¸ºè§’åº¦ï¼Œç¬¬å››ä¸ªå‚æ•°ä¸ºæ£€æµ‹çš„ç›®æ ‡å±‚çº§
         Collider2D overlapCheck = Physics2D.OverlapBox(position, new Vector2(m_PhysicsCheckingXPos, m_PhysicsCheckingYPos), 0f, m_FurnitureLayerMask);
         return overlapCheck == null;
     }

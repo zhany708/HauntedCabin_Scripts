@@ -6,24 +6,24 @@ using UnityEngine;
 public class EventManager : ManagerTemplate<EventManager>
 {
     public SO_EventKeys EventKeys;
-    public int EnterSecondStageCount;      //½øÈë¶ş½×¶ÎËùĞèµÄÊÂ¼şÊı
+    public int EnterSecondStageCount;      //è¿›å…¥äºŒé˜¶æ®µæ‰€éœ€çš„äº‹ä»¶æ•°
 
     public bool IsSecondStage { get; private set; } = false;
 
 
 
     Animator m_Animator;
-    GameObject m_EventPrefab;       //ÊÂ¼şÔ¤ÖÆ¼ş
-    Vector2 m_RoomPosition;         //±íÊ¾ÊÂ¼ş·¢ÉúµÄ·¿¼äµÄ×ø±ê
+    GameObject m_EventPrefab;       //äº‹ä»¶é¢„åˆ¶ä»¶
+    Vector2 m_RoomPosition;         //è¡¨ç¤ºäº‹ä»¶å‘ç”Ÿçš„æˆ¿é—´çš„åæ ‡
 
-    int m_EventCount = 0;                 //Éú³É¹ı¶àÉÙÊÂ¼ş  
-    int m_RandomGeneratedNum = -1;         //Ëæ»úÉú³ÉµÄÊı£¨ÓÃÓÚĞÂµÄÊÂ¼şÉú³ÉµÄË÷Òı£©
-
-
+    int m_EventCount = 0;                 //ç”Ÿæˆè¿‡å¤šå°‘äº‹ä»¶  
+    int m_RandomGeneratedNum = -1;         //éšæœºç”Ÿæˆçš„æ•°ï¼ˆç”¨äºæ–°çš„äº‹ä»¶ç”Ÿæˆçš„ç´¢å¼•ï¼‰
 
 
 
-    #region UnityÄÚ²¿º¯ÊıÑ­»·
+
+
+    #region Unityå†…éƒ¨å‡½æ•°å¾ªç¯
     protected override void Awake()
     {
         base.Awake();
@@ -39,7 +39,7 @@ public class EventManager : ManagerTemplate<EventManager>
 
     private async void Start()
     {
-        //ÌáÇ°¼ÓÔØ¾ç±¾±³¾°£¬µ«²»ÊµÀı»¯   
+        //æå‰åŠ è½½å‰§æœ¬èƒŒæ™¯ï¼Œä½†ä¸å®ä¾‹åŒ–   
         if (UIManager.Instance.UIKeys != null && !string.IsNullOrEmpty(UIManager.Instance.UIKeys.HellsCallPanel))
         {
             await UIManager.Instance.InitPanel(UIManager.Instance.UIKeys.HellsCallPanel);
@@ -54,22 +54,22 @@ public class EventManager : ManagerTemplate<EventManager>
     #endregion
 
 
-    #region ÊÂ¼şÏà¹Ø
+    #region äº‹ä»¶ç›¸å…³
     public async void GenerateRandomEvent(Vector2 position, DoorController thisDoor)
     {
         m_RoomPosition = position;
 
-        m_RandomGeneratedNum = UnityEngine.Random.Range(0, EventKeys.EvilEventKeys.Count);       //¸ù¾İÁĞ±íµÄÊıÁ¿Ëæ»úÉú³ÉÔ¤Õ×ÊÂ¼ş    Todo:µÈÊÂ¼ş×ã¹»¶àºóĞèÒª¾ö¶¨´¥·¢Ô¤Õ×ÊÂ¼şµÄÆµÂÊ
+        m_RandomGeneratedNum = UnityEngine.Random.Range(0, EventKeys.EvilEventKeys.Count);       //æ ¹æ®åˆ—è¡¨çš„æ•°é‡éšæœºç”Ÿæˆé¢„å…†äº‹ä»¶    Todo:ç­‰äº‹ä»¶è¶³å¤Ÿå¤šåéœ€è¦å†³å®šè§¦å‘é¢„å…†äº‹ä»¶çš„é¢‘ç‡
         
-        //È·ÈÏËæ»úË÷Òıºó³¢ÊÔÒì²½¼ÓÔØÊÂ¼ş
+        //ç¡®è®¤éšæœºç´¢å¼•åå°è¯•å¼‚æ­¥åŠ è½½äº‹ä»¶
         try
         {
-            GameObject loadedEventPrefab = await LoadPrefabAsync(EventKeys.EvilEventKeys[m_RandomGeneratedNum]);       //Òì²½¼ÓÔØÊÂ¼şÎïÌå
+            GameObject loadedEventPrefab = await LoadPrefabAsync(EventKeys.EvilEventKeys[m_RandomGeneratedNum]);       //å¼‚æ­¥åŠ è½½äº‹ä»¶ç‰©ä½“
             if (loadedEventPrefab != null)
             {
                 Event loadedEvent = loadedEventPrefab.GetComponent<Event>();
 
-                m_EventPrefab = ParticlePool.Instance.GetObject(loadedEvent.EventData.EventPrefab);        //Ê¹ÓÃ¶ÔÏó³ØÉú³ÉÊÂ¼şÔ¤ÖÆ¼ş
+                m_EventPrefab = ParticlePool.Instance.GetObject(loadedEvent.EventData.EventPrefab);        //ä½¿ç”¨å¯¹è±¡æ± ç”Ÿæˆäº‹ä»¶é¢„åˆ¶ä»¶
             }
 
             else
@@ -85,7 +85,7 @@ public class EventManager : ManagerTemplate<EventManager>
 
 
 
-        m_EventPrefab.transform.parent.position = m_RoomPosition;      //¸³ÖµÊÂ¼ş´¥·¢µÄ·¿¼äµÄ×ø±ê¸øÊÂ¼şµÄ¸¸ÎïÌå£¨ÒòÎª¶ÔÏó³ØµÄÔµ¹Ê£©
+        m_EventPrefab.transform.parent.position = m_RoomPosition;      //èµ‹å€¼äº‹ä»¶è§¦å‘çš„æˆ¿é—´çš„åæ ‡ç»™äº‹ä»¶çš„çˆ¶ç‰©ä½“ï¼ˆå› ä¸ºå¯¹è±¡æ± çš„ç¼˜æ•…ï¼‰
 
         Event eventScript = m_EventPrefab.GetComponent<Event>();
         if (eventScript == null)
@@ -94,17 +94,17 @@ public class EventManager : ManagerTemplate<EventManager>
             return;
         }
 
-        eventScript.SetDoor(thisDoor);         //½«ÊÂ¼ş·¢ÉúµÄ·¿¼ä´«¹ıÈ¥
-        eventScript.StartEvent();              //¿ªÊ¼ÊÂ¼ş
+        eventScript.SetDoor(thisDoor);         //å°†äº‹ä»¶å‘ç”Ÿçš„æˆ¿é—´ä¼ è¿‡å»
+        eventScript.StartEvent();              //å¼€å§‹äº‹ä»¶
 
-        //ĞèÒª×öµÄ£º¿ªÊ¼ÊÂ¼şºó´ÓÁĞ±íÖĞÒÆ³ıÊÂ¼ş£¬·ÀÖ¹Ö®ºóÖØ¸´´¥·¢ÊÂ¼ş
+        //éœ€è¦åšçš„ï¼šå¼€å§‹äº‹ä»¶åä»åˆ—è¡¨ä¸­ç§»é™¤äº‹ä»¶ï¼Œé˜²æ­¢ä¹‹åé‡å¤è§¦å‘äº‹ä»¶
     }
 
 
-    //È¡Ïû¼¤»îÊÂ¼şÎïÌå
+    //å–æ¶ˆæ¿€æ´»äº‹ä»¶ç‰©ä½“
     public void DeactivateEventObject()
     {       
-        //³¢ÊÔ½«ÊÂ¼şÍÆ»Ø¶ÔÏó³Ø
+        //å°è¯•å°†äº‹ä»¶æ¨å›å¯¹è±¡æ± 
         if (!ParticlePool.Instance.PushObject(m_EventPrefab) )
         {
             if (m_EventPrefab != null)
@@ -114,17 +114,17 @@ public class EventManager : ManagerTemplate<EventManager>
         }
         
         /*
-        //ÓÃAddressablesÊÍ·ÅÊÂ¼ş
+        //ç”¨Addressablesé‡Šæ”¾äº‹ä»¶
         if (m_EventPrefab != null)
         {
             string eventName = m_EventPrefab.name;
             if (eventName.EndsWith("(Clone)"))
             {
-                //¼ì²éÊÇ·ñÓĞ¡°¿ËÂ¡¡±ºó×º£¬Èç¹ûÓĞµÄ»°¼õÈ¥ºó×º¡££¨Clone£©¸ÕºÃÓĞ7¸ö×Ö·û
+                //æ£€æŸ¥æ˜¯å¦æœ‰â€œå…‹éš†â€åç¼€ï¼Œå¦‚æœæœ‰çš„è¯å‡å»åç¼€ã€‚ï¼ˆCloneï¼‰åˆšå¥½æœ‰7ä¸ªå­—ç¬¦
                 eventName = eventName.Substring(0, eventName.Length - 7);
             }
 
-            ReleasePrefab(eventName);       //Í¨¹ıAddressablesÊÍ·ÅÄÚ´æ
+            ReleasePrefab(eventName);       //é€šè¿‡Addressablesé‡Šæ”¾å†…å­˜
         }
 
         else
@@ -137,13 +137,13 @@ public class EventManager : ManagerTemplate<EventManager>
 
 
 
-    //¼ì²éÊÇ·ñ½øÈë¶ş½×¶Î
+    //æ£€æŸ¥æ˜¯å¦è¿›å…¥äºŒé˜¶æ®µ
     private void CheckIfTranstionToSecondStage()
     {
-        if (m_EventCount >= EnterSecondStageCount && !IsSecondStage)   //¼ì²éÊÇ·ñ´¥·¢ÁË×ã¹»´ÎÊıµÄÊÂ¼ş£¬²¢ÇÒÄ¿Ç°²»ÊÇ¶ş½×¶Î
+        if (m_EventCount >= EnterSecondStageCount && !IsSecondStage)   //æ£€æŸ¥æ˜¯å¦è§¦å‘äº†è¶³å¤Ÿæ¬¡æ•°çš„äº‹ä»¶ï¼Œå¹¶ä¸”ç›®å‰ä¸æ˜¯äºŒé˜¶æ®µ
         {
-            transform.position = m_RoomPosition;            //½«ÊÂ¼ş¹ÜÀíÆ÷µÄ×ø±êÒÆµ½µ±Ç°·¿¼ä
-            m_Animator.SetTrigger("TranstionSecondStage");  //Ëæºó²¥·Å¹ı¶É½×¶ÎµÄ¶¯»­
+            transform.position = m_RoomPosition;            //å°†äº‹ä»¶ç®¡ç†å™¨çš„åæ ‡ç§»åˆ°å½“å‰æˆ¿é—´
+            m_Animator.SetTrigger("TranstionSecondStage");  //éšåæ’­æ”¾è¿‡æ¸¡é˜¶æ®µçš„åŠ¨ç”»
 
             IsSecondStage = true;
         }
@@ -152,9 +152,9 @@ public class EventManager : ManagerTemplate<EventManager>
     
 
     #region AnimationEvents
-    private async void DisplayTransitionStageText()       //ÓÃÓÚ½×¶Î¶¯»­ÖĞ¾ö¶¨ºÎÊ±Éú³É¾ç±¾ÎïÌå
+    private async void DisplayTransitionStageText()       //ç”¨äºé˜¶æ®µåŠ¨ç”»ä¸­å†³å®šä½•æ—¶ç”Ÿæˆå‰§æœ¬ç‰©ä½“
     {
-        //´ò¿ª¾ç±¾
+        //æ‰“å¼€å‰§æœ¬
         if (ScreenplayManager.Instance.ScreenplayKeys != null && !string.IsNullOrEmpty(ScreenplayManager.Instance.ScreenplayKeys.HellsCall))
         {
             await ScreenplayManager.Instance.OpenScreenplay(ScreenplayManager.Instance.ScreenplayKeys.HellsCall);
@@ -173,16 +173,16 @@ public class EventManager : ManagerTemplate<EventManager>
     {
         m_EventCount++;
 
-        CheckIfTranstionToSecondStage();    //Ã¿´ÎÊÂ¼ş¼ÆÊıÔö¼Óºó¼ì²éÊÇ·ñÂú×ã½øÈë¶ş½×¶Î
+        CheckIfTranstionToSecondStage();    //æ¯æ¬¡äº‹ä»¶è®¡æ•°å¢åŠ åæ£€æŸ¥æ˜¯å¦æ»¡è¶³è¿›å…¥äºŒé˜¶æ®µ
     }
 
-    //ÖØÖÃÓÎÏ·
+    //é‡ç½®æ¸¸æˆ
     public void ResetGame()
     {
-        //ÅĞ¶ÏÍæ¼ÒÊÇ·ñ½øĞĞ¹ıÓÎÏ·
+        //åˆ¤æ–­ç©å®¶æ˜¯å¦è¿›è¡Œè¿‡æ¸¸æˆ
         if (m_EventCount != 0 || IsSecondStage)
         {
-            //ÖØÖÃ´¥·¢¹ıµÄÊÂ¼ş
+            //é‡ç½®è§¦å‘è¿‡çš„äº‹ä»¶
             m_EventCount = 0;
             IsSecondStage = false;
         }
@@ -191,7 +191,7 @@ public class EventManager : ManagerTemplate<EventManager>
 
 
     #region Getters
-    public Vector2 GetRoomPosWhereEnterSecondStage()        //»ñÈ¡´¥·¢½øÈë¶ş½×¶ÎµÄ·¿¼ä
+    public Vector2 GetRoomPosWhereEnterSecondStage()        //è·å–è§¦å‘è¿›å…¥äºŒé˜¶æ®µçš„æˆ¿é—´
     {
         return m_RoomPosition;
     }

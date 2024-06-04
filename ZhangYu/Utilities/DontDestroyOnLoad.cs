@@ -2,7 +2,7 @@ using UnityEngine;
 
 
 
-public class DontDestroyOnLoad : MonoBehaviour      //给所有在加载场景时禁止删除的物体使用
+public class DontDestroyOnLoad : MonoBehaviour      //缁欐墍鏈夊湪鍔犺浇鍦烘櫙鏃剁姝㈠垹闄ょ殑鐗╀綋浣跨敤
 {
     private void Awake()
     {

@@ -10,53 +10,53 @@ public class SoundManager : ManagerTemplate<SoundManager>
 {
     public SO_AudioClipKeys AudioClipKeys;
 
-    public float MusicVolume { get; private set; }               //±³¾°ÒôÀÖµÄÒôÁ¿
-    public float SfxVolume { get; private set; }        //ÒôĞ§ÒôÁ¿
+    public float MusicVolume { get; private set; }               //èƒŒæ™¯éŸ³ä¹çš„éŸ³é‡
+    public float SfxVolume { get; private set; }        //éŸ³æ•ˆéŸ³é‡
 
 
 
-    AudioSource m_MusicSource;  //ÓÃÓÚBGMµÄ²¥·ÅÆ÷
-    AudioSource m_SfxSource;    //ÓÃÓÚÒôĞ§µÄ²¥·ÅÆ÷
+    AudioSource m_MusicSource;  //ç”¨äºBGMçš„æ’­æ”¾å™¨
+    AudioSource m_SfxSource;    //ç”¨äºéŸ³æ•ˆçš„æ’­æ”¾å™¨
 
-    //ÓÉÓÚÒôÆµ¹ÜÀíÆ÷¼ÓÔØµÄÎÄ¼şÀàĞÍÊÇÒôÆµ£¬²»ÊÇÓÎÏ·ÎïÌå£¬ËùÒÔĞèÒªÓĞ×Ô¼ºµÄ×Öµä
+    //ç”±äºéŸ³é¢‘ç®¡ç†å™¨åŠ è½½çš„æ–‡ä»¶ç±»å‹æ˜¯éŸ³é¢‘ï¼Œä¸æ˜¯æ¸¸æˆç‰©ä½“ï¼Œæ‰€ä»¥éœ€è¦æœ‰è‡ªå·±çš„å­—å…¸
     Dictionary<string, AudioClip> m_AudioDict;
 
 
 
 
 
-    #region UnityÄÚ²¿º¯ÊıÑ­»·
+    #region Unityå†…éƒ¨å‡½æ•°å¾ªç¯
     protected override void Awake()
     {
         base.Awake();
 
 
-        //³õÊ¼»¯£¨Ìí¼ÓÁ½¸öÒôÆµÔ´£©
+        //åˆå§‹åŒ–ï¼ˆæ·»åŠ ä¸¤ä¸ªéŸ³é¢‘æºï¼‰
         m_MusicSource = gameObject.AddComponent<AudioSource>();
         m_SfxSource = gameObject.AddComponent<AudioSource>();
 
         m_AudioDict = new Dictionary<string, AudioClip>();
 
 
-        //³õÊ¼»¯ÒôÁ¿
+        //åˆå§‹åŒ–éŸ³é‡
         MusicVolume = 1f;
         SfxVolume = 1f;
     }
     #endregion
 
 
-    #region ×ÊÔ´¼ÓÔØÏà¹Ø
-    //Ê¹ÓÃAddressables¼ÓÔØÒôÆµ
+    #region èµ„æºåŠ è½½ç›¸å…³
+    //ä½¿ç”¨AddressablesåŠ è½½éŸ³é¢‘
     private async Task<AudioClip> LoadClipAsync(string name)
     {
-        //Èç¹û×ÖµäÀïÒÑ¾­ÓĞÁË£¬ÔòÖ±½Ó·µ»Ø
+        //å¦‚æœå­—å…¸é‡Œå·²ç»æœ‰äº†ï¼Œåˆ™ç›´æ¥è¿”å›
         if (m_AudioDict.TryGetValue(name, out AudioClip clip))
         {
             return clip;
         }
 
 
-        //×ÖµäÀïÃ»ÓĞµÄ»°¾ÍÒì²½¼ÓÔØ
+        //å­—å…¸é‡Œæ²¡æœ‰çš„è¯å°±å¼‚æ­¥åŠ è½½
         AudioClip loadedClip = await Addressables.LoadAssetAsync<AudioClip>(name).Task;
         if (loadedClip != null)
         {
@@ -72,12 +72,12 @@ public class SoundManager : ManagerTemplate<SoundManager>
     }
 
 
-    //ÔÚAddressablesÀïÊÍ·ÅÒôÆµ£¬Ö»ÓĞÕâÑù²ÅÄÜÊÍ·ÅÄÚ´æ
+    //åœ¨Addressablesé‡Œé‡Šæ”¾éŸ³é¢‘ï¼Œåªæœ‰è¿™æ ·æ‰èƒ½é‡Šæ”¾å†…å­˜
     public void ReleaseAudioClip(string key)
     {
         if (key.EndsWith("(Clone)"))
         {
-            //¼ì²éÊÇ·ñÓĞ¡°¿ËÂ¡¡±ºó×º£¬Èç¹ûÓĞµÄ»°¼õÈ¥ºó×º¡££¨Clone£©¸ÕºÃÓĞ7¸ö×Ö·û
+            //æ£€æŸ¥æ˜¯å¦æœ‰â€œå…‹éš†â€åç¼€ï¼Œå¦‚æœæœ‰çš„è¯å‡å»åç¼€ã€‚ï¼ˆCloneï¼‰åˆšå¥½æœ‰7ä¸ªå­—ç¬¦
             key = key.Substring(0, key.Length - 7);
         }
 
@@ -86,7 +86,7 @@ public class SoundManager : ManagerTemplate<SoundManager>
         {
             Addressables.Release(clip);
 
-            //´Ó×ÖµäÖĞÒÆ³ıÒôÆµ
+            //ä»å­—å…¸ä¸­ç§»é™¤éŸ³é¢‘
             m_AudioDict.Remove(key);
 
             //Debug.Log("AudioClip released and removed from dictionary: " + key);
@@ -100,8 +100,8 @@ public class SoundManager : ManagerTemplate<SoundManager>
     #endregion
 
 
-    #region BGMÏà¹Ø
-    //¹«¹²º¯Êı£¬ÓÃÓÚÍâ²¿µ÷ÓÃ²¥·ÅBGM
+    #region BGMç›¸å…³
+    //å…¬å…±å‡½æ•°ï¼Œç”¨äºå¤–éƒ¨è°ƒç”¨æ’­æ”¾BGM
     public async Task PlayBGMAsync(string clipName, bool isLoop, float thisVolume = 1f)
     {
         try
@@ -124,7 +124,7 @@ public class SoundManager : ManagerTemplate<SoundManager>
         }
     }
 
-    //ÄÚ²¿º¯Êı
+    //å†…éƒ¨å‡½æ•°
     private void ConfigureAndPlayBGM(AudioClip thisClip, bool isLoop, float thisVolume)
     {
         m_MusicSource.Stop();
@@ -136,9 +136,9 @@ public class SoundManager : ManagerTemplate<SoundManager>
     #endregion
 
 
-    #region ÒôĞ§Ïà¹Ø
-    //¹«¹²º¯Êı£¬ÓÃÓÚÍâ²¿µ÷ÓÃ²¥·ÅÒôĞ§
-    public async void PlaySFXAsync(string clipName, float thisVolume = 1f)     //²¥·ÅÎäÆ÷¹¥»÷ÒôĞ§
+    #region éŸ³æ•ˆç›¸å…³
+    //å…¬å…±å‡½æ•°ï¼Œç”¨äºå¤–éƒ¨è°ƒç”¨æ’­æ”¾éŸ³æ•ˆ
+    public async void PlaySFXAsync(string clipName, float thisVolume = 1f)     //æ’­æ”¾æ­¦å™¨æ”»å‡»éŸ³æ•ˆ
     {
         try
         {
@@ -160,7 +160,7 @@ public class SoundManager : ManagerTemplate<SoundManager>
         }
     }
 
-    public async void PlaySFXAsyncWithAudioSource(AudioSource thisAudioSource, string clipName, float thisVolume = 1f)     //²¥·ÅÎäÆ÷¹¥»÷ÒôĞ§
+    public async void PlaySFXAsyncWithAudioSource(AudioSource thisAudioSource, string clipName, float thisVolume = 1f)     //æ’­æ”¾æ­¦å™¨æ”»å‡»éŸ³æ•ˆ
     {
         try
         {
@@ -184,28 +184,28 @@ public class SoundManager : ManagerTemplate<SoundManager>
 
 
 
-    //ÄÚ²¿º¯Êı
+    //å†…éƒ¨å‡½æ•°
     private void ConfigureAndPlaySFX(AudioClip thisClip, float thisVolume)
     {
         if (thisClip != null)
         {
-            //½ö²¥·ÅÒ»´ÎÒôĞ§£¬Ê¹ÓÃ²ÎÊıÖĞµÄÒôÁ¿
+            //ä»…æ’­æ”¾ä¸€æ¬¡éŸ³æ•ˆï¼Œä½¿ç”¨å‚æ•°ä¸­çš„éŸ³é‡
             m_SfxSource.PlayOneShot(thisClip, SfxVolume * thisVolume * RandomVolume() );
         }
     }
 
-    //¸Ãº¯ÊıµÄ²ÎÊıÖĞ´«µİÒôÆµÔ´£¬ÓÃÓÚÀàËÆ3DµÄ²¥·Å£¬ĞÎ³É½ü´óÔ¶Ğ¡µÄĞ§¹û
+    //è¯¥å‡½æ•°çš„å‚æ•°ä¸­ä¼ é€’éŸ³é¢‘æºï¼Œç”¨äºç±»ä¼¼3Dçš„æ’­æ”¾ï¼Œå½¢æˆè¿‘å¤§è¿œå°çš„æ•ˆæœ
     private void ConfigureAndPlaySFXWithAudioSource(AudioSource thisAudioSource, AudioClip thisClip, float thisVolume)
     {
         if (thisClip != null)
         {
-            //½ö²¥·ÅÒ»´ÎÒôĞ§£¬Ê¹ÓÃ²ÎÊıÖĞµÄÒôÁ¿
+            //ä»…æ’­æ”¾ä¸€æ¬¡éŸ³æ•ˆï¼Œä½¿ç”¨å‚æ•°ä¸­çš„éŸ³é‡
             thisAudioSource.PlayOneShot(thisClip, SfxVolume * thisVolume * RandomVolume() );
         }
     }
 
 
-    //Ëæ»úÒô¸ß£¨98%-103%£©£¬ÕâÑù²»»áÏÔµÃÒôĞ§µ¥µ÷
+    //éšæœºéŸ³é«˜ï¼ˆ98%-103%ï¼‰ï¼Œè¿™æ ·ä¸ä¼šæ˜¾å¾—éŸ³æ•ˆå•è°ƒ
     private float RandomVolume()
     {
         return UnityEngine.Random.Range(0.98f, 1.03f);

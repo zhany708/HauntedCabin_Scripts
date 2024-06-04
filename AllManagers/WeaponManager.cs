@@ -3,7 +3,7 @@ using UnityEngine;
 
 
 
-public class WeaponManager : ManagerTemplate<WeaponManager>        //ÓÃÓÚ¹ÜÀíÎäÆ÷µÄ¼ÓÔØ/Ïú»ÙµÈ
+public class WeaponManager : ManagerTemplate<WeaponManager>        //ç”¨äºç®¡ç†æ­¦å™¨çš„åŠ è½½/é”€æ¯ç­‰
 {
     private Transform m_PrimaryWeapon;
     private Transform m_SecondaryWeapon;
@@ -11,7 +11,7 @@ public class WeaponManager : ManagerTemplate<WeaponManager>        //ÓÃÓÚ¹ÜÀíÎäÆ
 
 
 
-    //Dictionary<string, Weapon> m_WeaponDict;      //´æ·ÅÕıÔÚÊ¹ÓÃµÄÎäÆ÷µÄ×Öµä
+    //Dictionary<string, Weapon> m_WeaponDict;      //å­˜æ”¾æ­£åœ¨ä½¿ç”¨çš„æ­¦å™¨çš„å­—å…¸
 
 
 
@@ -22,7 +22,7 @@ public class WeaponManager : ManagerTemplate<WeaponManager>        //ÓÃÓÚ¹ÜÀíÎäÆ
     {
         base.Awake();
 
-        //¸³ÖµÖ÷ÎäÆ÷ºÍ¸±ÎäÆ÷¸ø½Å±¾
+        //èµ‹å€¼ä¸»æ­¦å™¨å’Œå‰¯æ­¦å™¨ç»™è„šæœ¬
         SetupWeaponHolder(ref m_PrimaryWeapon, "PrimaryWeapon");
         SetupWeaponHolder(ref m_SecondaryWeapon, "SecondaryWeapon");
     }
@@ -31,14 +31,14 @@ public class WeaponManager : ManagerTemplate<WeaponManager>        //ÓÃÓÚ¹ÜÀíÎäÆ
 
 
 
-    //ÉèÖÃ½Å±¾ÖĞÖ÷¸±ÎäÆ÷µÄ×ø±ê
+    //è®¾ç½®è„šæœ¬ä¸­ä¸»å‰¯æ­¦å™¨çš„åæ ‡
     private void SetupWeaponHolder(ref Transform weaponHolder, string weaponHolderName)
     {
-        //³¢ÊÔÑ°ÕÒÓÎÏ·ÖĞÓÃÓÚµÚ¶ş¸ö²ÎÊıµÄÃû×ÖµÄÎïÌå£¬Èç¹ûÃ»ÕÒµ½µÄ»°¾ÍĞÂ½¨Ò»¸ö
+        //å°è¯•å¯»æ‰¾æ¸¸æˆä¸­ç”¨äºç¬¬äºŒä¸ªå‚æ•°çš„åå­—çš„ç‰©ä½“ï¼Œå¦‚æœæ²¡æ‰¾åˆ°çš„è¯å°±æ–°å»ºä¸€ä¸ª
         GameObject weaponHolderObject = GameObject.Find(weaponHolderName) ?? new GameObject(weaponHolderName);
 
 
-        //½¨ÍêºóÑ°ÕÒPlayer½Å±¾²¢½«Íæ¼ÒÉèÖÃÎªÎäÆ÷µÄ¸¸ÎïÌå
+        //å»ºå®Œåå¯»æ‰¾Playerè„šæœ¬å¹¶å°†ç©å®¶è®¾ç½®ä¸ºæ­¦å™¨çš„çˆ¶ç‰©ä½“
         Player player = FindObjectOfType<Player>();
         if (player)
         {
@@ -54,7 +54,7 @@ public class WeaponManager : ManagerTemplate<WeaponManager>        //ÓÃÓÚ¹ÜÀíÎäÆ
 
     public async Task LoadWeapon(string weaponName, bool isPrimary)
     {
-        //Òì²½¼ÓÔØ£¬Ëæºó¼ì²éÊÇ·ñ¼ÓÔØ³É¹¦
+        //å¼‚æ­¥åŠ è½½ï¼Œéšåæ£€æŸ¥æ˜¯å¦åŠ è½½æˆåŠŸ
         GameObject weaponPrefab = await LoadPrefabAsync(weaponName);
         if (weaponPrefab == null)
         {
@@ -62,25 +62,25 @@ public class WeaponManager : ManagerTemplate<WeaponManager>        //ÓÃÓÚ¹ÜÀíÎäÆ
             return;
         }
 
-        //Èç¹ûÒòÎª³¡¾°¼ÓÔØµÈÔ­Òòµ¼ÖÂÍæ¼ÒÎïÌå±»É¾³ı¹ı£¬¾ÍÖØĞÂ»ñÈ¡Ö÷¸±ÎäÆ÷
+        //å¦‚æœå› ä¸ºåœºæ™¯åŠ è½½ç­‰åŸå› å¯¼è‡´ç©å®¶ç‰©ä½“è¢«åˆ é™¤è¿‡ï¼Œå°±é‡æ–°è·å–ä¸»å‰¯æ­¦å™¨
         if (m_PrimaryWeapon == null || m_SecondaryWeapon == null)
         {
-            //¸³ÖµÖ÷ÎäÆ÷ºÍ¸±ÎäÆ÷¸ø½Å±¾
+            //èµ‹å€¼ä¸»æ­¦å™¨å’Œå‰¯æ­¦å™¨ç»™è„šæœ¬
             SetupWeaponHolder(ref m_PrimaryWeapon, "PrimaryWeapon");
             SetupWeaponHolder(ref m_SecondaryWeapon, "SecondaryWeapon");
         }
 
-        //Éú³ÉÎïÌå£¬²¢¸ù¾İµÚ¶ş¸ö²ÎÊı¾ö¶¨¸¸ÎïÌåÎªÖ÷ÎäÆ÷»¹ÊÇ¸±ÎäÆ÷
+        //ç”Ÿæˆç‰©ä½“ï¼Œå¹¶æ ¹æ®ç¬¬äºŒä¸ªå‚æ•°å†³å®šçˆ¶ç‰©ä½“ä¸ºä¸»æ­¦å™¨è¿˜æ˜¯å‰¯æ­¦å™¨
         GameObject weaponObject = Instantiate(weaponPrefab, isPrimary ? m_PrimaryWeapon : m_SecondaryWeapon);
 
-        //Éú³ÉÍêÎäÆ÷ÎïÌåºó£¬´«µİ¸øÍæ¼Ò½Å±¾
+        //ç”Ÿæˆå®Œæ­¦å™¨ç‰©ä½“åï¼Œä¼ é€’ç»™ç©å®¶è„šæœ¬
         EquipWeaponToPlayer(weaponObject, isPrimary);
     }
 
 
 
 
-    //½«ĞÂÎäÆ÷Ô¤ÖÆ¼ş¸³Öµ¸øPlayer½Å±¾ÖĞµÄÖ÷/¸±ÎäÆ÷
+    //å°†æ–°æ­¦å™¨é¢„åˆ¶ä»¶èµ‹å€¼ç»™Playerè„šæœ¬ä¸­çš„ä¸»/å‰¯æ­¦å™¨
     private void EquipWeaponToPlayer(GameObject weaponObject, bool isPrimary)
     {
         Player player = GameObject.FindObjectOfType<Player>();

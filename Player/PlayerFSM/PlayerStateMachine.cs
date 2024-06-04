@@ -1,6 +1,6 @@
 public class PlayerStateMachine
 {
-    public PlayerState currentState {  get; private set; }  //´´ÔìÒ»¸ö¹«¹²GetterºÍÒ»¸öË½ÈËSetter¸øÕâ¸ö±äÁ¿
+    public PlayerState currentState {  get; private set; }  //åˆ›é€ ä¸€ä¸ªå…¬å…±Getterå’Œä¸€ä¸ªç§äººSetterç»™è¿™ä¸ªå˜é‡
 
     public void Initialize(PlayerState startingState)
     {

@@ -8,20 +8,20 @@ public class SO_MeleeWeaponData : SO_WeaponData
     [SerializeField] private MeleeWeaponAttackDetails[] attackDetails;
 
 
-    public MeleeWeaponAttackDetails[] AttackDetails { get => attackDetails; private set => attackDetails = value; }      //ÓÃÓÚÆäËû½Å±¾µ÷ÓÃ´Ë½Å±¾ÖĞµÄË½ÓĞ±äÁ¿
+    public MeleeWeaponAttackDetails[] AttackDetails { get => attackDetails; private set => attackDetails = value; }      //ç”¨äºå…¶ä»–è„šæœ¬è°ƒç”¨æ­¤è„šæœ¬ä¸­çš„ç§æœ‰å˜é‡
 
 
 
     private void OnEnable()
     {
-        AmountOfAttack = attackDetails.Length;      //´«µİÎäÆ÷µÄ¹¥»÷´ÎÊı
+        AmountOfAttack = attackDetails.Length;      //ä¼ é€’æ­¦å™¨çš„æ”»å‡»æ¬¡æ•°
 
         /*
         MovementSpeed = new float[AmountOfAttack];
 
         for (int i = 0; i < AmountOfAttack; i++)
         {
-            MovementSpeed[i] = attackDetails[i].MovementSpeed;      //½«¹¥»÷ĞÔÎäÆ÷Êı¾İÖĞµÄÒÆ¶¯²¹³¥ËÙ¶È´«µİ¸øÎäÆ÷Êı¾İÖĞµÄÒÆ¶¯²¹³¥ËÙ¶È
+            MovementSpeed[i] = attackDetails[i].MovementSpeed;      //å°†æ”»å‡»æ€§æ­¦å™¨æ•°æ®ä¸­çš„ç§»åŠ¨è¡¥å¿é€Ÿåº¦ä¼ é€’ç»™æ­¦å™¨æ•°æ®ä¸­çš„ç§»åŠ¨è¡¥å¿é€Ÿåº¦
         }
         */
     }
@@ -32,15 +32,15 @@ public class SO_MeleeWeaponData : SO_WeaponData
 
 
 
-[System.Serializable]       //ÓÃÓÚÔÚUnityÖĞÏÔÊ¾ÇÒµ÷ÕûÒÔÏÂ²ÎÊı
+[System.Serializable]       //ç”¨äºåœ¨Unityä¸­æ˜¾ç¤ºä¸”è°ƒæ•´ä»¥ä¸‹å‚æ•°
 public struct MeleeWeaponAttackDetails
 {
     public string AttackName;
     //public float MovementSpeed;
 
-    public float DamageAmount;              //»ù´¡ÉËº¦Á¿
-    public float KnockbackStrength;         //»÷ÍËÁ¦¶È
+    public float DamageAmount;              //åŸºç¡€ä¼¤å®³é‡
+    public float KnockbackStrength;         //å‡»é€€åŠ›åº¦
 
-    public float CameraShakeIntensity;      //Ïà»úÕğ¶¯Ç¿¶È
-    public float CameraShakeDuration;       //Ïà»úÕğ¶¯Ê±³¤
+    public float CameraShakeIntensity;      //ç›¸æœºéœ‡åŠ¨å¼ºåº¦
+    public float CameraShakeDuration;       //ç›¸æœºéœ‡åŠ¨æ—¶é•¿
 }

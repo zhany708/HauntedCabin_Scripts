@@ -1,7 +1,7 @@
 using Unity.Mathematics;
 using UnityEngine;
 
-public class ParticleManager : CoreComponent    //ÓÃÓÚÉú³ÉÌØĞ§
+public class ParticleManager : CoreComponent    //ç”¨äºç”Ÿæˆç‰¹æ•ˆ
 {
 
 
@@ -18,12 +18,12 @@ public class ParticleManager : CoreComponent    //ÓÃÓÚÉú³ÉÌØĞ§
 
     public GameObject StartParticles(GameObject particlePrefab)
     {
-        return StartParticles(particlePrefab, transform.position, quaternion.identity);      //Éú³ÉÌØĞ§ÓÚÎïÌåÖĞĞÄ
+        return StartParticles(particlePrefab, transform.position, quaternion.identity);      //ç”Ÿæˆç‰¹æ•ˆäºç‰©ä½“ä¸­å¿ƒ
     }
 
     public GameObject StartParticleWithRandomRotation(GameObject particlePrefab)
     {
-        var randomRotation = Quaternion.Euler(0f, 0f, UnityEngine.Random.Range(0f, 360f));      //Éú³ÉËæ»ú½Ç¶È
+        var randomRotation = Quaternion.Euler(0f, 0f, UnityEngine.Random.Range(0f, 360f));      //ç”Ÿæˆéšæœºè§’åº¦
 
         return StartParticles(particlePrefab, transform.position, randomRotation);
     }

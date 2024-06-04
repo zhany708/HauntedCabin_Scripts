@@ -45,7 +45,7 @@ public class PlayerAttackState : PlayerAbilityState
         AnimationFinishTrigger();
 
         isAttack = false;
-        isAbilityDone = true;       //ÉèÖÃisAbilityDoneÎªÕæÒÔ½øÈëÏĞÖÃ×´Ì¬
+        isAbilityDone = true;       //è®¾ç½®isAbilityDoneä¸ºçœŸä»¥è¿›å…¥é—²ç½®çŠ¶æ€
     }
 
     /*

@@ -3,18 +3,18 @@ using UnityEngine;
 
 [CreateAssetMenu(fileName = "newPlayerData", menuName = "Data/Player Data/Base Data")]
 
-public class SO_PlayerData : ScriptableObject      //ÔÊĞíÍ¨¹ı´Ë½Å±¾´´½¨Asset
+public class SO_PlayerData : ScriptableObject      //å…è®¸é€šè¿‡æ­¤è„šæœ¬åˆ›å»ºAsset
 {
     [Header("Movement Values")]
-    public float MovementVelocity = 2f;     //Íæ¼ÒÒÆËÙµÄÄ¬ÈÏÖµÎª2
+    public float MovementVelocity = 2f;     //ç©å®¶ç§»é€Ÿçš„é»˜è®¤å€¼ä¸º2
 
     [Header("Status Values")]
-    public float MaxHealth = 10f;   //×î´óÉúÃüÖµ
-    public float Strength = 5f;     //Á¦Á¿£¨ËÄ¸öÊôĞÔµÄÄ¬ÈÏÖµ¶¼Îª5£©
-    public float Speed = 5f;        //ËÙ¶È
-    public float Sanity = 5f;       //ÉñÖ¾
-    public float Knowledge = 5f;    //ÖªÊ¶
-    public float Defense = 2f;      //·ÀÓù
+    public float MaxHealth = 10f;   //æœ€å¤§ç”Ÿå‘½å€¼
+    public float Strength = 5f;     //åŠ›é‡ï¼ˆå››ä¸ªå±æ€§çš„é»˜è®¤å€¼éƒ½ä¸º5ï¼‰
+    public float Speed = 5f;        //é€Ÿåº¦
+    public float Sanity = 5f;       //ç¥å¿—
+    public float Knowledge = 5f;    //çŸ¥è¯†
+    public float Defense = 2f;      //é˜²å¾¡
 
     [Header("Hit Values")]
     public float HitResistance = 1f;

@@ -2,9 +2,9 @@ using UnityEngine;
 
 
 
-public interface Idamageable        //ÓÃÓÚËùÓĞ¿ÉÒÔ±»ÉËº¦µÄÎïÌå
+public interface Idamageable        //ç”¨äºæ‰€æœ‰å¯ä»¥è¢«ä¼¤å®³çš„ç‰©ä½“
 {
-    void Damage(float amount, bool doesIgnoreDefense);      //¼õÉÙÉúÃüÖµ£¨µÚÒ»¸ö²ÎÊı±íÊ¾ÉËº¦Á¿£¬µÚ¶ş¸ö²ÎÊı±íÊ¾ÊÇ·ñÎŞÊÓ·ÀÓù£©
+    void Damage(float amount, bool doesIgnoreDefense);      //å‡å°‘ç”Ÿå‘½å€¼ï¼ˆç¬¬ä¸€ä¸ªå‚æ•°è¡¨ç¤ºä¼¤å®³é‡ï¼Œç¬¬äºŒä¸ªå‚æ•°è¡¨ç¤ºæ˜¯å¦æ— è§†é˜²å¾¡ï¼‰
 
-    //void GetHit(Vector2 direction);     //ÊÜ»÷Ë²¼äÖ´ĞĞµÄÂß¼­£¨±ÈÈç×ªÏò£¬¸Ä±äĞÎÌ¬µÈ£©
+    //void GetHit(Vector2 direction);     //å—å‡»ç¬é—´æ‰§è¡Œçš„é€»è¾‘ï¼ˆæ¯”å¦‚è½¬å‘ï¼Œæ”¹å˜å½¢æ€ç­‰ï¼‰
 }

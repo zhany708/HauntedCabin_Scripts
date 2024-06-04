@@ -4,25 +4,25 @@ using UnityEngine.EventSystems;
 
 
 
-public class PanelWithButton : BasePanel        //×¨ÃÅÓÃÓÚÓĞ°´Å¥µÄ½çÃæUI
+public class PanelWithButton : BasePanel        //ä¸“é—¨ç”¨äºæœ‰æŒ‰é’®çš„ç•Œé¢UI
 {
     
 
 
 
-    //´ò¿ª½çÃæºóÈÃEventSystemµÚÒ»¸öÑ¡ÔñµÄ°´Å¥
+    //æ‰“å¼€ç•Œé¢åè®©EventSystemç¬¬ä¸€ä¸ªé€‰æ‹©çš„æŒ‰é’®
     protected GameObject firstSelectedButton = null;
 
-    //ÉÏÒ»¸öÑ¡ÔñµÄ°´Å¥
+    //ä¸Šä¸€ä¸ªé€‰æ‹©çš„æŒ‰é’®
     protected GameObject lastSelectedButton;
 
 
-    //ÓÃÓÚ´¢´æËùÓĞÕıÔÚ´ò¿ªµÄÓĞ°´Å¥µÄ½çÃæ£¨¼Óstatic´Ó¶øÈÃËùÓĞ×ÓÀà¹²ÓÃÍ¬Ò»¸öÁĞ±í£©
+    //ç”¨äºå‚¨å­˜æ‰€æœ‰æ­£åœ¨æ‰“å¼€çš„æœ‰æŒ‰é’®çš„ç•Œé¢ï¼ˆåŠ staticä»è€Œè®©æ‰€æœ‰å­ç±»å…±ç”¨åŒä¸€ä¸ªåˆ—è¡¨ï¼‰
     protected static List<PanelWithButton> m_OpenedPanelsWithButton = new List<PanelWithButton>();
 
 
 
-    //ÓÃÓÚ±íÊ¾ÊÇ·ñÓĞ´ø°´Å¥µÄ½çÃæ´ò¿ª
+    //ç”¨äºè¡¨ç¤ºæ˜¯å¦æœ‰å¸¦æŒ‰é’®çš„ç•Œé¢æ‰“å¼€
     bool m_IsPanelWithButtonOpened => m_OpenedPanelsWithButton.Count > 0;
 
 
@@ -31,18 +31,18 @@ public class PanelWithButton : BasePanel        //×¨ÃÅÓÃÓÚÓĞ°´Å¥µÄ½çÃæUI
 
     protected virtual void Update()
     {      
-        //ÏÈ¼ì²éÊÂ¼şÏµÍ³ÊÇ·ñÎª¿Õ
+        //å…ˆæ£€æŸ¥äº‹ä»¶ç³»ç»Ÿæ˜¯å¦ä¸ºç©º
         if (EventSystem.current != null)
         {
-            //Èç¹ûµ±Ç°Ñ¡ÔñµÄ°´Å¥Îª¿Õ£¨¿ÉÄÜÒòÎªÊó±êµã»÷£¬½çÃæ¹Ø±ÕµÈ£©
+            //å¦‚æœå½“å‰é€‰æ‹©çš„æŒ‰é’®ä¸ºç©ºï¼ˆå¯èƒ½å› ä¸ºé¼ æ ‡ç‚¹å‡»ï¼Œç•Œé¢å…³é—­ç­‰ï¼‰
             if (EventSystem.current.currentSelectedGameObject == null && lastSelectedButton != null)
             {
-                //ÖØĞÂÉèÖÃÉÏÒ»¸öÑ¡Ôñ°´Å¥
+                //é‡æ–°è®¾ç½®ä¸Šä¸€ä¸ªé€‰æ‹©æŒ‰é’®
                 EventSystem.current.SetSelectedGameObject(lastSelectedButton);
             }
 
 
-            //³ÖĞø¸üĞÂÉÏÒ»¸öÑ¡ÔñµÄ°´Å¥
+            //æŒç»­æ›´æ–°ä¸Šä¸€ä¸ªé€‰æ‹©çš„æŒ‰é’®
             else
             {
                 lastSelectedButton = EventSystem.current.currentSelectedGameObject;
@@ -53,7 +53,7 @@ public class PanelWithButton : BasePanel        //×¨ÃÅÓÃÓÚÓĞ°´Å¥µÄ½çÃæUI
 
     protected virtual void OnEnable()
     {
-        //½çÃæ´ò¿ªºó¼Ó½øÁĞ±í
+        //ç•Œé¢æ‰“å¼€ååŠ è¿›åˆ—è¡¨
         if (!m_OpenedPanelsWithButton.Contains(this) )
         {
             //Debug.Log("Panel with button added to the list: " + this.name);
@@ -61,7 +61,7 @@ public class PanelWithButton : BasePanel        //×¨ÃÅÓÃÓÚÓĞ°´Å¥µÄ½çÃæUI
             m_OpenedPanelsWithButton.Add(this);
         }
 
-        //Ã¿´Î½çÃæÖØĞÂ¼ÓÔØºó¶¼ÉèÖÃĞÂµÄ°´Å¥¸øEventSystem
+        //æ¯æ¬¡ç•Œé¢é‡æ–°åŠ è½½åéƒ½è®¾ç½®æ–°çš„æŒ‰é’®ç»™EventSystem
         SetTopPriorityButton();
     }
 
@@ -69,7 +69,7 @@ public class PanelWithButton : BasePanel        //×¨ÃÅÓÃÓÚÓĞ°´Å¥µÄ½çÃæUI
     {
         base.OnDisable();
 
-        //½çÃæ¹Ø±ÕºóÒÆ³öÁĞ±í
+        //ç•Œé¢å…³é—­åç§»å‡ºåˆ—è¡¨
         if (m_OpenedPanelsWithButton.Contains(this))
         {
             //Debug.Log("Panel with button removed from the list: " + this.name);
@@ -86,7 +86,7 @@ public class PanelWithButton : BasePanel        //×¨ÃÅÓÃÓÚÓĞ°´Å¥µÄ½çÃæUI
 
     public override void Fade(CanvasGroup targetGroup, float targetAlpha, float duration, bool blocksRaycasts)
     {
-        //ÓĞ°´Å¥µÄ½çÃæÔÚµ­Èë/µ­³öÇ°£¬ĞèÒªÌáÇ°ÉèÖÃ°´Å¥ÊÇ·ñ¿É½»»¥£¬·ñÔò»á³öÏÖÔÚµ­³öµÄ¹ı³ÌÖĞ¶ş´Îµã»÷µÄÇé¿ö
+        //æœ‰æŒ‰é’®çš„ç•Œé¢åœ¨æ·¡å…¥/æ·¡å‡ºå‰ï¼Œéœ€è¦æå‰è®¾ç½®æŒ‰é’®æ˜¯å¦å¯äº¤äº’ï¼Œå¦åˆ™ä¼šå‡ºç°åœ¨æ·¡å‡ºçš„è¿‡ç¨‹ä¸­äºŒæ¬¡ç‚¹å‡»çš„æƒ…å†µ
         targetGroup.interactable = blocksRaycasts;
 
         base.Fade(targetGroup, targetAlpha, duration, blocksRaycasts);
@@ -102,17 +102,17 @@ public class PanelWithButton : BasePanel        //×¨ÃÅÓÃÓÚÓĞ°´Å¥µÄ½çÃæUI
 
         if (m_OpenedPanelsWithButton.Count > 0)
         {
-            //½«×îºó¼Ó½øÁĞ±íµÄ°´Å¥£¨×î½üÒ»´Î´ò¿ªµÄ½çÃæ£©ÉèÖÃÎªÉÏÒ»¸öÑ¡ÔñµÄ°´Å¥
+            //å°†æœ€ååŠ è¿›åˆ—è¡¨çš„æŒ‰é’®ï¼ˆæœ€è¿‘ä¸€æ¬¡æ‰“å¼€çš„ç•Œé¢ï¼‰è®¾ç½®ä¸ºä¸Šä¸€ä¸ªé€‰æ‹©çš„æŒ‰é’®
             lastSelectedButton = m_OpenedPanelsWithButton[m_OpenedPanelsWithButton.Count - 1].firstSelectedButton;
         }
 
         if (EventSystem.current != null)
         {
-            //ÖØÖÃÊÂ¼şÏµÍ³ÀïµÄµ±Ç°Ñ¡Ôñ°´Å¥
+            //é‡ç½®äº‹ä»¶ç³»ç»Ÿé‡Œçš„å½“å‰é€‰æ‹©æŒ‰é’®
             EventSystem.current.SetSelectedGameObject(lastSelectedButton);
         }
 
-        //¸ù¾İÊÇ·ñÓĞ´ø°´Å¥µÄ½çÃæ´ò¿ªÀ´¾ö¶¨ÊÇ·ñÔÊĞíÍæ¼ÒÒÆ¶¯ºÍ¹¥»÷
+        //æ ¹æ®æ˜¯å¦æœ‰å¸¦æŒ‰é’®çš„ç•Œé¢æ‰“å¼€æ¥å†³å®šæ˜¯å¦å…è®¸ç©å®¶ç§»åŠ¨å’Œæ”»å‡»
         SetBothMoveableAndAttackable(!m_IsPanelWithButtonOpened);
     }
 
@@ -121,14 +121,14 @@ public class PanelWithButton : BasePanel        //×¨ÃÅÓÃÓÚÓĞ°´Å¥µÄ½çÃæUI
 
     protected void ResetGameSystems()
     {
-        //ÖØÖÃÓÎÏ·µÄ¸÷ÖÖÏµÍ³
+        //é‡ç½®æ¸¸æˆçš„å„ç§ç³»ç»Ÿ
         EventManager.Instance.ResetGame();
         UIManager.Instance.ResetGame();
         EnemyPool.Instance.ResetGame();
     }
 
     /*
-    //ÓÃÓÚµ÷ÊÔ
+    //ç”¨äºè°ƒè¯•
     private void PrintList()
     {
         if (m_OpenedPanelsWithButton.Count != 0)

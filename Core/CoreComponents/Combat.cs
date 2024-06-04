@@ -2,7 +2,7 @@ using UnityEngine;
 
 
 
-public class Combat : CoreComponent, Idamageable, IKnockbackable    //ÓÃÓÚ¹ÜÀíÊÜ»÷
+public class Combat : CoreComponent, Idamageable, IKnockbackable    //ç”¨äºç®¡ç†å—å‡»
 {
     [SerializeField] private GameObject m_DamageParticles;
 
@@ -11,15 +11,15 @@ public class Combat : CoreComponent, Idamageable, IKnockbackable    //ÓÃÓÚ¹ÜÀíÊÜ
     public bool IsHit {  get; private set; }
 
     /*
-    //ÓÃÓÚÊÜ»÷Ê±µÄ¾«ÁéÍ¼±ä°×Ğ§¹ûµÄShader
+    //ç”¨äºå—å‡»æ—¶çš„ç²¾çµå›¾å˜ç™½æ•ˆæœçš„Shader
     public Material FlashMaterial;
 
     SpriteRenderer m_SpriteRenderer;
-    Material m_OriginalMaterial;        //¾«ÁéÍ¼µÄÔ­Ê¼²ÄÖÊ
-    bool m_IsFlashing = false;      //±íÊ¾¾«ÁéÍ¼ÊÇ·ñÔÚÉÁË¸
+    Material m_OriginalMaterial;        //ç²¾çµå›¾çš„åŸå§‹æè´¨
+    bool m_IsFlashing = false;      //è¡¨ç¤ºç²¾çµå›¾æ˜¯å¦åœ¨é—ªçƒ
     */
 
-    float m_HitResistance;     //»÷ÍË¿¹ĞÔ
+    float m_HitResistance;     //å‡»é€€æŠ—æ€§
     
 
 
@@ -32,14 +32,14 @@ public class Combat : CoreComponent, Idamageable, IKnockbackable    //ÓÃÓÚ¹ÜÀíÊÜ
     {
         base.Awake();
 
-        m_SpriteRenderer = GetComponentInParent<SpriteRenderer>();      //»ñÈ¡¸¸ÎïÌåµÄ¾«Áé×é¼ş
+        m_SpriteRenderer = GetComponentInParent<SpriteRenderer>();      //è·å–çˆ¶ç‰©ä½“çš„ç²¾çµç»„ä»¶
         m_OriginalMaterial = m_SpriteRenderer.material;
     }
     */
 
     private void Start()
     {
-        m_HitResistance = core.HitResistance;   //´ÓCoreÄÇÀï»ñµÃ²ÎÊı
+        m_HitResistance = core.HitResistance;   //ä»Coreé‚£é‡Œè·å¾—å‚æ•°
     }
 
     public void Damage(float amount, bool doesIgnoreDefense)
@@ -50,7 +50,7 @@ public class Combat : CoreComponent, Idamageable, IKnockbackable    //ÓÃÓÚ¹ÜÀíÊÜ
         //Debug.Log(core.transform.parent.name + " Damaged!");
         Stats.DecreaseHealth(amount, doesIgnoreDefense);
 
-        particleManager.StartParticleWithRandomRotation(m_DamageParticles);   //Ôì³ÉÉËº¦Ê±ÔÚÊÜ»÷ÎïÌåÖÜÎ§Éú³ÉÌØĞ§
+        particleManager.StartParticleWithRandomRotation(m_DamageParticles);   //é€ æˆä¼¤å®³æ—¶åœ¨å—å‡»ç‰©ä½“å‘¨å›´ç”Ÿæˆç‰¹æ•ˆ
     }
 
     /*
@@ -68,12 +68,12 @@ public class Combat : CoreComponent, Idamageable, IKnockbackable    //ÓÃÓÚ¹ÜÀíÊÜ
         if (strength > m_HitResistance)
         {
             //Debug.Log("You got knocked!");
-            Movement.SetVelocity(strength - m_HitResistance, direction);      //Ö»ÓĞµ±»÷ÍËÁ¦¶È´óÓÚ»÷ÍË¿¹ĞÔÊ±²Å»á±»»÷ÍË
+            Movement.SetVelocity(strength - m_HitResistance, direction);      //åªæœ‰å½“å‡»é€€åŠ›åº¦å¤§äºå‡»é€€æŠ—æ€§æ—¶æ‰ä¼šè¢«å‡»é€€
         }
     }
 
     /*
-    //Í¨¹ıShaderÊµÏÖÊÜ»÷ÉÁË¸µÄĞ§¹û£¨Ä¿Ç°ÏÈ²»ÓÃ£©
+    //é€šè¿‡Shaderå®ç°å—å‡»é—ªçƒçš„æ•ˆæœï¼ˆç›®å‰å…ˆä¸ç”¨ï¼‰
     public void Flash()
     {
         if (m_IsFlashing) return; 
@@ -87,9 +87,9 @@ public class Combat : CoreComponent, Idamageable, IKnockbackable    //ÓÃÓÚ¹ÜÀíÊÜ
         m_SpriteRenderer.material = FlashMaterial;
 
 
-        yield return new WaitForSeconds(0.1f);    //µÈ´ıxÃë
+        yield return new WaitForSeconds(0.1f);    //ç­‰å¾…xç§’
 
-        //»Ö¸´²ÄÖÊ
+        //æ¢å¤æè´¨
         m_SpriteRenderer.material = m_OriginalMaterial;
         m_IsFlashing = false;
     }

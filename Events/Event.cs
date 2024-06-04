@@ -29,7 +29,7 @@ public abstract class Event : MonoBehaviour
 
     protected void FinishEvent()
     {
-        EventManager.Instance.IncrementEventCount();     //Ôö¼Ó´¥·¢¹ıµÄÊÂ¼ş¼ÆÊı
+        EventManager.Instance.IncrementEventCount();     //å¢åŠ è§¦å‘è¿‡çš„äº‹ä»¶è®¡æ•°
 
         if (doorController != null)
         {
@@ -41,7 +41,7 @@ public abstract class Event : MonoBehaviour
             return;
         }
 
-        EventManager.Instance.DeactivateEventObject();        //½«ÊÂ¼şÎïÌå·Å»Ø³ØÖĞ
+        EventManager.Instance.DeactivateEventObject();        //å°†äº‹ä»¶ç‰©ä½“æ”¾å›æ± ä¸­
     }
 
 

@@ -1,8 +1,8 @@
 using UnityEngine;
 
 
-//ÊÊºÏ´æ·ÅÍ¨ÓÃµÄËÀÍöÂß¼­£¨Íæ¼Ò£¬µĞÈË¶¼ÓĞµÄÂß¼­£©
-public class Death : CoreComponent      //Èç¹ûĞèÒª²»Í¬µÄËÀÍöĞ§¹û£¬ÔòĞÂ½¨Ò»¸ö½Å±¾£¬È»ºó¼Ì³Ğ´Ë½Å±¾
+//é€‚åˆå­˜æ”¾é€šç”¨çš„æ­»äº¡é€»è¾‘ï¼ˆç©å®¶ï¼Œæ•Œäººéƒ½æœ‰çš„é€»è¾‘ï¼‰
+public class Death : CoreComponent      //å¦‚æœéœ€è¦ä¸åŒçš„æ­»äº¡æ•ˆæœï¼Œåˆ™æ–°å»ºä¸€ä¸ªè„šæœ¬ï¼Œç„¶åç»§æ‰¿æ­¤è„šæœ¬
 {
 
 
@@ -11,17 +11,17 @@ public class Death : CoreComponent      //Èç¹ûĞèÒª²»Í¬µÄËÀÍöĞ§¹û£¬ÔòĞÂ½¨Ò»¸ö½Å±¾
     {
         if (!combat.gameObject.activeSelf)
         {
-            //ÖØĞÂ¼¤»îÕ½¶·×é¼ş£¬·ÀÖ¹ÔÙ´Î¼ÓÔØºóÎŞ·¨¹¥»÷µĞÈË
+            //é‡æ–°æ¿€æ´»æˆ˜æ–—ç»„ä»¶ï¼Œé˜²æ­¢å†æ¬¡åŠ è½½åæ— æ³•æ”»å‡»æ•Œäºº
             combat.gameObject.SetActive(true);
         }
 
 
-        Stats.OnHealthZero += Die;    //½«º¯Êı¼Ó½øÊÂ¼ş
+        Stats.OnHealthZero += Die;    //å°†å‡½æ•°åŠ è¿›äº‹ä»¶
     }
 
     private void OnDisable()
     {
-        Stats.OnHealthZero -= Die;    //ÎïÌå½ûÓÃºó´ÓÊÂ¼şÖĞÒÆ³ıº¯Êı£¬·ÀÖ¹ÒòÎªÕÒ²»µ½º¯ÊıËùÔÚµÄ½Å±¾¶ø±¨´í
+        Stats.OnHealthZero -= Die;    //ç‰©ä½“ç¦ç”¨åä»äº‹ä»¶ä¸­ç§»é™¤å‡½æ•°ï¼Œé˜²æ­¢å› ä¸ºæ‰¾ä¸åˆ°å‡½æ•°æ‰€åœ¨çš„è„šæœ¬è€ŒæŠ¥é”™
     }
 
 
@@ -29,11 +29,11 @@ public class Death : CoreComponent      //Èç¹ûĞèÒª²»Í¬µÄËÀÍöĞ§¹û£¬ÔòĞÂ½¨Ò»¸ö½Å±¾
 
     public virtual void Die()
     {
-        //core.transform.parent.gameObject.SetActive(false);  //½ûÓÃÓÎÏ·ÎïÌå
+        //core.transform.parent.gameObject.SetActive(false);  //ç¦ç”¨æ¸¸æˆç‰©ä½“
 
-        Movement.Rigidbody2d.constraints = RigidbodyConstraints2D.FreezeAll;        //ËÀÍöºó½ûÖ¹ÎïÌåµÄÒ»ÇĞÒÆ¶¯ºÍĞı×ª
+        Movement.Rigidbody2d.constraints = RigidbodyConstraints2D.FreezeAll;        //æ­»äº¡åç¦æ­¢ç‰©ä½“çš„ä¸€åˆ‡ç§»åŠ¨å’Œæ—‹è½¬
                   
-        combat.gameObject.SetActive(false);     //È¡Ïû¼¤»îÕ½¶·×é¼ş£¬·ÀÖ¹³öÏÖ±ŞÊ¬ÏÖÏó
+        combat.gameObject.SetActive(false);     //å–æ¶ˆæ¿€æ´»æˆ˜æ–—ç»„ä»¶ï¼Œé˜²æ­¢å‡ºç°é­å°¸ç°è±¡
 
         core.Animator.SetBool("Death", true);
     }

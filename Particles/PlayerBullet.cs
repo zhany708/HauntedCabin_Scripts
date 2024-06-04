@@ -25,7 +25,7 @@ public class PlayerBullet : MonoBehaviour
     {
         m_CurrentTime += Time.deltaTime;
 
-        if (m_CurrentTime - m_ExistTimer >= 4)      //×Óµ¯Éú³É4ÃëºóÇ¿ÖÆÏú»Ù×Óµ¯
+        if (m_CurrentTime - m_ExistTimer >= 4)      //å­å¼¹ç”Ÿæˆ4ç§’åå¼ºåˆ¶é”€æ¯å­å¼¹
         {
             DestroyBullet();
         }
@@ -43,7 +43,7 @@ public class PlayerBullet : MonoBehaviour
     {
         //Debug.Log("The Player bullet collided with : " + other.gameObject.name);
 
-        DestroyBullet();       //Ê¹×Óµ¯Åöµ½ÆäËûÅö×²Ìå£¨Ç½±Ú£¬¼Ò¾ßµÈ£©Ê±×Ô»Ù
+        DestroyBullet();       //ä½¿å­å¼¹ç¢°åˆ°å…¶ä»–ç¢°æ’ä½“ï¼ˆå¢™å£ï¼Œå®¶å…·ç­‰ï¼‰æ—¶è‡ªæ¯
     }
 
     protected virtual void OnTriggerEnter2D(Collider2D other)
@@ -54,7 +54,7 @@ public class PlayerBullet : MonoBehaviour
 
         if (damageable != null)
         {
-            //¶Ô±»»÷ÖĞµÄµĞÈËÔì³ÉÉËº¦£¨ÉËº¦ÊÜÁ¦Á¿ºÍµĞÈË·ÀÓùÓ°Ïì£©
+            //å¯¹è¢«å‡»ä¸­çš„æ•Œäººé€ æˆä¼¤å®³ï¼ˆä¼¤å®³å—åŠ›é‡å’Œæ•Œäººé˜²å¾¡å½±å“ï¼‰
             damageable.Damage(m_Gun.GunData.AttackDetail.DamageAmount * PlayerStatusBar.GetStrengthAddition(), false);
             //damageable.GetHit(m_AttackDirection);
         }

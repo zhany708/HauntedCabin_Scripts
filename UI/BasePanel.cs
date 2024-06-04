@@ -10,16 +10,16 @@ using UnityEngine;
 
 public class BasePanel : MonoBehaviour
 {
-    public event Action OnFadeInFinished;       //½çÃæÍêÈ«µ­ÈëÊ±µ÷ÓÃµÄÊÂ¼ş£¬½ÓÊÕ·½Îª×ÓÀà
-    public event Action OnFadeOutFinished;       //½çÃæÍêÈ«µ­³öÊ±µ÷ÓÃµÄÊÂ¼ş£¬½ÓÊÕ·½Îª×ÓÀà
+    public event Action OnFadeInFinished;       //ç•Œé¢å®Œå…¨æ·¡å…¥æ—¶è°ƒç”¨çš„äº‹ä»¶ï¼Œæ¥æ”¶æ–¹ä¸ºå­ç±»
+    public event Action OnFadeOutFinished;       //ç•Œé¢å®Œå…¨æ·¡å‡ºæ—¶è°ƒç”¨çš„äº‹ä»¶ï¼Œæ¥æ”¶æ–¹ä¸ºå­ç±»
 
 
-    public static bool IsPlayerMoveable { get; protected set; } = true;     //ÊÇ·ñÔÊĞíÍæ¼ÒÒÆ¶¯
-    public static bool IsPlayerAttackable { get; protected set; } = true;   //ÊÇ·ñÔÊĞíÍæ¼Ò¹¥»÷
+    public static bool IsPlayerMoveable { get; protected set; } = true;     //æ˜¯å¦å…è®¸ç©å®¶ç§»åŠ¨
+    public static bool IsPlayerAttackable { get; protected set; } = true;   //æ˜¯å¦å…è®¸ç©å®¶æ”»å‡»
 
 
     private CanvasGroup m_CanvasGroup;
-    public CanvasGroup CanvasGroup      //Lazy Load£¨Ö»ÔÚĞèÒªÊ¹ÓÃ×é¼şÊ±²Å¼ÓÔØ×é¼ş£¨¶ø²»ÊÇÔÚAwakeº¯ÊıÀïÄ¬ÈÏ¼ÓÔØ£©£¬½ÚÊ¡ÄÚ´æ£©
+    public CanvasGroup CanvasGroup      //Lazy Loadï¼ˆåªåœ¨éœ€è¦ä½¿ç”¨ç»„ä»¶æ—¶æ‰åŠ è½½ç»„ä»¶ï¼ˆè€Œä¸æ˜¯åœ¨Awakeå‡½æ•°é‡Œé»˜è®¤åŠ è½½ï¼‰ï¼ŒèŠ‚çœå†…å­˜ï¼‰
     {
         get
         {
@@ -35,24 +35,24 @@ public class BasePanel : MonoBehaviour
 
 
 
-    //´¢´æËùÓĞµ±Ç°½çÃæ½øĞĞ¹ıµÄĞ­³Ì£¬·ÀÖ¹É¾³ı½çÃæÊ±Ä³Ğ©Ğ­³ÌÈÔÔÚ¼ÌĞø£¬Õ¼ÓÃÄÚ´æ£¨²»¼Óstatic£¬´Ó¶øÈÃÃ¿¸ö½çÃæ¶¼ÓĞÒ»¸öµ¥¶ÀµÄÁĞ±í£©
+    //å‚¨å­˜æ‰€æœ‰å½“å‰ç•Œé¢è¿›è¡Œè¿‡çš„åç¨‹ï¼Œé˜²æ­¢åˆ é™¤ç•Œé¢æ—¶æŸäº›åç¨‹ä»åœ¨ç»§ç»­ï¼Œå ç”¨å†…å­˜ï¼ˆä¸åŠ staticï¼Œä»è€Œè®©æ¯ä¸ªç•Œé¢éƒ½æœ‰ä¸€ä¸ªå•ç‹¬çš„åˆ—è¡¨ï¼‰
     protected List<Coroutine> generatedCoroutines = new List<Coroutine>();
-    protected List<Tween> generatedDOTweens = new List<Tween>();        //¸úÉÏÃæÍ¬Àí
+    protected List<Tween> generatedDOTweens = new List<Tween>();        //è·Ÿä¸Šé¢åŒç†
 
 
 
-    protected float FadeDuration = 1f;          //Ä¬ÈÏµ­Èë/³öÊ±¼ä
-    protected float FadeInAlpha = 1f;           //Ä¬ÈÏµ­ÈëÖµ
-    protected const float FadeOutAlpha = 0f;    //Ä¬ÈÏµ­³öÖµ
+    protected float FadeDuration = 1f;          //é»˜è®¤æ·¡å…¥/å‡ºæ—¶é—´
+    protected float FadeInAlpha = 1f;           //é»˜è®¤æ·¡å…¥å€¼
+    protected const float FadeOutAlpha = 0f;    //é»˜è®¤æ·¡å‡ºå€¼
 
 
-    protected float typeSpeed = 0.05f;      //Ä¬ÈÏ´ò×ÖËÙ¶È£¨Ã¿¸ô0.05Ãë´òÒ»¸ö×Ö£©
+    protected float typeSpeed = 0.05f;      //é»˜è®¤æ‰“å­—é€Ÿåº¦ï¼ˆæ¯éš”0.05ç§’æ‰“ä¸€ä¸ªå­—ï¼‰
  
 
-    protected bool isTyping = false;        //±íÊ¾ÊÇ·ñÕıÔÚÏÔÊ¾ÎÄ±¾
-    protected bool isRemoved = false;       //±íÊ¾UIÊÇ·ñ±»ÒÆ³ı
+    protected bool isTyping = false;        //è¡¨ç¤ºæ˜¯å¦æ­£åœ¨æ˜¾ç¤ºæ–‡æœ¬
+    protected bool isRemoved = false;       //è¡¨ç¤ºUIæ˜¯å¦è¢«ç§»é™¤
 
-    protected string panelName;             //½çÃæÃû×Ö
+    protected string panelName;             //ç•Œé¢åå­—
 
 
 
@@ -66,7 +66,7 @@ public class BasePanel : MonoBehaviour
     {
         if (UIManager.Instance.PanelDict.ContainsKey(panelName) )
         {
-            //´Ó×ÖµäÖĞÒÆ³ı£¬±íÊ¾½çÃæÃ»´ò¿ª
+            //ä»å­—å…¸ä¸­ç§»é™¤ï¼Œè¡¨ç¤ºç•Œé¢æ²¡æ‰“å¼€
             UIManager.Instance.PanelDict.Remove(panelName);
         }     
     }
@@ -79,7 +79,7 @@ public class BasePanel : MonoBehaviour
     {
         panelName = name;
 
-        //µ­Èë½çÃæ
+        //æ·¡å…¥ç•Œé¢
         Fade(CanvasGroup, FadeInAlpha, FadeDuration, true);
     }
 
@@ -89,18 +89,18 @@ public class BasePanel : MonoBehaviour
 
         isRemoved = true;
 
-        ClearAllCoroutinesAndTweens();        //Çå³ıËùÓĞµ±Ç°½çÃæÕıÔÚ½øĞĞµÄĞ­³Ì
+        ClearAllCoroutinesAndTweens();        //æ¸…é™¤æ‰€æœ‰å½“å‰ç•Œé¢æ­£åœ¨è¿›è¡Œçš„åç¨‹
 
-        //Ïú»ÙÎïÌå
+        //é”€æ¯ç‰©ä½“
         Destroy(gameObject);
 
-        //ÊÍ·ÅÎïÌåºÍÄÚ´æ
+        //é‡Šæ”¾ç‰©ä½“å’Œå†…å­˜
         UIManager.Instance.ReleasePrefab(panelName);     
     }
 
 
 
-    //ÓÃÓÚ½çÃæµÄµ­Èë/µ­³ö£¨µ­ÈëÊ±µÚËÄ¸ö²ÎÊıÓ¦ÎªÕæ£¬µ­³öÊ±Îª¼Ù£©
+    //ç”¨äºç•Œé¢çš„æ·¡å…¥/æ·¡å‡ºï¼ˆæ·¡å…¥æ—¶ç¬¬å››ä¸ªå‚æ•°åº”ä¸ºçœŸï¼Œæ·¡å‡ºæ—¶ä¸ºå‡ï¼‰
     public virtual void Fade(CanvasGroup targetGroup, float targetAlpha, float duration, bool blocksRaycasts)
     {
         if (targetGroup == null)
@@ -113,109 +113,109 @@ public class BasePanel : MonoBehaviour
         
         Tween fadeTween = targetGroup.DOFade(targetAlpha, duration).OnComplete(() =>
         {
-            targetGroup.blocksRaycasts = blocksRaycasts;    //ÉèÖÃÊÇ·ñ×èµ²ÉäÏß¼ì²â
+            targetGroup.blocksRaycasts = blocksRaycasts;    //è®¾ç½®æ˜¯å¦é˜»æŒ¡å°„çº¿æ£€æµ‹
 
-            //ÔÚµ­ÈëµÄÇé¿öÏÂ
+            //åœ¨æ·¡å…¥çš„æƒ…å†µä¸‹
             if (targetAlpha != FadeOutAlpha)
             {
                 OnFadeInFinished?.Invoke();
 
                 isRemoved = false;
 
-                //Ìí¼Ó»º´æ½ø×Öµä£¬±íÊ¾½çÃæÕıÔÚ´ò¿ª
+                //æ·»åŠ ç¼“å­˜è¿›å­—å…¸ï¼Œè¡¨ç¤ºç•Œé¢æ­£åœ¨æ‰“å¼€
                 UIManager.Instance.PanelDict[panelName] = this;
             }
 
-            //µ­³öÊ±
+            //æ·¡å‡ºæ—¶
             else
             {
                 OnFadeOutFinished?.Invoke();
 
                 isRemoved = true;
 
-                //´Ó×ÖµäÖĞÒÆ³ı»º´æ£¬±íÊ¾½çÃæÃ»´ò¿ª
+                //ä»å­—å…¸ä¸­ç§»é™¤ç¼“å­˜ï¼Œè¡¨ç¤ºç•Œé¢æ²¡æ‰“å¼€
                 UIManager.Instance.PanelDict.Remove(panelName);
             }             
         });
 
-        generatedDOTweens.Add(fadeTween);      //½«DOTween¼Ó½øÁĞ±í
+        generatedDOTweens.Add(fadeTween);      //å°†DOTweenåŠ è¿›åˆ—è¡¨
     }
   
 
 
-    //ÓÃÓÚ´ò×Ö»úĞ§¹û
+    //ç”¨äºæ‰“å­—æœºæ•ˆæœ
     protected IEnumerator TypeText(TextMeshProUGUI textComponent, string fullText, Action onTypingCompleted = null)
     {
-        isTyping = true;        //±íÊ¾ÕıÔÚ´ò×Ö£¨·ÀÖ¹ÕıÔÚ´ò×ÖÊ±°´¿Õ¸ñ»á¹Ø±ÕUI£©
+        isTyping = true;        //è¡¨ç¤ºæ­£åœ¨æ‰“å­—ï¼ˆé˜²æ­¢æ­£åœ¨æ‰“å­—æ—¶æŒ‰ç©ºæ ¼ä¼šå…³é—­UIï¼‰
 
 
-        int totalLength = fullText.Length;      //ÎÄ±¾×Ü³¤¶È£¬ÓÃÓÚ¾ö¶¨´ò×Ö»úºÎÊ±½áÊø
-        int visibleCount = 0;                   //ÏÔÊ¾µÄÎÄ×ÖÊıÁ¿
+        int totalLength = fullText.Length;      //æ–‡æœ¬æ€»é•¿åº¦ï¼Œç”¨äºå†³å®šæ‰“å­—æœºä½•æ—¶ç»“æŸ
+        int visibleCount = 0;                   //æ˜¾ç¤ºçš„æ–‡å­—æ•°é‡
 
 
-        textComponent.maxVisibleCharacters = 0;  //Ò»¿ªÊ¼Ê²Ã´¶¼²»ÏÔÊ¾
+        textComponent.maxVisibleCharacters = 0;  //ä¸€å¼€å§‹ä»€ä¹ˆéƒ½ä¸æ˜¾ç¤º
 
         while (visibleCount < totalLength)
         {
             if (PlayerInputHandler.Instance.IsSpacePressed)
             {
-                textComponent.maxVisibleCharacters = totalLength;  //Íæ¼Ò°´ÏÂ¿Õ¸ñºó£¬Ë²¼äÏÔÊ¾ËùÓĞÎÄ±¾
+                textComponent.maxVisibleCharacters = totalLength;  //ç©å®¶æŒ‰ä¸‹ç©ºæ ¼åï¼Œç¬é—´æ˜¾ç¤ºæ‰€æœ‰æ–‡æœ¬
 
-                //µÈ´ı0.15ÃëÔÙÍË³ö£¬·ñÔòÈç¹û´Ëº¯Êı½áÊøºóµÄÏÂÒ»¸öº¯ÊıÒ²ĞèÒª°´¿Õ¸ñÊ±£¬¿ÉÄÜ»áµ¼ÖÂ°´Ò»´Î¿Õ¸ñÏìÓ¦¶à¸öº¯Êı
+                //ç­‰å¾…0.15ç§’å†é€€å‡ºï¼Œå¦åˆ™å¦‚æœæ­¤å‡½æ•°ç»“æŸåçš„ä¸‹ä¸€ä¸ªå‡½æ•°ä¹Ÿéœ€è¦æŒ‰ç©ºæ ¼æ—¶ï¼Œå¯èƒ½ä¼šå¯¼è‡´æŒ‰ä¸€æ¬¡ç©ºæ ¼å“åº”å¤šä¸ªå‡½æ•°
                 yield return new WaitForSeconds(0.15f);        
-                break;  //ÍË³öÑ­»·
+                break;  //é€€å‡ºå¾ªç¯
             }
 
-            //¼ì²éÊÇ·ñÔÚ±êÇ©µÄ¿ªÍ·
+            //æ£€æŸ¥æ˜¯å¦åœ¨æ ‡ç­¾çš„å¼€å¤´
             if (fullText[visibleCount] == '<') 
             {
-                //Ìø¹ıÕû¸ö±êÇ©£¬Ö±µ½±êÇ©µÄ½áÎ²£¨Ò²¾ÍÊÇ>·ûºÅ£©¡£Ìø¹ıµÄ·½Ê½Îª²»¸üĞÂ¿ÉÒÔÏÔÊ¾µÄÎÄ×ÖÊıÁ¿£¬µ«ÊÇÒÀÈ»Ôö¼ÓvisibleCount±äÁ¿
+                //è·³è¿‡æ•´ä¸ªæ ‡ç­¾ï¼Œç›´åˆ°æ ‡ç­¾çš„ç»“å°¾ï¼ˆä¹Ÿå°±æ˜¯>ç¬¦å·ï¼‰ã€‚è·³è¿‡çš„æ–¹å¼ä¸ºä¸æ›´æ–°å¯ä»¥æ˜¾ç¤ºçš„æ–‡å­—æ•°é‡ï¼Œä½†æ˜¯ä¾ç„¶å¢åŠ visibleCountå˜é‡
                 while (visibleCount < totalLength && fullText[visibleCount] != '>')
                 {
                     visibleCount++;
                 }
             }
 
-            visibleCount++;  //Ôö¼Ó¿ÉÒÔÏÔÊ¾µÄÎÄ×ÖÊıÁ¿
-            textComponent.maxVisibleCharacters = visibleCount;  //¸üĞÂ¿ÉÒÔÏÔÊ¾µÄÎÄ×ÖÊıÁ¿
+            visibleCount++;  //å¢åŠ å¯ä»¥æ˜¾ç¤ºçš„æ–‡å­—æ•°é‡
+            textComponent.maxVisibleCharacters = visibleCount;  //æ›´æ–°å¯ä»¥æ˜¾ç¤ºçš„æ–‡å­—æ•°é‡
 
-            yield return new WaitForSeconds(typeSpeed);  //µÈ´ıÒ»¶ÎÊ±¼äºóÔÙ´òÏÂÒ»¸ö×Ö
+            yield return new WaitForSeconds(typeSpeed);  //ç­‰å¾…ä¸€æ®µæ—¶é—´åå†æ‰“ä¸‹ä¸€ä¸ªå­—
         }
 
         isTyping = false;
-        onTypingCompleted?.Invoke();      //»Øµ÷º¯Êı£¬ÓÃÓÚÄ³¸öÎÄ±¾È«²¿ÏÔÊ¾ÍêºóÖ´ĞĞÒ»Ğ©Âß¼­
+        onTypingCompleted?.Invoke();      //å›è°ƒå‡½æ•°ï¼Œç”¨äºæŸä¸ªæ–‡æœ¬å…¨éƒ¨æ˜¾ç¤ºå®Œåæ‰§è¡Œä¸€äº›é€»è¾‘
     }
 
 
 
 
-    protected void ClearAllCoroutinesAndTweens()    //ÓÃÓÚÉ¾³ı½çÃæÊ±¼ì²éÊÇ·ñÓĞÕıÔÚ½øĞĞµÄĞ­³ÌºÍDOTween
+    protected void ClearAllCoroutinesAndTweens()    //ç”¨äºåˆ é™¤ç•Œé¢æ—¶æ£€æŸ¥æ˜¯å¦æœ‰æ­£åœ¨è¿›è¡Œçš„åç¨‹å’ŒDOTween
     {
-        foreach (var coroutine in generatedCoroutines)     //¼ìÔÄÁĞ±íÖĞµÄËùÓĞĞ­³Ì
+        foreach (var coroutine in generatedCoroutines)     //æ£€é˜…åˆ—è¡¨ä¸­çš„æ‰€æœ‰åç¨‹
         {
-            if (coroutine != null)      //¼ì²éĞ­³ÌÊÇ·ñ´æÔÚ£¨ÎŞÂÛÊÇ·ñÕıÔÚ½øĞĞ£©
+            if (coroutine != null)      //æ£€æŸ¥åç¨‹æ˜¯å¦å­˜åœ¨ï¼ˆæ— è®ºæ˜¯å¦æ­£åœ¨è¿›è¡Œï¼‰
             {
                 StopCoroutine(coroutine);
                 //Debug.Log("One Coroutine is stopped.");
             }
         }
 
-        foreach (var tween in generatedDOTweens)     //¼ìÔÄÁĞ±íÖĞµÄËùÓĞĞ­³Ì
+        foreach (var tween in generatedDOTweens)     //æ£€é˜…åˆ—è¡¨ä¸­çš„æ‰€æœ‰åç¨‹
         {
-            if (tween.active)      //¼ì²éDOTweenÊÇ·ñÕıÔÚ½øĞĞ
+            if (tween.active)      //æ£€æŸ¥DOTweenæ˜¯å¦æ­£åœ¨è¿›è¡Œ
             {
                 tween.Kill();
                 //Debug.Log("One DOTween is stopped and killed.");
             }
         }
 
-        generatedCoroutines.Clear();       //Çå³ıÁĞ±í
-        generatedDOTweens.Clear();       //Çå³ıÁĞ±í
+        generatedCoroutines.Clear();       //æ¸…é™¤åˆ—è¡¨
+        generatedDOTweens.Clear();       //æ¸…é™¤åˆ—è¡¨
     }
 
 
 
-    protected void SetBothMoveableAndAttackable(bool isTrue)    //ÉèÖÃÊÇ·ñÔÊĞíÍæ¼ÒÒÆ¶¯ºÍ¹¥»÷
+    protected void SetBothMoveableAndAttackable(bool isTrue)    //è®¾ç½®æ˜¯å¦å…è®¸ç©å®¶ç§»åŠ¨å’Œæ”»å‡»
     {
         IsPlayerMoveable = isTrue;
         IsPlayerAttackable = isTrue;

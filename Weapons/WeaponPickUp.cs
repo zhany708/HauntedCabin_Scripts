@@ -8,7 +8,7 @@ public class WeaponPickUp : MonoBehaviour
     //public SO_WeaponKeys WeaponKeys;
     public GameObject WeaponPreFab;
 
-    public string WeaponPhraseKey;      //´ÓLean LocalizationÄÇµ÷ÓÃÊ±ĞèÒªµÄstring
+    public string WeaponPhraseKey;      //ä»Lean Localizationé‚£è°ƒç”¨æ—¶éœ€è¦çš„string
 
 
 
@@ -16,7 +16,7 @@ public class WeaponPickUp : MonoBehaviour
 
     PickupWeaponPanel weaponPickupPanel;
 
-    bool m_IsPanelOpen = false;     //ÓÃÓÚ·ÀÖ¹Íæ¼ÒÔÚUIÏÔÊ¾Ê±ÖØĞÂ´¥·¢Ê°È¡ÎäÆ÷µÄ´¥·¢Æ÷µ¼ÖÂµÄÖØ¸´´ò¿ªUI
+    bool m_IsPanelOpen = false;     //ç”¨äºé˜²æ­¢ç©å®¶åœ¨UIæ˜¾ç¤ºæ—¶é‡æ–°è§¦å‘æ‹¾å–æ­¦å™¨çš„è§¦å‘å™¨å¯¼è‡´çš„é‡å¤æ‰“å¼€UI
 
 
 
@@ -41,7 +41,7 @@ public class WeaponPickUp : MonoBehaviour
 
     private async void Start()
     {
-        //ÌáÇ°¼ÓÔØÊ°È¡ÎäÆ÷µÄUI¡£·ÀÖ¹¿¨¶Ù
+        //æå‰åŠ è½½æ‹¾å–æ­¦å™¨çš„UIã€‚é˜²æ­¢å¡é¡¿
         if (!string.IsNullOrEmpty(UIManager.Instance.UIKeys.PickupWeaponPanelKey))
         {
             await UIManager.Instance.InitPanel(UIManager.Instance.UIKeys.PickupWeaponPanelKey);
@@ -65,12 +65,12 @@ public class WeaponPickUp : MonoBehaviour
 
 
 
-    //Íæ¼ÒÅö×²µØÉÏµÄÎäÆ÷ºó£¬ÏÔÊ¾ÎäÆ÷Ê°È¡UI
+    //ç©å®¶ç¢°æ’åœ°ä¸Šçš„æ­¦å™¨åï¼Œæ˜¾ç¤ºæ­¦å™¨æ‹¾å–UI
     private async void ProcessWeaponPickup(Collider2D other)
     {
         if (other.gameObject.CompareTag("Player") && !m_IsPanelOpen)
         {
-            Player player = other.gameObject.GetComponentInParent<Player>();    //ÓÉÓÚÅö×²µÄÊÇÍæ¼ÒµÄcombat×ÓÎïÌå£¬Òò´ËÒªÓÃInParent
+            Player player = other.gameObject.GetComponentInParent<Player>();    //ç”±äºç¢°æ’çš„æ˜¯ç©å®¶çš„combatå­ç‰©ä½“ï¼Œå› æ­¤è¦ç”¨InParent
 
             await UIManager.Instance.OpenPanel(UIManager.Instance.UIKeys.PickupWeaponPanelKey);
 
@@ -78,13 +78,13 @@ public class WeaponPickUp : MonoBehaviour
             weaponPickupPanel = FindAnyObjectByType<PickupWeaponPanel>();
             if (weaponPickupPanel != null)
             {
-                //½«ÎäÆ÷Ãû×Ö¸³Öµ¸øUI£¬ÓÃÓÚÏÔÊ¾
+                //å°†æ­¦å™¨åå­—èµ‹å€¼ç»™UIï¼Œç”¨äºæ˜¾ç¤º
                 SetLocalizedText(WeaponPhraseKey);
 
-                //½«½ÇÉ«½Å±¾ºÍÎäÆ÷ÎïÌå´«µİ¸øUI£¬ÓÃÓÚ²»Í¬µÄ°´Å¥¹¦ÄÜ
+                //å°†è§’è‰²è„šæœ¬å’Œæ­¦å™¨ç‰©ä½“ä¼ é€’ç»™UIï¼Œç”¨äºä¸åŒçš„æŒ‰é’®åŠŸèƒ½
                 weaponPickupPanel.SetPlayerAndWeapon(player, WeaponPreFab, this);
 
-                //ÔÚ´«µİ´Ë½Å±¾¸øUIºó£¬ÔÙÉèÖÃ²¼¶ûÖµ
+                //åœ¨ä¼ é€’æ­¤è„šæœ¬ç»™UIåï¼Œå†è®¾ç½®å¸ƒå°”å€¼
                 m_IsPanelOpen = true;
             }
         }
@@ -95,7 +95,7 @@ public class WeaponPickUp : MonoBehaviour
     {
         if (LeanLocalization.CurrentLanguages != null)
         {
-            //¸ù¾İµ±Ç°ÓïÑÔ¸³ÖµÎÄ±¾¸øÊ°È¡ÎäÆ÷½çÃæ
+            //æ ¹æ®å½“å‰è¯­è¨€èµ‹å€¼æ–‡æœ¬ç»™æ‹¾å–æ­¦å™¨ç•Œé¢
             weaponPickupPanel.SetItemName(LeanLocalization.GetTranslationText(phraseKey) );     
         }
     }

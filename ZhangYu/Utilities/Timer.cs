@@ -5,20 +5,20 @@ using UnityEngine;
 
 
 
-namespace ZhangYu.Utilities     //ÕÅìÏÎÄ¼ş¼ĞÓÃÓÚÒÔºóËùÓĞÓÎÏ·¶¼¿ÉÄÜ»áÓÃµ½µÄº¯Êı£¬Èç¼ÆÊ±Æ÷µÈ
+namespace ZhangYu.Utilities     //å¼ ç…œæ–‡ä»¶å¤¹ç”¨äºä»¥åæ‰€æœ‰æ¸¸æˆéƒ½å¯èƒ½ä¼šç”¨åˆ°çš„å‡½æ•°ï¼Œå¦‚è®¡æ—¶å™¨ç­‰
 {
     public class Timer
     {
-        public event Action OnTimerDone;    //½ÓÊÕ¶ÔÏóÓĞWeapon, EnemyFSM
+        public event Action OnTimerDone;    //æ¥æ”¶å¯¹è±¡æœ‰Weapon, EnemyFSM
 
 
 
-        float m_StartTime;      //¿ªÊ¼Ê±¼ä
-        float m_Duration;       //¼ÆÊ±Ê±³¤
-        float m_TargetTime;     //½áÊøÊ±¼ä
+        float m_StartTime;      //å¼€å§‹æ—¶é—´
+        float m_Duration;       //è®¡æ—¶æ—¶é•¿
+        float m_TargetTime;     //ç»“æŸæ—¶é—´
 
-        bool m_IsActive;                //±íÊ¾¼ÆÊ±Æ÷ÊÇ·ñ¼¤»î£¨ÕıÔÚ¼ÆÊ±£©
-        bool m_IsTimerDone = false;     //±íÊ¾Ê±¼äÊÇ·ñÒÑ¾­µ½ÁË£¨ÓÃÓÚĞ­³ÌµÄ¼ÆÊ±£©
+        bool m_IsActive;                //è¡¨ç¤ºè®¡æ—¶å™¨æ˜¯å¦æ¿€æ´»ï¼ˆæ­£åœ¨è®¡æ—¶ï¼‰
+        bool m_IsTimerDone = false;     //è¡¨ç¤ºæ—¶é—´æ˜¯å¦å·²ç»åˆ°äº†ï¼ˆç”¨äºåç¨‹çš„è®¡æ—¶ï¼‰
 
 
 
@@ -30,7 +30,7 @@ namespace ZhangYu.Utilities     //ÕÅìÏÎÄ¼ş¼ĞÓÃÓÚÒÔºóËùÓĞÓÎÏ·¶¼¿ÉÄÜ»áÓÃµ½µÄº¯Êı£¬
 
 
 
-        public void StartTimer()    //¿ªÊ¼¼ÆÊ±Æ÷
+        public void StartTimer()    //å¼€å§‹è®¡æ—¶å™¨
         {
             m_StartTime = Time.time;
             m_TargetTime = m_StartTime + m_Duration;
@@ -38,14 +38,14 @@ namespace ZhangYu.Utilities     //ÕÅìÏÎÄ¼ş¼ĞÓÃÓÚÒÔºóËùÓĞÓÎÏ·¶¼¿ÉÄÜ»áÓÃµ½µÄº¯Êı£¬
             //m_IsTimerDone = false;
         }
 
-        public void StopTimer()     //ÔİÍ£¼ÆÊ±Æ÷
+        public void StopTimer()     //æš‚åœè®¡æ—¶å™¨
         {
             m_IsActive = false;
         }
 
 
         
-        public void Tick()      //Ê¹ÓÃÏµÍ³×Ô´øµÄÊ±¼ä¼ÆÊ±£¬ÖĞÍ¾¿ÉÒÔÔİÍ£
+        public void Tick()      //ä½¿ç”¨ç³»ç»Ÿè‡ªå¸¦çš„æ—¶é—´è®¡æ—¶ï¼Œä¸­é€”å¯ä»¥æš‚åœ
         {
             if (!m_IsActive) return;
 
@@ -56,16 +56,16 @@ namespace ZhangYu.Utilities     //ÕÅìÏÎÄ¼ş¼ĞÓÃÓÚÒÔºóËùÓĞÓÎÏ·¶¼¿ÉÄÜ»áÓÃµ½µÄº¯Êı£¬
 
                 OnTimerDone?.Invoke();
                 //m_IsTimerDone = true;
-                StopTimer();    //µ½´ïÄ¿±êÊ±¼äºóÍ£Ö¹¼ÆÊ±
+                StopTimer();    //åˆ°è¾¾ç›®æ ‡æ—¶é—´ååœæ­¢è®¡æ—¶
             }
         }
 
 
-        public IEnumerator WaitForDuration()        //Ê¹ÓÃĞ­³Ì¼ÆÊ±£¬ÖĞÍ¾ÎŞ·¨ÔİÍ£
+        public IEnumerator WaitForDuration()        //ä½¿ç”¨åç¨‹è®¡æ—¶ï¼Œä¸­é€”æ— æ³•æš‚åœ
         {
             m_IsTimerDone = false;
 
-            yield return new WaitForSeconds(m_Duration);        //µÈ´ıÒ»¶ÎÊ±¼ä
+            yield return new WaitForSeconds(m_Duration);        //ç­‰å¾…ä¸€æ®µæ—¶é—´
 
             //Debug.Log("Time up!");
             m_IsTimerDone = true;

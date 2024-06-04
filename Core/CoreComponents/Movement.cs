@@ -2,14 +2,14 @@ using UnityEngine;
 
 
 
-public class Movement : CoreComponent   //ÓÃÓÚ¹ÜÀíÒÆ¶¯
+public class Movement : CoreComponent   //ç”¨äºç®¡ç†ç§»åŠ¨
 {
     public Rigidbody2D Rigidbody2d {  get; private set; }
 
     public Vector2 FacingDirection { get; private set; }
 
 
-    Vector2 m_WorkSpace;        //ÓÃÓÚÄÚ²¿µÄ¼ÆËã
+    Vector2 m_WorkSpace;        //ç”¨äºå†…éƒ¨çš„è®¡ç®—
 
 
 
@@ -70,19 +70,19 @@ public class Movement : CoreComponent   //ÓÃÓÚ¹ÜÀíÒÆ¶¯
 
         if (m_WorkSpace != Vector2.zero)        
         {
-            FacingDirection = m_WorkSpace.normalized;   //ÉèÖÃ½ÇÉ«µÄ³¯Ïò·½Ïò
+            FacingDirection = m_WorkSpace.normalized;   //è®¾ç½®è§’è‰²çš„æœå‘æ–¹å‘
         }       
     }
 
 
 
-    public int GetFlipNum(Vector2 faceDirection, Vector2 currentDirection)      //Èç¹û²»ĞèÒª¼õÈ¥µ±Ç°×ø±ê£¬ÔòµÚ¶ş¸ö²ÎÊıÓÃVector2.Zero
+    public int GetFlipNum(Vector2 faceDirection, Vector2 currentDirection)      //å¦‚æœä¸éœ€è¦å‡å»å½“å‰åæ ‡ï¼Œåˆ™ç¬¬äºŒä¸ªå‚æ•°ç”¨Vector2.Zero
     {
         if (faceDirection != null)
         {
-            Vector2 direction = (faceDirection - currentDirection).normalized;      //Ö»ĞèÒª·½Ïò
+            Vector2 direction = (faceDirection - currentDirection).normalized;      //åªéœ€è¦æ–¹å‘
 
-            int facingNum = direction.x < 0 ? -1 : 1;     //Èç¹ûÄ¿±ê×ø±êÎ»ÓÚµ±Ç°×ø±ê×ó²à£¬Ôò·­×ª
+            int facingNum = direction.x < 0 ? -1 : 1;     //å¦‚æœç›®æ ‡åæ ‡ä½äºå½“å‰åæ ‡å·¦ä¾§ï¼Œåˆ™ç¿»è½¬
             return facingNum;
         }
         return 0;

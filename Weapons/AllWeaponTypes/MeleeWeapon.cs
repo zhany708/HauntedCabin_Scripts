@@ -10,15 +10,15 @@ public class MeleeWeapon : Weapon
         get => m_CurrentAttackCounter;
         protected set => m_CurrentAttackCounter = value >= WeaponData.AmountOfAttack ? 0 : value;
     }
-    private int m_CurrentAttackCounter;        //±íÊ¾ÎäÆ÷µÄÁ¬»÷´ÎÊı
+    private int m_CurrentAttackCounter;        //è¡¨ç¤ºæ­¦å™¨çš„è¿å‡»æ¬¡æ•°
 
 
 
     protected SO_MeleeWeaponData aggressiveWeaponData;
     protected CameraShake cameraShake;
 
-    protected List<Idamageable> detectedDamageables = new List<Idamageable>();     //ÓÃÓÚ´¢´æËùÓĞÔÚ¹¥»÷·¶Î§µÄÅö×²Ìå
-    protected List<IKnockbackable> detectedKnockbackables = new List<IKnockbackable>();  //ÓÃÓÚ´¢´æËùÓĞ¹¥»÷·¶Î§ÄÚ¿É»÷ÍËµÄÅö×²Ìå
+    protected List<Idamageable> detectedDamageables = new List<Idamageable>();     //ç”¨äºå‚¨å­˜æ‰€æœ‰åœ¨æ”»å‡»èŒƒå›´çš„ç¢°æ’ä½“
+    protected List<IKnockbackable> detectedKnockbackables = new List<IKnockbackable>();  //ç”¨äºå‚¨å­˜æ‰€æœ‰æ”»å‡»èŒƒå›´å†…å¯å‡»é€€çš„ç¢°æ’ä½“
 
 
 
@@ -30,7 +30,7 @@ public class MeleeWeapon : Weapon
     {
         base.Awake();
 
-        InitializeComponents();     //³õÊ¼»¯×é¼ş
+        InitializeComponents();     //åˆå§‹åŒ–ç»„ä»¶
     }
 
 
@@ -51,7 +51,7 @@ public class MeleeWeapon : Weapon
 
     private void InitializeComponents()
     {
-        //Èç¹ûWeaponDataÓëµ±Ç°AggressiveWeaponDataÏàÍ¬£¬Ôò½«µ±Ç°¹¥»÷ĞÔÎäÆ÷Êı¾İµÄReference´«¸øWeapon½Å±¾
+        //å¦‚æœWeaponDataä¸å½“å‰AggressiveWeaponDataç›¸åŒï¼Œåˆ™å°†å½“å‰æ”»å‡»æ€§æ­¦å™¨æ•°æ®çš„Referenceä¼ ç»™Weaponè„šæœ¬
         if (WeaponData.GetType() == typeof(SO_MeleeWeaponData))
         {
             aggressiveWeaponData = (SO_MeleeWeaponData)WeaponData;
@@ -59,11 +59,11 @@ public class MeleeWeapon : Weapon
         else
         {
             Debug.LogError("Wrong data for the weapon");
-            enabled = false;    //È¡Ïû¼¤»îµ±Ç°½Å±¾£¨²»ÊÇÎïÌå£©
+            enabled = false;    //å–æ¶ˆæ¿€æ´»å½“å‰è„šæœ¬ï¼ˆä¸æ˜¯ç‰©ä½“ï¼‰
         }
 
 
-        cameraShake = FindObjectOfType<CameraShake>();    //ÕÒÓµÓĞCameraShake½Å±¾µÄ×é¼ş
+        cameraShake = FindObjectOfType<CameraShake>();    //æ‰¾æ‹¥æœ‰CameraShakeè„šæœ¬çš„ç»„ä»¶
         if (cameraShake == null)
         {
             Debug.LogError("Cannot find CameraShake component.");
@@ -74,28 +74,28 @@ public class MeleeWeapon : Weapon
 
 
 
-    public void CheckMeleeAttack()     //¹¥»÷µ½µĞÈËÊ±µ÷ÓÃ´Ëº¯Êı
+    public void CheckMeleeAttack()     //æ”»å‡»åˆ°æ•Œäººæ—¶è°ƒç”¨æ­¤å‡½æ•°
     {
         //Debug.Log("Checking!");
 
-        //µ÷ÓÃ¹¥»÷ĞÔÎäÆ÷ÖĞ²»Í¬Á¬»÷´ÎÊıµÄĞÅÏ¢
+        //è°ƒç”¨æ”»å‡»æ€§æ­¦å™¨ä¸­ä¸åŒè¿å‡»æ¬¡æ•°çš„ä¿¡æ¯
         MeleeWeaponAttackDetails details = aggressiveWeaponData.AttackDetails[CurrentAttackCounter];
 
-        //¶ÔÃ¿Ò»¸öÓĞ¿ÉÔì³ÉÉËº¦½Ó¿ÚµÄÅö×²ÌåÉúĞ§£¬¼ÓToList·ÀÖ¹µĞÈËËÀÍöºó³öÏÖBug£¨ToList¿ÉÒÔ¸´ÖÆÔ­Ê¼List£©
+        //å¯¹æ¯ä¸€ä¸ªæœ‰å¯é€ æˆä¼¤å®³æ¥å£çš„ç¢°æ’ä½“ç”Ÿæ•ˆï¼ŒåŠ ToListé˜²æ­¢æ•Œäººæ­»äº¡åå‡ºç°Bugï¼ˆToListå¯ä»¥å¤åˆ¶åŸå§‹Listï¼‰
         foreach (Idamageable item in detectedDamageables.ToList())      
         {
             if (cameraShake != null)
             {
-                cameraShake.ShakeCamera(details.CameraShakeIntensity, details.CameraShakeDuration);     //µ÷ÓÃÏà»úÕğ¶¯½Å±¾
+                cameraShake.ShakeCamera(details.CameraShakeIntensity, details.CameraShakeDuration);     //è°ƒç”¨ç›¸æœºéœ‡åŠ¨è„šæœ¬
             }
 
-            //¶Ô±»¼ì²âµ½Åö×²ÌåÔì³ÉÉËº¦£¨ÉËº¦ÊÜÍæ¼ÒÁ¦Á¿ºÍµĞÈË·ÀÓùÓ°Ïì£©
+            //å¯¹è¢«æ£€æµ‹åˆ°ç¢°æ’ä½“é€ æˆä¼¤å®³ï¼ˆä¼¤å®³å—ç©å®¶åŠ›é‡å’Œæ•Œäººé˜²å¾¡å½±å“ï¼‰
             item.Damage(details.DamageAmount * PlayerStatusBar.GetStrengthAddition(), false);      
         }
 
         foreach (IKnockbackable item in detectedKnockbackables.ToList())
         {
-            item.KnockBack(details.KnockbackStrength, mousePosition.normalized);       //»÷ÍËÄ¿±ê,»÷ÍË·½ÏòÎªÊó±ê·½Ïò£¨ÎäÆ÷Ö¸ÏòµÄ·½Ïò£©
+            item.KnockBack(details.KnockbackStrength, mousePosition.normalized);       //å‡»é€€ç›®æ ‡,å‡»é€€æ–¹å‘ä¸ºé¼ æ ‡æ–¹å‘ï¼ˆæ­¦å™¨æŒ‡å‘çš„æ–¹å‘ï¼‰
             
         }
     }
@@ -106,13 +106,13 @@ public class MeleeWeapon : Weapon
         //Debug.Log("Added!");
         if (collision.TryGetComponent<Idamageable>(out var damageable))
         {
-            detectedDamageables.Add(damageable);     //Èç¹û¼ì²âµ½¿ÉÔì³ÉÉËº¦µÄÅö×²Ìå£¬Ôò¼Ó½øList
+            detectedDamageables.Add(damageable);     //å¦‚æœæ£€æµ‹åˆ°å¯é€ æˆä¼¤å®³çš„ç¢°æ’ä½“ï¼Œåˆ™åŠ è¿›List
         }
 
         
         if (collision.TryGetComponent<IKnockbackable>(out var knockbackable))
         {
-            detectedKnockbackables.Add(knockbackable);    //Èç¹û¼ì²âµ½¿É±»»÷ÍËµÄÅö×²Ìå£¬Ôò¼Ó½øList
+            detectedKnockbackables.Add(knockbackable);    //å¦‚æœæ£€æµ‹åˆ°å¯è¢«å‡»é€€çš„ç¢°æ’ä½“ï¼Œåˆ™åŠ è¿›List
         }
     }
 

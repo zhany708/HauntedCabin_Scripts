@@ -4,12 +4,12 @@ using UnityEngine.InputSystem;
 
 
 
-public class ParticlePool : MonoBehaviour       //ÓÃÓÚ×Óµ¯£¬ÌØĞ§µÈµÄ¶ÔÏó³Ø¡£Éú³É³öÀ´µÄËùÓĞÎïÌå¶¼·ÅÔÚ×ÓÎïÌå
+public class ParticlePool : MonoBehaviour       //ç”¨äºå­å¼¹ï¼Œç‰¹æ•ˆç­‰çš„å¯¹è±¡æ± ã€‚ç”Ÿæˆå‡ºæ¥çš„æ‰€æœ‰ç‰©ä½“éƒ½æ”¾åœ¨å­ç‰©ä½“
 {
     public static ParticlePool Instance {  get; private set; }
 
 
-    //Ê¹ÓÃ×Öµä¶Ô²»Í¬µÄÎïÌå½øĞĞ·Ö¿ª´æ´¢
+    //ä½¿ç”¨å­—å…¸å¯¹ä¸åŒçš„ç‰©ä½“è¿›è¡Œåˆ†å¼€å­˜å‚¨
     private Dictionary<string, Queue<GameObject>> m_ParticlePoolDict = new Dictionary<string, Queue<GameObject>>();     
 
 
@@ -20,7 +20,7 @@ public class ParticlePool : MonoBehaviour       //ÓÃÓÚ×Óµ¯£¬ÌØĞ§µÈµÄ¶ÔÏó³Ø¡£Éú³É
 
     private void Awake()
     {
-        //µ¥ÀıÄ£Ê½
+        //å•ä¾‹æ¨¡å¼
         if (Instance != null && Instance != this)
         {
             Destroy(this.gameObject);
@@ -33,10 +33,10 @@ public class ParticlePool : MonoBehaviour       //ÓÃÓÚ×Óµ¯£¬ÌØĞ§µÈµÄ¶ÔÏó³Ø¡£Éú³É
     }
 
 
-    //»ñÈ¡ÎïÌå
+    //è·å–ç‰©ä½“
     public GameObject GetObject(GameObject prefab)
     {
-        //¼ì²é³ØÖĞÓĞÃ»ÓĞÎïÌå£¬Ã»ÓĞµÄ»°ÔòĞÂ½¨Ò»¸ö²¢¼Ó½øÈ¥
+        //æ£€æŸ¥æ± ä¸­æœ‰æ²¡æœ‰ç‰©ä½“ï¼Œæ²¡æœ‰çš„è¯åˆ™æ–°å»ºä¸€ä¸ªå¹¶åŠ è¿›å»
         if (!m_ParticlePoolDict.TryGetValue(prefab.name, out var queue) || queue.Count == 0)
         {
             var newObject = CreateNewObject(prefab);
@@ -53,24 +53,24 @@ public class ParticlePool : MonoBehaviour       //ÓÃÓÚ×Óµ¯£¬ÌØĞ§µÈµÄ¶ÔÏó³Ø¡£Éú³É
 
     private GameObject CreateNewObject(GameObject prefab)
     {
-        //ÏÈÕÒÓÃÀ´´æ·ÅÃ¿ÀàÎïÌåµÄ¸¸ÎïÌå£¬ËæºóÔÙ´´½¨
+        //å…ˆæ‰¾ç”¨æ¥å­˜æ”¾æ¯ç±»ç‰©ä½“çš„çˆ¶ç‰©ä½“ï¼Œéšåå†åˆ›å»º
         GameObject childContainer = FindOrCreateChildContainer(prefab.name);
         GameObject obj = Instantiate(prefab, childContainer.transform);
 
         return obj;
     }
 
-    //ÓÃÓÚÑ°ÕÒ»ò´´½¨×ÓÎïÌåµÄ¸¸ÎïÌå£¨ÎªÁËÕû½àÃÀ¹Û£©
+    //ç”¨äºå¯»æ‰¾æˆ–åˆ›å»ºå­ç‰©ä½“çš„çˆ¶ç‰©ä½“ï¼ˆä¸ºäº†æ•´æ´ç¾è§‚ï¼‰
     private GameObject FindOrCreateChildContainer(string name)
     {
-        //ÏÈ³¢ÊÔÔÚµ±Ç°ÎïÌåµÄ×ÓÎïÌåÖĞÑ°ÕÒ²ÎÊıÖĞµÄÃû×ÖµÄÎïÌå
+        //å…ˆå°è¯•åœ¨å½“å‰ç‰©ä½“çš„å­ç‰©ä½“ä¸­å¯»æ‰¾å‚æ•°ä¸­çš„åå­—çš„ç‰©ä½“
         Transform childTransform = transform.Find(name);
 
         if (childTransform == null)
         {
             GameObject child = new GameObject(name);
 
-            //½«Ã¿ÖÖÀàĞÍµÄÎïÌåµÄ¸¸ÎïÌåÉèÖÃÎªµ±Ç°ÎïÌåµÄ×ÓÎïÌå
+            //å°†æ¯ç§ç±»å‹çš„ç‰©ä½“çš„çˆ¶ç‰©ä½“è®¾ç½®ä¸ºå½“å‰ç‰©ä½“çš„å­ç‰©ä½“
             child.transform.SetParent(transform);
 
             return child;
@@ -83,17 +83,17 @@ public class ParticlePool : MonoBehaviour       //ÓÃÓÚ×Óµ¯£¬ÌØĞ§µÈµÄ¶ÔÏó³Ø¡£Éú³É
 
 
 
-    //´¢´æÎïÌå
+    //å‚¨å­˜ç‰©ä½“
     public bool PushObject(GameObject obj)
     {
         if (obj != null)
         {
-            //»ñÈ¡ÎïÌåÃû×Ö
+            //è·å–ç‰©ä½“åå­—
             string name = obj.name;
 
             if (name.EndsWith("(Clone)"))
             {
-                //¼ì²éÊÇ·ñÓĞ¡°¿ËÂ¡¡±ºó×º£¬Èç¹ûÓĞµÄ»°¼õÈ¥ºó×º¡££¨Clone£©¸ÕºÃÓĞ7¸ö×Ö·û
+                //æ£€æŸ¥æ˜¯å¦æœ‰â€œå…‹éš†â€åç¼€ï¼Œå¦‚æœæœ‰çš„è¯å‡å»åç¼€ã€‚ï¼ˆCloneï¼‰åˆšå¥½æœ‰7ä¸ªå­—ç¬¦
                 name = name.Substring(0, name.Length - 7);
             }
 
@@ -101,16 +101,16 @@ public class ParticlePool : MonoBehaviour       //ÓÃÓÚ×Óµ¯£¬ÌØĞ§µÈµÄ¶ÔÏó³Ø¡£Éú³É
 
             if (!m_ParticlePoolDict.ContainsKey(name))
             {
-                //Èç¹û³ØÖĞÃ»ÓĞÎïÌå£¬Ôò´´½¨Ò»¸ö²¢¼Ó½øÈ¥
+                //å¦‚æœæ± ä¸­æ²¡æœ‰ç‰©ä½“ï¼Œåˆ™åˆ›å»ºä¸€ä¸ªå¹¶åŠ è¿›å»
                 m_ParticlePoolDict[name] = new Queue<GameObject>();
             }
 
             m_ParticlePoolDict[name].Enqueue(obj);
 
-            //´´½¨ÍêºóÈ¡Ïû¼¤»î
+            //åˆ›å»ºå®Œåå–æ¶ˆæ¿€æ´»
             obj.SetActive(false);
 
-            //ËæºóÉèÖÃ¸¸ÎïÌå
+            //éšåè®¾ç½®çˆ¶ç‰©ä½“
             obj.transform.SetParent(FindOrCreateChildContainer(name).transform);
 
             return true;

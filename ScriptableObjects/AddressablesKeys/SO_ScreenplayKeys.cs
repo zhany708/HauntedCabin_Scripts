@@ -5,7 +5,7 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "newScreenplayKeys", menuName = "Data/Screenplay Data/Screenplay Keys")]
 public class SO_ScreenplayKeys : ScriptableObject
 {
-    //ÒÇÊ½Ïà¹Ø
+    //ä»ªå¼ç›¸å…³
     [Header("Ritual")]
-    public string HellsCall;        //»ğÑæµÄºô»½
+    public string HellsCall;        //ç«ç„°çš„å‘¼å”¤
 }

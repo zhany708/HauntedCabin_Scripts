@@ -10,7 +10,7 @@ public class PlayerState
     {
         get
         {
-            if (m_Movement) { return m_Movement; }      //¼ì²é×é¼şÊÇ·ñÎª¿Õ
+            if (m_Movement) { return m_Movement; }      //æ£€æŸ¥ç»„ä»¶æ˜¯å¦ä¸ºç©º
             m_Movement = core.GetCoreComponent<Movement>();
             return m_Movement;
         }
@@ -49,14 +49,14 @@ public class PlayerState
     protected SO_PlayerData playerData;
 
 
-    protected Vector2 input;        //ÏĞÖÃ×´Ì¬ºÍÒÆ¶¯×´Ì¬ĞèÒªµÄÏòÁ¿ÊıÖµ
+    protected Vector2 input;        //é—²ç½®çŠ¶æ€å’Œç§»åŠ¨çŠ¶æ€éœ€è¦çš„å‘é‡æ•°å€¼
 
-    protected bool isAnimationFinished = false;     //ÓÃÓÚ¼ì²é¶¯»­ÊÇ·ñ²¥·ÅÍê±Ï
-    protected bool isAttack = false;        //±íÊ¾ÊÇ·ñÕıÔÚ¹¥»÷
-    protected bool isHit = false;           //±íÊ¾ÊÇ·ñÕıÔÚÊÜ»÷
+    protected bool isAnimationFinished = false;     //ç”¨äºæ£€æŸ¥åŠ¨ç”»æ˜¯å¦æ’­æ”¾å®Œæ¯•
+    protected bool isAttack = false;        //è¡¨ç¤ºæ˜¯å¦æ­£åœ¨æ”»å‡»
+    protected bool isHit = false;           //è¡¨ç¤ºæ˜¯å¦æ­£åœ¨å—å‡»
 
 
-    string m_AnimationBoolName;     //¸æËß¶¯»­Æ÷Ó¦¸Ã²¥·ÅÄÄ¸ö¶¯»­
+    string m_AnimationBoolName;     //å‘Šè¯‰åŠ¨ç”»å™¨åº”è¯¥æ’­æ”¾å“ªä¸ªåŠ¨ç”»
 
 
     public PlayerState(Player player, PlayerStateMachine stateMachine, SO_PlayerData playerData, string animBoolName)
@@ -73,29 +73,29 @@ public class PlayerState
     {
         //Debug.Log(m_AnimationBoolName);
 
-        player.Core.Animator.SetBool(m_AnimationBoolName, true);     //²¥·Å×´Ì¬µÄ¶¯»­
+        player.Core.Animator.SetBool(m_AnimationBoolName, true);     //æ’­æ”¾çŠ¶æ€çš„åŠ¨ç”»
     }
 
     public virtual void Exit()
     {
-        player.Core.Animator.SetBool(m_AnimationBoolName, false);        //ÉèÖÃµ±Ç°×´Ì¬²¼¶ûÎªfalseÒÔ½øÈëÏÂ¸ö×´Ì¬
+        player.Core.Animator.SetBool(m_AnimationBoolName, false);        //è®¾ç½®å½“å‰çŠ¶æ€å¸ƒå°”ä¸ºfalseä»¥è¿›å…¥ä¸‹ä¸ªçŠ¶æ€
     }
 
 
     public virtual void LogicUpdate() 
     {
-        input = PlayerInputHandler.Instance.RawMovementInput;   //Í¨¹ıPlayer½Å±¾µ÷ÓÃÏĞÖÃ×´Ì¬ºÍÒÆ¶¯×´Ì¬ĞèÒªµÄÏòÁ¿ÊıÖµ
+        input = PlayerInputHandler.Instance.RawMovementInput;   //é€šè¿‡Playerè„šæœ¬è°ƒç”¨é—²ç½®çŠ¶æ€å’Œç§»åŠ¨çŠ¶æ€éœ€è¦çš„å‘é‡æ•°å€¼
 
-        SetMoveAnimation();    //ÅĞ¶ÏÊÇ·ñ²¥·Å½Å²½ÒÆ¶¯¶¯»­
+        SetMoveAnimation();    //åˆ¤æ–­æ˜¯å¦æ’­æ”¾è„šæ­¥ç§»åŠ¨åŠ¨ç”»
 
 
-        //¼ì²éÍæ¼ÒÊÇ·ñËÀÍö£¨²»ÄÜ·ÅÔÚÊÜ»÷×´Ì¬ÀïÅĞ¶Ï£¬ÒòÎªÍæ¼Ò¹¥»÷Ê±²»»á½øÈëÊÜ»÷×´Ì¬£©
+        //æ£€æŸ¥ç©å®¶æ˜¯å¦æ­»äº¡ï¼ˆä¸èƒ½æ”¾åœ¨å—å‡»çŠ¶æ€é‡Œåˆ¤æ–­ï¼Œå› ä¸ºç©å®¶æ”»å‡»æ—¶ä¸ä¼šè¿›å…¥å—å‡»çŠ¶æ€ï¼‰
         if (playerStats.GetCurrentHealth() <= 0)
         {
             stateMachine.ChangeState(player.DeathState);
         }     
 
-        else if (combat.IsHit && !isHit && !isAttack)    //¼ì²éÊÇ·ñ½øÈëÊÜ»÷×´Ì¬
+        else if (combat.IsHit && !isHit && !isAttack)    //æ£€æŸ¥æ˜¯å¦è¿›å…¥å—å‡»çŠ¶æ€
         {
             stateMachine.ChangeState(player.HitState);
         }
@@ -103,14 +103,14 @@ public class PlayerState
 
     public virtual void PhysicsUpdate() 
     {
-        //Ö»ÓĞµ±Íæ¼Ò¿ÉÒÔÒÆ¶¯£¬²ÅÔÊĞíÍæ¼ÒÒÆ¶¯
+        //åªæœ‰å½“ç©å®¶å¯ä»¥ç§»åŠ¨ï¼Œæ‰å…è®¸ç©å®¶ç§»åŠ¨
         if (BasePanel.IsPlayerMoveable)
         {
-            //½«ÒÆ¶¯Âß¼­·ÅÔÚ¸ú×´Ì¬ÖĞ£¬ÕâÑùÍæ¼ÒÎŞĞè½øÈëÒÆ¶¯×´Ì¬Ò²¿ÉÒÔÒÆ¶¯£¨Ä³Ğ©×´Ì¬ĞèÒª¸²¸Ç´Ëº¯Êı£¬ÈçÊÜ»÷×´Ì¬£©
+            //å°†ç§»åŠ¨é€»è¾‘æ”¾åœ¨è·ŸçŠ¶æ€ä¸­ï¼Œè¿™æ ·ç©å®¶æ— éœ€è¿›å…¥ç§»åŠ¨çŠ¶æ€ä¹Ÿå¯ä»¥ç§»åŠ¨ï¼ˆæŸäº›çŠ¶æ€éœ€è¦è¦†ç›–æ­¤å‡½æ•°ï¼Œå¦‚å—å‡»çŠ¶æ€ï¼‰
             movement.SetVelocity(playerData.MovementVelocity * PlayerStatusBar.GetSpeedAddition(), input);
         }
 
-        //·ñÔòÔİÍ£Íæ¼ÒµÄÒÆ¶¯
+        //å¦åˆ™æš‚åœç©å®¶çš„ç§»åŠ¨
         else
         {
             movement.SetVelocityZero();
@@ -125,7 +125,7 @@ public class PlayerState
 
 
 
-    protected void SetMoveAnimation()      //¼ì²éÍæ¼ÒÊÇ·ñ°´ÏÂWASD¼ü£¬´Ó¶øÅĞ¶ÏÊÇ·ñ²¥·Å½Å²½ÒÆ¶¯¶¯»­
+    protected void SetMoveAnimation()      //æ£€æŸ¥ç©å®¶æ˜¯å¦æŒ‰ä¸‹WASDé”®ï¼Œä»è€Œåˆ¤æ–­æ˜¯å¦æ’­æ”¾è„šæ­¥ç§»åŠ¨åŠ¨ç”»
     {
         if (input.x == 0f && input.y == 0f)
         {

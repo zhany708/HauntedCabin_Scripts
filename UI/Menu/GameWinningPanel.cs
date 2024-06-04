@@ -2,7 +2,7 @@
 
 
 
-public class GameWinningPanel : GameLostPanel   //¸Ã½çÃæ¸úÕ½°Ü½çÃæµÄ¹¦ÄÜ²î²»¶à£¬Òò´ËÖ±½Ó¼Ì³Ğ
+public class GameWinningPanel : GameLostPanel   //è¯¥ç•Œé¢è·Ÿæˆ˜è´¥ç•Œé¢çš„åŠŸèƒ½å·®ä¸å¤šï¼Œå› æ­¤ç›´æ¥ç»§æ‰¿
 {
     
 }

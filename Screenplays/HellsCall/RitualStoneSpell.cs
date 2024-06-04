@@ -6,13 +6,13 @@ public class NewBehaviourScript : MonoBehaviour
 {
     private void OnTriggerEnter2D(Collider2D other)
     {
-        //Ö»ÓĞµ±Íæ¼ÒÉíÉÏÃ»ÓĞ»¤·ûÊ±²Å»á´¥·¢Ğ§¹û
+        //åªæœ‰å½“ç©å®¶èº«ä¸Šæ²¡æœ‰æŠ¤ç¬¦æ—¶æ‰ä¼šè§¦å‘æ•ˆæœ
         if (other.gameObject.CompareTag("Player") && !HellsCall.Instance.GetCanStartRitual() )
         {
-            //µ÷Õû¾ç±¾ÎïÌåÖĞµÄ²¼¶û²ÎÊı£¬±íÊ¾Íæ¼Ò¿ÉÒÔ½øĞĞÒÇÊ½
+            //è°ƒæ•´å‰§æœ¬ç‰©ä½“ä¸­çš„å¸ƒå°”å‚æ•°ï¼Œè¡¨ç¤ºç©å®¶å¯ä»¥è¿›è¡Œä»ªå¼
             HellsCall.Instance.SetCanStartRitual(true);
 
-            Destroy(gameObject);        //É¾³ıµ»¸æÊ¯»¤·ûÎïÌå
+            Destroy(gameObject);        //åˆ é™¤ç¥·å‘ŠçŸ³æŠ¤ç¬¦ç‰©ä½“
         }
     }
 }

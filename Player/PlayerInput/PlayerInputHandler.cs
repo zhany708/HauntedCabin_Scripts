@@ -9,14 +9,14 @@ public class PlayerInputHandler : MonoBehaviour
     public static PlayerInputHandler Instance { get; private set; }
 
 
-    public Vector2 RawMovementInput { get; private set; }       //·ÀÖ¹ÊÖ±úÇáÎ¢ÒÆ¶¯Ê±Íæ¼ÒËÙ¶È»ºÂı£¨Ç¿ÖÆÈÃ0-1Ö®¼äµÄĞ¡ÊıÉèÎª1£©
-    public Vector2 ProjectedMousePos { get; private set; }      //ÓÃÓÚ³ÖĞø¸üĞÂÊó±ê×ø±ê£¨¼´Ê¹Êó±ê¾²Ö¹£©
-    public Vector2 MouseScrollInput { get; private set; }       //Êó±ê¹öÂÖµÄĞÅÏ¢
+    public Vector2 RawMovementInput { get; private set; }       //é˜²æ­¢æ‰‹æŸ„è½»å¾®ç§»åŠ¨æ—¶ç©å®¶é€Ÿåº¦ç¼“æ…¢ï¼ˆå¼ºåˆ¶è®©0-1ä¹‹é—´çš„å°æ•°è®¾ä¸º1ï¼‰
+    public Vector2 ProjectedMousePos { get; private set; }      //ç”¨äºæŒç»­æ›´æ–°é¼ æ ‡åæ ‡ï¼ˆå³ä½¿é¼ æ ‡é™æ­¢ï¼‰
+    public Vector2 MouseScrollInput { get; private set; }       //é¼ æ ‡æ»šè½®çš„ä¿¡æ¯
 
 
-    public bool[] AttackInputs { get; private set; }    //ÓÃÓÚ¼ì²âÊó±ê°´¼ü£¬¾ö¶¨Ê¹ÓÃÖ÷ÎäÆ÷»ò¸±ÎäÆ÷
-    public bool IsSpacePressed {  get; private set; }   //ÓÃÓÚ±íÊ¾ÊÇ·ñ°´ÏÂ¿Õ¸ñ
-    public bool IsEscPressed { get; private set; }      //ÓÃÓÚ±íÊ¾ÊÇ·ñ°´ÏÂEsc¼ü
+    public bool[] AttackInputs { get; private set; }    //ç”¨äºæ£€æµ‹é¼ æ ‡æŒ‰é”®ï¼Œå†³å®šä½¿ç”¨ä¸»æ­¦å™¨æˆ–å‰¯æ­¦å™¨
+    public bool IsSpacePressed {  get; private set; }   //ç”¨äºè¡¨ç¤ºæ˜¯å¦æŒ‰ä¸‹ç©ºæ ¼
+    public bool IsEscPressed { get; private set; }      //ç”¨äºè¡¨ç¤ºæ˜¯å¦æŒ‰ä¸‹Escé”®
 
     Vector2 m_MousePos;
 
@@ -28,7 +28,7 @@ public class PlayerInputHandler : MonoBehaviour
     #region Unity Callback Functions
     private void Awake()
     {
-        //µ¥ÀıÄ£Ê½
+        //å•ä¾‹æ¨¡å¼
         if (Instance != null && Instance != this)
         {
             Destroy(gameObject);
@@ -42,7 +42,7 @@ public class PlayerInputHandler : MonoBehaviour
 
     private void Start()
     {
-        int count = Enum.GetValues(typeof(CombatInputs)).Length;        //·µ»Ø¶ş£¬Ò²¾ÍÊÇÁ½ÖÖ¹¥»÷ÎäÆ÷
+        int count = Enum.GetValues(typeof(CombatInputs)).Length;        //è¿”å›äºŒï¼Œä¹Ÿå°±æ˜¯ä¸¤ç§æ”»å‡»æ­¦å™¨
 
         AttackInputs = new bool[count];
     }
@@ -51,7 +51,7 @@ public class PlayerInputHandler : MonoBehaviour
     {
         if (m_MousePos != null)
         {
-            ProjectedMousePos = Camera.main.ScreenToWorldPoint(m_MousePos);        //½«Êó±ê×ø±ê´ÓÏà¶ÔÏà»ú¸Ä³ÉÏà¶ÔÊÀ½ç
+            ProjectedMousePos = Camera.main.ScreenToWorldPoint(m_MousePos);        //å°†é¼ æ ‡åæ ‡ä»ç›¸å¯¹ç›¸æœºæ”¹æˆç›¸å¯¹ä¸–ç•Œ
         }
     }
     #endregion
@@ -59,7 +59,7 @@ public class PlayerInputHandler : MonoBehaviour
     #region CallbackContexts
     public void OnMoveInput(InputAction.CallbackContext context)
     {
-        Vector2 input = context.ReadValue<Vector2>();   //(0,1) (0,-1) (1,0) (-1,0)ËÄÖÖÏòÁ¿±íÊ¾·½Ïò
+        Vector2 input = context.ReadValue<Vector2>();   //(0,1) (0,-1) (1,0) (-1,0)å››ç§å‘é‡è¡¨ç¤ºæ–¹å‘
         RawMovementInput = input.magnitude > 0 ? input.normalized : Vector2.zero;
     }
 
@@ -77,13 +77,13 @@ public class PlayerInputHandler : MonoBehaviour
 
 
 
-    public void OnMousePos(InputAction.CallbackContext context)      //ÓÃÓÚ¶ÁÈ¡Êó±ê×ø±ê
+    public void OnMousePos(InputAction.CallbackContext context)      //ç”¨äºè¯»å–é¼ æ ‡åæ ‡
     {
         m_MousePos = context.ReadValue<Vector2>();
     }
 
 
-    public void OnMouseScorll(InputAction.CallbackContext context)      //ÓÃÓÚ¶ÁÈ¡Êó±ê¹öÂÖ
+    public void OnMouseScorll(InputAction.CallbackContext context)      //ç”¨äºè¯»å–é¼ æ ‡æ»šè½®
     {
         MouseScrollInput = context.ReadValue<Vector2>().normalized;
 
@@ -91,14 +91,14 @@ public class PlayerInputHandler : MonoBehaviour
     }
 
 
-    public void OnSpacebar(InputAction.CallbackContext context)    //ÓÃÓÚ¶ÁÈ¡¼üÅÌ¿Õ¸ñ
+    public void OnSpacebar(InputAction.CallbackContext context)    //ç”¨äºè¯»å–é”®ç›˜ç©ºæ ¼
     {
-        IsSpacePressed = context.performed;     //°´ÏÂ¿Õ¸ñÊ±ÎªÕæ£¬ËÉ¿ªºóÎª¼Ù
+        IsSpacePressed = context.performed;     //æŒ‰ä¸‹ç©ºæ ¼æ—¶ä¸ºçœŸï¼Œæ¾å¼€åä¸ºå‡
     }
 
-    public void OnEscKey(InputAction.CallbackContext context)    //ÓÃÓÚ¶ÁÈ¡¼üÅÌEsc
+    public void OnEscKey(InputAction.CallbackContext context)    //ç”¨äºè¯»å–é”®ç›˜Esc
     {
-        IsEscPressed = context.performed;     //°´ÏÂEscÊ±ÎªÕæ£¬ËÉ¿ªºóÎª¼Ù
+        IsEscPressed = context.performed;     //æŒ‰ä¸‹Escæ—¶ä¸ºçœŸï¼Œæ¾å¼€åä¸ºå‡
     }
     #endregion
 

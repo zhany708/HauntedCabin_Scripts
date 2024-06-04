@@ -4,5 +4,5 @@
 
 public class EventSystemManager : ManagerTemplate<EventSystemManager>
 {
-    //ÓÃÓÚEventSystem£¬±íÊ¾µ¥ÀıÄ£Ê½
+    //ç”¨äºEventSystemï¼Œè¡¨ç¤ºå•ä¾‹æ¨¡å¼
 }

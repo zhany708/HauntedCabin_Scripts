@@ -5,16 +5,16 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "newWeaponKeys", menuName = "Data/Weapon Data/Weapon Keys")]
 public class SO_WeaponKeys : ScriptableObject
 {
-    //ÔÚ±à¼­Æ÷Àï½«ËùÓĞÃû×Ö¼Ó½øÁĞ±í
+    //åœ¨ç¼–è¾‘å™¨é‡Œå°†æ‰€æœ‰åå­—åŠ è¿›åˆ—è¡¨
     public List<string> weaponKeyList = new List<string>();
-    private HashSet<string> weaponKeys;     //¹şÏ£±íµÄËÑÑ°ËÙ¶ÈÎªO(1)
+    private HashSet<string> weaponKeys;     //å“ˆå¸Œè¡¨çš„æœå¯»é€Ÿåº¦ä¸ºO(1)
 
 
 
 
     private void OnEnable()
     {
-        //ÔÚÁĞ±íÖĞÌî³ä¹şÏ£±íÒÔ¿ìËÙ·ÃÎÊÆäÖĞµÄÔªËØ
+        //åœ¨åˆ—è¡¨ä¸­å¡«å……å“ˆå¸Œè¡¨ä»¥å¿«é€Ÿè®¿é—®å…¶ä¸­çš„å…ƒç´ 
         weaponKeys = new HashSet<string>(weaponKeyList);
     }
 

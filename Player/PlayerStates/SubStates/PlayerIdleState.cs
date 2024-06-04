@@ -10,7 +10,7 @@ public class PlayerIdleState : PlayerGroundedState
     {
         base.Enter();
 
-        movement.SetVelocityZero();       //将玩家速度归零
+        movement.SetVelocityZero();       //灏嗙帺瀹堕�熷害褰掗浂
     }
 
     /*

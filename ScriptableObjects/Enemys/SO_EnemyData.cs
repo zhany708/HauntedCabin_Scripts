@@ -7,13 +7,13 @@ public class SO_EnemyData : ScriptableObject
     [Header("Movement Vlaues")]
     public float MoveSpeed = 0;
     public float ChaseSpeed = 0;
-    public float IdleDuration = 0;      //´ı»úÊ±³¤
-    public float StoppingDistance = 0;  //µĞÈËÓëÍæ¼ÒµÄ×îĞ¡¾àÀë
+    public float IdleDuration = 0;      //å¾…æœºæ—¶é•¿
+    public float StoppingDistance = 0;  //æ•Œäººä¸ç©å®¶çš„æœ€å°è·ç¦»
 
     [Header("Attack Values")]
     public LayerMask TargetLayer = 0;
-    public float AttackArea = 0;        //¹¥»÷¼ì²âÔ²µÄ°ë¾¶²ÎÊı
-    public float AttackInterval = 0;    //¹¥»÷¼ä¸ô
+    public float AttackArea = 0;        //æ”»å‡»æ£€æµ‹åœ†çš„åŠå¾„å‚æ•°
+    public float AttackInterval = 0;    //æ”»å‡»é—´éš”
 
     [Header("Status Values")]
     public float MaxHealth = 0;
@@ -21,5 +21,5 @@ public class SO_EnemyData : ScriptableObject
 
     [Header("Hit Values")]
     public float HitResistance = 0;
-    public float HitInterval = 0;   //ÎŞµĞÊ±¼ä
+    public float HitInterval = 0;   //æ— æ•Œæ—¶é—´
 }

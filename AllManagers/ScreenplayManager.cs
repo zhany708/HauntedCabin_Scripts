@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 
 
-public class ScreenplayManager : ManagerTemplate<ScreenplayManager>     //ÓÃÓÚ¹ÜÀí¾ç±¾Ïà¹ØµÄÂß¼­µÄ
+public class ScreenplayManager : ManagerTemplate<ScreenplayManager>     //ç”¨äºç®¡ç†å‰§æœ¬ç›¸å…³çš„é€»è¾‘çš„
 {
     public SO_ScreenplayKeys ScreenplayKeys;
 
@@ -13,9 +13,9 @@ public class ScreenplayManager : ManagerTemplate<ScreenplayManager>     //ÓÃÓÚ¹Ü
 
 
 
-    public async Task OpenScreenplay(string name)       //´ò¿ª¾ç±¾
+    public async Task OpenScreenplay(string name)       //æ‰“å¼€å‰§æœ¬
     {
-        //Òì²½¼ÓÔØ£¬Ëæºó¼ì²éÊÇ·ñ¼ÓÔØ³É¹¦
+        //å¼‚æ­¥åŠ è½½ï¼Œéšåæ£€æŸ¥æ˜¯å¦åŠ è½½æˆåŠŸ
         GameObject screenPlayPrefab = await LoadPrefabAsync(name);
         if (screenPlayPrefab == null)
         {
@@ -24,7 +24,7 @@ public class ScreenplayManager : ManagerTemplate<ScreenplayManager>     //ÓÃÓÚ¹Ü
         }
 
 
-        //Òì²½¼ÓÔØºóÉú³ÉÎïÌå²¢»ñÈ¡ÎïÌåÉíÉÏµÄ×é¼ş£¨ÎïÌåÎ»ÓÚ³õÊ¼×ø±ê£¬ÇÒÎŞĞı×ª£©
+        //å¼‚æ­¥åŠ è½½åç”Ÿæˆç‰©ä½“å¹¶è·å–ç‰©ä½“èº«ä¸Šçš„ç»„ä»¶ï¼ˆç‰©ä½“ä½äºåˆå§‹åæ ‡ï¼Œä¸”æ— æ—‹è½¬ï¼‰
         GameObject screenplayObject = GameObject.Instantiate(screenPlayPrefab, Vector3.zero, Quaternion.identity);
 
         if (screenplayObject == null)

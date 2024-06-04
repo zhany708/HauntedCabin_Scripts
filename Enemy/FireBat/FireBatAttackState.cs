@@ -17,13 +17,13 @@ public class FireBatAttackState : EnemyAttackState
     {
         //Debug.Log("FireBatAttackState");
 
-        m_Target = enemy.Parameter.Target;      //´¢´æÍæ¼Ò×ø±êÐÅÏ¢£¬·ÀÖ¹·¢Éä»ðÇòÊ±¶ªÊ§×ø±ê
+        m_Target = enemy.Parameter.Target;      //å‚¨å­˜çŽ©å®¶åæ ‡ä¿¡æ¯ï¼Œé˜²æ­¢å‘å°„ç«çƒæ—¶ä¸¢å¤±åæ ‡
         base.Enter();
     }
 
     public override void LogicUpdate()
     {
-        if (core.AnimatorInfo.IsName("Attack") && core.AnimatorInfo.normalizedTime >= 0.95f)     //²¥·ÅÍê¹¥»÷¶¯»­Ôò·¢Éä»ðÇòÇÒÇÐ»»³É×·»÷×´Ì¬
+        if (core.AnimatorInfo.IsName("Attack") && core.AnimatorInfo.normalizedTime >= 0.95f)     //æ’­æ”¾å®Œæ”»å‡»åŠ¨ç”»åˆ™å‘å°„ç«çƒä¸”åˆ‡æ¢æˆè¿½å‡»çŠ¶æ€
         {
             if (m_Target != null)
             {

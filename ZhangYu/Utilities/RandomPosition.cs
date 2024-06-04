@@ -3,13 +3,13 @@ using UnityEngine;
 
 
 
-namespace ZhangYu.Utilities     //ÕÅìÏÎÄ¼ş¼ĞÓÃÓÚÒÔºóËùÓĞÓÎÏ·¶¼¿ÉÄÜ»áÓÃµ½µÄº¯Êı£¬Èç¼ÆÊ±Æ÷£¬Éú³ÉËæ»ú×ø±êµÈ
+namespace ZhangYu.Utilities     //å¼ ç…œæ–‡ä»¶å¤¹ç”¨äºä»¥åæ‰€æœ‰æ¸¸æˆéƒ½å¯èƒ½ä¼šç”¨åˆ°çš„å‡½æ•°ï¼Œå¦‚è®¡æ—¶å™¨ï¼Œç”Ÿæˆéšæœºåæ ‡ç­‰
 {
     public class RandomPosition
     {
-        Vector2 m_LeftDownPosition;     //ÓÃÓÚËæ»úÉú³ÉÑ²Âß×ø±ê
+        Vector2 m_LeftDownPosition;     //ç”¨äºéšæœºç”Ÿæˆå·¡é€»åæ ‡
         Vector2 m_RightTopPosition;
-        float m_OverlapTolerance = 1f;     //¼ì²éÖØ¸´×ø±êÊ±¾ö¶¨×ø±ê¼äÊÇ·ñÖØ¸´µÄ¾àÀëÖµ£¬Ä¬ÈÏ1
+        float m_OverlapTolerance = 1f;     //æ£€æŸ¥é‡å¤åæ ‡æ—¶å†³å®šåæ ‡é—´æ˜¯å¦é‡å¤çš„è·ç¦»å€¼ï¼Œé»˜è®¤1
 
         public RandomPosition(Vector2 leftDownPos, Vector2 rightTopPos, float overlapTolerance)
         {
@@ -24,12 +24,12 @@ namespace ZhangYu.Utilities     //ÕÅìÏÎÄ¼ş¼ĞÓÃÓÚÒÔºóËùÓĞÓÎÏ·¶¼¿ÉÄÜ»áÓÃµ½µÄº¯Êı£¬
 
         public Vector2 GenerateSingleRandomPos()
         {
-            //¸ù¾İ×óÏÂ½ÇµÄ×ø±êºÍÓÒÉÏ½ÇµÄ×ø±ê£¬ÔÚÒ»¸ö³¤·½ĞÎÄÚËæ»úÉú³É×ø±ê
+            //æ ¹æ®å·¦ä¸‹è§’çš„åæ ‡å’Œå³ä¸Šè§’çš„åæ ‡ï¼Œåœ¨ä¸€ä¸ªé•¿æ–¹å½¢å†…éšæœºç”Ÿæˆåæ ‡
             return new Vector2(Random.Range(m_LeftDownPosition.x, m_RightTopPosition.x), Random.Range(m_LeftDownPosition.y, m_RightTopPosition.y));
         }
 
 
-        //´Ëº¯ÊıÔÚÉú³Éµ¥¸ö×ø±êµÄÍ¬Ê±£¬»¹±£Ö¤²»»á¸ú²ÎÊıÖĞÁĞ±íÀïµÄËùÓĞ×ø±êÖØ¸´
+        //æ­¤å‡½æ•°åœ¨ç”Ÿæˆå•ä¸ªåæ ‡çš„åŒæ—¶ï¼Œè¿˜ä¿è¯ä¸ä¼šè·Ÿå‚æ•°ä¸­åˆ—è¡¨é‡Œçš„æ‰€æœ‰åæ ‡é‡å¤
         public Vector2 GenerateNonOverlappingPosition(List<Vector2> existingPositions, int maxAttempts = 100)
         {
             Vector2 position;
@@ -39,7 +39,7 @@ namespace ZhangYu.Utilities     //ÕÅìÏÎÄ¼ş¼ĞÓÃÓÚÒÔºóËùÓĞÓÎÏ·¶¼¿ÉÄÜ»áÓÃµ½µÄº¯Êı£¬
             {
                 position = GenerateSingleRandomPos();
 
-                if (++attempts > maxAttempts)       //³¢ÊÔ¹ı100´Îºó£¬Ôò±¨´í
+                if (++attempts > maxAttempts)       //å°è¯•è¿‡100æ¬¡åï¼Œåˆ™æŠ¥é”™
                 {
                     Debug.LogError("Failed to generate non-overlapping position after " + maxAttempts + " attempts.");
                     break;
@@ -52,18 +52,18 @@ namespace ZhangYu.Utilities     //ÕÅìÏÎÄ¼ş¼ĞÓÃÓÚÒÔºóËùÓĞÓÎÏ·¶¼¿ÉÄÜ»áÓÃµ½µÄº¯Êı£¬
 
 
 
-        //Éú³É¶à¸ö×ø±ê£¬ÊıÁ¿Îª²ÎÊıÖĞµÄ±äÁ¿£¬×îºó·µ»ØÒ»¸öÁĞ±í
+        //ç”Ÿæˆå¤šä¸ªåæ ‡ï¼Œæ•°é‡ä¸ºå‚æ•°ä¸­çš„å˜é‡ï¼Œæœ€åè¿”å›ä¸€ä¸ªåˆ—è¡¨
         public List<Vector2> GenerateMultiRandomPos(int num)
         {
             //Debug.Log("Number of position that need to generate is " + num);
 
             List<Vector2> newPos = new List<Vector2>();
 
-            //Èç¹û²ÎÊıĞ¡ÓÚµÈÓÚ0£¬Ôò·µ»Ø¿ÕÁĞ±í
+            //å¦‚æœå‚æ•°å°äºç­‰äº0ï¼Œåˆ™è¿”å›ç©ºåˆ—è¡¨
             if (num <= 0)  return newPos;
 
 
-            //½«ËùÓĞ×ø±êÉú³É³öÀ´£¬ÇÒÕâĞ©×ø±ê²»»áÖØ¸´
+            //å°†æ‰€æœ‰åæ ‡ç”Ÿæˆå‡ºæ¥ï¼Œä¸”è¿™äº›åæ ‡ä¸ä¼šé‡å¤
             for (int i = 0; i < num; i++)
             {
                 newPos.Add(GenerateNonOverlappingPosition(newPos));
@@ -75,7 +75,7 @@ namespace ZhangYu.Utilities     //ÕÅìÏÎÄ¼ş¼ĞÓÃÓÚÒÔºóËùÓĞÓÎÏ·¶¼¿ÉÄÜ»áÓÃµ½µÄº¯Êı£¬
  
 
 
-        //¼ì²é²ÎÊıÖĞµÄ×ø±êÊÇ·ñ¸ú²ÎÊıÖĞµÄÁĞ±íÀïµÄÈÎÒâÒ»¸ö×ø±êÖØºÏ
+        //æ£€æŸ¥å‚æ•°ä¸­çš„åæ ‡æ˜¯å¦è·Ÿå‚æ•°ä¸­çš„åˆ—è¡¨é‡Œçš„ä»»æ„ä¸€ä¸ªåæ ‡é‡åˆ
         private bool CheckOverlapForSinglePosition(List<Vector2> positions, Vector2 candidatePosition)
         {
             foreach (Vector2 existingPosition in positions)
@@ -91,9 +91,9 @@ namespace ZhangYu.Utilities     //ÕÅìÏÎÄ¼ş¼ĞÓÃÓÚÒÔºóËùÓĞÓÎÏ·¶¼¿ÉÄÜ»áÓÃµ½µÄº¯Êı£¬
 
 
 
-        private bool IsOverlap(Vector2 firstPos, Vector2 secondPos)     //¼ì²éÁ½¸ö×ø±êÊÇ·ñ¼¸ºõÖØºÏ
+        private bool IsOverlap(Vector2 firstPos, Vector2 secondPos)     //æ£€æŸ¥ä¸¤ä¸ªåæ ‡æ˜¯å¦å‡ ä¹é‡åˆ
         {
-            //Èç¹ûÁ½¸ö×ø±êµÄxºÍyµÄ²îÖµ¶¼Ğ¡ÓÚ½Å±¾ÖĞµÄ¼ì²â±äÁ¿£¬ÔòÊÓÎªÖØºÏ
+            //å¦‚æœä¸¤ä¸ªåæ ‡çš„xå’Œyçš„å·®å€¼éƒ½å°äºè„šæœ¬ä¸­çš„æ£€æµ‹å˜é‡ï¼Œåˆ™è§†ä¸ºé‡åˆ
             return (Mathf.Abs(secondPos.x - firstPos.x) <= m_OverlapTolerance) && (Mathf.Abs(secondPos.y - firstPos.y) <= m_OverlapTolerance);
         }
 

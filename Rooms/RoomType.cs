@@ -3,37 +3,37 @@ using UnityEngine;
 
 
 
-#region Ïà¹ØEnum
+#region ç›¸å…³Enum
 public enum RoomTypeName
 {
     None,
 
-    AllDirection,   //ËÄÖÜ¶¼ÓĞÃÅ
-    AllHorizontal,  //×óÓÒ¶¼ÓĞÃÅ
-    AllVertical,    //ÉÏÏÂ¶¼ÓĞÃÅ
-    OneHorizontal,  //×óÓÒÓĞÒ»¸öÃÅ
-    OneVertical,    //ÉÏÏÂÓĞÒ»¸öÃÅ
-    AllHorizontalAndOneVertical,    //×óÓÒ¶¼ÓĞÃÅ£¬ÉÏÏÂÖ»ÓĞÒ»¸ö
-    OneHorizontalAndAllVertical,    //ÉÏÏÂ¶¼ÓĞÃÅ£¬×óÓÒÖ»ÓĞÒ»¸ö
-    OneHorizontalAndOneVertical    //ÉÏÏÂºÍ×óÓÒ¸÷ÓĞÒ»¸öÃÅ
+    AllDirection,   //å››å‘¨éƒ½æœ‰é—¨
+    AllHorizontal,  //å·¦å³éƒ½æœ‰é—¨
+    AllVertical,    //ä¸Šä¸‹éƒ½æœ‰é—¨
+    OneHorizontal,  //å·¦å³æœ‰ä¸€ä¸ªé—¨
+    OneVertical,    //ä¸Šä¸‹æœ‰ä¸€ä¸ªé—¨
+    AllHorizontalAndOneVertical,    //å·¦å³éƒ½æœ‰é—¨ï¼Œä¸Šä¸‹åªæœ‰ä¸€ä¸ª
+    OneHorizontalAndAllVertical,    //ä¸Šä¸‹éƒ½æœ‰é—¨ï¼Œå·¦å³åªæœ‰ä¸€ä¸ª
+    OneHorizontalAndOneVertical    //ä¸Šä¸‹å’Œå·¦å³å„æœ‰ä¸€ä¸ªé—¨
 
 
 
-    /* XÖá180·­×ªÉÏÏÂ£¬YÖá180·­×ª×óÓÒ£¬ZÖá180Í¬Ê±·­×ªÉÏÏÂºÍ×óÓÒ
-    1. ËÄÖÜ¶¼ÓĞÃÅ£¨²»ĞèÒªĞı×ª£©
-    2. ×óÓÒ¶¼ÓĞÃÅ£¨±ÈÈçÈë¿Ú´óÌÃ£©£¨²»ĞèÒªĞı×ª£©
-    3. ×óÓÒÓĞÒ»¸öÃÅ£¨¿ÉºáÏòĞı×ª£¬YÖá180£©
-    4. ÉÏÏÂ¶¼ÓĞÃÅ£¨²»ĞèÒªĞı×ª£©
-    5. ÉÏÏÂÓĞÒ»¸öÃÅ£¨¿ÉÊúÏòĞı×ª£¬XÖá180£©
-    6. ÉÏÏÂºÍ×óÓÒ¸÷ÓĞÒ»¸öÃÅ£¨±ÈÈç³ø·¿£©£¨ÊúÏòºÍºáÏòĞı×ª£¬XÖá180£¬YÖá180£©
-    7. ÉÏÏÂ¶¼ÓĞ£¬×óÓÒÖ»ÓĞÒ»¸ö£¨ºáÏòĞı×ª£¬YÖá180£©
-    8. ×óÓÒ¶¼ÓĞÃÅ£¬ÉÏÏÂÖ»ÓĞÒ»¸ö£¨ÊúÏòĞı×ª£¬XÖá180£©
+    /* Xè½´180ç¿»è½¬ä¸Šä¸‹ï¼ŒYè½´180ç¿»è½¬å·¦å³ï¼ŒZè½´180åŒæ—¶ç¿»è½¬ä¸Šä¸‹å’Œå·¦å³
+    1. å››å‘¨éƒ½æœ‰é—¨ï¼ˆä¸éœ€è¦æ—‹è½¬ï¼‰
+    2. å·¦å³éƒ½æœ‰é—¨ï¼ˆæ¯”å¦‚å…¥å£å¤§å ‚ï¼‰ï¼ˆä¸éœ€è¦æ—‹è½¬ï¼‰
+    3. å·¦å³æœ‰ä¸€ä¸ªé—¨ï¼ˆå¯æ¨ªå‘æ—‹è½¬ï¼ŒYè½´180ï¼‰
+    4. ä¸Šä¸‹éƒ½æœ‰é—¨ï¼ˆä¸éœ€è¦æ—‹è½¬ï¼‰
+    5. ä¸Šä¸‹æœ‰ä¸€ä¸ªé—¨ï¼ˆå¯ç«–å‘æ—‹è½¬ï¼ŒXè½´180ï¼‰
+    6. ä¸Šä¸‹å’Œå·¦å³å„æœ‰ä¸€ä¸ªé—¨ï¼ˆæ¯”å¦‚å¨æˆ¿ï¼‰ï¼ˆç«–å‘å’Œæ¨ªå‘æ—‹è½¬ï¼ŒXè½´180ï¼ŒYè½´180ï¼‰
+    7. ä¸Šä¸‹éƒ½æœ‰ï¼Œå·¦å³åªæœ‰ä¸€ä¸ªï¼ˆæ¨ªå‘æ—‹è½¬ï¼ŒYè½´180ï¼‰
+    8. å·¦å³éƒ½æœ‰é—¨ï¼Œä¸Šä¸‹åªæœ‰ä¸€ä¸ªï¼ˆç«–å‘æ—‹è½¬ï¼ŒXè½´180ï¼‰
     */
 }
 
 
 [Flags]
-public enum DoorFlags   //Í¨¹ıBit FlagÅĞ¶Ï·¿¼äµÄÖÖÀà
+public enum DoorFlags   //é€šè¿‡Bit Flagåˆ¤æ–­æˆ¿é—´çš„ç§ç±»
 {
     None = 0,
 
@@ -44,7 +44,7 @@ public enum DoorFlags   //Í¨¹ıBit FlagÅĞ¶Ï·¿¼äµÄÖÖÀà
 }
 
 [Flags]
-public enum CheckFlags      //ÅĞ¶Ïµ±Ç°·¿¼äÊÇ·ñ¼ì²é¹ı×Ô¼ºÊÇ·ñÁ¬½ÓÖÜÎ§µÄ·¿¼ä
+public enum CheckFlags      //åˆ¤æ–­å½“å‰æˆ¿é—´æ˜¯å¦æ£€æŸ¥è¿‡è‡ªå·±æ˜¯å¦è¿æ¥å‘¨å›´çš„æˆ¿é—´
 {
     None = 0,
 
@@ -59,35 +59,35 @@ public enum CheckFlags      //ÅĞ¶Ïµ±Ç°·¿¼äÊÇ·ñ¼ì²é¹ı×Ô¼ºÊÇ·ñÁ¬½ÓÖÜÎ§µÄ·¿¼ä
 [System.Serializable]
 public class RoomType : MonoBehaviour
 {
-    Transform m_Doors;      //Doors×ÓÎïÌå
+    Transform m_Doors;      //Doorså­ç‰©ä½“
 
     DoorFlags m_DoorFlags;
-    CheckFlags m_CheckFlags = CheckFlags.None;      //³õÊ¼»¯µÄÊ±ºò£¬ËùÓĞ·½ÏòµÄ²¼¶û¶¼Îªfalse
+    CheckFlags m_CheckFlags = CheckFlags.None;      //åˆå§‹åŒ–çš„æ—¶å€™ï¼Œæ‰€æœ‰æ–¹å‘çš„å¸ƒå°”éƒ½ä¸ºfalse
 
 
     
 
 
 
-    #region UnityÄÚ²¿º¯ÊıÑ­»·
+    #region Unityå†…éƒ¨å‡½æ•°å¾ªç¯
     private void Awake()
     {
-        m_Doors = transform.Find("Doors");      //ÕÒµ½Doors×ÓÎïÌå£¬È»ºóÍ¨¹ı¸Ã×ÓÎïÌåÖğÒ»Ñ°ÕÒÊÇ·ñÓĞ¶ÔÓ¦µÄ²àÃÅ
+        m_Doors = transform.Find("Doors");      //æ‰¾åˆ°Doorså­ç‰©ä½“ï¼Œç„¶åé€šè¿‡è¯¥å­ç‰©ä½“é€ä¸€å¯»æ‰¾æ˜¯å¦æœ‰å¯¹åº”çš„ä¾§é—¨
 
-        m_DoorFlags = DoorFlags.None;       //¸øBit Flag¸³Öµ
+        m_DoorFlags = DoorFlags.None;       //ç»™Bit Flagèµ‹å€¼
 
 
-        InitDoorFlags();     //ÓÎÏ·¿ªÊ¼Ê±³õÊ¼»¯ÃÅµÄÆìÖÄ
+        InitDoorFlags();     //æ¸¸æˆå¼€å§‹æ—¶åˆå§‹åŒ–é—¨çš„æ——å¸œ
     }
 
     private void OnEnable()
     {
-        //Debug.Log(gameObject.name + "'s room type is " + GetRoomTypeName() );     //ÏÔÊ¾µ±Ç°·¿¼äµÄÖÖÀà
+        //Debug.Log(gameObject.name + "'s room type is " + GetRoomTypeName() );     //æ˜¾ç¤ºå½“å‰æˆ¿é—´çš„ç§ç±»
     }
     #endregion
 
 
-    #region Ã¶¾ÙÏà¹Øº¯Êı
+    #region æšä¸¾ç›¸å…³å‡½æ•°
     public RoomTypeName GetRoomType()
     {
         
@@ -100,12 +100,12 @@ public class RoomType : MonoBehaviour
         bool hasHorizontal = hasLeftDoor || hasRightDoor;
         bool hasVertical = hasUpDoor || hasDownDoor;
 
-        if (hasLeftDoor && hasRightDoor && hasUpDoor && hasDownDoor)    //ÏÈ¼ì²éÊÇ·ñ¶¼ÓĞÃÅ
+        if (hasLeftDoor && hasRightDoor && hasUpDoor && hasDownDoor)    //å…ˆæ£€æŸ¥æ˜¯å¦éƒ½æœ‰é—¨
         {
             return RoomTypeName.AllDirection;
         }
 
-        else if (hasLeftDoor && hasRightDoor)   //ÔÙ¼ì²éÊÇ·ñ¶¼ÓĞ×óÓÒÃÅ
+        else if (hasLeftDoor && hasRightDoor)   //å†æ£€æŸ¥æ˜¯å¦éƒ½æœ‰å·¦å³é—¨
         {
             if (hasUpDoor || hasDownDoor)
             {
@@ -117,7 +117,7 @@ public class RoomType : MonoBehaviour
             }
         }
 
-        else if (hasUpDoor && hasDownDoor)      //ÔÙ¼ì²éÊÇ·ñ¶¼ÓĞÉÏÏÂÃÅ
+        else if (hasUpDoor && hasDownDoor)      //å†æ£€æŸ¥æ˜¯å¦éƒ½æœ‰ä¸Šä¸‹é—¨
         {
             if (hasLeftDoor || hasRightDoor)
             {
@@ -129,12 +129,12 @@ public class RoomType : MonoBehaviour
             }
         }
 
-        else if (hasHorizontal && hasVertical)      //ÔÙ¼ì²éÊÇ·ñÁ½¸ö·½Ïò¶¼ÓĞÃÅ
+        else if (hasHorizontal && hasVertical)      //å†æ£€æŸ¥æ˜¯å¦ä¸¤ä¸ªæ–¹å‘éƒ½æœ‰é—¨
         {
             return RoomTypeName.OneHorizontalAndOneVertical;
         }
 
-        else if (hasHorizontal)     //ÔÙ¼ì²éÊÇ·ñÖ»ÓĞÒ»¸ö·½ÏòÓĞÃÅ
+        else if (hasHorizontal)     //å†æ£€æŸ¥æ˜¯å¦åªæœ‰ä¸€ä¸ªæ–¹å‘æœ‰é—¨
         {
             return RoomTypeName.OneHorizontal;
         }
@@ -144,7 +144,7 @@ public class RoomType : MonoBehaviour
             return RoomTypeName.OneVertical;
         }
 
-        return RoomTypeName.None;   //Ä¬ÈÏ·µ»Ø¿Õ
+        return RoomTypeName.None;   //é»˜è®¤è¿”å›ç©º
     }
 
 
@@ -153,7 +153,7 @@ public class RoomType : MonoBehaviour
 
 
 
-    private void InitDoorFlags()        //¸ù¾İµ±Ç°·¿¼äÓµÓĞµÄÃÅÀ´¾ö¶¨²¼¶û
+    private void InitDoorFlags()        //æ ¹æ®å½“å‰æˆ¿é—´æ‹¥æœ‰çš„é—¨æ¥å†³å®šå¸ƒå°”
     {
         m_DoorFlags = (IsDoorExist(m_Doors, "LeftDoor") ? DoorFlags.Left : DoorFlags.None) |
                       (IsDoorExist(m_Doors, "RightDoor") ? DoorFlags.Right : DoorFlags.None) |
@@ -161,7 +161,7 @@ public class RoomType : MonoBehaviour
                       (IsDoorExist(m_Doors, "DownDoor") ? DoorFlags.Down : DoorFlags.None);
     }
 
-    private bool IsDoorExist(Transform doors, string checkDoor)     //¼ì²é·¿¼äÓĞÄÄĞ©ÃÅ
+    private bool IsDoorExist(Transform doors, string checkDoor)     //æ£€æŸ¥æˆ¿é—´æœ‰å“ªäº›é—¨
     {
         Transform door = doors.Find(checkDoor);
 
@@ -177,12 +177,12 @@ public class RoomType : MonoBehaviour
 
 
 
-    public bool HasCheckFlag(CheckFlags flag)       //¼ì²éÊÇ·ñÓĞ¼ì²é²ÎÊıÖĞµÄ·½Ïò
+    public bool HasCheckFlag(CheckFlags flag)       //æ£€æŸ¥æ˜¯å¦æœ‰æ£€æŸ¥å‚æ•°ä¸­çš„æ–¹å‘
     {
         return (m_CheckFlags & flag) == flag;
     }
 
-    public void SetCheckFlag(CheckFlags flag)       //ÉèÖÃÒÑ¾­¼ì²é¹ı²ÎÊıÖĞµÄ·½Ïò
+    public void SetCheckFlag(CheckFlags flag)       //è®¾ç½®å·²ç»æ£€æŸ¥è¿‡å‚æ•°ä¸­çš„æ–¹å‘
     {
         m_CheckFlags |= flag;
     }

@@ -6,10 +6,10 @@ using UnityEngine.SceneManagement;
 
 public class RootRoomController : MonoBehaviour
 {
-    //Íæ¼ÒÀë¿ª·¿¼äºó·¿¼ä±ä³ÉµÄÍ¸Ã÷¶È
+    //ç©å®¶ç¦»å¼€æˆ¿é—´åæˆ¿é—´å˜æˆçš„é€æ˜åº¦
     public float HiddenTransparency = 0.01f;
 
-    //ºóÆÚ´¦ÀíÏà¹ØµÄ±äÁ¿
+    //åæœŸå¤„ç†ç›¸å…³çš„å˜é‡
     public float m_DarkPostProcessColorValue = -250f;
     public float m_PostProcessDuration = 1f;
 
@@ -22,7 +22,7 @@ public class RootRoomController : MonoBehaviour
     RoomType m_RoomType;
     PostProcessController m_PostProcessController;
 
-    //Ä¬ÈÏÍ¸Ã÷¶ÈÎª1
+    //é»˜è®¤é€æ˜åº¦ä¸º1
     const float m_DefaultTransparency = 1f; 
 
     bool m_HasGeneratedRoom = false;
@@ -32,15 +32,15 @@ public class RootRoomController : MonoBehaviour
 
 
 
-    #region UnityÄÚ²¿º¯ÊıÑ­»·
+    #region Unityå†…éƒ¨å‡½æ•°å¾ªç¯
     private void Awake()
     {
-        //»ñÈ¡¸ÃÎïÌåÒÔ¼°ËùÓĞ×ÓÎïÌåµÄ¾«ÁéÍ¼×é¼ş
+        //è·å–è¯¥ç‰©ä½“ä»¥åŠæ‰€æœ‰å­ç‰©ä½“çš„ç²¾çµå›¾ç»„ä»¶
         m_AllSprites = new List<SpriteRenderer>(GetComponentsInChildren<SpriteRenderer>() );
 
         m_DoorInsideThisRoom = GetComponentInChildren<DoorController>();
 
-        m_RoomManager = GameObject.Find("RoomManager").GetComponent<RoomManager>();   //Ñ°ÕÒ³¡¾°ÖĞÕâ¸öÃû×ÖµÄÎïÌå£¬²¢»ñµÃÏàÓ¦µÄ×é¼ş
+        m_RoomManager = GameObject.Find("RoomManager").GetComponent<RoomManager>();   //å¯»æ‰¾åœºæ™¯ä¸­è¿™ä¸ªåå­—çš„ç‰©ä½“ï¼Œå¹¶è·å¾—ç›¸åº”çš„ç»„ä»¶
         if (m_RoomManager == null)
         {
             Debug.LogError("Cannot find the Gameobject 'RoomManager'.");
@@ -62,11 +62,11 @@ public class RootRoomController : MonoBehaviour
     {
         //Debug.Log(transform.position);
 
-        //·¿¼ä¼¤»îÊ±½«·¿¼ä¾«ÁéÍ¼±äµÃÍ¸Ã÷
+        //æˆ¿é—´æ¿€æ´»æ—¶å°†æˆ¿é—´ç²¾çµå›¾å˜å¾—é€æ˜
         ChangeRoomTransparency(HiddenTransparency);
 
         
-        //Ã¿µ±·¿¼ä¼¤»îÊ±£¬½«µ±Ç°·¿¼äµÄ×ø±ê¼Ó½ø×Öµä
+        //æ¯å½“æˆ¿é—´æ¿€æ´»æ—¶ï¼Œå°†å½“å‰æˆ¿é—´çš„åæ ‡åŠ è¿›å­—å…¸
         if (!m_RoomManager.GeneratedRoomDict.ContainsKey(transform.position) )
         {
             m_RoomManager.GeneratedRoomDict.Add(transform.position, gameObject);
@@ -75,7 +75,7 @@ public class RootRoomController : MonoBehaviour
 
     private void OnDisable()
     {
-        //Ã¿µ±·¿¼äÈ¡Ïû¼¤»îÊ±£¬´Ó×ÖµäÖĞÒÆ³ıµ±Ç°·¿¼äµÄ×ø±ê
+        //æ¯å½“æˆ¿é—´å–æ¶ˆæ¿€æ´»æ—¶ï¼Œä»å­—å…¸ä¸­ç§»é™¤å½“å‰æˆ¿é—´çš„åæ ‡
         if (m_RoomManager.GeneratedRoomDict.ContainsKey(transform.position))
         {
             m_RoomManager.GeneratedRoomDict.Remove(transform.position);
@@ -90,17 +90,17 @@ public class RootRoomController : MonoBehaviour
         {
             //Debug.Log("Player entered room: " + gameObject.name);
 
-            //Íæ¼Ò½øÈë·¿¼äºó£¬½«·¿¼äÍ¸Ã÷¶Èµ÷»Ø1
+            //ç©å®¶è¿›å…¥æˆ¿é—´åï¼Œå°†æˆ¿é—´é€æ˜åº¦è°ƒå›1
             ChangeRoomTransparency(m_DefaultTransparency);
 
 
-            //·¿¼äÖÜÎ§Éú³É¹ıÒ»´Î·¿¼äºó¾Í²»»áÔÙÉú³ÉÁË
+            //æˆ¿é—´å‘¨å›´ç”Ÿæˆè¿‡ä¸€æ¬¡æˆ¿é—´åå°±ä¸ä¼šå†ç”Ÿæˆäº†
             if (!m_HasGeneratedRoom)
             {
-                m_RoomManager.GenerateRoom(transform, m_RoomType);  //ÔÚµ±Ç°·¿¼äÖÜÎ§Éú³ÉĞÂµÄ·¿¼ä
+                m_RoomManager.GenerateRoom(transform, m_RoomType);  //åœ¨å½“å‰æˆ¿é—´å‘¨å›´ç”Ÿæˆæ–°çš„æˆ¿é—´
             }
 
-            RoomManager.Instance.CheckIfConnectSurroundingRooms(transform);  //Ã¿µ±Íæ¼Ò½øÈë·¿¼äÊ±£¬¼ì²éµ±Ç°·¿¼äÊÇ·ñÁ¬½ÓÖÜÎ§µÄ·¿¼ä
+            RoomManager.Instance.CheckIfConnectSurroundingRooms(transform);  //æ¯å½“ç©å®¶è¿›å…¥æˆ¿é—´æ—¶ï¼Œæ£€æŸ¥å½“å‰æˆ¿é—´æ˜¯å¦è¿æ¥å‘¨å›´çš„æˆ¿é—´
         }
     }
 
@@ -108,34 +108,34 @@ public class RootRoomController : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            //Íæ¼ÒÀë¿ª·¿¼äºó£¬½«·¿¼ä±äµÃÍ¸Ã÷
+            //ç©å®¶ç¦»å¼€æˆ¿é—´åï¼Œå°†æˆ¿é—´å˜å¾—é€æ˜
             ChangeRoomTransparency(HiddenTransparency);
 
 
-            //È·±£Ö»ÔÚ³¡¾°³ÖĞø´æÔÚÇÒÎ´Ğ¶ÔØÊ±£¬²Å»áÊ¹ÓÃDoTeen£¨·ñÔòÔÚ³¡¾°Ğ¶ÔØºó»á±¨´í£©
+            //ç¡®ä¿åªåœ¨åœºæ™¯æŒç»­å­˜åœ¨ä¸”æœªå¸è½½æ—¶ï¼Œæ‰ä¼šä½¿ç”¨DoTeenï¼ˆå¦åˆ™åœ¨åœºæ™¯å¸è½½åä¼šæŠ¥é”™ï¼‰
             if (SceneManager.GetActiveScene().isLoaded)
             {
-                //½«Ïà»úÁÁ¶ÈÒ»Ë²¼äµÄ±ä°µ
+                //å°†ç›¸æœºäº®åº¦ä¸€ç¬é—´çš„å˜æš—
                 m_PostProcessController.DarkenThenBrighten(m_DarkPostProcessColorValue, m_PostProcessDuration);
             }
             
 
             if (m_DoorInsideThisRoom != null)
             {
-                m_DoorInsideThisRoom.RoomTrigger.enabled = true;    //Íæ¼ÒÀë¿ª·¿¼äºóÖØĞÂ¼¤»îÃÅµÄ´¥·¢Æ÷£¬´Ó¶øÈÃÍæ¼ÒÖ®ºóÔÙ½øÈëÊ±Éú³ÉµĞÈË             
+                m_DoorInsideThisRoom.RoomTrigger.enabled = true;    //ç©å®¶ç¦»å¼€æˆ¿é—´åé‡æ–°æ¿€æ´»é—¨çš„è§¦å‘å™¨ï¼Œä»è€Œè®©ç©å®¶ä¹‹åå†è¿›å…¥æ—¶ç”Ÿæˆæ•Œäºº             
             }             
         }
     }
     #endregion
 
 
-    #region ÆäÓàº¯Êı
-    //¸ü¸Ä·¿¼äÕûÌåµÄÍ¸Ã÷¶È
+    #region å…¶ä½™å‡½æ•°
+    //æ›´æ”¹æˆ¿é—´æ•´ä½“çš„é€æ˜åº¦
     private void ChangeRoomTransparency(float alphaVal)
     {
         foreach(var sprite in m_AllSprites)
         {
-            //¼ì²é¾«ÁéÍ¼ÊÇ·ñÎª¿Õ£¬·ÀÖ¹±¨´í
+            //æ£€æŸ¥ç²¾çµå›¾æ˜¯å¦ä¸ºç©ºï¼Œé˜²æ­¢æŠ¥é”™
             if (sprite != null)
             {
                 var tempColor = sprite.color;
@@ -146,7 +146,7 @@ public class RootRoomController : MonoBehaviour
     }
 
 
-    //Ìí¼ÓĞÂµÄ¾«ÁéÍ¼µ½ÁĞ±í
+    //æ·»åŠ æ–°çš„ç²¾çµå›¾åˆ°åˆ—è¡¨
     public void AddNewSpriteRenderers()
     {
         SpriteRenderer[] newSprites = GetComponentsInChildren<SpriteRenderer>();

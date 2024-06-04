@@ -21,18 +21,18 @@ public class PlayerHitState : PlayerGroundedState
 
     public override void LogicUpdate()
     {               
-        input = PlayerInputHandler.Instance.RawMovementInput;   //Í¨¹ıPlayer½Å±¾µ÷ÓÃÏĞÖÃ×´Ì¬ºÍÒÆ¶¯×´Ì¬ĞèÒªµÄÏòÁ¿ÊıÖµ
+        input = PlayerInputHandler.Instance.RawMovementInput;   //é€šè¿‡Playerè„šæœ¬è°ƒç”¨é—²ç½®çŠ¶æ€å’Œç§»åŠ¨çŠ¶æ€éœ€è¦çš„å‘é‡æ•°å€¼
 
-        animatorStateInfo = core.Animator.GetCurrentAnimatorStateInfo(0);       //»ñÈ¡µ±Ç°¶¯»­
+        animatorStateInfo = core.Animator.GetCurrentAnimatorStateInfo(0);       //è·å–å½“å‰åŠ¨ç”»
 
         if (animatorStateInfo.IsName("Hit") && animatorStateInfo.normalizedTime >= 0.95f)
         {
-            stateMachine.ChangeState(player.IdleState);     //ÊÜ»÷¶¯»­½áÊøºóÇĞ»»³ÉÏĞÖÃ×´Ì¬
+            stateMachine.ChangeState(player.IdleState);     //å—å‡»åŠ¨ç”»ç»“æŸååˆ‡æ¢æˆé—²ç½®çŠ¶æ€
         }
     }
 
     public override void PhysicsUpdate()
     {
-        //ÖØĞ´´Ëº¯Êı£¬´Ó¶ø½ûÖ¹Íæ¼ÒÊÜ»÷Ê±×ÔÓÉÒÆ¶¯
+        //é‡å†™æ­¤å‡½æ•°ï¼Œä»è€Œç¦æ­¢ç©å®¶å—å‡»æ—¶è‡ªç”±ç§»åŠ¨
     }
 }

@@ -9,7 +9,7 @@ public class CoreComponent : MonoBehaviour
     {
         get
         {
-            if (m_Movement) { return m_Movement; }      //¼ì²é×é¼şÊÇ·ñÎª¿Õ
+            if (m_Movement) { return m_Movement; }      //æ£€æŸ¥ç»„ä»¶æ˜¯å¦ä¸ºç©º
             m_Movement = core.GetCoreComponent<Movement>();
             return m_Movement;
         }
@@ -21,7 +21,7 @@ public class CoreComponent : MonoBehaviour
     {
         get
         {
-            if (m_Combat) { return m_Combat; }      //¼ì²é×é¼şÊÇ·ñÎª¿Õ
+            if (m_Combat) { return m_Combat; }      //æ£€æŸ¥ç»„ä»¶æ˜¯å¦ä¸ºç©º
             m_Combat = core.GetCoreComponent<Combat>();
             return m_Combat;
         }
@@ -33,7 +33,7 @@ public class CoreComponent : MonoBehaviour
     {
         get
         {
-            if (m_Stats) { return m_Stats; }      //¼ì²é×é¼şÊÇ·ñÎª¿Õ
+            if (m_Stats) { return m_Stats; }      //æ£€æŸ¥ç»„ä»¶æ˜¯å¦ä¸ºç©º
             m_Stats = core.GetCoreComponent<Stats>();
             return m_Stats;
         }
@@ -41,7 +41,7 @@ public class CoreComponent : MonoBehaviour
     private Stats m_Stats;
 
 
-    protected ParticleManager particleManager => m_ParticleManager ? m_ParticleManager : core.GetCoreComponent(ref m_ParticleManager);      //ÎÊºÅ±íÊ¾Èç¹ûÎÊºÅ×ó±ß±äÁ¿Îª¿Õ£¬Ôò·µ»¹Ã°ºÅÓÒ±ßµÄº¯Êı£¬·ñÔò·µ»¹Ã°ºÅ×ó±ßµÄ±äÁ¿
+    protected ParticleManager particleManager => m_ParticleManager ? m_ParticleManager : core.GetCoreComponent(ref m_ParticleManager);      //é—®å·è¡¨ç¤ºå¦‚æœé—®å·å·¦è¾¹å˜é‡ä¸ºç©ºï¼Œåˆ™è¿”è¿˜å†’å·å³è¾¹çš„å‡½æ•°ï¼Œå¦åˆ™è¿”è¿˜å†’å·å·¦è¾¹çš„å˜é‡
 
     private ParticleManager m_ParticleManager;
 
@@ -52,7 +52,7 @@ public class CoreComponent : MonoBehaviour
     protected virtual void Awake()
     {
         
-        core = transform.parent.GetComponent<Core>();       //´Ó¸¸ÎïÌåÄÇÀïµ÷ÓÃCore×é¼ş
+        core = transform.parent.GetComponent<Core>();       //ä»çˆ¶ç‰©ä½“é‚£é‡Œè°ƒç”¨Coreç»„ä»¶
 
         if (!core)
         {
@@ -64,7 +64,7 @@ public class CoreComponent : MonoBehaviour
             Debug.Log("Something is wrong in the CoreComponent!");
         }
 
-        core.Addcomponent(this);    //½«ËùÓĞĞèÒªÔËÓÃLogicUpdateº¯ÊıµÄ×é¼ş¼Ó½øList     
+        core.Addcomponent(this);    //å°†æ‰€æœ‰éœ€è¦è¿ç”¨LogicUpdateå‡½æ•°çš„ç»„ä»¶åŠ è¿›List     
     }
 
 

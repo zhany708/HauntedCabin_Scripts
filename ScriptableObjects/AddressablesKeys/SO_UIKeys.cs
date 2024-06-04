@@ -4,35 +4,35 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "newUIKeys", menuName = "Data/UI Data/UI Keys")]
 public class SO_UIKeys : ScriptableObject
 {
-    //²Ëµ¥Ïà¹Ø
+    //èœå•ç›¸å…³
     [Header("Menu")]
-    public string MainMenuPanel;        //ÓÎÏ·¿ªÊ¼²Ëµ¥
-    public string SettingPanel;         //ÓÎÏ·ÉèÖÃ½çÃæ
-    public string PauseMenuPanel;       //ÓÎÏ·ÔİÍ£½çÃæ
-    public string GameLostPanel;        //ÓÎÏ·Ê§°Ü½çÃæ
-    public string GameWinningPanel;     //ÓÎÏ·Ê¤Àû½çÃæ
+    public string MainMenuPanel;        //æ¸¸æˆå¼€å§‹èœå•
+    public string SettingPanel;         //æ¸¸æˆè®¾ç½®ç•Œé¢
+    public string PauseMenuPanel;       //æ¸¸æˆæš‚åœç•Œé¢
+    public string GameLostPanel;        //æ¸¸æˆå¤±è´¥ç•Œé¢
+    public string GameWinningPanel;     //æ¸¸æˆèƒœåˆ©ç•Œé¢
 
-    public string TaskPanel;                //ÓÎÏ·ÈÎÎñ½çÃæ
+    public string TaskPanel;                //æ¸¸æˆä»»åŠ¡ç•Œé¢
 
 
-    //¾ç±¾Ïà¹Ø
+    //å‰§æœ¬ç›¸å…³
     [Header("ScreenPlay")]
-    public string GameBackgroundPanel;      //ÓÎÏ·µ×²ã¾ç±¾½çÃæ
-    public string HellsCallPanel;           //µØÓòµÄºô»½¾ç±¾±³¾°½çÃæ
+    public string GameBackgroundPanel;      //æ¸¸æˆåº•å±‚å‰§æœ¬ç•Œé¢
+    public string HellsCallPanel;           //åœ°åŸŸçš„å‘¼å”¤å‰§æœ¬èƒŒæ™¯ç•Œé¢
 
 
-    //ÈËÎïÏà¹Ø
+    //äººç‰©ç›¸å…³
     [Header("Player")]
-    public string PlayerStatusBarKey;         //Íæ¼Ò×´Ì¬À¸¡£ÔÚHealthBar½Å±¾Àï³õÊ¼»¯
+    public string PlayerStatusBarKey;         //ç©å®¶çŠ¶æ€æ ã€‚åœ¨HealthBarè„šæœ¬é‡Œåˆå§‹åŒ–
 
 
-    //ÊÂ¼şÏà¹Ø
+    //äº‹ä»¶ç›¸å…³
     [Header("Event")]
-    public string TransitionStagePanelKey;    //½øÈë¶ş½×¶ÎÎÄ×Ö
-    public string EvilTelephonePanel;         //¡¶µç»°ÁåÉù¡·ÊÂ¼ş½çÃæ
+    public string TransitionStagePanelKey;    //è¿›å…¥äºŒé˜¶æ®µæ–‡å­—
+    public string EvilTelephonePanel;         //ã€Šç”µè¯é“ƒå£°ã€‹äº‹ä»¶ç•Œé¢
 
 
-    //ÎäÆ÷Ïà¹Ø
+    //æ­¦å™¨ç›¸å…³
     [Header("Weapon")]
-    public string PickupWeaponPanelKey;       //ÓÃÓÚÍæ¼ÒÊ°È¡ÎäÆ÷  
+    public string PickupWeaponPanelKey;       //ç”¨äºç©å®¶æ‹¾å–æ­¦å™¨  
 }

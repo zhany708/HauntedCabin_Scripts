@@ -15,20 +15,20 @@ public class GameLostPanel : PanelWithButton
 
     protected override void Awake()
     {
-        //¼ì²é°´Å¥×é¼şÊÇ·ñ´æÔÚ
+        //æ£€æŸ¥æŒ‰é’®ç»„ä»¶æ˜¯å¦å­˜åœ¨
         if (RestartButton == null || QuitButton == null)
         {
             Debug.LogError("Some buttons are not assigned in the GameOverPanel.");
             return;
         }
 
-        //Ä¬ÈÏ°´Å¥Îª¡°ÖØĞÂ¿ªÊ¼¡±°´Å¥
+        //é»˜è®¤æŒ‰é’®ä¸ºâ€œé‡æ–°å¼€å§‹â€æŒ‰é’®
         firstSelectedButton = RestartButton.gameObject;
     }
 
     private void Start()
     {
-        //½«°´Å¥ºÍº¯Êı°ó¶¨ÆğÀ´
+        //å°†æŒ‰é’®å’Œå‡½æ•°ç»‘å®šèµ·æ¥
         RestartButton.onClick.AddListener(() => OnRestartButtonClick());
         QuitButton.onClick.AddListener(() => OnQuitButtonClick());       
     }
@@ -38,7 +38,7 @@ public class GameLostPanel : PanelWithButton
     {
         base.OnEnable();
 
-        OnFadeOutFinished += HandleFadeOutFinished;        //³¹µ×µ­³öÊ±Ö´ĞĞº¯Êı
+        OnFadeOutFinished += HandleFadeOutFinished;        //å½»åº•æ·¡å‡ºæ—¶æ‰§è¡Œå‡½æ•°
     }
 
     protected override void OnDisable()
@@ -56,16 +56,16 @@ public class GameLostPanel : PanelWithButton
 
     private void OnRestartButtonClick()
     {
-        //¹Ø±Õ½çÃæ
+        //å…³é—­ç•Œé¢
         Fade(CanvasGroup, FadeOutAlpha, FadeDuration, false);
     }
    
     private void OnQuitButtonClick()
     {
-        //ÍË³öÓÎÏ·£¨ÓÃÓÚ±¾µØÓÎÏ·°ü£©
+        //é€€å‡ºæ¸¸æˆï¼ˆç”¨äºæœ¬åœ°æ¸¸æˆåŒ…ï¼‰
         Application.Quit();
 
-        //ÔÚUnity±à¼­Æ÷ÄÚÍË³öÓÎÍæÄ£Ê½
+        //åœ¨Unityç¼–è¾‘å™¨å†…é€€å‡ºæ¸¸ç©æ¨¡å¼
         #if UNITY_EDITOR
         UnityEditor.EditorApplication.isPlaying = false;
         #endif
@@ -75,10 +75,10 @@ public class GameLostPanel : PanelWithButton
 
     private void HandleFadeOutFinished()
     {
-        //·µ»ØÖ÷²Ëµ¥
+        //è¿”å›ä¸»èœå•
         SceneManager.LoadScene("MainMenu");
 
-        //ÖØÖÃÓÎÏ·µÄ¸÷ÖÖÏµÍ³
+        //é‡ç½®æ¸¸æˆçš„å„ç§ç³»ç»Ÿ
         ResetGameSystems();
     }
 }

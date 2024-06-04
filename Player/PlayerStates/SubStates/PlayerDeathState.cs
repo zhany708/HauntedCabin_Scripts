@@ -12,9 +12,9 @@ public class PlayerDeathState : PlayerState
     {
         base.Enter();
       
-        player.FootAnimator.gameObject.SetActive(false);    //È¡Ïû¼¤»îÍæ¼ÒµÄ½Å
+        player.FootAnimator.gameObject.SetActive(false);    //å–æ¶ˆæ¿€æ´»ç©å®¶çš„è„š
 
-        //È¡Ïû¼¤»îËùÓĞÎäÆ÷
+        //å–æ¶ˆæ¿€æ´»æ‰€æœ‰æ­¦å™¨
         player.PrimaryWeapon.gameObject.SetActive(false);
         player.SecondaryWeapon.gameObject.SetActive(false);
     }
@@ -23,9 +23,9 @@ public class PlayerDeathState : PlayerState
     {
         base.Exit();
 
-        player.gameObject.SetActive(false);    //È¡Ïû¼¤»îÍæ¼Ò£¬´Ó¶øÍË³öÍæ¼Ò×´Ì¬»ú
+        player.gameObject.SetActive(false);    //å–æ¶ˆæ¿€æ´»ç©å®¶ï¼Œä»è€Œé€€å‡ºç©å®¶çŠ¶æ€æœº
 
-        //ÓÎÏ·½áÊø½çÃæ²»ÄÜ·ÅÔÚLogicUpdateº¯ÊıÀï£¬·ÀÖ¹ÖØ¸´´ò¿ª¶à¸ö½çÃæ
+        //æ¸¸æˆç»“æŸç•Œé¢ä¸èƒ½æ”¾åœ¨LogicUpdateå‡½æ•°é‡Œï¼Œé˜²æ­¢é‡å¤æ‰“å¼€å¤šä¸ªç•Œé¢
         await UIManager.Instance.OpenPanel(UIManager.Instance.UIKeys.GameLostPanel);
     }
 
@@ -34,13 +34,13 @@ public class PlayerDeathState : PlayerState
 
     public override void LogicUpdate()
     {
-        animatorStateInfo = core.Animator.GetCurrentAnimatorStateInfo(0);       //»ñÈ¡µ±Ç°¶¯»­
+        animatorStateInfo = core.Animator.GetCurrentAnimatorStateInfo(0);       //è·å–å½“å‰åŠ¨ç”»
 
         if (animatorStateInfo.IsName("Death") && animatorStateInfo.normalizedTime >= 0.95f)
         {
             //Debug.Log("Game Over!");
 
-            //ËÀÍö¶¯»­²¥Íêºó½øÈë¡°ÏĞÖÃ¡±×´Ì¬£¨Êµ¼ÊÉÏÖ±½ÓÍË³öÍæ¼Ò×´Ì¬»ú£©
+            //æ­»äº¡åŠ¨ç”»æ’­å®Œåè¿›å…¥â€œé—²ç½®â€çŠ¶æ€ï¼ˆå®é™…ä¸Šç›´æ¥é€€å‡ºç©å®¶çŠ¶æ€æœºï¼‰
             stateMachine.ChangeState(player.IdleState);
         }
     }

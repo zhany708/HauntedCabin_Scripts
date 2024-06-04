@@ -6,16 +6,16 @@ using Lean.Localization;
 
 public class TaskPanel : BasePanel
 {
-    //ÈÎÎñÎÄ±¾¶ÔÓ¦µÄ·­ÒëÎÄ±¾µÄstring
+    //ä»»åŠ¡æ–‡æœ¬å¯¹åº”çš„ç¿»è¯‘æ–‡æœ¬çš„string
     public string TaskPhraseKey;
 
     
 
     TextMeshProUGUI m_TaskText;
-    EnvironmentManager m_EnvironmentManager;       //´Ëº¯ÊıĞèÒª»·¾³¹ÜÀíÆ÷ÖĞµÄ»Øµ÷º¯Êı£¬Òò´ËĞèÒª»ñÈ¡ÒıÓÃ£¬¶ø²»ÄÜÖ±½Óµ÷ÓÃ
+    EnvironmentManager m_EnvironmentManager;       //æ­¤å‡½æ•°éœ€è¦ç¯å¢ƒç®¡ç†å™¨ä¸­çš„å›è°ƒå‡½æ•°ï¼Œå› æ­¤éœ€è¦è·å–å¼•ç”¨ï¼Œè€Œä¸èƒ½ç›´æ¥è°ƒç”¨
 
-    int m_FinishedTaskCount => EnvironmentManager.Instance.KilledEnemyCount;    //µ±Ç°Íê³ÉµÄÈÎÎñÊıÁ¿
-    int m_RequiredTaskCount => EnvironmentManager.Instance.RequiredEnemyCount;  //ĞèÒªÍê³ÉµÄÈÎÎñÊıÁ¿
+    int m_FinishedTaskCount => EnvironmentManager.Instance.KilledEnemyCount;    //å½“å‰å®Œæˆçš„ä»»åŠ¡æ•°é‡
+    int m_RequiredTaskCount => EnvironmentManager.Instance.RequiredEnemyCount;  //éœ€è¦å®Œæˆçš„ä»»åŠ¡æ•°é‡
 
 
 
@@ -25,8 +25,8 @@ public class TaskPanel : BasePanel
     {
         base.Awake();
 
-        m_TaskText = GetComponentInChildren<TextMeshProUGUI>();     //´Ó×ÓÎïÌåÄÇ»ñÈ¡ÎÄ±¾×é¼ş
-        m_EnvironmentManager = FindAnyObjectByType<EnvironmentManager>();     //Ñ°ÕÒ»·¾³¹ÜÀíÆ÷×é¼ş
+        m_TaskText = GetComponentInChildren<TextMeshProUGUI>();     //ä»å­ç‰©ä½“é‚£è·å–æ–‡æœ¬ç»„ä»¶
+        m_EnvironmentManager = FindAnyObjectByType<EnvironmentManager>();     //å¯»æ‰¾ç¯å¢ƒç®¡ç†å™¨ç»„ä»¶
 
         if (m_TaskText == null || m_EnvironmentManager == null)
         {
@@ -43,7 +43,7 @@ public class TaskPanel : BasePanel
 
     private void Start()
     {
-        UpdateTaskText();       //ÓÎÏ·¿ªÊ¼Ç°ÕıÈ·ÏÔÊ¾ÈÎÎñÊıÁ¿
+        UpdateTaskText();       //æ¸¸æˆå¼€å§‹å‰æ­£ç¡®æ˜¾ç¤ºä»»åŠ¡æ•°é‡
     }
 
 
@@ -62,13 +62,13 @@ public class TaskPanel : BasePanel
 
 
 
-    //¸üĞÂÍæ¼ÒµÄÊôĞÔUI
+    //æ›´æ–°ç©å®¶çš„å±æ€§UI
     public void UpdateTaskText()
     {
-        //»ñÈ¡·­ÒëµÄÎÄ±¾×é¼ş
+        //è·å–ç¿»è¯‘çš„æ–‡æœ¬ç»„ä»¶
         string taskFormat = LeanLocalization.GetTranslationText(TaskPhraseKey);
 
-        //¸³ÖµÈÎÎñÎÄ±¾µÄÊıÖµ
+        //èµ‹å€¼ä»»åŠ¡æ–‡æœ¬çš„æ•°å€¼
         m_TaskText.text = string.Format(taskFormat, m_FinishedTaskCount, m_RequiredTaskCount);            
     }
 }

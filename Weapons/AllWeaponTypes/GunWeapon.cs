@@ -24,7 +24,7 @@ public class GunWeapon : Weapon
     {
         base.Awake();
 
-        InitializeComponents();     //³õÊ¼»¯×é¼ş
+        InitializeComponents();     //åˆå§‹åŒ–ç»„ä»¶
     }
 
 
@@ -35,7 +35,7 @@ public class GunWeapon : Weapon
     {
         m_GunFlip = new Flip(transform);
 
-        //Èç¹ûµ±Ç°WeaponDataÓëGunWeaponDataÏàÍ¬£¬ÔòÓÃ¸¸ÀàÖĞµÄÍ¨ÓÃWeaponData¸³Öµ´Ë½Å±¾ÖĞµÄÇ¹ĞµÎäÆ÷Êı¾İ
+        //å¦‚æœå½“å‰WeaponDataä¸GunWeaponDataç›¸åŒï¼Œåˆ™ç”¨çˆ¶ç±»ä¸­çš„é€šç”¨WeaponDataèµ‹å€¼æ­¤è„šæœ¬ä¸­çš„æªæ¢°æ­¦å™¨æ•°æ®
         if (WeaponData.GetType() == typeof(SO_GunData))
         {
             GunData = (SO_GunData)WeaponData;
@@ -71,7 +71,7 @@ public class GunWeapon : Weapon
     {
         base.PointToMouse();
 
-        //µ±Êó±êÎ»ÓÚÇ¹Ğµ×ó²àÊ±£¬·­×ªÇ¹ĞµµÄYÖµ
+        //å½“é¼ æ ‡ä½äºæªæ¢°å·¦ä¾§æ—¶ï¼Œç¿»è½¬æªæ¢°çš„Yå€¼
         int flipNum = PlayerInputHandler.Instance.ProjectedMousePos.x < transform.position.x ? -1 : 1;    
 
         m_GunFlip.FlipY(flipNum);
@@ -84,7 +84,7 @@ public class GunWeapon : Weapon
     {
         if (muzzlePos == null) return;
 
-        GameObject bulletObject = ParticlePool.Instance.GetObject(BulletPrefab);    //´Ó¶ÔÏó³Ø»ñÈ¡×Óµ¯ÎïÌå
+        GameObject bulletObject = ParticlePool.Instance.GetObject(BulletPrefab);    //ä»å¯¹è±¡æ± è·å–å­å¼¹ç‰©ä½“
         if (bulletObject == null)
         {
             Debug.LogError("Failed to retrieve bullet from ParticlePool.");
@@ -92,11 +92,11 @@ public class GunWeapon : Weapon
         }
 
 
-        float offsetAngle = Random.Range(-5f, 5f);      //ÓÃÓÚĞ¡·ùÆ«ÒÆ×Óµ¯£¨²»ÈÃ×Óµ¯ÍêÈ«¶Ô×ÅÊó±ê·¢Éä£©
+        float offsetAngle = Random.Range(-5f, 5f);      //ç”¨äºå°å¹…åç§»å­å¼¹ï¼ˆä¸è®©å­å¼¹å®Œå…¨å¯¹ç€é¼ æ ‡å‘å°„ï¼‰
 
-        bulletObject.transform.position = muzzlePos.position;     //Éú³É×Óµ¯ºó¸ü¸ÄÎ»ÖÃÓÚÇ¹¿ÚÎ»ÖÃ
+        bulletObject.transform.position = muzzlePos.position;     //ç”Ÿæˆå­å¼¹åæ›´æ”¹ä½ç½®äºæªå£ä½ç½®
 
-        //´Ó×Óµ¯ÎïÌåÄÇ»ñÈ¡×Óµ¯½Å±¾
+        //ä»å­å¼¹ç‰©ä½“é‚£è·å–å­å¼¹è„šæœ¬
         PlayerBullet bulletScript = bulletObject.GetComponent<PlayerBullet>();
         if (bulletScript == null)
         {
@@ -106,9 +106,9 @@ public class GunWeapon : Weapon
 
         bulletScript.SetWeapon(this);
 
-        //Ê¹×Óµ¯ÏòÊó±êÎ»ÖÃÒÆ¶¯£¬²¢²úÉúËæ»úµÄ½Ç¶ÈÆ«ÒÆ
+        //ä½¿å­å¼¹å‘é¼ æ ‡ä½ç½®ç§»åŠ¨ï¼Œå¹¶äº§ç”Ÿéšæœºçš„è§’åº¦åç§»
         bulletScript.SetSpeed(Quaternion.AngleAxis(offsetAngle, Vector3.forward) * mousePosition);     
 
-        PlayAudioSound();   //²¥·Å¿ªÇ¹ÒôĞ§
+        PlayAudioSound();   //æ’­æ”¾å¼€æªéŸ³æ•ˆ
     }
 }

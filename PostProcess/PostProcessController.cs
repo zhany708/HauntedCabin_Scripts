@@ -6,19 +6,19 @@ using UnityEngine.Rendering.PostProcessing;
 
 public class PostProcessController : MonoBehaviour
 {
-    //¸ü¸ÄÑÕÉ«ÂË¾µÏà¹Ø   
-    public Color OrangeFilter = new Color(250, 107, 58);   //³ÈÉ«
-    public Color RedFilter = new Color(214, 53, 56);       //ºìÉ«
+    //æ›´æ”¹é¢œè‰²æ»¤é•œç›¸å…³   
+    public Color OrangeFilter = new Color(250, 107, 58);   //æ©™è‰²
+    public Color RedFilter = new Color(214, 53, 56);       //çº¢è‰²
 
-    float m_FireEffectFrequency = 3.0f;                    //ÑÕÉ«×ª±äÆµÂÊ
-    float m_Timer = 0f;     //ÓÃÓÚÑÕÉ«×ª±ä
+    float m_FireEffectFrequency = 3.0f;                    //é¢œè‰²è½¬å˜é¢‘ç‡
+    float m_Timer = 0f;     //ç”¨äºé¢œè‰²è½¬å˜
 
 
 
 
     PostProcessVolume m_PostProcessVolume;
-    ColorGrading m_ColorGrading;                //ÑÕÉ«´¦ÀíÏà¹Ø
-    Vignette m_Vignette;                        //ÆÁÄ»¾Û½¹Ïà¹Ø£¨±ÈÈçÄ£ÄâÊÖµçÍ²£¬Ö»ÈÃÍæ¼Ò¿´µ½ÖÜÎ§Ò»Ğ¡¿éÃæ»ı£©
+    ColorGrading m_ColorGrading;                //é¢œè‰²å¤„ç†ç›¸å…³
+    Vignette m_Vignette;                        //å±å¹•èšç„¦ç›¸å…³ï¼ˆæ¯”å¦‚æ¨¡æ‹Ÿæ‰‹ç”µç­’ï¼Œåªè®©ç©å®¶çœ‹åˆ°å‘¨å›´ä¸€å°å—é¢ç§¯ï¼‰
 
 
 
@@ -33,7 +33,7 @@ public class PostProcessController : MonoBehaviour
         
         if (m_PostProcessVolume != null )
         {
-            //³¢ÊÔ»ñÈ¡ËùÓĞ×é¼ş£¬ÓĞÒ»¸öÃ»ÓĞ»ñÈ¡µ½µÄ»°Ôò±¨´í
+            //å°è¯•è·å–æ‰€æœ‰ç»„ä»¶ï¼Œæœ‰ä¸€ä¸ªæ²¡æœ‰è·å–åˆ°çš„è¯åˆ™æŠ¥é”™
             if (!m_PostProcessVolume.profile.TryGetSettings(out m_ColorGrading) || !m_PostProcessVolume.profile.TryGetSettings(out m_Vignette))
             {
                 Debug.LogError("Some components are not assigned in the PostProcess volume.");
@@ -56,16 +56,16 @@ public class PostProcessController : MonoBehaviour
 
 
 
-    #region ColorGradingÏà¹Ø
-    //µ÷ÕûÃ÷ÁÁ¶È
+    #region ColorGradingç›¸å…³
+    //è°ƒæ•´æ˜äº®åº¦
     public void AdjustBrightness(float newBrightness, float duration)
     {
         if (m_ColorGrading != null)
         {
-            //ÏÈ¼ì²éÒªµ÷ÕûµÄÖµÊÇ·ñµÈÓÚµ±Ç°µÄÖµ
+            //å…ˆæ£€æŸ¥è¦è°ƒæ•´çš„å€¼æ˜¯å¦ç­‰äºå½“å‰çš„å€¼
             if (m_ColorGrading.postExposure.value != newBrightness)
             {
-                //ÔÚÒ»¶¨Ê±¼ä£¨µÚ¶ş¸ö²ÎÊı£©Ö®ÄÚ½«Ïà»úÒõÓ°Öµ´Óµ±Ç°µÄÖµ±äÎªÒ»¸öÖµ£¨µÚÒ»¸ö²ÎÊı£©£¬ÊµÏÖ±ä°µ/±äÁÁµÄĞ§¹û   
+                //åœ¨ä¸€å®šæ—¶é—´ï¼ˆç¬¬äºŒä¸ªå‚æ•°ï¼‰ä¹‹å†…å°†ç›¸æœºé˜´å½±å€¼ä»å½“å‰çš„å€¼å˜ä¸ºä¸€ä¸ªå€¼ï¼ˆç¬¬ä¸€ä¸ªå‚æ•°ï¼‰ï¼Œå®ç°å˜æš—/å˜äº®çš„æ•ˆæœ   
                 DOTween.To(() => m_ColorGrading.postExposure.value, x => m_ColorGrading.postExposure.value = x, newBrightness, duration);
             }   
         }
@@ -76,18 +76,18 @@ public class PostProcessController : MonoBehaviour
         }
     }
 
-    //ÏÈ±ä°µ£¬Ëæºó±äÁÁ£¨ÓÃÓÚ±íÊ¾Ò»Ë²¼äµÄÉÁË¸£©
+    //å…ˆå˜æš—ï¼Œéšåå˜äº®ï¼ˆç”¨äºè¡¨ç¤ºä¸€ç¬é—´çš„é—ªçƒï¼‰
     public void DarkenThenBrighten(float newBrightness, float duration)
     {
         if (m_ColorGrading != null)
         {
-            //ÏÈ¼ì²éÒªµ÷ÕûµÄÖµÊÇ·ñµÈÓÚµ±Ç°µÄÖµ
+            //å…ˆæ£€æŸ¥è¦è°ƒæ•´çš„å€¼æ˜¯å¦ç­‰äºå½“å‰çš„å€¼
             if (m_ColorGrading.postExposure.value != newBrightness)
             {
-                //¸ÄÖ®Ç°ÏÈ±£´æµ±Ç°µÄÃ÷°µÖµ
+                //æ”¹ä¹‹å‰å…ˆä¿å­˜å½“å‰çš„æ˜æš—å€¼
                 float currentValue = m_ColorGrading.postExposure;
 
-                //½«Ïà»úÒõÓ°Öµ´Óµ±Ç°µÄÖµ±äÎªÒ»¸öÁíÒ»¸öÖµ£¬Ëæºó±ä»ØÀ´
+                //å°†ç›¸æœºé˜´å½±å€¼ä»å½“å‰çš„å€¼å˜ä¸ºä¸€ä¸ªå¦ä¸€ä¸ªå€¼ï¼Œéšåå˜å›æ¥
                 DOTween.To(() => m_ColorGrading.postExposure.value, x => m_ColorGrading.postExposure.value = x, newBrightness, duration);
                 DOTween.To(() => m_ColorGrading.postExposure.value, x => m_ColorGrading.postExposure.value = x, currentValue, duration);
             }
@@ -101,19 +101,19 @@ public class PostProcessController : MonoBehaviour
     #endregion
 
 
-    #region VignetteÏà¹Ø
-    private void FireEffect()       //Í¨¹ıµ÷ÕûÑÕÉ«ÂË¾µÀ´Ä£ÄâÍæ¼Ò±»»ğÑæ°üÎ§
+    #region Vignetteç›¸å…³
+    private void FireEffect()       //é€šè¿‡è°ƒæ•´é¢œè‰²æ»¤é•œæ¥æ¨¡æ‹Ÿç©å®¶è¢«ç«ç„°åŒ…å›´
     {
         if (m_Vignette != null)
         {
-            //¸üĞÂ¼ÆÊ±Æ÷
+            //æ›´æ–°è®¡æ—¶å™¨
             m_Timer += Time.deltaTime * m_FireEffectFrequency;
 
-            //¸ù¾İÆµÂÊÔÚºìÉ«ºÍ³ÈÉ«Ö®¼ä×ª»»
+            //æ ¹æ®é¢‘ç‡åœ¨çº¢è‰²å’Œæ©™è‰²ä¹‹é—´è½¬æ¢
             float t = Mathf.Sin(m_Timer) * 0.5f + 0.5f;
             Color currentColor = Color.Lerp(OrangeFilter, RedFilter, t);
 
-            //¸³ÖµĞÂµÄÑÕÉ«
+            //èµ‹å€¼æ–°çš„é¢œè‰²
             m_Vignette.color.Override(currentColor);
         }
     }

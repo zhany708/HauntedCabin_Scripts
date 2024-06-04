@@ -4,18 +4,18 @@ using UnityEngine;
 
 public class SideDoorController : MonoBehaviour
 {
-    //½ÇÉ«´«ËÍÊ±ĞèÒªµÄÊıÖµ£¬ÓÃÓÚ±íÊ¾½«Òª´«ËÍµÄ·¿¼ä×ø±êµÄÆ«ÒÆ
+    //è§’è‰²ä¼ é€æ—¶éœ€è¦çš„æ•°å€¼ï¼Œç”¨äºè¡¨ç¤ºå°†è¦ä¼ é€çš„æˆ¿é—´åæ ‡çš„åç§»
     public float XOffset = 17f;
     public float YOffset = 10.7f;
 
-    //·¿¼äÒş²ØÊ±Í¸Ã÷¶ÈµÄÖµ
+    //æˆ¿é—´éšè—æ—¶é€æ˜åº¦çš„å€¼
     public float HiddenTransparency = 0.5f;
 
 
 
     protected SpriteRenderer sprite;
 
-    //ÓÃÓÚ´¢´æËùÓĞ´¥·¢ÁËÃÅµÄÅö×²Æ÷
+    //ç”¨äºå‚¨å­˜æ‰€æœ‰è§¦å‘äº†é—¨çš„ç¢°æ’å™¨
     List<Collider2D> m_AllObjects;
 
     const float m_DefaultTransparency = 1f;
@@ -32,7 +32,7 @@ public class SideDoorController : MonoBehaviour
 
     private void Start()
     {
-        //³õÊ¼»¯
+        //åˆå§‹åŒ–
         m_AllObjects = new List<Collider2D>();
     }
 
@@ -40,15 +40,15 @@ public class SideDoorController : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        //Ö»ÓĞÍæ¼Ò»òµĞÈË´¥·¢ÁËÃÅµÄ´¥·¢Æ÷ºó£¬²Å»á½µµÍÍ¸Ã÷¶È
+        //åªæœ‰ç©å®¶æˆ–æ•Œäººè§¦å‘äº†é—¨çš„è§¦å‘å™¨åï¼Œæ‰ä¼šé™ä½é€æ˜åº¦
         if (other.CompareTag("Player") || other.CompareTag("Enemy") )
         {
-            //¼ì²éÅö×²Æ÷ÊÇ·ñÎª¿Õ£¬·ÀÖ¹Bug
+            //æ£€æŸ¥ç¢°æ’å™¨æ˜¯å¦ä¸ºç©ºï¼Œé˜²æ­¢Bug
             if (other != null)
             {
                 m_AllObjects.Add(other);
 
-                //½µµÍÃÅµÄÍ¸Ã÷¶È
+                //é™ä½é—¨çš„é€æ˜åº¦
                 ChangeTransparency(HiddenTransparency);
             }          
         }
@@ -58,17 +58,17 @@ public class SideDoorController : MonoBehaviour
 
     private void OnTriggerExit2D(Collider2D other)
     {
-        //ÏÈ¼ì²éÀë¿ªÅö×²Æ÷µÄÊÇ·ñÎªÍæ¼Ò»òµĞÈË
+        //å…ˆæ£€æŸ¥ç¦»å¼€ç¢°æ’å™¨çš„æ˜¯å¦ä¸ºç©å®¶æˆ–æ•Œäºº
         if (other.CompareTag("Player") || other.CompareTag("Enemy"))
         {
-            //ÔÙ¼ì²éÁĞ±íµÄÔªËØÊıÁ¿ÊÇ·ñÎª0
+            //å†æ£€æŸ¥åˆ—è¡¨çš„å…ƒç´ æ•°é‡æ˜¯å¦ä¸º0
             if (m_AllObjects.Count > 0)
             {
                 m_AllObjects.Remove(other);
             }
 
-            //Ö»ÒªÈÔÈ»ÓĞ´¥·¢Æ÷Ã»ÓĞÀë¿ªÃÅ£¬ÄÇÃ´¼´Ê¹Íæ¼Ò/µĞÈËÀë¿ªÁËÃÅµÄ´¥·¢Æ÷£¬ÃÅÒÀÈ»±£³Ö°ëÍ¸Ã÷
-            if (m_AllObjects.Count == 0 && sprite.color.a == HiddenTransparency)        //Ö»ÓĞÃÅµÄÍ¸Ã÷¶ÈÎª´Ë½Å±¾ÖĞµÄ±äÁ¿Ê±£¬²Åµ÷»ØÍ¸Ã÷¶È
+            //åªè¦ä»ç„¶æœ‰è§¦å‘å™¨æ²¡æœ‰ç¦»å¼€é—¨ï¼Œé‚£ä¹ˆå³ä½¿ç©å®¶/æ•Œäººç¦»å¼€äº†é—¨çš„è§¦å‘å™¨ï¼Œé—¨ä¾ç„¶ä¿æŒåŠé€æ˜
+            if (m_AllObjects.Count == 0 && sprite.color.a == HiddenTransparency)        //åªæœ‰é—¨çš„é€æ˜åº¦ä¸ºæ­¤è„šæœ¬ä¸­çš„å˜é‡æ—¶ï¼Œæ‰è°ƒå›é€æ˜åº¦
             {
                 ChangeTransparency(m_DefaultTransparency);
             }
@@ -82,7 +82,7 @@ public class SideDoorController : MonoBehaviour
     {
         if (sprite != null)
         {
-            //¸ü¸ÄÃÅµÄÍ¸Ã÷¶È
+            //æ›´æ”¹é—¨çš„é€æ˜åº¦
             sprite.color = new Color(1f, 1f, 1f, alphaVal);
         }
     }

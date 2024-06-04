@@ -5,9 +5,9 @@ using UnityEngine.UI;
 
 public class MainMenuPanel : PanelWithButton
 {
-    public Button PlayButton;       //¿ªÊ¼ÓÎÏ·°´Å¥
-    public Button SettingButton;    //ÉèÖÃ½çÃæ°´Å¥
-    public Button QuitButton;       //¹Ø±ÕÓÎÏ·°´Å¥
+    public Button PlayButton;       //å¼€å§‹æ¸¸æˆæŒ‰é’®
+    public Button SettingButton;    //è®¾ç½®ç•Œé¢æŒ‰é’®
+    public Button QuitButton;       //å…³é—­æ¸¸æˆæŒ‰é’®
 
 
 
@@ -19,34 +19,34 @@ public class MainMenuPanel : PanelWithButton
     {
         base.Awake();
 
-        //¼ì²é°´Å¥×é¼şÊÇ·ñ´æÔÚ
+        //æ£€æŸ¥æŒ‰é’®ç»„ä»¶æ˜¯å¦å­˜åœ¨
         if (PlayButton == null || SettingButton == null || QuitButton == null)
         {
             Debug.LogError("Some buttons are not assigned in the MainMenuPanel.");
             return;
         }
 
-        //Ä¬ÈÏ°´Å¥Îª¡°¿ªÊ¼ÓÎÏ·¡±°´Å¥
+        //é»˜è®¤æŒ‰é’®ä¸ºâ€œå¼€å§‹æ¸¸æˆâ€æŒ‰é’®
         firstSelectedButton = PlayButton.gameObject;
     }
 
 
     private async void Start()
     {
-        //½«°´Å¥ºÍº¯Êı°ó¶¨ÆğÀ´
+        //å°†æŒ‰é’®å’Œå‡½æ•°ç»‘å®šèµ·æ¥
         PlayButton.onClick.AddListener(() => PlayGame());
         SettingButton.onClick.AddListener(() => OpenSettingPanel());
         QuitButton.onClick.AddListener(() => QuitGame());
 
         
-        //³õÊ¼»¯½çÃæÃû×Ö
+        //åˆå§‹åŒ–ç•Œé¢åå­—
         if (panelName  == null)
         {
             panelName = UIManager.Instance.UIKeys.MainMenuPanel;
         }
         
 
-        //²¥·ÅÖ÷½çÃæBGN
+        //æ’­æ”¾ä¸»ç•Œé¢BGN
         await SoundManager.Instance.PlayBGMAsync(SoundManager.Instance.AudioClipKeys.MyVeryOwnDeadShip, true);
     }
 
@@ -57,25 +57,25 @@ public class MainMenuPanel : PanelWithButton
 
     private async void PlayGame()
     {
-        //´ò¿ªÓÎÏ·±³¾°½éÉÜ½çÃæ
+        //æ‰“å¼€æ¸¸æˆèƒŒæ™¯ä»‹ç»ç•Œé¢
         await UIManager.Instance.OpenPanel(UIManager.Instance.UIKeys.GameBackgroundPanel);
 
-        //µ­³öµ±Ç°½çÃæ
+        //æ·¡å‡ºå½“å‰ç•Œé¢
         Fade(CanvasGroup, FadeOutAlpha, FadeDuration, false);
     }
 
     private async void OpenSettingPanel()
     {
-        //´ò¿ªÓÎÏ·ÉèÖÃ½çÃæ
+        //æ‰“å¼€æ¸¸æˆè®¾ç½®ç•Œé¢
         await UIManager.Instance.OpenPanel(UIManager.Instance.UIKeys.SettingPanel);
     }
 
     private void QuitGame()
     {
-        //ÍË³öÓÎÏ·£¨ÓÃÓÚ±¾µØÓÎÏ·°ü£©
+        //é€€å‡ºæ¸¸æˆï¼ˆç”¨äºæœ¬åœ°æ¸¸æˆåŒ…ï¼‰
         Application.Quit();
 
-        //ÔÚUnity±à¼­Æ÷ÄÚÍË³öÓÎÍæÄ£Ê½
+        //åœ¨Unityç¼–è¾‘å™¨å†…é€€å‡ºæ¸¸ç©æ¨¡å¼
         #if UNITY_EDITOR
         UnityEditor.EditorApplication.isPlaying = false;
         #endif

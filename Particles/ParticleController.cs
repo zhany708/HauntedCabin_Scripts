@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class ParticleController : MonoBehaviour
 {
-    private void DestroyGameObject()    //ÓÃÓÚ¶¯»­Ö¡ÊÂ¼þ
+    private void DestroyGameObject()    //ç”¨äºŽåŠ¨ç”»å¸§äº‹ä»¶
     {
         ParticlePool.Instance.PushObject(gameObject);
     }

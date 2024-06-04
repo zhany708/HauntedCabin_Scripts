@@ -9,10 +9,10 @@ public class Core : MonoBehaviour
 
     public float MaxHealth { get; private set; }
     public float Defense { get; private set; }
-    public float HitResistance { get; private set; }     //»÷ÍË¿¹ĞÔ
+    public float HitResistance { get; private set; }     //å‡»é€€æŠ—æ€§
 
 
-    private readonly List<CoreComponent> m_CoreComponents = new List<CoreComponent>();      //½«ËùÓĞCore×é¼ş¼Ó½øÈ¥¡£readonlyÓÃÓÚ±£»¤List£¬·ÀÖ¹ÔËĞĞÊ±²»Ğ¡ĞÄÖØĞÂ¸³Öµ
+    private readonly List<CoreComponent> m_CoreComponents = new List<CoreComponent>();      //å°†æ‰€æœ‰Coreç»„ä»¶åŠ è¿›å»ã€‚readonlyç”¨äºä¿æŠ¤Listï¼Œé˜²æ­¢è¿è¡Œæ—¶ä¸å°å¿ƒé‡æ–°èµ‹å€¼
 
 
 
@@ -23,7 +23,7 @@ public class Core : MonoBehaviour
     {
         
         //Debug.Log("Core Awake");
-        Animator = GetComponentInParent<Animator>();        //µ÷ÓÃ¸¸ÎïÌåµÄ¶¯»­¿ØÖÆÆ÷×é¼ş
+        Animator = GetComponentInParent<Animator>();        //è°ƒç”¨çˆ¶ç‰©ä½“çš„åŠ¨ç”»æ§åˆ¶å™¨ç»„ä»¶
 
         if (!Animator)
         {
@@ -42,7 +42,7 @@ public class Core : MonoBehaviour
         
         foreach (CoreComponent component in m_CoreComponents)
         {
-            component.LogicUpdate();    //ÔËĞĞÃ¿¸ö×é½¨µÄLogicUpdateº¯Êı
+            component.LogicUpdate();    //è¿è¡Œæ¯ä¸ªç»„å»ºçš„LogicUpdateå‡½æ•°
         }
         
         AnimatorInfo = Animator.GetCurrentAnimatorStateInfo(0);
@@ -53,34 +53,34 @@ public class Core : MonoBehaviour
     {
         if (!m_CoreComponents.Contains(component))
         {
-            m_CoreComponents.Add(component);     //Èç¹û×é¼ş²»ÔÚList£¬Ôò¼Ó½øÈ¥
+            m_CoreComponents.Add(component);     //å¦‚æœç»„ä»¶ä¸åœ¨Listï¼Œåˆ™åŠ è¿›å»
         }
     }
     
 
 
-    public T GetCoreComponent<T>() where T : CoreComponent      //T´ú±íÕâÊÇGenericº¯Êı
+    public T GetCoreComponent<T>() where T : CoreComponent      //Tä»£è¡¨è¿™æ˜¯Genericå‡½æ•°
     {
-        var comp = m_CoreComponents.OfType<T>().FirstOrDefault();  //·µ»ØµÚÒ»¸öÕÒµ½µÄÖµ£¬·ñÔò·µ»Ø»ù´¡Öµ£¨´ó²¿·Ö±äÁ¿ÀàĞÍµÄ»ù´¡ÖµÎªnull£©
+        var comp = m_CoreComponents.OfType<T>().FirstOrDefault();  //è¿”å›ç¬¬ä¸€ä¸ªæ‰¾åˆ°çš„å€¼ï¼Œå¦åˆ™è¿”å›åŸºç¡€å€¼ï¼ˆå¤§éƒ¨åˆ†å˜é‡ç±»å‹çš„åŸºç¡€å€¼ä¸ºnullï¼‰
 
         if (comp) { return comp; }
-        comp = GetComponentInChildren<T>();     //Èç¹ûÕÒ²»µ½£¬Ôòµ½×ÓÎïÌåÖĞÑ°ÕÒ
+        comp = GetComponentInChildren<T>();     //å¦‚æœæ‰¾ä¸åˆ°ï¼Œåˆ™åˆ°å­ç‰©ä½“ä¸­å¯»æ‰¾
 
         if (comp) { return comp; }
         
-        Debug.LogWarning($"{typeof(T)} not found on {transform.parent.name}");      //¼ì²é×é¼şÊÇ·ñ´æÔÚ
+        Debug.LogWarning($"{typeof(T)} not found on {transform.parent.name}");      //æ£€æŸ¥ç»„ä»¶æ˜¯å¦å­˜åœ¨
         return null;
     }
 
     public T GetCoreComponent<T>(ref T value) where T : CoreComponent
     {
         value = GetCoreComponent<T>();
-        return value;       //·µ»¹×é¼şµÄ²Î¿¼
+        return value;       //è¿”è¿˜ç»„ä»¶çš„å‚è€ƒ
     }
 
 
     #region Setters
-    public void SetParameters(float maxHealth, float defense, float hitResistamce)  //ÉèÖÃ²ÎÊı£¬ÒÔ¹©CoreComponentÖĞµÄ×é¼şÊ¹ÓÃ
+    public void SetParameters(float maxHealth, float defense, float hitResistamce)  //è®¾ç½®å‚æ•°ï¼Œä»¥ä¾›CoreComponentä¸­çš„ç»„ä»¶ä½¿ç”¨
     {
         MaxHealth = maxHealth;
         Defense = defense;

@@ -1,12 +1,12 @@
 public abstract class DarkEvent : Event
 {
-    protected static int darkEventCount = 0;   //±íÊ¾Íæ¼Ò´¥·¢µÄÔ¤Õ×ÊÂ¼şÊıÁ¿
+    protected static int darkEventCount = 0;   //è¡¨ç¤ºç©å®¶è§¦å‘çš„é¢„å…†äº‹ä»¶æ•°é‡
 
 
 
 
     private void OnEnable()
     {
-        darkEventCount++;       //Ôö¼ÓÔ¤Õ×ÊÂ¼şÊı
+        darkEventCount++;       //å¢åŠ é¢„å…†äº‹ä»¶æ•°
     }
 }

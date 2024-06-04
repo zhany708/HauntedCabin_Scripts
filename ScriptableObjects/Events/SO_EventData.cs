@@ -6,20 +6,20 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "newEventData", menuName = "Data/Event Data/Event")]
 public class SO_EventData : ScriptableObject
 {
-    //ÌØĞÔÏà¹Ø
+    //ç‰¹æ€§ç›¸å…³
     [Header("Feature")]
     public string EventName;
-    public GameObject EventPrefab;       //ÊÂ¼şÔ¤ÖÆ¼ş
+    public GameObject EventPrefab;       //äº‹ä»¶é¢„åˆ¶ä»¶
 
 
-    //ÒôĞ§Ïà¹Ø
+    //éŸ³æ•ˆç›¸å…³
     [Header("Audio")]
-    public List<string> AudioClipNames;  //ÊÂ¼şµÄÒôĞ§Ãû£¬ÓÃÓÚ¼ÓÔØ
-    public float AudioVolume = 1f;       //ÒôĞ§µÄÒôÁ¿
+    public List<string> AudioClipNames;  //äº‹ä»¶çš„éŸ³æ•ˆåï¼Œç”¨äºåŠ è½½
+    public float AudioVolume = 1f;       //éŸ³æ•ˆçš„éŸ³é‡
 
     /*
-    //Ñ¡ÏîÏà¹Ø
+    //é€‰é¡¹ç›¸å…³
     [Header("Option")]
-    public List<string> OptionResults;    //Ñ¡ÏîµÄ½á¹ûÎÄ±¾
+    public List<string> OptionResults;    //é€‰é¡¹çš„ç»“æœæ–‡æœ¬
     */
 }

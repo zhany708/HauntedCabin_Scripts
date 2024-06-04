@@ -7,38 +7,38 @@ using Lean.Localization;
 
 public class EvilTelephonePanel : PanelWithButton
 {
-    public static Action OnResultFinished;      //½ÓÊÜÊÂ¼ş·½ÎªE_EvilTelephone½Å±¾
+    public static Action OnResultFinished;      //æ¥å—äº‹ä»¶æ–¹ä¸ºE_EvilTelephoneè„šæœ¬
 
-    public TextMeshProUGUI EventInfo;     //ÊÂ¼ş±³¾°ÎÄ±¾
-    public TextMeshProUGUI ResultText;    //Ñ¡Ïî½á¹ûÎÄ±¾
-    public TextMeshProUGUI TipText;       //ÌáÊ¾ÎÄ±¾£¨ÌáÊ¾Íæ¼Ò°´¿Õ¸ñ»òµã»÷£©
+    public TextMeshProUGUI EventInfo;     //äº‹ä»¶èƒŒæ™¯æ–‡æœ¬
+    public TextMeshProUGUI ResultText;    //é€‰é¡¹ç»“æœæ–‡æœ¬
+    public TextMeshProUGUI TipText;       //æç¤ºæ–‡æœ¬ï¼ˆæç¤ºç©å®¶æŒ‰ç©ºæ ¼æˆ–ç‚¹å‡»ï¼‰
 
 
-    //ËÄ¸ö°´Å¥
+    //å››ä¸ªæŒ‰é’®
     public Button OptionA;
     public Button OptionB;
     public Button OptionC;
     public Button OptionD;
 
-    //ÓÃÓÚËÄ¸ö½á¹ûµÄÎÄ±¾£¨´ÓLean LocalizationÄÇµ÷ÓÃÊ±ĞèÒªµÄstring£©
+    //ç”¨äºå››ä¸ªç»“æœçš„æ–‡æœ¬ï¼ˆä»Lean Localizationé‚£è°ƒç”¨æ—¶éœ€è¦çš„stringï¼‰
     public string ResultA_PhraseKey;
     public string ResultB_PhraseKey;
     public string ResultC_PhraseKey;
     public string ResultD_PhraseKey;
 
 
-    //°´Å¥µÄÎÄ±¾×é¼ş
+    //æŒ‰é’®çš„æ–‡æœ¬ç»„ä»¶
     TextMeshProUGUI m_OptionAText;      
     TextMeshProUGUI m_OptionBText;     
     TextMeshProUGUI m_OptionCText;      
     TextMeshProUGUI m_OptionDText;
 
 
-    PlayerStatusBar m_PlayerStatusBar;      //Íæ¼ÒµÄ×´Ì¬À¸UI
+    PlayerStatusBar m_PlayerStatusBar;      //ç©å®¶çš„çŠ¶æ€æ UI
 
 
 
-    //ÓÃÓÚ°´Å¥º¯ÊıµÄÃ¶¾Ù
+    //ç”¨äºæŒ‰é’®å‡½æ•°çš„æšä¸¾
     private enum ButtonAction
     {
         OptionA,
@@ -53,16 +53,16 @@ public class EvilTelephonePanel : PanelWithButton
 
     protected override void Awake()
     {
-        CheckComponents();      //¼ì²éËùÓĞ×é¼ş
+        CheckComponents();      //æ£€æŸ¥æ‰€æœ‰ç»„ä»¶
 
-        //Ä¬ÈÏ°´Å¥Îª¡°µÚËÄ¸öÑ¡Ïî¡±°´Å¥
+        //é»˜è®¤æŒ‰é’®ä¸ºâ€œç¬¬å››ä¸ªé€‰é¡¹â€æŒ‰é’®
         firstSelectedButton = OptionD.gameObject;
     }
 
 
     private void Start()
     {
-        //½«°´Å¥ºÍº¯Êı°ó¶¨ÆğÀ´
+        //å°†æŒ‰é’®å’Œå‡½æ•°ç»‘å®šèµ·æ¥
         OptionA.onClick.AddListener(() => OnButtonClicked(ButtonAction.OptionA));
         OptionB.onClick.AddListener(() => OnButtonClicked(ButtonAction.OptionB));
         OptionC.onClick.AddListener(() => OnButtonClicked(ButtonAction.OptionC));
@@ -73,10 +73,10 @@ public class EvilTelephonePanel : PanelWithButton
     protected override void OnEnable()
     {
         base.OnEnable();
-        //½çÃæÍêÈ«µ­³öºóµ÷ÓÃ´Ëº¯Êı
+        //ç•Œé¢å®Œå…¨æ·¡å‡ºåè°ƒç”¨æ­¤å‡½æ•°
         OnFadeOutFinished += ClosePanel;
 
-        OnFadeInFinished += StartTextAnimations;    //½çÃæÍêÈ«µ­Èëºóµ÷ÓÃ´Ëº¯Êı
+        OnFadeInFinished += StartTextAnimations;    //ç•Œé¢å®Œå…¨æ·¡å…¥åè°ƒç”¨æ­¤å‡½æ•°
     }
 
     protected override void OnDisable()
@@ -91,7 +91,7 @@ public class EvilTelephonePanel : PanelWithButton
 
     public override void ClosePanel()
     {
-        //ÑÓ³Ù0.5ÃëºóÔÙ¹Ø±Õ½çÃæ£¬²¢ÇÒÖ´ĞĞÊÂ¼ş»Øµ÷
+        //å»¶è¿Ÿ0.5ç§’åå†å…³é—­ç•Œé¢ï¼Œå¹¶ä¸”æ‰§è¡Œäº‹ä»¶å›è°ƒ
         Coroutine ClosePanelCoroutine = StartCoroutine(Delay.Instance.DelaySomeTime(0.5f, () =>
         {
             base.ClosePanel();
@@ -99,7 +99,7 @@ public class EvilTelephonePanel : PanelWithButton
             OnResultFinished?.Invoke();
         }));
 
-        generatedCoroutines.Add(ClosePanelCoroutine);     //½«Ğ­³Ì¼Ó½øÁĞ±í
+        generatedCoroutines.Add(ClosePanelCoroutine);     //å°†åç¨‹åŠ è¿›åˆ—è¡¨
     }
 
 
@@ -110,40 +110,40 @@ public class EvilTelephonePanel : PanelWithButton
         switch (action)
         {
             case ButtonAction.OptionA:
-                //¸³ÖµÑ¡ÏîµÄ½á¹ûÎÄ±¾
+                //èµ‹å€¼é€‰é¡¹çš„ç»“æœæ–‡æœ¬
                 SetLocalizedText(ResultA_PhraseKey);
 
-                //¸Ä±äÍæ¼ÒµÄÊôĞÔ
+                //æ”¹å˜ç©å®¶çš„å±æ€§
                 m_PlayerStatusBar.ChangePropertyValue(PlayerProperty.Sanity, 1f);
 
                 CommonLogicForOptions();
                 break;
 
             case ButtonAction.OptionB:
-                //¸³ÖµÑ¡ÏîµÄ½á¹ûÎÄ±¾
+                //èµ‹å€¼é€‰é¡¹çš„ç»“æœæ–‡æœ¬
                 SetLocalizedText(ResultB_PhraseKey);
 
-                //¸Ä±äÍæ¼ÒµÄÊôĞÔ
+                //æ”¹å˜ç©å®¶çš„å±æ€§
                 m_PlayerStatusBar.ChangePropertyValue(PlayerProperty.Knowledge, 1f);
 
                 CommonLogicForOptions();
                 break;
 
             case ButtonAction.OptionC:
-                //¸³ÖµÑ¡ÏîµÄ½á¹ûÎÄ±¾
+                //èµ‹å€¼é€‰é¡¹çš„ç»“æœæ–‡æœ¬
                 SetLocalizedText(ResultC_PhraseKey);
 
-                //¸Ä±äÍæ¼ÒµÄÊôĞÔ
+                //æ”¹å˜ç©å®¶çš„å±æ€§
                 m_PlayerStatusBar.ChangePropertyValue(PlayerProperty.Sanity, -1f);
 
                 CommonLogicForOptions();
                 break;
 
             case ButtonAction.OptionD:
-                //¸³ÖµÑ¡ÏîµÄ½á¹ûÎÄ±¾
+                //èµ‹å€¼é€‰é¡¹çš„ç»“æœæ–‡æœ¬
                 SetLocalizedText(ResultD_PhraseKey);
 
-                //¸Ä±äÍæ¼ÒµÄÊôĞÔ
+                //æ”¹å˜ç©å®¶çš„å±æ€§
                 m_PlayerStatusBar.ChangePropertyValue(PlayerProperty.Strength, -1f);
 
                 CommonLogicForOptions();
@@ -158,32 +158,32 @@ public class EvilTelephonePanel : PanelWithButton
 
 
 
-    private void CommonLogicForOptions()        //ËùÓĞÑ¡ÏîµÄÍ¨ÓÃÂß¼­
+    private void CommonLogicForOptions()        //æ‰€æœ‰é€‰é¡¹çš„é€šç”¨é€»è¾‘
     {
-        SetButtons(false);      //È¡Ïû¼¤»îËùÓĞ°´Å¥
-        ResultText.gameObject.SetActive(true);     //¼¤»î½á¹ûÎÄ±¾
+        SetButtons(false);      //å–æ¶ˆæ¿€æ´»æ‰€æœ‰æŒ‰é’®
+        ResultText.gameObject.SetActive(true);     //æ¿€æ´»ç»“æœæ–‡æœ¬
 
 
-        //ÏÈ¿ªÊ¼½á¹ûÎÄ±¾µÄ´ò×ÖĞ§¹û
+        //å…ˆå¼€å§‹ç»“æœæ–‡æœ¬çš„æ‰“å­—æ•ˆæœ
         Coroutine resultTextCoroutine = StartCoroutine(TypeText(ResultText, ResultText.text, () =>       
         {
             //Debug.Log("First Coroutine done!.");
 
-            TipText.gameObject.SetActive(true);     //¼¤»îÌáÊ¾ÎÄ±¾£¬ÌáĞÑÍæ¼Ò°´¿Õ¸ñ»òµã»÷ÒÔ¼ÌĞøÓÎÏ·
+            TipText.gameObject.SetActive(true);     //æ¿€æ´»æç¤ºæ–‡æœ¬ï¼Œæé†’ç©å®¶æŒ‰ç©ºæ ¼æˆ–ç‚¹å‡»ä»¥ç»§ç»­æ¸¸æˆ
 
-            //µÈ´ıÍæ¼Ò°´¿Õ¸ñ»òµã»÷Êó±ê
+            //ç­‰å¾…ç©å®¶æŒ‰ç©ºæ ¼æˆ–ç‚¹å‡»é¼ æ ‡
             Coroutine waitForInputCoroutine = StartCoroutine(Delay.Instance.WaitForPlayerInput(() =>     
             {
                 //Debug.Log("Second Coroutine done!.");
 
-                //µ­³ö½çÃæ
+                //æ·¡å‡ºç•Œé¢
                 Fade(CanvasGroup, FadeOutAlpha, FadeDuration, false);
             }));
 
-            generatedCoroutines.Add(waitForInputCoroutine);    //½«Ğ­³Ì¼Ó½øÁĞ±í
+            generatedCoroutines.Add(waitForInputCoroutine);    //å°†åç¨‹åŠ è¿›åˆ—è¡¨
         }));
 
-        generatedCoroutines.Add(resultTextCoroutine);      //½«Ğ­³Ì¼Ó½øÁĞ±í
+        generatedCoroutines.Add(resultTextCoroutine);      //å°†åç¨‹åŠ è¿›åˆ—è¡¨
     }
 
 
@@ -194,7 +194,7 @@ public class EvilTelephonePanel : PanelWithButton
     {
         if (LeanLocalization.CurrentLanguages != null && ResultText != null)
         {
-            ResultText.text = LeanLocalization.GetTranslationText(phraseKey);   //¸ù¾İµ±Ç°ÓïÑÔ¸³ÖµÎÄ±¾
+            ResultText.text = LeanLocalization.GetTranslationText(phraseKey);   //æ ¹æ®å½“å‰è¯­è¨€èµ‹å€¼æ–‡æœ¬
         }
     }
 
@@ -210,27 +210,27 @@ public class EvilTelephonePanel : PanelWithButton
 
     private void StartTextAnimations()
     {       
-        if (EventInfo.text.Length > 0)      //ÏÈ¼ì²é½éÉÜÎÄ±¾ÊÇ·ñÓĞ×Ö
+        if (EventInfo.text.Length > 0)      //å…ˆæ£€æŸ¥ä»‹ç»æ–‡æœ¬æ˜¯å¦æœ‰å­—
         {
-            EventInfo.gameObject.SetActive(true);       //¼¤»îÊÂ¼ş½éÉÜÎÄ±¾
+            EventInfo.gameObject.SetActive(true);       //æ¿€æ´»äº‹ä»¶ä»‹ç»æ–‡æœ¬
 
             Coroutine eventInfoCoroutine = StartCoroutine(TypeText(EventInfo, EventInfo.text, () =>
             {
-                SetButtons(true);       //ÊÂ¼ş½éÉÜÍê±Ïºó£¬¼¤»îËùÓĞ°´Å¥
+                SetButtons(true);       //äº‹ä»¶ä»‹ç»å®Œæ¯•åï¼Œæ¿€æ´»æ‰€æœ‰æŒ‰é’®
 
-                //Í¬Ê±´ò×ÖËùÓĞÑ¡Ïî°´Å¥µÄÎÄ±¾
+                //åŒæ—¶æ‰“å­—æ‰€æœ‰é€‰é¡¹æŒ‰é’®çš„æ–‡æœ¬
                 Coroutine OptionATextCoroutine = StartCoroutine(TypeText(m_OptionAText, m_OptionAText.text));
                 Coroutine OptionBTextCoroutine = StartCoroutine(TypeText(m_OptionBText, m_OptionBText.text));
                 Coroutine OptionCTextCoroutine = StartCoroutine(TypeText(m_OptionCText, m_OptionCText.text));
                 Coroutine OptionDTextCoroutine = StartCoroutine(TypeText(m_OptionDText, m_OptionDText.text));
 
-                generatedCoroutines.Add(OptionATextCoroutine);       //½«Ğ­³Ì¼Ó½øÁĞ±í
+                generatedCoroutines.Add(OptionATextCoroutine);       //å°†åç¨‹åŠ è¿›åˆ—è¡¨
                 generatedCoroutines.Add(OptionBTextCoroutine);
                 generatedCoroutines.Add(OptionCTextCoroutine);
                 generatedCoroutines.Add(OptionDTextCoroutine);
             }));
 
-            generatedCoroutines.Add(eventInfoCoroutine);       //½«Ğ­³Ì¼Ó½øÁĞ±í
+            generatedCoroutines.Add(eventInfoCoroutine);       //å°†åç¨‹åŠ è¿›åˆ—è¡¨
         }
 
         else
@@ -246,7 +246,7 @@ public class EvilTelephonePanel : PanelWithButton
 
     private void CheckComponents()
     {
-        //¼ì²é°´Å¥×é¼şºÍÊÂ¼ş±³¾°ÎÄ±¾×é¼şÊÇ·ñ´æÔÚ
+        //æ£€æŸ¥æŒ‰é’®ç»„ä»¶å’Œäº‹ä»¶èƒŒæ™¯æ–‡æœ¬ç»„ä»¶æ˜¯å¦å­˜åœ¨
         if (OptionA == null || OptionB == null || OptionC == null || OptionD == null)
         {
             Debug.LogError("Some buttons are not assigned in the EvilTelephonePanel.");
@@ -266,17 +266,17 @@ public class EvilTelephonePanel : PanelWithButton
         }
 
 
-        //»ñÈ¡ËùÓĞ°´Å¥µÄÎÄ±¾×é¼ş
+        //è·å–æ‰€æœ‰æŒ‰é’®çš„æ–‡æœ¬ç»„ä»¶
         m_OptionAText = OptionA.GetComponentInChildren<TextMeshProUGUI>();
         m_OptionBText = OptionB.GetComponentInChildren<TextMeshProUGUI>();
         m_OptionCText = OptionC.GetComponentInChildren<TextMeshProUGUI>();
         m_OptionDText = OptionD.GetComponentInChildren<TextMeshProUGUI>();
 
 
-        m_PlayerStatusBar = FindObjectOfType<PlayerStatusBar>();    //Ñ°ÕÒ´øÓĞ´Ë½Å±¾µÄÎïÌå
+        m_PlayerStatusBar = FindObjectOfType<PlayerStatusBar>();    //å¯»æ‰¾å¸¦æœ‰æ­¤è„šæœ¬çš„ç‰©ä½“
 
 
-        //¼ì²é°´Å¥µÄÎÄ±¾×é¼şÊÇ·ñ´æÔÚ
+        //æ£€æŸ¥æŒ‰é’®çš„æ–‡æœ¬ç»„ä»¶æ˜¯å¦å­˜åœ¨
         if (m_OptionAText == null || m_OptionBText == null || m_OptionCText == null || m_OptionDText == null)
         {
             Debug.LogError("Some option texts are not assigned on the buttons in the EvilTelephonePanel.");

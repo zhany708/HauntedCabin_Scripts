@@ -10,7 +10,7 @@ public abstract class ManagerTemplate<T> : MonoBehaviour where T : Component
     public static T Instance { get; private set; }
 
 
-    //Ô¤ÖÆ¼ş»º´æ×Öµä£¬ËùÓĞµÄ¹ÜÀíÆ÷¼ÓÔØÍêÎïÌåºó¶¼»á±£´æ½øÕâ¸ö×Öµä£¨Ã¿¸ö¹ÜÀíÆ÷¶¼ÓĞÒ»¸öµ¥¶ÀÇÒ·Ö¿ªµÄ×Öµä£¬Ö»ÊÇÃû×ÖÒ»Ñù£©
+    //é¢„åˆ¶ä»¶ç¼“å­˜å­—å…¸ï¼Œæ‰€æœ‰çš„ç®¡ç†å™¨åŠ è½½å®Œç‰©ä½“åéƒ½ä¼šä¿å­˜è¿›è¿™ä¸ªå­—å…¸ï¼ˆæ¯ä¸ªç®¡ç†å™¨éƒ½æœ‰ä¸€ä¸ªå•ç‹¬ä¸”åˆ†å¼€çš„å­—å…¸ï¼Œåªæ˜¯åå­—ä¸€æ ·ï¼‰
     protected Dictionary<string, GameObject> m_PrefabDict = new Dictionary<string, GameObject>();
 
 
@@ -18,7 +18,7 @@ public abstract class ManagerTemplate<T> : MonoBehaviour where T : Component
 
     protected virtual void Awake()
     {
-        //µ¥ÀıÄ£Ê½
+        //å•ä¾‹æ¨¡å¼
         if (Instance != null && Instance != this as T)
         {
             Destroy(gameObject);
@@ -28,7 +28,7 @@ public abstract class ManagerTemplate<T> : MonoBehaviour where T : Component
         {
             Instance = this as T;
 
-            //Ö»ÓĞÔÚÃ»ÓĞ¸¸ÎïÌåÊ±²ÅÔËĞĞ·ÀÉ¾º¯Êı£¬·ñÔò»á³öÏÖÌáĞÑ
+            //åªæœ‰åœ¨æ²¡æœ‰çˆ¶ç‰©ä½“æ—¶æ‰è¿è¡Œé˜²åˆ å‡½æ•°ï¼Œå¦åˆ™ä¼šå‡ºç°æé†’
             if (gameObject.transform.parent == null)
             {
                 DontDestroyOnLoad(gameObject);
@@ -40,22 +40,22 @@ public abstract class ManagerTemplate<T> : MonoBehaviour where T : Component
 
 
 
-    //Òì²½¼ÓÔØ
+    //å¼‚æ­¥åŠ è½½
     protected async Task<GameObject> LoadPrefabAsync(string name)
     {
-        //¼ì²é×ÖµäÀïÊÇ·ñÓĞÔ¤ÖÆ¼ş£¬Èç¹ûÓĞµÄ»°Ö±½Ó·µ»Ø
+        //æ£€æŸ¥å­—å…¸é‡Œæ˜¯å¦æœ‰é¢„åˆ¶ä»¶ï¼Œå¦‚æœæœ‰çš„è¯ç›´æ¥è¿”å›
         if (!m_PrefabDict.TryGetValue(name, out GameObject panelPrefab))
         {
-            //Òì²½¼ÓÔØÓÎÏ·ÎïÌå
+            //å¼‚æ­¥åŠ è½½æ¸¸æˆç‰©ä½“
             var handle = Addressables.LoadAssetAsync<GameObject>(name);
             await handle.Task;
 
-            //¼ì²éÒì²½¼ÓÔØÊÇ·ñ³É¹¦
+            //æ£€æŸ¥å¼‚æ­¥åŠ è½½æ˜¯å¦æˆåŠŸ
             if (handle.Status == UnityEngine.ResourceManagement.AsyncOperations.AsyncOperationStatus.Succeeded)
             {
                 panelPrefab = handle.Result;
 
-                //½«Ô¤ÖÆ¼ş´æ½ø×Öµä
+                //å°†é¢„åˆ¶ä»¶å­˜è¿›å­—å…¸
                 m_PrefabDict[name] = panelPrefab;
             }
 
@@ -81,12 +81,12 @@ public abstract class ManagerTemplate<T> : MonoBehaviour where T : Component
 
 
 
-    //ÔÚAddressablesÀïÊÍ·ÅÎïÌå£¬Ö»ÓĞÕâÑù²ÅÄÜÊÍ·ÅÄÚ´æ
+    //åœ¨Addressablesé‡Œé‡Šæ”¾ç‰©ä½“ï¼Œåªæœ‰è¿™æ ·æ‰èƒ½é‡Šæ”¾å†…å­˜
     public void ReleasePrefab(string key)
     {
         if (key.EndsWith("(Clone)"))
         {
-            //¼ì²éÊÇ·ñÓĞ¡°¿ËÂ¡¡±ºó×º£¬Èç¹ûÓĞµÄ»°¼õÈ¥ºó×º¡££¨Clone£©¸ÕºÃÓĞ7¸ö×Ö·û
+            //æ£€æŸ¥æ˜¯å¦æœ‰â€œå…‹éš†â€åç¼€ï¼Œå¦‚æœæœ‰çš„è¯å‡å»åç¼€ã€‚ï¼ˆCloneï¼‰åˆšå¥½æœ‰7ä¸ªå­—ç¬¦
             key = key.Substring(0, key.Length - 7);
         }
 
@@ -95,7 +95,7 @@ public abstract class ManagerTemplate<T> : MonoBehaviour where T : Component
         {
             Addressables.Release(gameObjectPrefab);
 
-            //´ÓÔ¤ÖÆ¼ş»º´æ×ÖµäÖĞÒÆ³ıÎïÌå
+            //ä»é¢„åˆ¶ä»¶ç¼“å­˜å­—å…¸ä¸­ç§»é™¤ç‰©ä½“
             m_PrefabDict.Remove(key);
 
             //Debug.Log("Gameobject released and removed from dictionary: " + key);
@@ -111,10 +111,10 @@ public abstract class ManagerTemplate<T> : MonoBehaviour where T : Component
 
 
 
-    //ÉèÖÃ½Å±¾ÖĞ¸úÎïÌåµÄ×ø±ê
+    //è®¾ç½®è„šæœ¬ä¸­è·Ÿç‰©ä½“çš„åæ ‡
     protected void SetupRootGameObject(ref Transform rootGameObject, string rootGameObjectName)
     {
-        //³¢ÊÔÑ°ÕÒÓÎÏ·ÖĞº¬ÓĞµÚ¶ş¸ö²ÎÊıµÄÃû×ÖµÄÎïÌå£¬Èç¹ûÃ»ÕÒµ½µÄ»°¾ÍĞÂ½¨Ò»¸ö
+        //å°è¯•å¯»æ‰¾æ¸¸æˆä¸­å«æœ‰ç¬¬äºŒä¸ªå‚æ•°çš„åå­—çš„ç‰©ä½“ï¼Œå¦‚æœæ²¡æ‰¾åˆ°çš„è¯å°±æ–°å»ºä¸€ä¸ª
         GameObject rootObject = GameObject.Find(rootGameObjectName) ?? new GameObject(rootGameObjectName);
 
         rootGameObject = rootObject.transform;

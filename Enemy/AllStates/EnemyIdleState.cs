@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class EnemyIdleState : EnemyState
 {
-    float m_IdleTimer;      //Ñ²Âß£¨Ô­µØÍ£Áô£©Ê±¼ä
+    float m_IdleTimer;      //å·¡é€»ï¼ˆåŸåœ°åœç•™ï¼‰æ—¶é—´
 
     public EnemyIdleState(Enemy enemy, EnemyStateMachine stateMachine, SO_EnemyData enemyData, string animBoolName) : base(enemy, stateMachine, enemyData, animBoolName)
     {
@@ -15,7 +15,7 @@ public class EnemyIdleState : EnemyState
     {
         base.Enter();
 
-        enemyMovement.SetVelocityZero();       //½«ËÙ¶È¹éÁã
+        enemyMovement.SetVelocityZero();       //å°†é€Ÿåº¦å½’é›¶
     }
 
     public override void LogicUpdate()
@@ -26,11 +26,11 @@ public class EnemyIdleState : EnemyState
 
         if (enemy.Parameter.Target != null)      //&& !enemy.CheckOutside())
         {
-            stateMachine.ChangeState(enemy.ChaseState);     //Èç¹û¼ì²âµ½Íæ¼ÒÔòÇĞ»»Îª×·»÷×´Ì¬£¨Èç¹ûÓĞ·´Ó¦¶¯»­¿ÉÒÔÏÈÇĞ»»Îª·´Ó¦×´Ì¬¡£È»ºóÔÙ·´Ó¦¶¯»­²¥ÍêºóÇĞ»»³É×·»÷×´Ì¬£©
+            stateMachine.ChangeState(enemy.ChaseState);     //å¦‚æœæ£€æµ‹åˆ°ç©å®¶åˆ™åˆ‡æ¢ä¸ºè¿½å‡»çŠ¶æ€ï¼ˆå¦‚æœæœ‰ååº”åŠ¨ç”»å¯ä»¥å…ˆåˆ‡æ¢ä¸ºååº”çŠ¶æ€ã€‚ç„¶åå†ååº”åŠ¨ç”»æ’­å®Œååˆ‡æ¢æˆè¿½å‡»çŠ¶æ€ï¼‰
         }
 
 
-        else if (m_IdleTimer >= enemyData.IdleDuration)    //¼ì²âÊÇ·ñ¸Ã½øÈëÑ²Âß×´Ì¬
+        else if (m_IdleTimer >= enemyData.IdleDuration)    //æ£€æµ‹æ˜¯å¦è¯¥è¿›å…¥å·¡é€»çŠ¶æ€
         {
             stateMachine.ChangeState(enemy.PatrolState);
         }

@@ -5,9 +5,9 @@ using ZhangYu.Utilities;
 
 
 
-public class Stats : CoreComponent      //ÓÃÓÚ¹ÜÀíÉúÃü£¬Ä§Á¦µÈ×´Ì¬ĞÅÏ¢
+public class Stats : CoreComponent      //ç”¨äºç®¡ç†ç”Ÿå‘½ï¼Œé­”åŠ›ç­‰çŠ¶æ€ä¿¡æ¯
 {
-    public event Action OnHealthZero;       //½ÓÊÕ·½ÎªDeath½Å±¾
+    public event Action OnHealthZero;       //æ¥æ”¶æ–¹ä¸ºDeathè„šæœ¬
 
     public float MaxHealth { get; private set; }
 
@@ -16,7 +16,7 @@ public class Stats : CoreComponent      //ÓÃÓÚ¹ÜÀíÉúÃü£¬Ä§Á¦µÈ×´Ì¬ĞÅÏ¢
     protected float currentHealth;
 
     float m_Defense;
-    float m_DefenseRate = 0.01f;     //Ã¿Ò»µã·ÀÓù¶ÔÓ¦1%µÄÉËº¦¼õÃâ
+    float m_DefenseRate = 0.01f;     //æ¯ä¸€ç‚¹é˜²å¾¡å¯¹åº”1%çš„ä¼¤å®³å‡å…
 
 
 
@@ -25,10 +25,10 @@ public class Stats : CoreComponent      //ÓÃÓÚ¹ÜÀíÉúÃü£¬Ä§Á¦µÈ×´Ì¬ĞÅÏ¢
 
     private void Start()
     {
-        MaxHealth = core.MaxHealth;     //´ÓCoreÄÇÀï»ñµÃ²ÎÊı
+        MaxHealth = core.MaxHealth;     //ä»Coreé‚£é‡Œè·å¾—å‚æ•°
         m_Defense = core.Defense;
 
-        currentHealth = MaxHealth;      //ÓÎÏ·¿ªÊ¼Ê±ÖØÖÃµ±Ç°ÉúÃüÖµ
+        currentHealth = MaxHealth;      //æ¸¸æˆå¼€å§‹æ—¶é‡ç½®å½“å‰ç”Ÿå‘½å€¼
     }
 
 
@@ -36,19 +36,19 @@ public class Stats : CoreComponent      //ÓÃÓÚ¹ÜÀíÉúÃü£¬Ä§Á¦µÈ×´Ì¬ĞÅÏ¢
 
     public virtual void IncreaseHealth(float amount)
     {
-        currentHealth = Mathf.Clamp(currentHealth + amount, 0, MaxHealth);    //È·±£ÉúÃüÖµ²»»á³¬¹ı×î´óÉÏÏŞ
+        currentHealth = Mathf.Clamp(currentHealth + amount, 0, MaxHealth);    //ç¡®ä¿ç”Ÿå‘½å€¼ä¸ä¼šè¶…è¿‡æœ€å¤§ä¸Šé™
     }
 
     public virtual void DecreaseHealth(float amount, bool doesIgnoreDefense)
     {
-        if (currentHealth != 0)      //ÉúÃüÖµÎª0Ê±¾Í²»»á¼ÌĞøÊÜÉËÁË
+        if (currentHealth != 0)      //ç”Ÿå‘½å€¼ä¸º0æ—¶å°±ä¸ä¼šç»§ç»­å—ä¼¤äº†
         {
-            if (doesIgnoreDefense)      //ÎŞÊÓ·ÀÓù
+            if (doesIgnoreDefense)      //æ— è§†é˜²å¾¡
             {
                 
                 currentHealth -= amount;
             }
-            else      //¸ù¾İ·ÀÓùÁ¦¼õÃâÊÜµ½µÄÉËº¦
+            else      //æ ¹æ®é˜²å¾¡åŠ›å‡å…å—åˆ°çš„ä¼¤å®³
             {
                 currentHealth -= (amount * GetDefenseAddition());      
             }
@@ -59,7 +59,7 @@ public class Stats : CoreComponent      //ÓÃÓÚ¹ÜÀíÉúÃü£¬Ä§Á¦µÈ×´Ì¬ĞÅÏ¢
             {
                 currentHealth = 0;
 
-                OnHealthZero?.Invoke();     //ÏÈ¼ì²éÊÇ·ñÎª¿Õ£¬ÔÙµ÷ÓÃÑÓÊ±º¯Êı
+                OnHealthZero?.Invoke();     //å…ˆæ£€æŸ¥æ˜¯å¦ä¸ºç©ºï¼Œå†è°ƒç”¨å»¶æ—¶å‡½æ•°
 
                 //Debug.Log("Health is zero!!");
             }
@@ -67,26 +67,26 @@ public class Stats : CoreComponent      //ÓÃÓÚ¹ÜÀíÉúÃü£¬Ä§Á¦µÈ×´Ì¬ĞÅÏ¢
     }
 
 
-    //ÉúÃüËæÊ±¼äÁ÷ÊÅ£¨µÚÒ»¸ö²ÎÊıÎª³ÖĞøÊ±¼ä£¬µÚ¶ş¸öÎªÉËº¦Öµ£¬µÚÈı¸öÎªÆµÂÊ£©
+    //ç”Ÿå‘½éšæ—¶é—´æµé€ï¼ˆç¬¬ä¸€ä¸ªå‚æ•°ä¸ºæŒç»­æ—¶é—´ï¼Œç¬¬äºŒä¸ªä¸ºä¼¤å®³å€¼ï¼Œç¬¬ä¸‰ä¸ªä¸ºé¢‘ç‡ï¼‰
     public IEnumerator HealthDrain(float duration, float damageAmount, float frequency)        
     {
         Timer timer = new Timer(duration);
 
-        StartCoroutine(timer.WaitForDuration() );       //¿ªÊ¼¼ÆÊ±
+        StartCoroutine(timer.WaitForDuration() );       //å¼€å§‹è®¡æ—¶
 
         while(!timer.GetIsTimerDone() )
         {
-            yield return new WaitForSeconds(60 / frequency);        //Ã¿60/ÆµÂÊ£¨µ¥Î»£ºÃë£©µôÂäÒ»´ÎÑªÁ¿
-            DecreaseHealth(damageAmount, true);       //µôÂäÑªÁ¿£¨ÎŞÊÓ·ÀÓù£©
+            yield return new WaitForSeconds(60 / frequency);        //æ¯60/é¢‘ç‡ï¼ˆå•ä½ï¼šç§’ï¼‰æ‰è½ä¸€æ¬¡è¡€é‡
+            DecreaseHealth(damageAmount, true);       //æ‰è½è¡€é‡ï¼ˆæ— è§†é˜²å¾¡ï¼‰
         }
     }
 
 
 
 
-    private float GetDefenseAddition()   //Ã¿µ±¿Û³ıÑªÁ¿Ê±¶¼ĞèÒªµ÷ÓÃ´Ëº¯Êı
+    private float GetDefenseAddition()   //æ¯å½“æ‰£é™¤è¡€é‡æ—¶éƒ½éœ€è¦è°ƒç”¨æ­¤å‡½æ•°
     {
-        return 1 - m_Defense * m_DefenseRate;       //¼ÆËãÉËº¦¼õÃâ
+        return 1 - m_Defense * m_DefenseRate;       //è®¡ç®—ä¼¤å®³å‡å…
     }
 
     #region Getters

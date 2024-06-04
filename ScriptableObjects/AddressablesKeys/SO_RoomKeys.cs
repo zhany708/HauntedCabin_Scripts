@@ -5,25 +5,25 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "newRoomKeys", menuName = "Data/Room Data/Room Keys")]
 public class SO_RoomKeys : ScriptableObject
 {
-    //·¿¼äĞèÒªÓÃÁĞ±í£¬·ñÔò²»·½±ãËæ»úÉú³É
+    //æˆ¿é—´éœ€è¦ç”¨åˆ—è¡¨ï¼Œå¦åˆ™ä¸æ–¹ä¾¿éšæœºç”Ÿæˆ
 
-    //³õÊ¼·¿¼ä
+    //åˆå§‹æˆ¿é—´
     [Header("Root Room")]
     public List<string> RootRoomKeys;
 
-    //Ò»Â¥
+    //ä¸€æ¥¼
     [Header("First Floor")]
     public List<string> FirstFloorRoomKeys;
 
-    //¶şÂ¥
+    //äºŒæ¥¼
     [Header("Second Floor")]
     public List<string> SecondFloorRoomKeys;
 
-    //Â¥¶¥
+    //æ¥¼é¡¶
     [Header("Top Floor")]
     public List<string> TopFloorRoomKeys;
 
-    //µØÏÂÊÒ
+    //åœ°ä¸‹å®¤
     [Header("Basement")]
     public List<string> BasementRoomKeys;
 }

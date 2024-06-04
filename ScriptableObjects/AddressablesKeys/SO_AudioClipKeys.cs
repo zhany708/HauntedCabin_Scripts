@@ -6,21 +6,21 @@ public class SO_AudioClipKeys : ScriptableObject
 {
     //BGM
     [Header("BGM Music")]
-    //ĞİÏĞÒôÀÖ
+    //ä¼‘é—²éŸ³ä¹
     public string StopForAMoment;   
 
-    //¿Ö²ÀÒôÀÖ
+    //ææ€–éŸ³ä¹
     public string MyVeryOwnDeadShip;
 
 
-    //Ä³Ğ©ÒôĞ§ÒòÎªÔÚ´´½¨¶ÀÁ¢µÄScriptableObjectÊ±ÒÑ¾­´¢´æÒôĞ§Ãû×ÖÁË£¬Òò´Ë²»»á´ÓÕâÀïµ÷È¡Ãû×Ö£¡
+    //æŸäº›éŸ³æ•ˆå› ä¸ºåœ¨åˆ›å»ºç‹¬ç«‹çš„ScriptableObjectæ—¶å·²ç»å‚¨å­˜éŸ³æ•ˆåå­—äº†ï¼Œå› æ­¤ä¸ä¼šä»è¿™é‡Œè°ƒå–åå­—ï¼
 
-    //ÎäÆ÷ÒôĞ§
+    //æ­¦å™¨éŸ³æ•ˆ
     [Header("Weapon Audio")]
     public string ShotgunKey;
 
 
-    //ÊÂ¼şÒôĞ§
+    //äº‹ä»¶éŸ³æ•ˆ
     [Header("Event Audio")]
     public string PhoneRingKey;
     public string AnswerPhoneKey;

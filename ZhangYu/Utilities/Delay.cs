@@ -5,7 +5,7 @@ using UnityEngine;
 
 
 
-public class Delay : MonoBehaviour      //ÓÃÓÚ´¦ÀíÑÓ³ÙÏà¹ØµÄ½Å±¾
+public class Delay : MonoBehaviour      //ç”¨äºå¤„ç†å»¶è¿Ÿç›¸å…³çš„è„šæœ¬
 {
     public static Delay Instance { get; private set; }
 
@@ -15,7 +15,7 @@ public class Delay : MonoBehaviour      //ÓÃÓÚ´¦ÀíÑÓ³ÙÏà¹ØµÄ½Å±¾
 
     private void Awake()
     {
-        //µ¥ÀıÄ£Ê½
+        //å•ä¾‹æ¨¡å¼
         if (Instance != null && Instance != this)
         {
             Destroy(gameObject);
@@ -29,7 +29,7 @@ public class Delay : MonoBehaviour      //ÓÃÓÚ´¦ÀíÑÓ³ÙÏà¹ØµÄ½Å±¾
 
 
 
-    public IEnumerator DelaySomeTime(float delay, Action onTimerDone = null)      //ÓÃÓÚÑÓ³ÙÒ»¶ÎÊ±¼äºóÖ´ĞĞÒ»Ğ©Âß¼­
+    public IEnumerator DelaySomeTime(float delay, Action onTimerDone = null)      //ç”¨äºå»¶è¿Ÿä¸€æ®µæ—¶é—´åæ‰§è¡Œä¸€äº›é€»è¾‘
     {
         yield return new WaitForSeconds(delay);
 
@@ -38,19 +38,19 @@ public class Delay : MonoBehaviour      //ÓÃÓÚ´¦ÀíÑÓ³ÙÏà¹ØµÄ½Å±¾
 
 
 
-    //µÈ´ıÍæ¼Ò°´¿Õ¸ñ»òÊó±ê
+    //ç­‰å¾…ç©å®¶æŒ‰ç©ºæ ¼æˆ–é¼ æ ‡
     public IEnumerator WaitForPlayerInput(Action onInputReceived = null)      
     {
-        bool inputReceived = false;     //±íÊ¾ÊÇ·ñ½ÓÊÜµ½Íæ¼ÒµÄĞÅºÅ£¬ÓÃÓÚ¾ö¶¨ÊÇ·ñ½áÊøÑ­»·
+        bool inputReceived = false;     //è¡¨ç¤ºæ˜¯å¦æ¥å—åˆ°ç©å®¶çš„ä¿¡å·ï¼Œç”¨äºå†³å®šæ˜¯å¦ç»“æŸå¾ªç¯
 
         while (!inputReceived)
         {
-            //¼ì²éÍæ¼ÒÊÇ·ñ°´ÏÂ¿Õ¸ñ»òµã»÷Êó±ê×ó¼ü
+            //æ£€æŸ¥ç©å®¶æ˜¯å¦æŒ‰ä¸‹ç©ºæ ¼æˆ–ç‚¹å‡»é¼ æ ‡å·¦é”®
             if (PlayerInputHandler.Instance.IsSpacePressed || PlayerInputHandler.Instance.AttackInputs[(int)CombatInputs.primary])
             {
                 inputReceived = true;
 
-                //µÈ´ı0.15ÃëÔÙµ÷ÓÃ»Øµ÷£¬·ñÔòÈç¹û´Ëº¯Êı½áÊøºóµÄÏÂÒ»¸öº¯ÊıÒ²ĞèÒª°´¿Õ¸ñÊ±£¬¿ÉÄÜ»áµ¼ÖÂ°´Ò»´Î¿Õ¸ñÏìÓ¦¶à¸öº¯Êı
+                //ç­‰å¾…0.15ç§’å†è°ƒç”¨å›è°ƒï¼Œå¦åˆ™å¦‚æœæ­¤å‡½æ•°ç»“æŸåçš„ä¸‹ä¸€ä¸ªå‡½æ•°ä¹Ÿéœ€è¦æŒ‰ç©ºæ ¼æ—¶ï¼Œå¯èƒ½ä¼šå¯¼è‡´æŒ‰ä¸€æ¬¡ç©ºæ ¼å“åº”å¤šä¸ªå‡½æ•°
                 yield return new WaitForSeconds(0.15f);
 
                 onInputReceived?.Invoke();
@@ -58,7 +58,7 @@ public class Delay : MonoBehaviour      //ÓÃÓÚ´¦ÀíÑÓ³ÙÏà¹ØµÄ½Å±¾
                 yield break;
             }
 
-            yield return null;  //µÈ´ıµ½ÏÂÒ»Ö¡ÎªÖ¹£¬´Ó¶øÔÙ´Î¼ì²é
+            yield return null;  //ç­‰å¾…åˆ°ä¸‹ä¸€å¸§ä¸ºæ­¢ï¼Œä»è€Œå†æ¬¡æ£€æŸ¥
         }
     }
 }

@@ -2,7 +2,7 @@ using UnityEngine;
 
 
 
-public class E_EvilTelephone : Event    //E¿ªÍ·µÄ½Å±¾±íÊ¾¸úÊÂ¼şÏà¹Ø
+public class E_EvilTelephone : Event    //Eå¼€å¤´çš„è„šæœ¬è¡¨ç¤ºè·Ÿäº‹ä»¶ç›¸å…³
 {
     Animator m_Animator;
     AudioSource m_AudioSource;
@@ -28,10 +28,10 @@ public class E_EvilTelephone : Event    //E¿ªÍ·µÄ½Å±¾±íÊ¾¸úÊÂ¼şÏà¹Ø
 
     private void OnEnable()
     {
-        //Ã¿´Î¼ÓÔØÊ±¶¼ÖØÖÃÅö×²¿ò
+        //æ¯æ¬¡åŠ è½½æ—¶éƒ½é‡ç½®ç¢°æ’æ¡†
         m_Collider.enabled = true;
 
-        EvilTelephonePanel.OnResultFinished += FinishEvent;     //UI½çÃæ¹Ø±ÕºóÔÙÖ´ĞĞÊÂ¼ş½áÊøÂß¼­
+        EvilTelephonePanel.OnResultFinished += FinishEvent;     //UIç•Œé¢å…³é—­åå†æ‰§è¡Œäº‹ä»¶ç»“æŸé€»è¾‘
     }
 
     private void OnDisable()
@@ -44,16 +44,16 @@ public class E_EvilTelephone : Event    //E¿ªÍ·µÄ½Å±¾±íÊ¾¸úÊÂ¼şÏà¹Ø
     {
         if (other.CompareTag("Player"))
         {
-            TriggerPlayerInteraction(other);    //¸úÍæ¼Ò½»»¥µÄÂß¼­
+            TriggerPlayerInteraction(other);    //è·Ÿç©å®¶äº¤äº’çš„é€»è¾‘
         }      
     }
 
 
     private void OnDestroy()
     {       
-        //ÊÍ·ÅÏìÁåÉùµÄÒôÆµ
+        //é‡Šæ”¾å“é“ƒå£°çš„éŸ³é¢‘
         SoundManager.Instance.ReleaseAudioClip(EventData.AudioClipNames[0]);
-        //ÊÍ·Å½Óµç»°µÄÒôÆµ
+        //é‡Šæ”¾æ¥ç”µè¯çš„éŸ³é¢‘
         SoundManager.Instance.ReleaseAudioClip(EventData.AudioClipNames[1]);      
     }
 
@@ -69,22 +69,22 @@ public class E_EvilTelephone : Event    //E¿ªÍ·µÄ½Å±¾±íÊ¾¸úÊÂ¼şÏà¹Ø
 
     private async void TriggerPlayerInteraction(Collider2D playerCollider)
     {
-        m_Animator.SetBool("Ringing", false);       //½ÇÉ«´¥Åöµç»°ºóÈ¡ÏûÕğ¶¯
+        m_Animator.SetBool("Ringing", false);       //è§’è‰²è§¦ç¢°ç”µè¯åå–æ¶ˆéœ‡åŠ¨
 
-        PlayAnswerPhoneSound();     //²¥·Å½Óµç»°µÄÒôĞ§
+        PlayAnswerPhoneSound();     //æ’­æ”¾æ¥ç”µè¯çš„éŸ³æ•ˆ
 
-        await UIManager.Instance.OpenPanel(UIManager.Instance.UIKeys.EvilTelephonePanel);   //´ò¿ªÊÂ¼ş½çÃæ
+        await UIManager.Instance.OpenPanel(UIManager.Instance.UIKeys.EvilTelephonePanel);   //æ‰“å¼€äº‹ä»¶ç•Œé¢
 
-        m_Collider.enabled = false;     //½çÃæ´ò¿ªºó£¬È¡Ïû¼¤»îÅö×²¿ò
+        m_Collider.enabled = false;     //ç•Œé¢æ‰“å¼€åï¼Œå–æ¶ˆæ¿€æ´»ç¢°æ’æ¡†
     }
 
 
 
-    private void PlayAnswerPhoneSound()     //²¥·Å½Óµç»°µÄÒôĞ§
+    private void PlayAnswerPhoneSound()     //æ’­æ”¾æ¥ç”µè¯çš„éŸ³æ•ˆ
     {
         if (m_AudioSource != null)
         {
-            //ÏÈÔİÍ£µ±Ç°µÄÒôÆµ
+            //å…ˆæš‚åœå½“å‰çš„éŸ³é¢‘
             m_AudioSource.Stop();
 
             SoundManager.Instance.PlaySFXAsyncWithAudioSource(m_AudioSource, EventData.AudioClipNames[1], EventData.AudioVolume);
@@ -92,9 +92,9 @@ public class E_EvilTelephone : Event    //E¿ªÍ·µÄ½Å±¾±íÊ¾¸úÊÂ¼şÏà¹Ø
     }
 
     #region AnimationEvents
-    private void PlayRingSound()        //ÓÃÓÚ¶¯»­Ö¡ÊÂ¼ş£¬²¥·ÅÏìÁåÉù
+    private void PlayRingSound()        //ç”¨äºåŠ¨ç”»å¸§äº‹ä»¶ï¼Œæ’­æ”¾å“é“ƒå£°
     {
-        if (m_AudioSource != null && !m_AudioSource.isPlaying)      //·ÀÖ¹ÖØ¸´²¥·Å
+        if (m_AudioSource != null && !m_AudioSource.isPlaying)      //é˜²æ­¢é‡å¤æ’­æ”¾
         {
             SoundManager.Instance.PlaySFXAsyncWithAudioSource(m_AudioSource, EventData.AudioClipNames[0], 0.6f);
         }

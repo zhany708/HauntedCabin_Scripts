@@ -8,21 +8,21 @@ using UnityEngine.UI;
 public class PlayerStatusBar : BasePanel
 {
     public Image HpImage;
-    public Image HpEffectImage;     //ÑªÁ¿»º³åÍ¼Æ¬
+    public Image HpEffectImage;     //è¡€é‡ç¼“å†²å›¾ç‰‡
 
-    //ËÄ¸öÊôĞÔÏà¹ØµÄUI
+    //å››ä¸ªå±æ€§ç›¸å…³çš„UI
     public TextMeshProUGUI StrengthText;
     public TextMeshProUGUI SpeedText;
     public TextMeshProUGUI SanityText;
     public TextMeshProUGUI KnowledgeText;
 
-    //ËÄ¸öÊôĞÔµÄÖµ
+    //å››ä¸ªå±æ€§çš„å€¼
     public static float StrengthValue {  get; private set; }
     public static float SpeedValue { get; private set; }
     public static float SanityValue { get; private set; }
     public static float KnowledgeValue { get; private set; }
 
-    //ËÄ¸öÊôĞÔ¶ÔÓ¦µÄ·­ÒëÎÄ±¾µÄstring
+    //å››ä¸ªå±æ€§å¯¹åº”çš„ç¿»è¯‘æ–‡æœ¬çš„string
     public string StrengthPhraseKey;
     public string SpeedPhraseKey;
     public string SanityPhraseKey;
@@ -42,28 +42,28 @@ public class PlayerStatusBar : BasePanel
     {
         base.Awake();
 
-        CheckComponents();              //¼ì²é¹«ÓĞ×é¼şÊÇ·ñ¶¼´æÔÚ
-        InitializePlayerStatus();       //³õÊ¼»¯
+        CheckComponents();              //æ£€æŸ¥å…¬æœ‰ç»„ä»¶æ˜¯å¦éƒ½å­˜åœ¨
+        InitializePlayerStatus();       //åˆå§‹åŒ–
     }   
 
     private void Start()
     {
-        //¼ì²éËÄ¸öÊôĞÔ×é¼şÊÇ·ñÓĞµÄÎª¿Õ
+        //æ£€æŸ¥å››ä¸ªå±æ€§ç»„ä»¶æ˜¯å¦æœ‰çš„ä¸ºç©º
         if (StrengthText == null || SpeedText == null || SanityText == null || KnowledgeText == null)
         {
             Debug.LogError("Some Status Text is not assigned.");
             return;
         }
 
-        UpdateStatusUI();       //½øÈëÓÎÏ·Ç°¸üĞÂÏÔÊ¾µÄÊıÖµ
+        UpdateStatusUI();       //è¿›å…¥æ¸¸æˆå‰æ›´æ–°æ˜¾ç¤ºçš„æ•°å€¼
     }
 
 
 
-    //³õÊ¼»¯ÑªÌõÏà¹ØµÄ²¿·Ö
+    //åˆå§‹åŒ–è¡€æ¡ç›¸å…³çš„éƒ¨åˆ†
     private void InitializePlayerStatus()
     {
-        //»ñÈ¡PlayerHealthBarÓÎÏ·ÎïÌå
+        //è·å–PlayerHealthBaræ¸¸æˆç‰©ä½“
         GameObject playerHealthBarObject = GameObject.Find("PlayerHealthBar");
 
         if (playerHealthBarObject == null)
@@ -72,7 +72,7 @@ public class PlayerStatusBar : BasePanel
             return;
         }
 
-        //»ñÈ¡½Å±¾×é¼ş
+        //è·å–è„šæœ¬ç»„ä»¶
         m_PlayerHealthBar = playerHealthBarObject.GetComponent<HealthBar>();
         if (m_PlayerHealthBar == null)
         {
@@ -80,7 +80,7 @@ public class PlayerStatusBar : BasePanel
             return;
         }
 
-        //´«µİÉúÃüÖµÍ¼Æ¬
+        //ä¼ é€’ç”Ÿå‘½å€¼å›¾ç‰‡
         m_PlayerHealthBar.SetHpImage(HpImage);
         m_PlayerHealthBar.SetHpEffectImage(HpEffectImage);
 
@@ -93,7 +93,7 @@ public class PlayerStatusBar : BasePanel
         }
 
 
-        //´ÓPlayerDataÄÄÀï»ñÈ¡ÊôĞÔÖµ
+        //ä»PlayerDataå“ªé‡Œè·å–å±æ€§å€¼
         StrengthValue = m_Player.PlayerData.Strength;
         SpeedValue = m_Player.PlayerData.Speed;
         SanityValue = m_Player.PlayerData.Sanity;
@@ -138,18 +138,18 @@ public class PlayerStatusBar : BasePanel
 
 
 
-    //¸üĞÂÍæ¼ÒµÄÊôĞÔUI
+    //æ›´æ–°ç©å®¶çš„å±æ€§UI
     public void UpdateStatusUI()
     {
         if (m_Player != null)
         {
-            //»ñÈ¡·­ÒëµÄÎÄ±¾×é¼ş
+            //è·å–ç¿»è¯‘çš„æ–‡æœ¬ç»„ä»¶
             string strengthFormat = LeanLocalization.GetTranslationText(StrengthPhraseKey);
             string speedFormat = LeanLocalization.GetTranslationText(SpeedPhraseKey);
             string sanityFormat = LeanLocalization.GetTranslationText(SanityPhraseKey);
             string knowledgeFormat = LeanLocalization.GetTranslationText(KnowledgePhraseKey);
 
-            //¸³ÖµËùÓĞÊôĞÔµÄÊıÖµ
+            //èµ‹å€¼æ‰€æœ‰å±æ€§çš„æ•°å€¼
             StrengthText.text = string.Format(strengthFormat, StrengthValue);
             SpeedText.text = string.Format(speedFormat, SpeedValue);
             SanityText.text = string.Format(sanityFormat, SanityValue);
@@ -176,20 +176,20 @@ public class PlayerStatusBar : BasePanel
 
 
 
-    public static float GetStrengthAddition()   //Ã¿µ±Íæ¼ÒÔì³ÉÉËº¦Ê±¶¼ĞèÒªµ÷ÓÃ´Ëº¯Êı
+    public static float GetStrengthAddition()   //æ¯å½“ç©å®¶é€ æˆä¼¤å®³æ—¶éƒ½éœ€è¦è°ƒç”¨æ­¤å‡½æ•°
     {
-        return 1 + StrengthValue * 0.05f;       //Ã¿Ò»µãÁ¦Á¿¶ÔÓ¦5%µÄÉËº¦¼Ó³É
+        return 1 + StrengthValue * 0.05f;       //æ¯ä¸€ç‚¹åŠ›é‡å¯¹åº”5%çš„ä¼¤å®³åŠ æˆ
     }
 
-    public static float GetSpeedAddition()   //Ã¿µ±Íæ¼ÒÒÆ¶¯Ê±¶¼ĞèÒªµ÷ÓÃ´Ëº¯Êı
+    public static float GetSpeedAddition()   //æ¯å½“ç©å®¶ç§»åŠ¨æ—¶éƒ½éœ€è¦è°ƒç”¨æ­¤å‡½æ•°
     {
-        return 1 + SpeedValue * 0.05f;       //Ã¿Ò»µãËÙ¶È¶ÔÓ¦5%µÄÒÆËÙ¼Ó³É
+        return 1 + SpeedValue * 0.05f;       //æ¯ä¸€ç‚¹é€Ÿåº¦å¯¹åº”5%çš„ç§»é€ŸåŠ æˆ
     }
 }
 
 
 
-//ÓÃÓÚÍæ¼ÒÊôĞÔµÄÃ¶¾Ù
+//ç”¨äºç©å®¶å±æ€§çš„æšä¸¾
 public enum PlayerProperty
 {
     Strength,

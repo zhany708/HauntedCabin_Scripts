@@ -7,26 +7,26 @@ using ZhangYu.Utilities;
 
 public class Weapon : MonoBehaviour
 {
-    public event Action OnWeaponExit;      //½ÓÊÜÊÂ¼ş·½ÎªPlayerAttackState½Å±¾
+    public event Action OnWeaponExit;      //æ¥å—äº‹ä»¶æ–¹ä¸ºPlayerAttackStateè„šæœ¬
 
     #region Components
     public SO_WeaponData WeaponData;
 
 
     protected Animator animator;
-    //protected AudioSource audioSource;        //¹ÒÔØÔÚÎäÆ÷ÎïÌåÉÏµÄ²¥·ÅÆ÷
+    //protected AudioSource audioSource;        //æŒ‚è½½åœ¨æ­¦å™¨ç‰©ä½“ä¸Šçš„æ’­æ”¾å™¨
 
     protected Core core;
     protected Player player;
     protected Flip weaponInventoryFlip;
 
-    //¼ì²ém_MovementÊÇ·ñÎª¿Õ£¬²»ÊÇµÄ»°Ôò·µ»ØËü£¬ÊÇµÄ»°Ôòµ÷ÓÃGetCoreComponentº¯ÊıÒÔ»ñÈ¡×é¼ş
+    //æ£€æŸ¥m_Movementæ˜¯å¦ä¸ºç©ºï¼Œä¸æ˜¯çš„è¯åˆ™è¿”å›å®ƒï¼Œæ˜¯çš„è¯åˆ™è°ƒç”¨GetCoreComponentå‡½æ•°ä»¥è·å–ç»„ä»¶
     protected Movement Movement => m_Movement ? m_Movement : core.GetCoreComponent(ref m_Movement);   
     private Movement m_Movement;
     #endregion
 
     #region Variables
-    public Vector2 mousePosition { get; private set; }     //Êó±êµÄ·½Ïò
+    public Vector2 mousePosition { get; private set; }     //é¼ æ ‡çš„æ–¹å‘
     #endregion
 
     #region Unity Callback Functions
@@ -39,18 +39,18 @@ public class Weapon : MonoBehaviour
 
         if (player != null )
         {
-            core = player.GetComponentInChildren<Core>();   //ÏÈµ÷ÓÃPlayer¸¸ÎïÌå£¬È»ºóÔÙ´Ó¸¸ÎïÌåÖĞÑ°ÕÒCore×ÓÎïÌå
+            core = player.GetComponentInChildren<Core>();   //å…ˆè°ƒç”¨Playerçˆ¶ç‰©ä½“ï¼Œç„¶åå†ä»çˆ¶ç‰©ä½“ä¸­å¯»æ‰¾Coreå­ç‰©ä½“
         }       
     }
 
     protected virtual void Start()
     {
-        weaponInventoryFlip = new Flip(transform.parent.transform);     //ÓÃÎäÆ÷¿âµÄ×ø±ê¹¹ÔìFlip½Å±¾
+        weaponInventoryFlip = new Flip(transform.parent.transform);     //ç”¨æ­¦å™¨åº“çš„åæ ‡æ„é€ Flipè„šæœ¬
     }
 
     protected virtual void Update()
     {
-        //ÔÊĞíÍæ¼Ò¹¥»÷Ê±£¬ÈÃÎäÆ÷³ÖĞøÖ¸ÏòÊó±ê
+        //å…è®¸ç©å®¶æ”»å‡»æ—¶ï¼Œè®©æ­¦å™¨æŒç»­æŒ‡å‘é¼ æ ‡
         if (BasePanel.IsPlayerAttackable)
         {
             PointToMouse();
@@ -78,15 +78,15 @@ public class Weapon : MonoBehaviour
 
     protected virtual void PointToMouse()
     {
-        mousePosition = (PlayerInputHandler.Instance.ProjectedMousePos - new Vector2(transform.parent.position.x, transform.parent.position.y));    //¼ÆËãĞèÒª³¯ÏòÊó±êµÄ·½Ïò
+        mousePosition = (PlayerInputHandler.Instance.ProjectedMousePos - new Vector2(transform.parent.position.x, transform.parent.position.y));    //è®¡ç®—éœ€è¦æœå‘é¼ æ ‡çš„æ–¹å‘
 
-        transform.parent.right = mousePosition.normalized;   //¹éÒ»»¯ºó£¬¸ü¸ÄÎäÆ÷¿âµÄ³¯Ïò£¬¶ø²»ÊÇÎäÆ÷µÄ
-        weaponInventoryFlip.FlipX(player.FacingNum);       //ÊµÊ±·­×ªÎäÆ÷£¬·ÀÖ¹Íæ¼Ò·­×ªÊ±ÎäÆ÷Ò²±»·­×ª
+        transform.parent.right = mousePosition.normalized;   //å½’ä¸€åŒ–åï¼Œæ›´æ”¹æ­¦å™¨åº“çš„æœå‘ï¼Œè€Œä¸æ˜¯æ­¦å™¨çš„
+        weaponInventoryFlip.FlipX(player.FacingNum);       //å®æ—¶ç¿»è½¬æ­¦å™¨ï¼Œé˜²æ­¢ç©å®¶ç¿»è½¬æ—¶æ­¦å™¨ä¹Ÿè¢«ç¿»è½¬
     }
 
 
 
-    protected virtual void PlayAudioSound()     //²¥·ÅÎäÆ÷¹¥»÷ÒôĞ§
+    protected virtual void PlayAudioSound()     //æ’­æ”¾æ­¦å™¨æ”»å‡»éŸ³æ•ˆ
     {
         if (!string.IsNullOrEmpty(WeaponData.AudioClipName) )
         {

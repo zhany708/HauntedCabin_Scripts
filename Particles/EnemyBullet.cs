@@ -30,7 +30,7 @@ public class EnemyBullet : PlayerBullet
 
         if (damageable != null)
         {
-            damageable.Damage(DamageAmount, false);     //�˺��ܷ���Ӱ��
+            damageable.Damage(DamageAmount, false);     //ÉËº¦ÊÜ·ÀÓùÓ°Ïì
             //damageable.GetHit(m_AttackDirection);
         }
 

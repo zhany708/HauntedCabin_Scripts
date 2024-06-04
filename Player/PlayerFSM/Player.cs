@@ -34,27 +34,27 @@ public class Player : MonoBehaviour
     #endregion
 
     #region Other Variable
-    //ÒÔÏÂÈı¸ö±äÁ¿ÓÃÓÚ¸Ä±äÏà»ú¸ß¶È
+    //ä»¥ä¸‹ä¸‰ä¸ªå˜é‡ç”¨äºæ”¹å˜ç›¸æœºé«˜åº¦
     public float ZoomSpeed = 0.5f;
     public float MinOrthoSize = 5.4f;
     public float MaxOrthoSize = 10f;
 
     
-    //public static bool IsAttackable {  get; private set; }      //±íÊ¾Íæ¼ÒÊÇ·ñ¿É¹¥»÷£¬ÓÃÓÚÊÜ»÷¼ä¸ô
+    //public static bool IsAttackable {  get; private set; }      //è¡¨ç¤ºç©å®¶æ˜¯å¦å¯æ”»å‡»ï¼Œç”¨äºå—å‡»é—´éš”
     public bool IsFirstFrame { get; private set; } = true;
     public int FacingNum { get; private set; }
 
-    //µ±Ç°×´Ì¬£¬ÓÃÓÚDebug
+    //å½“å‰çŠ¶æ€ï¼Œç”¨äºDebug
     string m_CurrentState;
     #endregion
 
     #region Unity Callback Functions
     private void Awake()
     {
-        FootAnimator = transform.Find("PlayerFoot").GetComponent<Animator>();   //»ñÈ¡½ÅÉÏµÄ¶¯»­Æ÷×é¼ş
+        FootAnimator = transform.Find("PlayerFoot").GetComponent<Animator>();   //è·å–è„šä¸Šçš„åŠ¨ç”»å™¨ç»„ä»¶
 
-        Core = GetComponentInChildren<Core>();      //´Ó×ÓÎïÌåÄÇµ÷ÓÃCore½Å±¾
-        Core.SetParameters(PlayerData.MaxHealth, PlayerData.Defense, PlayerData.HitResistance);   //½«Íæ¼Ò²ÎÊı´«¸øCore
+        Core = GetComponentInChildren<Core>();      //ä»å­ç‰©ä½“é‚£è°ƒç”¨Coreè„šæœ¬
+        Core.SetParameters(PlayerData.MaxHealth, PlayerData.Defense, PlayerData.HitResistance);   //å°†ç©å®¶å‚æ•°ä¼ ç»™Core
 
         PrimaryWeapon = transform.Find("PrimaryWeapon").GetComponentInChildren<Weapon>();
         SecondaryWeapon = transform.Find("SecondaryWeapon").GetComponentInChildren<Weapon>();
@@ -62,7 +62,7 @@ public class Player : MonoBehaviour
 
         StateMachine = new PlayerStateMachine();
 
-        //³õÊ¼»¯¸÷×´Ì¬
+        //åˆå§‹åŒ–å„çŠ¶æ€
         IdleState = new PlayerIdleState(this, StateMachine, PlayerData, "Idle");
         MoveState = new PlayerMoveState(this, StateMachine, PlayerData, "Idle");
         HitState = new PlayerHitState(this, StateMachine, PlayerData, "Hit");
@@ -75,44 +75,44 @@ public class Player : MonoBehaviour
     {
         m_PlayerFlip = new Flip(transform);
 
-        FacingNum = 1;  //ÓÎÏ·¿ªÊ¼Ê±³õÊ¼»¯FacingNum£¬·ñÔòÎäÆ÷ÌùÍ¼ÎŞ·¨Õı³£ÏÔÊ¾
+        FacingNum = 1;  //æ¸¸æˆå¼€å§‹æ—¶åˆå§‹åŒ–FacingNumï¼Œå¦åˆ™æ­¦å™¨è´´å›¾æ— æ³•æ­£å¸¸æ˜¾ç¤º
 
-        MakeSpriteVisible(SecondaryWeapon.transform.gameObject, false);       //ÔÚÓÎÏ·¿ªÊ¼Ç°Òş²Ø¸±ÎäÆ÷
+        MakeSpriteVisible(SecondaryWeapon.transform.gameObject, false);       //åœ¨æ¸¸æˆå¼€å§‹å‰éšè—å‰¯æ­¦å™¨
 
-        StateMachine.Initialize(IdleState);     //³õÊ¼»¯×´Ì¬ÎªÏĞÖÃ
+        StateMachine.Initialize(IdleState);     //åˆå§‹åŒ–çŠ¶æ€ä¸ºé—²ç½®
     }
 
     private void Update()
     {
-        //ÊµÊ±ÏÔÊ¾µ±Ç°×´Ì¬
+        //å®æ—¶æ˜¾ç¤ºå½“å‰çŠ¶æ€
         m_CurrentState = StateMachine.currentState.ToString();
-        //Core.LogicUpdate();     //»ñÈ¡µ±Ç°ËÙ¶È
+        //Core.LogicUpdate();     //è·å–å½“å‰é€Ÿåº¦
 
-        if (IsFirstFrame)       //·ÀÖ¹µÚÒ»Ö¡½ÇÉ«Òì³£·­×ª¡£ToDO:ºóĞøÃ¿µ±ÔİÍ£ÓÎÏ·Ê±£¬Ò²ĞèÒª·ÀÖ¹»Ö¸´ºóµÚÒ»Ö¡½ÇÉ«Òì³£·­×ª
+        if (IsFirstFrame)       //é˜²æ­¢ç¬¬ä¸€å¸§è§’è‰²å¼‚å¸¸ç¿»è½¬ã€‚ToDO:åç»­æ¯å½“æš‚åœæ¸¸æˆæ—¶ï¼Œä¹Ÿéœ€è¦é˜²æ­¢æ¢å¤åç¬¬ä¸€å¸§è§’è‰²å¼‚å¸¸ç¿»è½¬
         {
             IsFirstFrame = false;
             return;
         }
 
-        PlayerFlip();   //³ÖĞø¼ì²âÊÇ·ñ·­×ªÍæ¼Ò
-        ZoomCamera();   //µ÷ÕûÏà»úµÄ½ÃÕı³ß´ç
+        PlayerFlip();   //æŒç»­æ£€æµ‹æ˜¯å¦ç¿»è½¬ç©å®¶
+        ZoomCamera();   //è°ƒæ•´ç›¸æœºçš„çŸ«æ­£å°ºå¯¸
 
-        StateMachine.currentState.LogicUpdate();    //³ÖĞøµ÷ÓÃµ±Ç°×´Ì¬µÄÂß¼­º¯Êı
+        StateMachine.currentState.LogicUpdate();    //æŒç»­è°ƒç”¨å½“å‰çŠ¶æ€çš„é€»è¾‘å‡½æ•°
     }
 
     private void FixedUpdate()
     {
-        StateMachine.currentState.PhysicsUpdate();  //³ÖĞøµ÷ÓÃµ±Ç°×´Ì¬µÄÎïÀíÂß¼­º¯Êı
+        StateMachine.currentState.PhysicsUpdate();  //æŒç»­è°ƒç”¨å½“å‰çŠ¶æ€çš„ç‰©ç†é€»è¾‘å‡½æ•°
     }
     #endregion
 
     #region Other Functions
-    //¸ü»»ÎäÆ÷
+    //æ›´æ¢æ­¦å™¨
     public async void ChangeWeapon(string weaponName, bool isPrimary)
     {
-        bool isPrimaryAttackState = false;    //¼ì²é¸ü»»ÎäÆ÷Ê±ÊÇ·ñ´¦ÓÚÒª·ÅÖÃµÄ¹¥»÷×´Ì¬£¨Ö÷»¹ÊÇ¸±£©
+        bool isPrimaryAttackState = false;    //æ£€æŸ¥æ›´æ¢æ­¦å™¨æ—¶æ˜¯å¦å¤„äºè¦æ”¾ç½®çš„æ”»å‡»çŠ¶æ€ï¼ˆä¸»è¿˜æ˜¯å‰¯ï¼‰
 
-        if (PrimaryWeapon.transform.gameObject.GetComponent<SpriteRenderer>().color == new Color(1f, 1f, 1f, 1f))       //Í¨¹ıÍ¸Ã÷¶È¼ì²é´¦ÓÚÄÄ¸ö¹¥»÷×´Ì¬
+        if (PrimaryWeapon.transform.gameObject.GetComponent<SpriteRenderer>().color == new Color(1f, 1f, 1f, 1f))       //é€šè¿‡é€æ˜åº¦æ£€æŸ¥å¤„äºå“ªä¸ªæ”»å‡»çŠ¶æ€
         {
             isPrimaryAttackState = true;
         }
@@ -121,22 +121,22 @@ public class Player : MonoBehaviour
 
         if (isPrimary)
         {
-            //¸ü»»ÎäÆ÷Ö®Ç°ÍË³öµ±Ç°ÎäÆ÷¹¥»÷×´Ì¬×´Ì¬£¬·ÀÖ¹³öÏÖBug
+            //æ›´æ¢æ­¦å™¨ä¹‹å‰é€€å‡ºå½“å‰æ­¦å™¨æ”»å‡»çŠ¶æ€çŠ¶æ€ï¼Œé˜²æ­¢å‡ºç°Bug
             //PrimaryWeapon.ExitWeapon();
 
             if (PrimaryWeapon != null && PrimaryWeapon.gameObject.activeSelf)
             {
-                PrimaryWeapon.gameObject.SetActive(false);      //»»ÎäÆ÷Ç°ÏÈÈ¡Ïû¼¤»îµ±Ç°ÎäÆ÷
+                PrimaryWeapon.gameObject.SetActive(false);      //æ¢æ­¦å™¨å‰å…ˆå–æ¶ˆæ¿€æ´»å½“å‰æ­¦å™¨
             }
 
-            await WeaponManager.Instance.LoadWeapon(weaponName, isPrimary);    //µÈ´ıÒì²½¼ÓÔØ
+            await WeaponManager.Instance.LoadWeapon(weaponName, isPrimary);    //ç­‰å¾…å¼‚æ­¥åŠ è½½
 
 
-            PrimaryAttackState = new PlayerAttackState(this, StateMachine, PlayerData, "Idle", PrimaryWeapon);       //¼¤»îĞÂ¹¥»÷×´Ì¬
+            PrimaryAttackState = new PlayerAttackState(this, StateMachine, PlayerData, "Idle", PrimaryWeapon);       //æ¿€æ´»æ–°æ”»å‡»çŠ¶æ€
 
             if (!isPrimaryAttackState)
             {
-                MakeSpriteVisible(PrimaryWeapon.transform.gameObject, false);       //Èç¹ûµ±Ç°²»ÔÚÖ÷ÎäÆ÷¹¥»÷×´Ì¬£¬Ôò»»ĞÂÎäÆ÷ºóÔÙ´ÎÒş²Ø
+                MakeSpriteVisible(PrimaryWeapon.transform.gameObject, false);       //å¦‚æœå½“å‰ä¸åœ¨ä¸»æ­¦å™¨æ”»å‡»çŠ¶æ€ï¼Œåˆ™æ¢æ–°æ­¦å™¨åå†æ¬¡éšè—
             }
         }
 
@@ -154,7 +154,7 @@ public class Player : MonoBehaviour
 
             if (isPrimaryAttackState)
             {
-                MakeSpriteVisible(SecondaryWeapon.transform.gameObject, false);     //Èç¹ûµ±Ç°²»ÔÚ¸±ÎäÆ÷¹¥»÷×´Ì¬£¬Ôò»»ĞÂÎäÆ÷ºóÔÙ´ÎÒş²Ø
+                MakeSpriteVisible(SecondaryWeapon.transform.gameObject, false);     //å¦‚æœå½“å‰ä¸åœ¨å‰¯æ­¦å™¨æ”»å‡»çŠ¶æ€ï¼Œåˆ™æ¢æ–°æ­¦å™¨åå†æ¬¡éšè—
             }
         }
 
@@ -163,15 +163,15 @@ public class Player : MonoBehaviour
 
     
 
-    //¸ü¸ÄäÖÈ¾µÄÍ¸Ã÷¶ÈÒÔ¼¤»î/Òş²ØÎïÌå
+    //æ›´æ”¹æ¸²æŸ“çš„é€æ˜åº¦ä»¥æ¿€æ´»/éšè—ç‰©ä½“
     public void MakeSpriteVisible(GameObject thisObject, bool isVisible)     
     {
-        if (isVisible)    //¼¤»î
+        if (isVisible)    //æ¿€æ´»
         {
             thisObject.GetComponent<SpriteRenderer>().color = new Color(1f, 1f, 1f, 1f);
         }
 
-        else              //Òş²Ø
+        else              //éšè—
         {
             thisObject.GetComponent<SpriteRenderer>().color = new Color(1f, 1f, 1f, 0f);        
         }       
@@ -181,30 +181,30 @@ public class Player : MonoBehaviour
 
     private void PlayerFlip()
     {
-        FacingNum = PlayerInputHandler.Instance.ProjectedMousePos.x < transform.position.x ? -1 : 1;     //Èç¹ûÊó±ê×ø±êÎ»ÓÚÍæ¼Ò×ó²à£¬Ôò·­×ªÍæ¼Ò
+        FacingNum = PlayerInputHandler.Instance.ProjectedMousePos.x < transform.position.x ? -1 : 1;     //å¦‚æœé¼ æ ‡åæ ‡ä½äºç©å®¶å·¦ä¾§ï¼Œåˆ™ç¿»è½¬ç©å®¶
 
         m_PlayerFlip.FlipX(FacingNum);
     }
 
 
 
-    //Í¨¹ıÊó±ê¹öÂÖÀ­½ü»òÀ­Ô¶Ïà»ú
+    //é€šè¿‡é¼ æ ‡æ»šè½®æ‹‰è¿‘æˆ–æ‹‰è¿œç›¸æœº
     private void ZoomCamera()       
     {
         if (PlayerCamera != null)
         {
-            float mouseScroll = PlayerInputHandler.Instance.MouseScrollInput.y;    //Ê¹ÓÃÊó±ê¹öÂÖĞÅÏ¢µÄyÖµ
+            float mouseScroll = PlayerInputHandler.Instance.MouseScrollInput.y;    //ä½¿ç”¨é¼ æ ‡æ»šè½®ä¿¡æ¯çš„yå€¼
 
             float newOrthoSize = PlayerCamera.m_Lens.OrthographicSize - mouseScroll * ZoomSpeed;
-            newOrthoSize = Mathf.Clamp(newOrthoSize, MinOrthoSize, MaxOrthoSize);       //¼ÆËãºó½«ĞÂµÄÏà»ú¾µÆ¬½ÃÕı³ß´ç±£³ÖÔÚ×î´óºÍ×îĞ¡Ö®¼ä
+            newOrthoSize = Mathf.Clamp(newOrthoSize, MinOrthoSize, MaxOrthoSize);       //è®¡ç®—åå°†æ–°çš„ç›¸æœºé•œç‰‡çŸ«æ­£å°ºå¯¸ä¿æŒåœ¨æœ€å¤§å’Œæœ€å°ä¹‹é—´
 
-            PlayerCamera.m_Lens.OrthographicSize = newOrthoSize;    //¼ÆËãÍê³Éºó¸³ÓèĞÂµÄÖµ
+            PlayerCamera.m_Lens.OrthographicSize = newOrthoSize;    //è®¡ç®—å®Œæˆåèµ‹äºˆæ–°çš„å€¼
         }
     }
     #endregion
 
     #region Animation Event Functions
-    private void DestroyPlayerAfterDeath()      //ÓÃÓÚ¶¯»­ÊÂ¼ş£¬´İ»ÙÎïÌå
+    private void DestroyPlayerAfterDeath()      //ç”¨äºåŠ¨ç”»äº‹ä»¶ï¼Œæ‘§æ¯ç‰©ä½“
     {
         Destroy(gameObject);   
     }

@@ -2,7 +2,7 @@ public class PlayerMoveState : PlayerGroundedState
 {
     public PlayerMoveState(Player player, PlayerStateMachine stateMachine, SO_PlayerData playerData, string animBoolName) : base(player, stateMachine, playerData, animBoolName)
     {
-        //Ä¿Ç°Íæ¼Ò²»»á½øÈë´Ë×´Ì¬£¬³ı·ÇºóĞøÓĞĞÂ¹¦ÄÜĞèÒªÌí¼Ó
+        //ç›®å‰ç©å®¶ä¸ä¼šè¿›å…¥æ­¤çŠ¶æ€ï¼Œé™¤éåç»­æœ‰æ–°åŠŸèƒ½éœ€è¦æ·»åŠ 
     }
 
 
@@ -22,14 +22,14 @@ public class PlayerMoveState : PlayerGroundedState
         base.PhysicsUpdate();
 
         
-        if (!isAttack)   //½ûÖ¹Íæ¼Ò¹¥»÷Ê±×ÔÓÉÒÆ¶¯
+        if (!isAttack)   //ç¦æ­¢ç©å®¶æ”»å‡»æ—¶è‡ªç”±ç§»åŠ¨
         {
-            Movement.SetVelocity(playerData.MovementVelocity, input);       //ÔÚ±äÁ¿ºóÃæ¼ÓÎÊºÅ£¬±íÊ¾Ö»ÓĞ±äÁ¿²»Îª¿ÕÊ±²Å»áµ÷ÓÃ±äÁ¿µÄº¯Êı£¨²»ÄÜÓÃÔÚUnityÄÚ²¿µÄ±äÁ¿ÉÏ£©
+            Movement.SetVelocity(playerData.MovementVelocity, input);       //åœ¨å˜é‡åé¢åŠ é—®å·ï¼Œè¡¨ç¤ºåªæœ‰å˜é‡ä¸ä¸ºç©ºæ—¶æ‰ä¼šè°ƒç”¨å˜é‡çš„å‡½æ•°ï¼ˆä¸èƒ½ç”¨åœ¨Unityå†…éƒ¨çš„å˜é‡ä¸Šï¼‰
         }
 
         else
         {
-            Movement.SetVelocityZero();     //ÔÚÒÆ¶¯×´Ì¬ÖĞ£¬Íæ¼Ò¹¥»÷Ê±½ûÖ¹ÒÆ¶¯
+            Movement.SetVelocityZero();     //åœ¨ç§»åŠ¨çŠ¶æ€ä¸­ï¼Œç©å®¶æ”»å‡»æ—¶ç¦æ­¢ç§»åŠ¨
         }
         
     }

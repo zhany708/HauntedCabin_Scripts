@@ -4,14 +4,14 @@ using UnityEngine;
 
 
 
-//ÓÃÓÚ´¦ÀíÓÎÏ·¹ı³ÌÖĞµÄÒ»Ğ©¶¯Ì¬±ä»¯£¨±ÈÈçÔÚÄ³¸öµØ·½Éú³ÉÄ³¸öĞÂ¶«Î÷£©
+//ç”¨äºå¤„ç†æ¸¸æˆè¿‡ç¨‹ä¸­çš„ä¸€äº›åŠ¨æ€å˜åŒ–ï¼ˆæ¯”å¦‚åœ¨æŸä¸ªåœ°æ–¹ç”ŸæˆæŸä¸ªæ–°ä¸œè¥¿ï¼‰
 public class EnvironmentManager : ManagerTemplate<EnvironmentManager>     
 {
-    public event Action OnEnemyKilled;       //½ÓÊÕ·½ÎªTaskPanel
+    public event Action OnEnemyKilled;       //æ¥æ”¶æ–¹ä¸ºTaskPanel
 
 
-    public int KilledEnemyCount { get; private set; } = 0;     //±íÊ¾É±ËÀ¹ı¶àÉÙµĞÈË
-    public int RequiredEnemyCount { get; private set; } = 6;   //±íÊ¾ĞèÒªÉ±ËÀ¶àÉÙµĞÈË£¬ÓÎÏ·²ÅÊ¤Àû
+    public int KilledEnemyCount { get; private set; } = 0;     //è¡¨ç¤ºæ€æ­»è¿‡å¤šå°‘æ•Œäºº
+    public int RequiredEnemyCount { get; private set; } = 6;   //è¡¨ç¤ºéœ€è¦æ€æ­»å¤šå°‘æ•Œäººï¼Œæ¸¸æˆæ‰èƒœåˆ©
     public bool IsGameOver { get; private set; } = false;
 
 
@@ -33,43 +33,43 @@ public class EnvironmentManager : ManagerTemplate<EnvironmentManager>
 
 
 
-    //Éú³ÉÎïÌå£¬Í¬Ê±½«²ÎÊıÖĞµÄTransformÉèÖÃÎªÎïÌåµÄ¸¸ÎïÌå     ĞèÒª×öµÄ£ºÓÃ¶ÔÏó³ØÉú³ÉÎïÌå
+    //ç”Ÿæˆç‰©ä½“ï¼ŒåŒæ—¶å°†å‚æ•°ä¸­çš„Transformè®¾ç½®ä¸ºç‰©ä½“çš„çˆ¶ç‰©ä½“     éœ€è¦åšçš„ï¼šç”¨å¯¹è±¡æ± ç”Ÿæˆç‰©ä½“
     public void GenerateObjectWithParent(GameObject generatedObject, Transform parentTransform, Vector2 generatedPos)
     {
         Instantiate(generatedObject, generatedPos, Quaternion.identity, parentTransform);
 
-        //³¢ÊÔ´Ó¸¸ÎïÌåÄÇÀï»ñÈ¡½Å±¾×é¼ş
+        //å°è¯•ä»çˆ¶ç‰©ä½“é‚£é‡Œè·å–è„šæœ¬ç»„ä»¶
         RootRoomController parentObject = parentTransform.GetComponent<RootRoomController>();
 
         if (parentObject != null)
         {
-            //Ìí¼ÓĞÂµÄ¾«ÁéÍ¼
+            //æ·»åŠ æ–°çš„ç²¾çµå›¾
             parentObject.AddNewSpriteRenderers();
         }
     }
 
 
-    #region Éú³ÉµĞÈËÏà¹Ø
-    //Éú³ÉµĞÈËºó£¬ÓÃPhysics2D.Oberlap¼ì²â¹ÖÎï¼´½«Éú³ÉµÄ×ø±êÊÇ·ñ¸ú¼Ò¾ßÖØºÏ£¬Èç¹ûÖØºÏÔòÖØĞÂÉú³É×ø±ê
+    #region ç”Ÿæˆæ•Œäººç›¸å…³
+    //ç”Ÿæˆæ•Œäººåï¼Œç”¨Physics2D.Oberlapæ£€æµ‹æ€ªç‰©å³å°†ç”Ÿæˆçš„åæ ‡æ˜¯å¦è·Ÿå®¶å…·é‡åˆï¼Œå¦‚æœé‡åˆåˆ™é‡æ–°ç”Ÿæˆåæ ‡
     public void GenerateEnemy(DoorController doorController)
     {
-        if (doorController.EnemyObjects.Length != 0)   //Èç¹û·¿¼äÓĞ¹ÖÎï
+        if (doorController.EnemyObjects.Length != 0)   //å¦‚æœæˆ¿é—´æœ‰æ€ªç‰©
         {
-            List<Vector2> enemySpawnList = doorController.EnemySpwanPos.GenerateMultiRandomPos(doorController.EnemyObjects.Length);     //¸ù¾İ¹ÖÎïÊıÁ¿Éú³ÉËæ»ú×ø±êlist
+            List<Vector2> enemySpawnList = doorController.EnemySpwanPos.GenerateMultiRandomPos(doorController.EnemyObjects.Length);     //æ ¹æ®æ€ªç‰©æ•°é‡ç”Ÿæˆéšæœºåæ ‡list
 
-            //Éú³ÉÍê×ø±êÁĞ±íºó¡£¼ì²éÁĞ±íÖĞÊÇ·ñÓĞ¸ú¼Ò¾ßÖØºÏµÄ×ø±ê
+            //ç”Ÿæˆå®Œåæ ‡åˆ—è¡¨åã€‚æ£€æŸ¥åˆ—è¡¨ä¸­æ˜¯å¦æœ‰è·Ÿå®¶å…·é‡åˆçš„åæ ‡
             CheckIfCollideFurniture(enemySpawnList, doorController);
 
 
 
             for (int i = 0; i < doorController.EnemyObjects.Length; i++)
             {
-                //ÕâÀïµÄenemyÎïÌåÊÇµĞÈËµÄ¸úÎïÌå£¨°üº¬Ñ²Âß×ø±êµÄ£©£¬ÔÚÉú³ÉµÄÍ¬Ê±¸³ÓèÎïÌåÉú³É×ø±ê
-                GameObject enemyObject = EnemyPool.Instance.GetObject(doorController.EnemyObjects[i], enemySpawnList[i]);     //´ÓµĞÈË¶ÔÏó³ØÖĞÉú³ÉµĞÈË
+                //è¿™é‡Œçš„enemyç‰©ä½“æ˜¯æ•Œäººçš„è·Ÿç‰©ä½“ï¼ˆåŒ…å«å·¡é€»åæ ‡çš„ï¼‰ï¼Œåœ¨ç”Ÿæˆçš„åŒæ—¶èµ‹äºˆç‰©ä½“ç”Ÿæˆåæ ‡
+                GameObject enemyObject = EnemyPool.Instance.GetObject(doorController.EnemyObjects[i], enemySpawnList[i]);     //ä»æ•Œäººå¯¹è±¡æ± ä¸­ç”Ÿæˆæ•Œäºº
 
                 //Debug.Log("The enemy spawn position is : " + enemySpawnList[i]);
 
-                //Éú³ÉÍêºóÖØÖÃµĞÈË½Å±¾°ó¶¨µÄÎïÌåµÄ±¾µØ£¨Ïà¶ÔÓÚ¸¸ÎïÌå£©×ø±ê¡£ÒòÎªµĞÈË´Ó¶ÔÏó³ØÖØĞÂÉú³Éºó£¬±¾µØ×ø±ê»á¼Ì³ĞËÀÍöÇ°µÄ±¾µØ×ø±ê
+                //ç”Ÿæˆå®Œåé‡ç½®æ•Œäººè„šæœ¬ç»‘å®šçš„ç‰©ä½“çš„æœ¬åœ°ï¼ˆç›¸å¯¹äºçˆ¶ç‰©ä½“ï¼‰åæ ‡ã€‚å› ä¸ºæ•Œäººä»å¯¹è±¡æ± é‡æ–°ç”Ÿæˆåï¼Œæœ¬åœ°åæ ‡ä¼šç»§æ‰¿æ­»äº¡å‰çš„æœ¬åœ°åæ ‡
                 Enemy enemyScript = enemyObject.GetComponentInChildren<Enemy>();
 
                 if (enemyScript != null)
@@ -78,26 +78,26 @@ public class EnvironmentManager : ManagerTemplate<EnvironmentManager>
                 }
 
 
-                //ÉèÖÃÃÅ¿ØÖÆÆ÷µÄ½Å±¾
+                //è®¾ç½®é—¨æ§åˆ¶å™¨çš„è„šæœ¬
                 enemyScript.SetDoorController(doorController);
 
-                //Éú³ÉµĞÈËºóÖØÖÃÉúÃü£¬·ñÔòÖØĞÂ¼¤»îµÄµĞÈËÉúÃüÒÀÈ»Îª0
+                //ç”Ÿæˆæ•Œäººåé‡ç½®ç”Ÿå‘½ï¼Œå¦åˆ™é‡æ–°æ¿€æ´»çš„æ•Œäººç”Ÿå‘½ä¾ç„¶ä¸º0
                 enemyObject.GetComponentInChildren<Stats>().SetCurrentHealth(enemyObject.GetComponentInChildren<Stats>().MaxHealth);
             }
         }
     }
 
 
-    //¼ì²éÁĞ±íÖĞµÄËùÓĞ×ø±ê´¦ÊÇ·ñÓĞ¼Ò¾ß
+    //æ£€æŸ¥åˆ—è¡¨ä¸­çš„æ‰€æœ‰åæ ‡å¤„æ˜¯å¦æœ‰å®¶å…·
     private void CheckIfCollideFurniture(List<Vector2> enemySpawnPosList, DoorController doorController)
     {
-        Vector2 checkSize = new Vector2(doorController.PhysicsCheckingXPos, doorController.PhysicsCheckingYPos);      //ÎïÀí¼ì²âµÄ´óĞ¡
+        Vector2 checkSize = new Vector2(doorController.PhysicsCheckingXPos, doorController.PhysicsCheckingYPos);      //ç‰©ç†æ£€æµ‹çš„å¤§å°
 
-        float adaptiveTolerance = doorController.EnemySpwanPos.GetOverlapTolerance();        //»ñÈ¡¼ì²éÖØ¸´µÄ¾àÀë
-        int attemptCount = 0;       //ÓÃÓÚ·ÀÖ¹½øÈëÎŞÏŞÑ­»·µÄ±äÁ¿
+        float adaptiveTolerance = doorController.EnemySpwanPos.GetOverlapTolerance();        //è·å–æ£€æŸ¥é‡å¤çš„è·ç¦»
+        int attemptCount = 0;       //ç”¨äºé˜²æ­¢è¿›å…¥æ— é™å¾ªç¯çš„å˜é‡
 
 
-        while (attemptCount < 100)      //È·±£²»³¬¹ı×î´ó³¢ÊÔ´ÎÊı
+        while (attemptCount < 100)      //ç¡®ä¿ä¸è¶…è¿‡æœ€å¤§å°è¯•æ¬¡æ•°
         {
             bool isOverlap = false;
 
@@ -107,25 +107,25 @@ public class EnvironmentManager : ManagerTemplate<EnvironmentManager>
                 {
                     enemySpawnPosList[i] = doorController.EnemySpwanPos.GenerateNonOverlappingPosition(enemySpawnPosList);
 
-                    doorController.EnemySpwanPos.SetOverlapTolerance(adaptiveTolerance);     //ÉèÖÃĞÂµÄ¼ì²éÖØ¸´µÄ¾àÀë
+                    doorController.EnemySpwanPos.SetOverlapTolerance(adaptiveTolerance);     //è®¾ç½®æ–°çš„æ£€æŸ¥é‡å¤çš„è·ç¦»
 
-                    isOverlap = true;  //ÉèÖÃ²¼¶ûÒÔ¼ÌĞø¼ì²é
+                    isOverlap = true;  //è®¾ç½®å¸ƒå°”ä»¥ç»§ç»­æ£€æŸ¥
                 }
             }
 
-            if (!isOverlap) break;  //µ±Ã»ÓĞÖØ¸´Ê±ÔòÍË³öÑ­»·
+            if (!isOverlap) break;  //å½“æ²¡æœ‰é‡å¤æ—¶åˆ™é€€å‡ºå¾ªç¯
 
             attemptCount++;
-            adaptiveTolerance -= 0.1f;  //Èç¹ûÊµÔÚÄÑÒÔÉú³É²»»áÖØ¸´µÄ×ø±êµÄ»°£¬¼õÉÙ¼ì²éÖØ¸´µÄ¾àÀë
+            adaptiveTolerance -= 0.1f;  //å¦‚æœå®åœ¨éš¾ä»¥ç”Ÿæˆä¸ä¼šé‡å¤çš„åæ ‡çš„è¯ï¼Œå‡å°‘æ£€æŸ¥é‡å¤çš„è·ç¦»
         }
 
     }
 
 
-    //ÔËÓÃÎïÀíº¯Êı¼ì²éÒªÉú³ÉµÄ×ø±êÊÇ·ñÓĞ¼Ò¾ß
+    //è¿ç”¨ç‰©ç†å‡½æ•°æ£€æŸ¥è¦ç”Ÿæˆçš„åæ ‡æ˜¯å¦æœ‰å®¶å…·
     private bool IsPositionEmpty(Vector2 positionToCheck, Vector2 checkSize, DoorController doorController)
     {
-        //µÚÒ»¸ö²ÎÊıÎªÖĞĞÄµã£¬µÚ¶ş¸ö²ÎÊıÎª³¤·½ĞÎ´óĞ¡£¨ÑØ×ÅÖĞĞÄ¸÷ÑÓÉêÒ»°ë£©£¬µÚÈı¸ö²ÎÊıÎª½Ç¶È£¬µÚËÄ¸ö²ÎÊıÎª¼ì²âµÄÄ¿±ê²ã¼¶
+        //ç¬¬ä¸€ä¸ªå‚æ•°ä¸ºä¸­å¿ƒç‚¹ï¼Œç¬¬äºŒä¸ªå‚æ•°ä¸ºé•¿æ–¹å½¢å¤§å°ï¼ˆæ²¿ç€ä¸­å¿ƒå„å»¶ç”³ä¸€åŠï¼‰ï¼Œç¬¬ä¸‰ä¸ªå‚æ•°ä¸ºè§’åº¦ï¼Œç¬¬å››ä¸ªå‚æ•°ä¸ºæ£€æµ‹çš„ç›®æ ‡å±‚çº§
         Collider2D overlapCheck = Physics2D.OverlapBox(positionToCheck, checkSize, 0f, doorController.FurnitureLayerMask);
         return overlapCheck == null;
     }
@@ -136,14 +136,14 @@ public class EnvironmentManager : ManagerTemplate<EnvironmentManager>
     {
         KilledEnemyCount++;
 
-        OnEnemyKilled?.Invoke();        //µ÷ÓÃ»Øµ÷º¯Êı
+        OnEnemyKilled?.Invoke();        //è°ƒç”¨å›è°ƒå‡½æ•°
 
-        if (KilledEnemyCount >= RequiredEnemyCount)     //¼ì²éÊÇ·ñÉ±ËÀÁË×ã¹»µÄµĞÈË
+        if (KilledEnemyCount >= RequiredEnemyCount)     //æ£€æŸ¥æ˜¯å¦æ€æ­»äº†è¶³å¤Ÿçš„æ•Œäºº
         {
-            //Debug.Log("You win!");      //ĞèÒª×öµÄ£º´ò¿ªÓÎÏ·Ê¤Àû½çÃæ£¬½«µĞÈË¶ÔÏó³ØÖĞµÄËùÓĞµĞÈËÇ¿ĞĞ½øÈëËÀÍö×´Ì¬
+            //Debug.Log("You win!");      //éœ€è¦åšçš„ï¼šæ‰“å¼€æ¸¸æˆèƒœåˆ©ç•Œé¢ï¼Œå°†æ•Œäººå¯¹è±¡æ± ä¸­çš„æ‰€æœ‰æ•Œäººå¼ºè¡Œè¿›å…¥æ­»äº¡çŠ¶æ€
             IsGameOver = true;
 
-            EnemyPool.Instance.EndGame();       //ÔÚ³¡¾°ÖĞÈÃËùÓĞ¼¤»îµÄµĞÈË½øÈëËÀÍö×´Ì¬
+            EnemyPool.Instance.EndGame();       //åœ¨åœºæ™¯ä¸­è®©æ‰€æœ‰æ¿€æ´»çš„æ•Œäººè¿›å…¥æ­»äº¡çŠ¶æ€
 
             await UIManager.Instance.OpenPanel(UIManager.Instance.UIKeys.GameWinningPanel);
         }

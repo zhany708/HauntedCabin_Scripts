@@ -8,7 +8,7 @@ public class EnemyState
     {
         get
         {
-            if (m_Movement) { return m_Movement; }      //¼ì²é×é¼şÊÇ·ñÎª¿Õ
+            if (m_Movement) { return m_Movement; }      //æ£€æŸ¥ç»„ä»¶æ˜¯å¦ä¸ºç©º
             m_Movement = core.GetCoreComponent<Movement>();
             return m_Movement;
         }
@@ -47,7 +47,7 @@ public class EnemyState
     protected bool isHit = false;
 
 
-    string m_AnimationBoolName;     //¸æËß¶¯»­Æ÷Ó¦¸Ã²¥·ÅÄÄ¸ö¶¯»­
+    string m_AnimationBoolName;     //å‘Šè¯‰åŠ¨ç”»å™¨åº”è¯¥æ’­æ”¾å“ªä¸ªåŠ¨ç”»
 
 
 
@@ -81,14 +81,14 @@ public class EnemyState
         }
 
 
-        core.Animator.SetBool(m_AnimationBoolName, true);     //²¥·Å×´Ì¬µÄ¶¯»­
+        core.Animator.SetBool(m_AnimationBoolName, true);     //æ’­æ”¾çŠ¶æ€çš„åŠ¨ç”»
         
         //Debug.Log(m_AnimationBoolName);
     }
 
     public virtual void LogicUpdate()
     {
-        //ÏÈÅĞ¶ÏÊÇ·ñËÀÍö£¨²»ÄÜ·ÅÔÚÊÜ»÷×´Ì¬ÖĞÅĞ¶Ï£¬ÒòÎªµĞÈË¹¥»÷Ê±²»»á½øÈëÊÜ»÷×´Ì¬£©
+        //å…ˆåˆ¤æ–­æ˜¯å¦æ­»äº¡ï¼ˆä¸èƒ½æ”¾åœ¨å—å‡»çŠ¶æ€ä¸­åˆ¤æ–­ï¼Œå› ä¸ºæ•Œäººæ”»å‡»æ—¶ä¸ä¼šè¿›å…¥å—å‡»çŠ¶æ€ï¼‰
         if (enemyStats.GetCurrentHealth() <= 0)
         {
             stateMachine.ChangeState(enemy.DeathState);
@@ -102,22 +102,22 @@ public class EnemyState
 
     public virtual void PhysicsUpdate() 
     {
-        if (isHit)   //ÊÜ»÷×´Ì¬ÖĞ
+        if (isHit)   //å—å‡»çŠ¶æ€ä¸­
         {
             float amount = 0.3f;
             amount += Time.deltaTime;
 
-            enemyMovement.ReduceVelocity(amount);    //³ÖĞø¼õÉÙÒÆ¶¯ËÙ¶È
+            enemyMovement.ReduceVelocity(amount);    //æŒç»­å‡å°‘ç§»åŠ¨é€Ÿåº¦
         }
 
         else
         {
-            enemyMovement.SetVelocityZero();     //ÊÜ»÷½áÊøºóÊ¹µĞÈËÍ£Ö¹ÒÆ¶¯£¬Ò²·ÀÖ¹Íæ¼ÒÅö×²µĞÈËºóµĞÈË³ÖĞøÒÆ¶¯
+            enemyMovement.SetVelocityZero();     //å—å‡»ç»“æŸåä½¿æ•Œäººåœæ­¢ç§»åŠ¨ï¼Œä¹Ÿé˜²æ­¢ç©å®¶ç¢°æ’æ•Œäººåæ•ŒäººæŒç»­ç§»åŠ¨
         }
     }
 
     public virtual void Exit()
     {
-        enemy.Core.Animator.SetBool(m_AnimationBoolName, false);        //ÉèÖÃµ±Ç°×´Ì¬²¼¶ûÎªfalseÒÔ½øÈëÏÂ¸ö×´Ì¬
+        enemy.Core.Animator.SetBool(m_AnimationBoolName, false);        //è®¾ç½®å½“å‰çŠ¶æ€å¸ƒå°”ä¸ºfalseä»¥è¿›å…¥ä¸‹ä¸ªçŠ¶æ€
     }
 }

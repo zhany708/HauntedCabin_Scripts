@@ -5,16 +5,16 @@ using ZhangYu.Utilities;
 
 
 #region Parameters
-[Serializable]      //ÈÃ±à¼­Æ÷ĞòÁĞ»¯Õâ¸öÀà
+[Serializable]      //è®©ç¼–è¾‘å™¨åºåˆ—åŒ–è¿™ä¸ªç±»
 public class EnemyParameter
 {
-    //»ù´¡ĞÅÏ¢
-    public Transform[] PatrolPoints;    //Ñ²Âß·¶Î§
+    //åŸºç¡€ä¿¡æ¯
+    public Transform[] PatrolPoints;    //å·¡é€»èŒƒå›´
 
-    //¹¥»÷Ïà¹Ø
-    public Transform Target;     //Íæ¼ÒµÄ×ø±ê
-    //public Transform[] ChasePoints;     //×·»÷·¶Î§
-    public Transform AttackPoint;   //¹¥»÷·¶Î§µÄÔ²ĞÄÎ»ÖÃ
+    //æ”»å‡»ç›¸å…³
+    public Transform Target;     //ç©å®¶çš„åæ ‡
+    //public Transform[] ChasePoints;     //è¿½å‡»èŒƒå›´
+    public Transform AttackPoint;   //æ”»å‡»èŒƒå›´çš„åœ†å¿ƒä½ç½®
 }
 #endregion
 
@@ -38,18 +38,18 @@ public class Enemy : MonoBehaviour
     public EnemyParameter Parameter;
     public Core Core { get; private set; }
 
-    public Movement Movement => m_Movement ? m_Movement : Core.GetCoreComponent(ref m_Movement);   //¼ì²ém_MovementÊÇ·ñÎª¿Õ£¬²»ÊÇµÄ»°Ôò·µ»ØËü£¬ÊÇµÄ»°Ôòµ÷ÓÃGetCoreComponentº¯ÊıÒÔ»ñÈ¡×é¼ş
+    public Movement Movement => m_Movement ? m_Movement : Core.GetCoreComponent(ref m_Movement);   //æ£€æŸ¥m_Movementæ˜¯å¦ä¸ºç©ºï¼Œä¸æ˜¯çš„è¯åˆ™è¿”å›å®ƒï¼Œæ˜¯çš„è¯åˆ™è°ƒç”¨GetCoreComponentå‡½æ•°ä»¥è·å–ç»„ä»¶
     private Movement m_Movement;
 
-    public Combat Combat => m_Combat ? m_Combat : Core.GetCoreComponent(ref m_Combat);   //¼ì²ém_MovementÊÇ·ñÎª¿Õ£¬²»ÊÇµÄ»°Ôò·µ»ØËü£¬ÊÇµÄ»°Ôòµ÷ÓÃGetCoreComponentº¯ÊıÒÔ»ñÈ¡×é¼ş
+    public Combat Combat => m_Combat ? m_Combat : Core.GetCoreComponent(ref m_Combat);   //æ£€æŸ¥m_Movementæ˜¯å¦ä¸ºç©ºï¼Œä¸æ˜¯çš„è¯åˆ™è¿”å›å®ƒï¼Œæ˜¯çš„è¯åˆ™è°ƒç”¨GetCoreComponentå‡½æ•°ä»¥è·å–ç»„ä»¶
     private Combat m_Combat;
 
-    /*  »ù´¡µ÷ÓÃºËĞÄ×é¼şµÄ·½·¨
+    /*  åŸºç¡€è°ƒç”¨æ ¸å¿ƒç»„ä»¶çš„æ–¹æ³•
     public EnemyDeath Death
     {
         get
         {
-            if (m_Death) { return m_Death; }      //¼ì²é×é¼şÊÇ·ñÎª¿Õ
+            if (m_Death) { return m_Death; }      //æ£€æŸ¥ç»„ä»¶æ˜¯å¦ä¸ºç©º
             m_Death = Core.GetCoreComponent<EnemyDeath>();
             return m_Death;
         }
@@ -57,7 +57,7 @@ public class Enemy : MonoBehaviour
     private EnemyDeath m_Death;
     */
 
-    public DoorController DoorController { get; private set; }      //ÓÃÓÚµĞÈËËÀÍö×´Ì¬ÖĞÔö¼ÓDoorController½Å±¾ÖĞµĞÈËËÀÍö¼ÆÊıµÄÕûÊı
+    public DoorController DoorController { get; private set; }      //ç”¨äºæ•Œäººæ­»äº¡çŠ¶æ€ä¸­å¢åŠ DoorControllerè„šæœ¬ä¸­æ•Œäººæ­»äº¡è®¡æ•°çš„æ•´æ•°
 
     public Timer AttackTimer { get; private set; }
     public RandomPosition PatrolRandomPos { get; private set; }
@@ -70,21 +70,21 @@ public class Enemy : MonoBehaviour
     #endregion
 
     #region Variables
-    public bool CanAttack { get; private set; } = true;        //ÓÃÓÚ¹¥»÷¼ä¸ô
+    public bool CanAttack { get; private set; } = true;        //ç”¨äºæ”»å‡»é—´éš”
 
-    //float m_LastHitTime;        //ÉÏ´ÎÊÜ»÷Ê±¼ä
-    bool m_IsReactivate = false;    //ÅĞ¶ÏµĞÈËÊÇ·ñÎªÖØĞÂ¼¤»î
+    //float m_LastHitTime;        //ä¸Šæ¬¡å—å‡»æ—¶é—´
+    bool m_IsReactivate = false;    //åˆ¤æ–­æ•Œäººæ˜¯å¦ä¸ºé‡æ–°æ¿€æ´»
     #endregion
 
     #region Unity Callback Functions
-    private void Awake()    //×îÔçÊµÊ©µÄº¯Êı£¨Ö»ÊµÊ©Ò»´Î£©
+    private void Awake()    //æœ€æ—©å®æ–½çš„å‡½æ•°ï¼ˆåªå®æ–½ä¸€æ¬¡ï¼‰
     {  
-        Core = GetComponentInChildren<Core>();      //´Ó×ÓÎïÌåÄÇµ÷ÓÃCore½Å±¾
-        Core.SetParameters(enemyData.MaxHealth, enemyData.Defense, enemyData.HitResistance);    //ÉèÖÃ²ÎÊı
+        Core = GetComponentInChildren<Core>();      //ä»å­ç‰©ä½“é‚£è°ƒç”¨Coreè„šæœ¬
+        Core.SetParameters(enemyData.MaxHealth, enemyData.Defense, enemyData.HitResistance);    //è®¾ç½®å‚æ•°
 
         StateMachine = new EnemyStateMachine();
 
-        //³õÊ¼»¯¸÷×´Ì¬
+        //åˆå§‹åŒ–å„çŠ¶æ€
         IdleState = new EnemyIdleState(this, StateMachine, enemyData, "Idle");
         PatrolState = new EnemyPatrolState(this, StateMachine, enemyData, "Idle");
         ChaseState = new EnemyChaseState(this, StateMachine, enemyData, "Idle");
@@ -93,14 +93,14 @@ public class Enemy : MonoBehaviour
         DeathState = new EnemyDeathState(this, StateMachine, enemyData, "Death");       
     }
 
-    protected virtual void Start()      //Ö»ÔÚµÚÒ»Ö¡ÔËĞĞÇ°ÔËĞĞÒ»´ÎÕâ¸öº¯Êı
+    protected virtual void Start()      //åªåœ¨ç¬¬ä¸€å¸§è¿è¡Œå‰è¿è¡Œä¸€æ¬¡è¿™ä¸ªå‡½æ•°
     {
-        StateMachine.Initialize(IdleState);     //³õÊ¼»¯×´Ì¬ÎªÏĞÖÃ
+        StateMachine.Initialize(IdleState);     //åˆå§‹åŒ–çŠ¶æ€ä¸ºé—²ç½®
     }
 
     private void Update()
     {
-        Core.LogicUpdate();     //»ñÈ¡µ±Ç°ËÙ¶È
+        Core.LogicUpdate();     //è·å–å½“å‰é€Ÿåº¦
 
         StateMachine.CurrentState.LogicUpdate();
 
@@ -112,11 +112,11 @@ public class Enemy : MonoBehaviour
         StateMachine.CurrentState.PhysicsUpdate();
     }
 
-    protected virtual void OnEnable()       //Ã¿´ÎÖØĞÂ¼¤»îÊ±¶¼»áÔËĞĞÕâ¸öº¯Êı
+    protected virtual void OnEnable()       //æ¯æ¬¡é‡æ–°æ¿€æ´»æ—¶éƒ½ä¼šè¿è¡Œè¿™ä¸ªå‡½æ•°
     {
-        AttackTimer = new Timer(enemyData.AttackInterval);      //ÓÃ¹¥»÷¼ä¸ô³õÊ¼»¯¼ÆÊ±Æ÷
+        AttackTimer = new Timer(enemyData.AttackInterval);      //ç”¨æ”»å‡»é—´éš”åˆå§‹åŒ–è®¡æ—¶å™¨
 
-        //¸ù¾İ¸¸ÎïÌåµÄ×ø±ê³õÊ¼»¯Ëæ»úÉú³É×ø±ê½Å±¾£¨transform.localPosition·µ»ØµÄÓÀÔ¶ÊÇÏà¶ÔÓÚ¸¸ÎïÌåµÄ×ø±ê£©£¬Ê¹ÓÃ¸úÎïÌåµÄÊÀ½ç×ø±ê½øĞĞ¼ÆËã£¨ÒòÎªÖ»ÓĞ¸úÎïÌåµÄ×ø±êÔÚÕâÖ®Ç°¸³¹ıÖµÁË£©
+        //æ ¹æ®çˆ¶ç‰©ä½“çš„åæ ‡åˆå§‹åŒ–éšæœºç”Ÿæˆåæ ‡è„šæœ¬ï¼ˆtransform.localPositionè¿”å›çš„æ°¸è¿œæ˜¯ç›¸å¯¹äºçˆ¶ç‰©ä½“çš„åæ ‡ï¼‰ï¼Œä½¿ç”¨è·Ÿç‰©ä½“çš„ä¸–ç•Œåæ ‡è¿›è¡Œè®¡ç®—ï¼ˆå› ä¸ºåªæœ‰è·Ÿç‰©ä½“çš„åæ ‡åœ¨è¿™ä¹‹å‰èµ‹è¿‡å€¼äº†ï¼‰
         Vector2 leftDownPos = Parameter.PatrolPoints[0].transform.localPosition + transform.parent.position;
         Vector2 rightTopPos = Parameter.PatrolPoints[1].transform.localPosition + transform.parent.position;
 
@@ -128,9 +128,9 @@ public class Enemy : MonoBehaviour
 
 
 
-        foreach (Transform child in transform.parent)    //ÔÚ³¡¾°ÖĞÈ¡Ïû¼¤»îËùÓĞÑ²Âßµã
+        foreach (Transform child in transform.parent)    //åœ¨åœºæ™¯ä¸­å–æ¶ˆæ¿€æ´»æ‰€æœ‰å·¡é€»ç‚¹
         {
-            foreach (Transform child2 in child)     //ÔÚµĞÈËµÄ¸¸ÎïÌåÖĞ¼ìË÷Ã¿Ò»¸ö×ÓÎïÌåµÄ×ÓÎïÌå
+            foreach (Transform child2 in child)     //åœ¨æ•Œäººçš„çˆ¶ç‰©ä½“ä¸­æ£€ç´¢æ¯ä¸€ä¸ªå­ç‰©ä½“çš„å­ç‰©ä½“
             {
                 if (child2.CompareTag("PatrolPoint"))
                 {
@@ -140,11 +140,11 @@ public class Enemy : MonoBehaviour
         }
 
 
-        CanAttack = true;   //ÖØĞÂ¼¤»îÊ±½«¿É¹¥»÷ÉèÖÃÎªtrue
-        AttackTimer.OnTimerDone += SetCanAttackTrue;        //´¥·¢ÊÂ¼ş£¬Ê¹µĞÈË¿ÉÒÔÖØĞÂ¹¥»÷
+        CanAttack = true;   //é‡æ–°æ¿€æ´»æ—¶å°†å¯æ”»å‡»è®¾ç½®ä¸ºtrue
+        AttackTimer.OnTimerDone += SetCanAttackTrue;        //è§¦å‘äº‹ä»¶ï¼Œä½¿æ•Œäººå¯ä»¥é‡æ–°æ”»å‡»
 
 
-        if (m_IsReactivate)     //µĞÈËÖØĞÂ¼¤»îºó²Å»áÔÚÕâÀï³õÊ¼»¯ÏĞÖÃ×´Ì¬£¬·ñÔòµÚÒ»´ÎÉú³ÉÊ±Èç¹ûÔÚÕâ³õÊ¼»¯»áÒòÎª½Å±¾µÄÊµÊ©Ë³Ğò³öÏÖnull´íÎó
+        if (m_IsReactivate)     //æ•Œäººé‡æ–°æ¿€æ´»åæ‰ä¼šåœ¨è¿™é‡Œåˆå§‹åŒ–é—²ç½®çŠ¶æ€ï¼Œå¦åˆ™ç¬¬ä¸€æ¬¡ç”Ÿæˆæ—¶å¦‚æœåœ¨è¿™åˆå§‹åŒ–ä¼šå› ä¸ºè„šæœ¬çš„å®æ–½é¡ºåºå‡ºç°nullé”™è¯¯
         {
             StateMachine.Initialize(IdleState);
         }
@@ -152,11 +152,11 @@ public class Enemy : MonoBehaviour
 
     private void OnDisable()
     {
-        Movement.SetVelocityZero();     //È¡Ïû¼¤»îºó½«¸ÕÌåËÙ¶ÈÖØÖÃ£¬·ÀÖ¹±¨´í
+        Movement.SetVelocityZero();     //å–æ¶ˆæ¿€æ´»åå°†åˆšä½“é€Ÿåº¦é‡ç½®ï¼Œé˜²æ­¢æŠ¥é”™
 
-        Combat.SetIsHit(false);  //µĞÈËËÀÍöºóÉèÖÃCombatÖĞµÄÊÜ»÷²¼¶ûÎªfalse£¬ÒÔ±ã¼°Ê±½øÈëËÀÍö×´Ì¬£¬ÇÒ·ÀÖ¹ÖØĞÂ¼¤»îºóÖ±½Ó½øÈëÊÜ»÷×´Ì¬
+        Combat.SetIsHit(false);  //æ•Œäººæ­»äº¡åè®¾ç½®Combatä¸­çš„å—å‡»å¸ƒå°”ä¸ºfalseï¼Œä»¥ä¾¿åŠæ—¶è¿›å…¥æ­»äº¡çŠ¶æ€ï¼Œä¸”é˜²æ­¢é‡æ–°æ¿€æ´»åç›´æ¥è¿›å…¥å—å‡»çŠ¶æ€
 
-        m_IsReactivate = true;      //±íÊ¾ÒÑ¾­ÖØĞÂ¼¤»î
+        m_IsReactivate = true;      //è¡¨ç¤ºå·²ç»é‡æ–°æ¿€æ´»
 
         AttackTimer.OnTimerDone -= SetCanAttackTrue;
     }
@@ -164,7 +164,7 @@ public class Enemy : MonoBehaviour
 
     #region Main Functions
     /*
-    //¼ì²âÍæ¼ÒÊÇ·ñ³¬³ö×·»÷·¶Î§
+    //æ£€æµ‹ç©å®¶æ˜¯å¦è¶…å‡ºè¿½å‡»èŒƒå›´
     public bool CheckOutside()
     {
         float minX = Mathf.Min(Parameter.ChasePoints[0].position.x, Parameter.ChasePoints[1].position.x);
@@ -175,35 +175,35 @@ public class Enemy : MonoBehaviour
         return Parameter.Target.position.x < minX || Parameter.Target.position.x > maxX || Parameter.Target.position.y < minY || Parameter.Target.position.y > maxY;
     }
     */
-    private void SetCanAttackTrue()     //ÓÃÓÚAction£¬ÓÉÓÚ²»ÄÜ´«²ÎÊı£¬Òò´Ë²»ÄÜÓÃÏÂÃæSettersÀïµÄº¯Êı
+    private void SetCanAttackTrue()     //ç”¨äºActionï¼Œç”±äºä¸èƒ½ä¼ å‚æ•°ï¼Œå› æ­¤ä¸èƒ½ç”¨ä¸‹é¢Settersé‡Œçš„å‡½æ•°
     {
         CanAttack = true;
     }
     #endregion
 
     #region Animation Event Functions
-    private void DeathLogicForAnimation()      //ÓÃÓÚ¶¯»­ÊÂ¼ş£¬´İ»ÙÎïÌå
+    private void DeathLogicForAnimation()      //ç”¨äºåŠ¨ç”»äº‹ä»¶ï¼Œæ‘§æ¯ç‰©ä½“
     {
         if (transform.parent != null)
         {
-            //¼ì²éÓÎÏ·ÊÇ·ñÒÑ¾­½áÊø£¬Èç¹û½áÊøÔòÎŞĞèÔÙ½øĞĞ¼ÆÊı
+            //æ£€æŸ¥æ¸¸æˆæ˜¯å¦å·²ç»ç»“æŸï¼Œå¦‚æœç»“æŸåˆ™æ— éœ€å†è¿›è¡Œè®¡æ•°
             if (DoorController != null && !EnvironmentManager.Instance.IsGameOver)
             {
-                DoorController.IncrementEnemyCount();     //Ôö¼ÓµĞÈË¼ÆÊıÆ÷µÄ¼ÆÊı
+                DoorController.IncrementEnemyCount();     //å¢åŠ æ•Œäººè®¡æ•°å™¨çš„è®¡æ•°
             }
             
-            EnemyPool.Instance.PushObject(transform.parent.gameObject);      //½«µĞÈËµÄ¸¸ÎïÌå·Å»Ø³ØÖĞ£¬Ò²½«·Å»Ø¸¸ÎïÌåµÄËùÓĞ×ÓÎïÌå
+            EnemyPool.Instance.PushObject(transform.parent.gameObject);      //å°†æ•Œäººçš„çˆ¶ç‰©ä½“æ”¾å›æ± ä¸­ï¼Œä¹Ÿå°†æ”¾å›çˆ¶ç‰©ä½“çš„æ‰€æœ‰å­ç‰©ä½“
         }
     }
     #endregion
 
     #region Trigger Detections
-    //¸÷ÖÖÎïÀí¼ì²â
+    //å„ç§ç‰©ç†æ£€æµ‹
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (other.CompareTag("Player"))
         {
-            Parameter.Target = other.transform;     //´¢´æÍæ¼ÒµÄÎ»ÖÃĞÅÏ¢
+            Parameter.Target = other.transform;     //å‚¨å­˜ç©å®¶çš„ä½ç½®ä¿¡æ¯
         }
     }
 
@@ -211,19 +211,19 @@ public class Enemy : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            Parameter.Target = null;     //Íæ¼ÒÍË³ö·¶Î§Ê±Çå¿Õ
+            Parameter.Target = null;     //ç©å®¶é€€å‡ºèŒƒå›´æ—¶æ¸…ç©º
         }
     }
 
 
     private void OnDrawGizmos()
     {
-        Gizmos.DrawWireSphere(Parameter.AttackPoint.position, enemyData.AttackArea);    //ÉèÖÃ¹¥»÷·¶Î§µÄÔ²ĞÄºÍ°ë¾¶
+        Gizmos.DrawWireSphere(Parameter.AttackPoint.position, enemyData.AttackArea);    //è®¾ç½®æ”»å‡»èŒƒå›´çš„åœ†å¿ƒå’ŒåŠå¾„
     }
     #endregion
 
     #region Getters
-    //»ñÈ¡³ÉÔ±±äÁ¿
+    //è·å–æˆå‘˜å˜é‡
     /*
     public float GetLastHitTime()
     {
@@ -233,7 +233,7 @@ public class Enemy : MonoBehaviour
     #endregion
 
     #region Setters
-    //ÉèÖÃ³ÉÔ±±äÁ¿
+    //è®¾ç½®æˆå‘˜å˜é‡
     public void SetDoorController(DoorController door)
     {
         DoorController = door;
@@ -253,7 +253,7 @@ public class Enemy : MonoBehaviour
 
     public void ResetLocalPos()
     {
-        //½«´Ë½Å±¾°ó¶¨µÄÎïÌåµÄÏà¶ÔÓÚ¸¸ÎïÌåµÄ×ø±êÇåÁã
+        //å°†æ­¤è„šæœ¬ç»‘å®šçš„ç‰©ä½“çš„ç›¸å¯¹äºçˆ¶ç‰©ä½“çš„åæ ‡æ¸…é›¶
         transform.localPosition = Vector2.zero;
     }
     #endregion

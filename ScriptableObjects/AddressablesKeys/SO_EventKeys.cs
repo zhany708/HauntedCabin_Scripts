@@ -5,13 +5,13 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "newEventKeys", menuName = "Data/Event Data/Event Keys")]
 public class SO_EventKeys : ScriptableObject
 {
-    //ÊÂ¼şĞèÒªÓÃÁĞ±í£¬·ñÔò²»·½±ãËæ»úÉú³É
+    //äº‹ä»¶éœ€è¦ç”¨åˆ—è¡¨ï¼Œå¦åˆ™ä¸æ–¹ä¾¿éšæœºç”Ÿæˆ
 
-    //Ô¤Õ×ÊÂ¼ş
+    //é¢„å…†äº‹ä»¶
     [Header("Evil Event")]
     public List<string> EvilEventKeys;
 
-    //ÆÕÍ¨ÊÂ¼ş
+    //æ™®é€šäº‹ä»¶
     [Header("Normal Event")]
     public List<string> NormalEventKeys;
 }

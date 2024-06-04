@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class TransitionStagePanel : BasePanel
 {
-    public TextMeshProUGUI TransitionStageText;      //ÎÄ±¾×é¼ş
+    public TextMeshProUGUI TransitionStageText;      //æ–‡æœ¬ç»„ä»¶
 
     float m_DisplayDuration = 5f;
 
@@ -27,10 +27,10 @@ public class TransitionStagePanel : BasePanel
 
     private void OnEnable()
     {       
-        OnFadeOutFinished += ClosePanel;            //³¹µ×µ­³öºóÔÙÉ¾³ı½çÃæ£¬²¢ÇÒ´ò¿ªÈÎÎñ½çÃæ
+        OnFadeOutFinished += ClosePanel;            //å½»åº•æ·¡å‡ºåå†åˆ é™¤ç•Œé¢ï¼Œå¹¶ä¸”æ‰“å¼€ä»»åŠ¡ç•Œé¢
         OnFadeOutFinished += OpenScreenPlayBackgroundPanel;
 
-        OnFadeInFinished += StartTextAnimations;    //³¹µ×µ­ÈëºóÔÙ¿ªÊ¼´ò×Ö
+        OnFadeInFinished += StartTextAnimations;    //å½»åº•æ·¡å…¥åå†å¼€å§‹æ‰“å­—
     }
 
     protected override void OnDisable()
@@ -51,7 +51,7 @@ public class TransitionStagePanel : BasePanel
     {
         panelName = name;
 
-        Fade(CanvasGroup, FadeInAlpha, FadeDuration, false);     //µ­Èë£¨Ã»ÓĞÉäÏß×èµ²£©       
+        Fade(CanvasGroup, FadeInAlpha, FadeDuration, false);     //æ·¡å…¥ï¼ˆæ²¡æœ‰å°„çº¿é˜»æŒ¡ï¼‰       
     }
 
 
@@ -60,15 +60,15 @@ public class TransitionStagePanel : BasePanel
 
     private void StartTextAnimations()
     {
-        TransitionStageText.gameObject.SetActive(true);       //¼¤»îÎÄ±¾×é¼ş
+        TransitionStageText.gameObject.SetActive(true);       //æ¿€æ´»æ–‡æœ¬ç»„ä»¶
 
-        //ÏÔÊ¾ÎÄ±¾
+        //æ˜¾ç¤ºæ–‡æœ¬
         Coroutine textCoroutine = StartCoroutine(TypeText(TransitionStageText, TransitionStageText.text));
 
-        //ÏÔÊ¾Ò»¶¨Ê±¼äºóµ­³ö½çÃæ
+        //æ˜¾ç¤ºä¸€å®šæ—¶é—´åæ·¡å‡ºç•Œé¢
         Coroutine ClosePanelCoroutine = StartCoroutine(Delay.Instance.DelaySomeTime(m_DisplayDuration, () =>
         {
-            Fade(CanvasGroup, FadeOutAlpha, FadeDuration, false);     //µ­³ö
+            Fade(CanvasGroup, FadeOutAlpha, FadeDuration, false);     //æ·¡å‡º
         }));
 
         generatedCoroutines.Add(textCoroutine);
@@ -79,6 +79,6 @@ public class TransitionStagePanel : BasePanel
 
     private async void OpenScreenPlayBackgroundPanel()        
     {
-        await UIManager.Instance.OpenPanel(UIManager.Instance.UIKeys.HellsCallPanel);   //´ò¿ª¾ç±¾±³¾°½çÃæ
+        await UIManager.Instance.OpenPanel(UIManager.Instance.UIKeys.HellsCallPanel);   //æ‰“å¼€å‰§æœ¬èƒŒæ™¯ç•Œé¢
     }
 }

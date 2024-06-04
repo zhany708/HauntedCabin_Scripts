@@ -14,23 +14,23 @@ public class EnemyHitState : EnemyState
         base.Enter();
 
         isHit = true;
-        //enemy.SetLastHitTime(Time.time);     //ÉèÖÃµ±Ç°Ê±¼äÎªÉÏ´ÎÊÜ»÷Ê±¼ä
+        //enemy.SetLastHitTime(Time.time);     //è®¾ç½®å½“å‰æ—¶é—´ä¸ºä¸Šæ¬¡å—å‡»æ—¶é—´
     }
 
     public override void LogicUpdate()
     {
-        //ÊÜ»÷½áÊøºó½øÈë¹¥»÷×´Ì¬
+        //å—å‡»ç»“æŸåè¿›å…¥æ”»å‡»çŠ¶æ€
         if (core.AnimatorInfo.IsName("Hit"))
         {
             if (core.AnimatorInfo.normalizedTime >= 0.95f)
             {
-                enemy.Parameter.Target = GameObject.FindWithTag("Player").transform;        //Ñ°ÕÒÓĞPlayer±êÇ©µÄÎï¼ş×ø±ê
+                enemy.Parameter.Target = GameObject.FindWithTag("Player").transform;        //å¯»æ‰¾æœ‰Playeræ ‡ç­¾çš„ç‰©ä»¶åæ ‡
                 stateMachine.ChangeState(enemy.ChaseState);
             }
 
             else if (core.AnimatorInfo.normalizedTime >= 0.5f)
             {
-                enemyMovement.SetVelocityZero();     //¶¯»­²¥µ½50%Ê±Í£Ö¹ÒÆ¶¯
+                enemyMovement.SetVelocityZero();     //åŠ¨ç”»æ’­åˆ°50%æ—¶åœæ­¢ç§»åŠ¨
             }        
         }
     }

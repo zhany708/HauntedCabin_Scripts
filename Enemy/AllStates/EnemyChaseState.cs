@@ -16,21 +16,21 @@ public class EnemyChaseState : EnemyState
     {
         if (enemy.Parameter.Target != null)
         {
-            //Ê¹µÐÈË³¯ÏòÍæ¼Ò
+            //ä½¿æ•Œäººæœå‘çŽ©å®¶
             enemy.EnemyFlip.FlipX( enemy.Movement.GetFlipNum(enemy.Parameter.Target.position, enemy.transform.position) );
 
-            //¼ÆËãµÐÈËÓëÍæ¼ÒµÄ¾àÀë
+            //è®¡ç®—æ•Œäººä¸ŽçŽ©å®¶çš„è·ç¦»
             m_DistanceToPlayer = Vector2.Distance(enemy.transform.position, enemy.Parameter.Target.position);       
         }
 
         base.LogicUpdate();
 
-        if (enemy.Parameter.Target == null) //|| enemy.CheckOutside())  ¿ÉÌí¼Ó£ºÍæ¼Ò°¡³¬³ö×·»÷·¶Î§Ê±ÇÐ»»µ½´ý»ú×´Ì¬
+        if (enemy.Parameter.Target == null) //|| enemy.CheckOutside())  å¯æ·»åŠ ï¼šçŽ©å®¶å•Šè¶…å‡ºè¿½å‡»èŒƒå›´æ—¶åˆ‡æ¢åˆ°å¾…æœºçŠ¶æ€
         {
-            stateMachine.ChangeState(enemy.IdleState);      //¶ªÊ§Ä¿±êºóÇÐ»»µ½´ý»ú×´Ì¬
+            stateMachine.ChangeState(enemy.IdleState);      //ä¸¢å¤±ç›®æ ‡åŽåˆ‡æ¢åˆ°å¾…æœºçŠ¶æ€
         }
 
-        //¼ì²â¹¥»÷·¶Î§£ºµÚÒ»¸ö²ÎÊýÎªÔ²ÐÄÎ»ÖÃ£¬µÚ¶þ¸öÎª°ë¾¶£¬µÚÈý¸öÎªÄ¿±êÍ¼²ã.Íæ¼Ò´¦ÓÚ¹¥»÷·¶Î§ÇÒ¹¥»÷¼ä¸ô½áÊøÔò½øÈë¹¥»÷×´Ì¬
+        //æ£€æµ‹æ”»å‡»èŒƒå›´ï¼šç¬¬ä¸€ä¸ªå‚æ•°ä¸ºåœ†å¿ƒä½ç½®ï¼Œç¬¬äºŒä¸ªä¸ºåŠå¾„ï¼Œç¬¬ä¸‰ä¸ªä¸ºç›®æ ‡å›¾å±‚.çŽ©å®¶å¤„äºŽæ”»å‡»èŒƒå›´ä¸”æ”»å‡»é—´éš”ç»“æŸåˆ™è¿›å…¥æ”»å‡»çŠ¶æ€
         else if (Physics2D.OverlapCircle(enemy.Parameter.AttackPoint.position, enemyData.AttackArea, enemyData.TargetLayer) && enemy.CanAttack)
         {
             stateMachine.ChangeState(enemy.AttackState);
@@ -41,7 +41,7 @@ public class EnemyChaseState : EnemyState
     {
         base.PhysicsUpdate();
 
-        //ÓÐÍæ¼Ò×ø±êÇÒÓëÍæ¼Ò¾àÀë´óÓÚ×îÐ¡¾àÀëÊ±³ÖÐø×·»÷Íæ¼Ò
+        //æœ‰çŽ©å®¶åæ ‡ä¸”ä¸ŽçŽ©å®¶è·ç¦»å¤§äºŽæœ€å°è·ç¦»æ—¶æŒç»­è¿½å‡»çŽ©å®¶
         if (enemy.Parameter.Target && m_DistanceToPlayer > enemyData.StoppingDistance)     
         {
             enemy.transform.position = Vector2.MoveTowards(enemy.transform.position, enemy.Parameter.Target.position, enemyData.ChaseSpeed * Time.deltaTime);

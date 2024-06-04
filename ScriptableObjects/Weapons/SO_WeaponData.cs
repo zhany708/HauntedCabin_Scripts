@@ -5,12 +5,12 @@ using UnityEngine;
 
 public class SO_WeaponData : ScriptableObject
 {
-    public int AmountOfAttack { get; protected set; }       //ÓÃÓÚÔÚ¹¥»÷ĞÔÎäÆ÷ÊıÖµ½Å±¾ÖĞĞŞ¸Ä
+    public int AmountOfAttack { get; protected set; }       //ç”¨äºåœ¨æ”»å‡»æ€§æ­¦å™¨æ•°å€¼è„šæœ¬ä¸­ä¿®æ”¹
 
 
-    public string AudioClipName;    //¸ÃÎäÆ÷µÄÒôĞ§Ãû£¬ÓÃÓÚ¼ÓÔØ
-    public float AudioVolume = 1f;       //ÎäÆ÷ÒôĞ§µÄÒôÁ¿
+    public string AudioClipName;    //è¯¥æ­¦å™¨çš„éŸ³æ•ˆåï¼Œç”¨äºåŠ è½½
+    public float AudioVolume = 1f;       //æ­¦å™¨éŸ³æ•ˆçš„éŸ³é‡
 
-    //ÎäÆ÷¹¥»÷Ê±µÄ²¹³¥ÒÆ¶¯ËÙ¶È¡£¼ÓÉÏÖ»ÄÜÄÚ²¿µ÷Õû£¬´Ó¶ø·ÀÖ¹UnityÖĞÖØ¸´ĞèÒªÎÒÃÇµ÷ÕûÊıÖµ£¨¹¥»÷ĞÔÎäÆ÷Êı¾İÖĞÒ²ÓĞÒÆ¶¯²¹³¥ËÙ¶ÈĞèÒªÉèÖÃ£©
+    //æ­¦å™¨æ”»å‡»æ—¶çš„è¡¥å¿ç§»åŠ¨é€Ÿåº¦ã€‚åŠ ä¸Šåªèƒ½å†…éƒ¨è°ƒæ•´ï¼Œä»è€Œé˜²æ­¢Unityä¸­é‡å¤éœ€è¦æˆ‘ä»¬è°ƒæ•´æ•°å€¼ï¼ˆæ”»å‡»æ€§æ­¦å™¨æ•°æ®ä¸­ä¹Ÿæœ‰ç§»åŠ¨è¡¥å¿é€Ÿåº¦éœ€è¦è®¾ç½®ï¼‰
     //public float[] MovementSpeed { get; protected set; }
 }
