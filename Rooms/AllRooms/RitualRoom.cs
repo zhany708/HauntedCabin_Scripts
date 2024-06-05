@@ -4,12 +4,12 @@ public class RitualRoom : RootRoomController
     {
         base.OnEnable();
 
-        //ÒòÎªÒÇÊ½·¿Ö»ÓĞÒ»¸ö£¬ËùÒÔÉú³Éºó½«ÒÇÊ½·¿µÄÃû×Ö´ÓÁĞ±íÖĞÒÆ³ı
+        //å› ä¸ºä»ªå¼æˆ¿åªæœ‰ä¸€ä¸ªï¼Œæ‰€ä»¥ç”Ÿæˆåå°†ä»ªå¼æˆ¿çš„åå­—ä»åˆ—è¡¨ä¸­ç§»é™¤
         if (RoomManager.Instance.RoomKeys.FirstFloorRoomKeys.Contains(HellsCall.Instance.RitualRoomName) )
         {
             RoomManager.Instance.RoomKeys.FirstFloorRoomKeys.Remove(HellsCall.Instance.RitualRoomName);
         }
 
-        HellsCall.Instance.SetRitualRoomDoorController(doorControllerInsideThisRoom);   //½«ÒÇÊ½·¿µÄÃÅ¿ØÖÆÆ÷½Å±¾´«¸ø¾ç±¾½Å±¾
+        HellsCall.Instance.SetRitualRoomDoorController(doorControllerInsideThisRoom);   //å°†ä»ªå¼æˆ¿çš„é—¨æ§åˆ¶å™¨è„šæœ¬ä¼ ç»™å‰§æœ¬è„šæœ¬
     }
 }
