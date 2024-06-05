@@ -4,11 +4,7 @@ public class RitualRoom : RootRoomController
     {
         base.OnEnable();
 
-<<<<<<< HEAD
-        //因为仪式房只有一个，所以生成后将仪式房的名字从列表中移除
-=======
         //因为仪式房只有一个，所以生成后将仪式房从列表中移除
->>>>>>> bb24b688957aaf28d467dd9a5046ca87ffa552a3
         if (RoomManager.Instance.RoomKeys.FirstFloorRoomKeys.Contains(HellsCall.Instance.RitualRoomName) )
         {
             RoomManager.Instance.RoomKeys.FirstFloorRoomKeys.Remove(HellsCall.Instance.RitualRoomName);
