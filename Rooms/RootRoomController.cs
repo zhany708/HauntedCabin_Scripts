@@ -14,10 +14,11 @@ public class RootRoomController : MonoBehaviour
     public float m_PostProcessDuration = 1f;
 
 
+    protected DoorController doorControllerInsideThisRoom;
+
+
     List<SpriteRenderer> m_AllSprites;
-
-
-    DoorController m_DoorInsideThisRoom;
+  
     RoomManager m_RoomManager;
     RoomType m_RoomType;
     PostProcessController m_PostProcessController;
@@ -38,7 +39,7 @@ public class RootRoomController : MonoBehaviour
         //获取该物体以及所有子物体的精灵图组件
         m_AllSprites = new List<SpriteRenderer>(GetComponentsInChildren<SpriteRenderer>() );
 
-        m_DoorInsideThisRoom = GetComponentInChildren<DoorController>();
+        doorControllerInsideThisRoom = GetComponentInChildren<DoorController>();
 
         m_RoomManager = GameObject.Find("RoomManager").GetComponent<RoomManager>();   //寻找场景中这个名字的物体，并获得相应的组件
         if (m_RoomManager == null)
@@ -120,9 +121,9 @@ public class RootRoomController : MonoBehaviour
             }
             
 
-            if (m_DoorInsideThisRoom != null)
+            if (doorControllerInsideThisRoom != null)
             {
-                m_DoorInsideThisRoom.RoomTrigger.enabled = true;    //玩家离开房间后重新激活门的触发器，从而让玩家之后再进入时生成敌人             
+                doorControllerInsideThisRoom.RoomTrigger.enabled = true;    //玩家离开房间后重新激活门的触发器，从而让玩家之后再进入时生成敌人             
             }             
         }
     }

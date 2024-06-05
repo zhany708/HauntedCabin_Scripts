@@ -7,7 +7,7 @@ using UnityEngine;
 public class RoomManager : ManagerTemplate<RoomManager>
 {
     public delegate void RoomGeneratedHandler(Vector2 roomPosition);        //delegate是用于限制引用事件的函数的参数（这里是必须有Vector2参数）
-    public event RoomGeneratedHandler OnRoomGenerated;                      //使用上面的限制的事件
+    public event RoomGeneratedHandler OnRoomGenerated;                      //使用上面的限制的事件。接收方为HellsCall脚本
 
 
     public SO_RoomKeys RoomKeys;            //生成房间需要的所有房间名

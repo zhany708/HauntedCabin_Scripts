@@ -7,8 +7,6 @@ public class Ritual : MonoBehaviour
     float m_RitualDuration = 0f;        //仪式时间
     float m_EnemySpawnInterval = 0f;    //敌人生成的冷却
 
-    DoorController m_DoorController;
-
 
 
 

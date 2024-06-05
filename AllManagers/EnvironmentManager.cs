@@ -53,9 +53,10 @@ public class EnvironmentManager : ManagerTemplate<EnvironmentManager>
     //持续的生成敌人，持续时长和生成间隔根据参数决定
     public void GenerateEnemy(DoorController doorController, GameObject enemyPrefab, float duration, float spawnInterval)
     {
-        Vector2 spawnPos = doorController.EnemySpwanPos.GenerateSingleRandomPos();
-    }
+        Vector2 spawnPos = doorController.EnemySpwanPos.GenerateSingleRandomPos();  //生成随机坐标
 
+        CheckIfCollideFurniture(ref spawnPos, doorController);      //检查是否跟家具重叠
+    }
 
     //根据房间提前设置的敌人数量生成敌人
     public void GenerateEnemy(DoorController doorController)
@@ -125,7 +126,36 @@ public class EnvironmentManager : ManagerTemplate<EnvironmentManager>
             attemptCount++;
             adaptiveTolerance -= 0.1f;  //如果实在难以生成不会重复的坐标的话，减少检查重复的距离
         }
+    }
 
+    //检查单独的坐标是否跟家具重叠
+    private void CheckIfCollideFurniture(ref Vector2 enemySpawnPos, DoorController doorController)
+    {
+        Vector2 checkSize = new Vector2(doorController.PhysicsCheckingXPos, doorController.PhysicsCheckingYPos);      //物理检测的大小
+
+        float adaptiveTolerance = doorController.EnemySpwanPos.GetOverlapTolerance();        //获取检查重复的距离
+        int attemptCount = 0;       //用于防止进入无限循环的变量
+
+
+        while (attemptCount < 100)      //确保不超过最大尝试次数
+        {
+            bool isOverlap = false;
+
+            if (!IsPositionEmpty(enemySpawnPos, checkSize, doorController) )    //检查是否跟家具重复
+            {
+                enemySpawnPos = doorController.EnemySpwanPos.GenerateSingleRandomPos();      //生成新的坐标
+
+                doorController.EnemySpwanPos.SetOverlapTolerance(adaptiveTolerance);     //设置新的检查重复的距离
+
+                isOverlap = true;  //设置布尔以继续检查
+            }
+            
+
+            if (!isOverlap) break;  //当没有重复时则退出循环
+
+            attemptCount++;
+            adaptiveTolerance -= 0.1f;  //如果实在难以生成不会重复的坐标的话，减少检查重复的距离
+        }
     }
 
 

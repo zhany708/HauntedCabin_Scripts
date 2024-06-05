@@ -1,10 +1,5 @@
 public class RitualRoom : RootRoomController
 {
-
-
-
-
-
     protected override void OnEnable()
     {
         base.OnEnable();
@@ -14,5 +9,7 @@ public class RitualRoom : RootRoomController
         {
             RoomManager.Instance.RoomKeys.FirstFloorRoomKeys.Remove(HellsCall.Instance.RitualRoomName);
         }
+
+        HellsCall.Instance.SetRitualRoomDoorController(doorControllerInsideThisRoom);   //将仪式房的门控制器脚本传给剧本脚本
     }
 }
