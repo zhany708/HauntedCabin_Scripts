@@ -50,7 +50,14 @@ public class EnvironmentManager : ManagerTemplate<EnvironmentManager>
 
 
     #region 生成敌人相关
-    //生成敌人后，用Physics2D.Oberlap检测怪物即将生成的坐标是否跟家具重合，如果重合则重新生成坐标
+    //持续的生成敌人，持续时长和生成间隔根据参数决定
+    public void GenerateEnemy(DoorController doorController, GameObject enemyPrefab, float duration, float spawnInterval)
+    {
+        Vector2 spawnPos = doorController.EnemySpwanPos.GenerateSingleRandomPos();
+    }
+
+
+    //根据房间提前设置的敌人数量生成敌人
     public void GenerateEnemy(DoorController doorController)
     {
         if (doorController.EnemyObjects.Length != 0)   //如果房间有怪物

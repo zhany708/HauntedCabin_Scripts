@@ -7,7 +7,7 @@ public class HellsCall : BaseScreenplay<HellsCall>
 {
     public GameObject RitualStone;      //祷告石物体
 
-
+    public DoorController RitualRoomDoorController { get; private set; }    //仪式房的DoorController脚本
     public PlayerStats PlayerStats      //Lazy load
     {
         get
@@ -263,6 +263,11 @@ public class HellsCall : BaseScreenplay<HellsCall>
 
 
     #region Setters
+    public void SetRitualRoomDoorController(DoorController thisDoorController)      //仪式房生成后调用此函数
+    {
+        RitualRoomDoorController = thisDoorController;
+    }
+
     public void SetCanStartRitual(bool isTrue)
     {
         Debug.Log("Can player start the ritual?" + isTrue);
