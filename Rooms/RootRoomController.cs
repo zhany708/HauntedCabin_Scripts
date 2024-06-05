@@ -58,7 +58,7 @@ public class RootRoomController : MonoBehaviour
 
 
 
-    private void OnEnable()
+    protected virtual void OnEnable()
     {
         //Debug.Log(transform.position);
 

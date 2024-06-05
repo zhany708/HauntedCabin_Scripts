@@ -17,7 +17,7 @@ public class Ritual : MonoBehaviour
         if (other.gameObject.CompareTag("Player"))
         {
             //需要做的：在一定时间内，定期在房间内生成敌人（生成位置随机）。敌人只会攻击仪式台，即使受到了玩家攻击（敌人相关的逻辑放在敌人脚本里）
-
+            GenerateEnemyThroughTime(m_RitualDuration, m_EnemySpawnInterval);
         }
     }
 

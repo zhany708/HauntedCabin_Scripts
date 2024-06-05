@@ -52,7 +52,8 @@ public class DoorController : MonoBehaviour
 
     private void Start()
     {
-        if (m_MainRoom.GetType() == typeof(RootRoomController))     //检查当前房间是否为初始板块
+        //检查当前房间是否为普通房间（不是的话就不生成事件和敌人）
+        if ( !(m_MainRoom.GetComponent<RootRoomController>() is NormalRoomController) )
         {
             m_IsRootRoom = true;        
         }
