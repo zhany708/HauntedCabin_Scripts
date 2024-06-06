@@ -20,6 +20,7 @@ public class Altar : MonoBehaviour     //放在仪式台上的脚本
 
     private void Awake()
     {
+        //初始化计数器
         m_DurationTimer = new Timer(m_RitualDuration);
         m_EnemySpawnTimer = new Timer(m_EnemySpawnInterval);
     }
@@ -31,22 +32,28 @@ public class Altar : MonoBehaviour     //放在仪式台上的脚本
 
     private void OnEnable()
     {
-        m_EnemySpawnTimer.OnTimerDone += GenerateEnemy;     //将函数绑定到计时结束的事件，这样计时结束后就会立刻生成敌人，并再次计时
+        //将函数绑定到计时结束的事件
+        m_DurationTimer.OnTimerDone += RitualDone;          //计时结束后进行仪式结束的逻辑
+        m_EnemySpawnTimer.OnTimerDone += GenerateEnemy;     //计时结束后会立刻生成敌人，并再次计时
     }
 
     private void OnDisable()
     {
+        m_DurationTimer.OnTimerDone -= RitualDone;
         m_EnemySpawnTimer.OnTimerDone -= GenerateEnemy;
     }
+
 
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (other.gameObject.CompareTag("Player"))
         {
-            //需要做的：在一定时间内，定期在房间内生成敌人（生成位置随机）。敌人只会攻击仪式台，即使受到了玩家攻击（敌人相关的逻辑放在敌人脚本里）
+            //在一定时间内，定期在房间内生成敌人（生成位置随机）    需要做的：敌人只会攻击仪式台，即使受到了玩家攻击（敌人相关的逻辑放在敌人脚本里）
             GenerateEnemyThroughTime(m_RitualDuration, m_EnemySpawnInterval);
         }
     }
+
+
 
 
 
@@ -57,12 +64,12 @@ public class Altar : MonoBehaviour     //放在仪式台上的脚本
 
         GenerateEnemy();        //生成第一个敌人
 
+        /*
         while (!m_DurationTimer.GetIsTimerDone() )      //仪式期间持续进行的逻辑（不能放只进行一次的函数！）
         {
             
-        }
-
-        m_EnemySpawnTimer.StopTimer();      //仪式结束后暂停生成敌人的计时，防止仪式结束后依然持续生成敌人
+        }    
+        */ 
     }
 
     private void GenerateEnemy()
@@ -71,5 +78,16 @@ public class Altar : MonoBehaviour     //放在仪式台上的脚本
         EnvironmentManager.Instance.GenerateEnemy(HellsCall.Instance.RitualRoomDoorController, EnemyPrefab);
 
         m_EnemySpawnTimer.StartTimer();     //生成完敌人后开始计时
+    }
+
+
+
+    private void RitualDone()   //仪式结束后的逻辑
+    {
+        m_EnemySpawnTimer.StopTimer();      //仪式结束后暂停生成敌人的计时，防止仪式结束后依然持续生成敌人
+
+        //将两个计时器脚本删除，防止后续出错
+        Destroy(m_DurationTimer);
+        Destroy(m_EnemySpawnTimer);
     }
 }

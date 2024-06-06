@@ -54,7 +54,7 @@ namespace ZhangYu.Utilities     //张煜文件夹用于以后所有游戏都可�
             {
                 //Debug.Log("Time up!");
 
-                OnTimerDone?.Invoke();
+                OnTimerDone?.Invoke();      //触发计时结束事件
                 //m_IsTimerDone = true;
                 StopTimer();    //到达目标时间后停止计时
             }
@@ -68,7 +68,8 @@ namespace ZhangYu.Utilities     //张煜文件夹用于以后所有游戏都可�
             yield return new WaitForSeconds(m_Duration);        //等待一段时间
 
             //Debug.Log("Time up!");
-            m_IsTimerDone = true;
+            OnTimerDone?.Invoke();          //触发计时结束事件
+            m_IsTimerDone = true;           //将布尔设置为false表示计时结束
         }
 
 
