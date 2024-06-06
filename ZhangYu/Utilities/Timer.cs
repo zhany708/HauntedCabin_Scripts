@@ -9,7 +9,7 @@ namespace ZhangYu.Utilities     //张煜文件夹用于以后所有游戏都可�
 {
     public class Timer
     {
-        public event Action OnTimerDone;    //接收对象有Weapon, EnemyFSM
+        public event Action OnTimerDone;    //接收对象有Weapon, Enemy, Altar
 
 
 

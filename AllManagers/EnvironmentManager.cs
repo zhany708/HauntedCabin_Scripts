@@ -50,12 +50,29 @@ public class EnvironmentManager : ManagerTemplate<EnvironmentManager>
 
 
     #region 生成敌人相关
-    //持续的生成敌人，持续时长和生成间隔根据参数决定
-    public void GenerateEnemy(DoorController doorController, GameObject enemyPrefab, float duration, float spawnInterval)
+    //在房间内随机的生成敌人
+    public void GenerateEnemy(DoorController doorController, GameObject enemyPrefab)
     {
         Vector2 spawnPos = doorController.EnemySpwanPos.GenerateSingleRandomPos();  //生成随机坐标
 
         CheckIfCollideFurniture(ref spawnPos, doorController);      //检查是否跟家具重叠
+
+
+        //这里的enemy物体是敌人的跟物体（包含巡逻坐标的），在生成的同时赋予物体生成坐标
+        GameObject enemyObject = EnemyPool.Instance.GetObject(enemyPrefab, spawnPos);     //从敌人对象池中生成敌人
+
+        //Debug.Log("The enemy spawn position is : " + enemySpawnList[i]);
+
+        //生成完后重置敌人脚本绑定的物体的本地（相对于父物体）坐标。因为敌人从对象池重新生成后，本地坐标会继承死亡前的本地坐标
+        Enemy enemyScript = enemyObject.GetComponentInChildren<Enemy>();
+
+        if (enemyScript != null)
+        {
+            enemyScript.ResetLocalPos();
+        }
+
+        //生成敌人后重置生命，否则重新激活的敌人生命依然为0
+        enemyObject.GetComponentInChildren<Stats>().SetCurrentHealth(enemyObject.GetComponentInChildren<Stats>().MaxHealth);
     }
 
     //根据房间提前设置的敌人数量生成敌人
