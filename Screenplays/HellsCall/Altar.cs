@@ -57,7 +57,7 @@ public class Altar : MonoBehaviour     //放在仪式台上的脚本
 
         GenerateEnemy();        //生成第一个敌人
 
-        while (!m_DurationTimer.GetIsTimerDone() )      //仪式期间持续进行的逻辑
+        while (!m_DurationTimer.GetIsTimerDone() )      //仪式期间持续进行的逻辑（不能放只进行一次的函数！）
         {
             
         }
