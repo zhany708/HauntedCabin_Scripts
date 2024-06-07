@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 
 
@@ -51,29 +50,18 @@ public class EnvironmentManager : ManagerTemplate<EnvironmentManager>
 
 
     #region 生成敌人相关
-    //在房间内随机的生成敌人
+    //在房间内随机的生成单个敌人
     public void GenerateEnemy(DoorController doorController, GameObject enemyPrefab)
     {
         Vector2 spawnPos = doorController.EnemySpwanPos.GenerateSingleRandomPos();  //生成随机坐标
 
-        CheckIfCollideFurniture(ref spawnPos, doorController);      //检查是否跟家具重叠
+        EnsureNoFurnitureCollision(ref spawnPos, doorController);      //检查是否跟家具重叠
 
 
         //这里的enemy物体是敌人的跟物体（包含巡逻坐标的），在生成的同时赋予物体生成坐标
         GameObject enemyObject = EnemyPool.Instance.GetObject(enemyPrefab, spawnPos);     //从敌人对象池中生成敌人
 
-        //Debug.Log("The enemy spawn position is : " + enemySpawnList[i]);
-
-        //生成完后重置敌人脚本绑定的物体的本地（相对于父物体）坐标。因为敌人从对象池重新生成后，本地坐标会继承死亡前的本地坐标
-        Enemy enemyScript = enemyObject.GetComponentInChildren<Enemy>();
-
-        if (enemyScript != null)
-        {
-            enemyScript.ResetLocalPos();
-        }
-
-        //生成敌人后重置生命，否则重新激活的敌人生命依然为0
-        enemyObject.GetComponentInChildren<Stats>().SetCurrentHealth(enemyObject.GetComponentInChildren<Stats>().MaxHealth);
+        InitializeEnemy(enemyObject, doorController);
     }
 
     //根据房间提前设置的敌人数量生成敌人
@@ -84,8 +72,7 @@ public class EnvironmentManager : ManagerTemplate<EnvironmentManager>
             List<Vector2> enemySpawnList = doorController.EnemySpwanPos.GenerateMultiRandomPos(doorController.EnemyObjects.Length);     //根据怪物数量生成随机坐标list
 
             //生成完坐标列表后。检查列表中是否有跟家具重合的坐标
-            CheckIfCollideFurniture(enemySpawnList, doorController);
-
+            EnsureNoFurnitureCollision(enemySpawnList, doorController);
 
 
             for (int i = 0; i < doorController.EnemyObjects.Length; i++)
@@ -95,27 +82,14 @@ public class EnvironmentManager : ManagerTemplate<EnvironmentManager>
 
                 //Debug.Log("The enemy spawn position is : " + enemySpawnList[i]);
 
-                //生成完后重置敌人脚本绑定的物体的本地（相对于父物体）坐标。因为敌人从对象池重新生成后，本地坐标会继承死亡前的本地坐标
-                Enemy enemyScript = enemyObject.GetComponentInChildren<Enemy>();
-
-                if (enemyScript != null)
-                {
-                    enemyScript.ResetLocalPos();
-                }
-
-
-                //设置门控制器的脚本
-                enemyScript.SetDoorController(doorController);
-
-                //生成敌人后重置生命，否则重新激活的敌人生命依然为0
-                enemyObject.GetComponentInChildren<Stats>().SetCurrentHealth(enemyObject.GetComponentInChildren<Stats>().MaxHealth);
+                InitializeEnemy(enemyObject, doorController);
             }
         }
     }
 
 
     //检查列表中的所有坐标处是否有家具
-    private void CheckIfCollideFurniture(List<Vector2> enemySpawnPosList, DoorController doorController)
+    private void EnsureNoFurnitureCollision(List<Vector2> enemySpawnPosList, DoorController doorController)
     {
         Vector2 checkSize = new Vector2(doorController.PhysicsCheckingXPos, doorController.PhysicsCheckingYPos);      //物理检测的大小
 
@@ -147,7 +121,7 @@ public class EnvironmentManager : ManagerTemplate<EnvironmentManager>
     }
 
     //检查单独的坐标是否跟家具重叠
-    private void CheckIfCollideFurniture(ref Vector2 enemySpawnPos, DoorController doorController)
+    private void EnsureNoFurnitureCollision(ref Vector2 enemySpawnPos, DoorController doorController)
     {
         Vector2 checkSize = new Vector2(doorController.PhysicsCheckingXPos, doorController.PhysicsCheckingYPos);      //物理检测的大小
 
@@ -157,19 +131,13 @@ public class EnvironmentManager : ManagerTemplate<EnvironmentManager>
 
         while (attemptCount < 100)      //确保不超过最大尝试次数
         {
-            bool isOverlap = false;
-
-            if (!IsPositionEmpty(enemySpawnPos, checkSize, doorController) )    //检查是否跟家具重复
-            {
-                enemySpawnPos = doorController.EnemySpwanPos.GenerateSingleRandomPos();      //生成新的坐标
-
-                doorController.EnemySpwanPos.SetOverlapTolerance(adaptiveTolerance);     //设置新的检查重复的距离
-
-                isOverlap = true;  //设置布尔以继续检查
-            }
+            //检查是否跟家具重复，不重复的话就退出循环
+            if (IsPositionEmpty(enemySpawnPos, checkSize, doorController)) break;    
             
 
-            if (!isOverlap) break;  //当没有重复时则退出循环
+            enemySpawnPos = doorController.EnemySpwanPos.GenerateSingleRandomPos();      //生成新的坐标
+
+            doorController.EnemySpwanPos.SetOverlapTolerance(adaptiveTolerance);     //设置新的检查重复的距离                  
 
             attemptCount++;
             adaptiveTolerance -= 0.1f;  //如果实在难以生成不会重复的坐标的话，减少检查重复的距离
@@ -184,6 +152,26 @@ public class EnvironmentManager : ManagerTemplate<EnvironmentManager>
         Collider2D overlapCheck = Physics2D.OverlapBox(positionToCheck, checkSize, 0f, doorController.FurnitureLayerMask);
         return overlapCheck == null;
     }
+
+
+    //生成完敌人后，进行初始化
+    private void InitializeEnemy(GameObject enemyObject, DoorController doorController)
+    {
+        Enemy enemyScript = enemyObject.GetComponentInChildren<Enemy>();
+
+        if (enemyScript != null)
+        {
+            //重置敌人脚本绑定的物体的本地（相对于父物体）坐标。因为敌人从对象池重新生成后，本地坐标会继承死亡前的本地坐标
+            enemyScript.ResetLocalPos();
+
+            //设置门控制器的脚本
+            enemyScript.SetDoorController(doorController);
+        }
+
+        //生成敌人后重置生命，否则重新激活的敌人生命依然为0
+        enemyObject.GetComponentInChildren<Stats>().SetCurrentHealth(enemyObject.GetComponentInChildren<Stats>().MaxHealth);
+    }
+
     #endregion
 
 

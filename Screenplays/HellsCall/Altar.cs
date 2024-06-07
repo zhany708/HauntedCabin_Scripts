@@ -8,7 +8,7 @@ public class Altar : MonoBehaviour     //放在仪式台上的脚本
 {
     public GameObject EnemyPrefab;      //敌人的预制件
 
-    Collider2D m_BoxCollider;   //触发器
+    Collider2D m_BoxTrigger;    //触发器
     Timer m_DurationTimer;      //用于计时仪式时长的计时器
 
 
@@ -23,7 +23,7 @@ public class Altar : MonoBehaviour     //放在仪式台上的脚本
 
     private void Awake()
     {
-        m_BoxCollider = GetComponent<Collider2D>();
+        m_BoxTrigger = GetComponent<Collider2D>();
 
         //初始化计数器
         m_DurationTimer = new Timer(m_RitualDuration);
@@ -45,7 +45,7 @@ public class Altar : MonoBehaviour     //放在仪式台上的脚本
     {
         if (other.gameObject.CompareTag("Player"))
         {
-            m_BoxCollider.enabled = false;      //取消激活碰撞框，防止重复进行仪式
+            m_BoxTrigger.enabled = false;      //取消激活碰撞框，防止重复进行仪式
 
             //在一定时间内，定期在房间内生成敌人（生成位置随机）    需要做的：敌人只会攻击仪式台，即使受到了玩家攻击（敌人相关的逻辑放在敌人脚本里）
             GenerateEnemyThroughTime(m_RitualDuration, m_EnemySpawnInterval);
@@ -74,7 +74,7 @@ public class Altar : MonoBehaviour     //放在仪式台上的脚本
 
     private IEnumerator EnemySpawnCoroutine(float spawnInterval)        //敌人生成的协程
     {
-        while (true)
+        while (true)            //反复的生成敌人
         {
             GenerateEnemy();
             yield return new WaitForSeconds(spawnInterval);
@@ -98,7 +98,6 @@ public class Altar : MonoBehaviour     //放在仪式台上的脚本
             StopCoroutine(m_EnemySpawnCoroutine);
         }
 
-
-        m_BoxCollider.enabled = true;      //计时结束后重新激活碰撞框，以便后续的仪式
+        m_BoxTrigger.enabled = true;      //计时结束后重新激活碰撞框，以便后续的仪式
     }
 }

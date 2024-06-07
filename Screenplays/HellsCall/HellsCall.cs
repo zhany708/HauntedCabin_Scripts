@@ -46,7 +46,6 @@ public class HellsCall : BaseScreenplay<HellsCall>
     {
         PlayerStats.OnHealthZero += DestroyCoroutine;       //玩家死亡时停止持续掉血的协程
         RoomManager.Instance.OnRoomGenerated += GenerateStoneAtSingleRoom;      //新生成房间时，检查是否生成祷告石
-        //RoomManager.Instance.OnRoomGenerated += CheckRitualRoomGeneration;      //新生成房间时，检查是否需要生成仪式房
     }
 
     private void OnDisable()
@@ -97,7 +96,7 @@ public class HellsCall : BaseScreenplay<HellsCall>
     {
         if (m_HealthDrainCoroutine != null)
         {
-            UnityEngine.Debug.Log("Coroutine stopped!!");
+            //Debug.Log("Coroutine stopped!!");
             StopCoroutine(m_HealthDrainCoroutine);
         }
     }
@@ -129,9 +128,9 @@ public class HellsCall : BaseScreenplay<HellsCall>
             AddAllRoomPosIntoList();
 
             Vector2 selectedRoomPos = GenerateSuitableRandomRoomPos();     //随机选择的房间的坐标
-            GameObject deletedRoom = null;                                 //创建坐标对应的房间
 
-            if (RoomManager.Instance.GeneratedRoomDict.TryGetValue(selectedRoomPos, out deletedRoom))   //尝试从字典中获取对应的房间
+            //尝试从字典中获取对应的房间
+            if (RoomManager.Instance.GeneratedRoomDict.TryGetValue(selectedRoomPos, out GameObject deletedRoom))   
             {
                 Destroy(deletedRoom);       //删除随机坐标对应的房间
 
@@ -159,9 +158,7 @@ public class HellsCall : BaseScreenplay<HellsCall>
         if (m_MaxAllowedRoomNum - RoomManager.Instance.GeneratedRoomDict.Count <= 0 && RoomManager.Instance.RoomKeys.FirstFloorRoomKeys.Contains(RitualRoomName))
         {
             //删除最后的房间，将仪式房生成在这里
-            GameObject deletedRoom = null;               //最后一个房间物体
-
-            if (RoomManager.Instance.GeneratedRoomDict.TryGetValue(roomPos, out deletedRoom))   //尝试从字典中获取对应的房间
+            if (RoomManager.Instance.GeneratedRoomDict.TryGetValue(roomPos, out GameObject deletedRoom))   //尝试从字典中获取对应的房间
             {
                 Destroy(deletedRoom);       //删除最后的房间
 
@@ -178,10 +175,8 @@ public class HellsCall : BaseScreenplay<HellsCall>
 
     private Vector2 GenerateSuitableRandomRoomPos()    //生成合适的随机房间坐标（因为某些房间不可更改）
     {
-        List<Vector2> importantRoomPos = new List<Vector2>();    //用于储存所有不可更改的房间坐标（比如初始房间等）
-
-        importantRoomPos.Add(Vector2.zero);     //将入口大堂添加进列表    后面要做的：添加其余的一楼初始板块
-
+        //用于储存所有不可更改的房间坐标（比如初始房间等），并将入口大堂加进列表    后面要做的：添加其余的一楼初始板块
+        List<Vector2> importantRoomPos = new List<Vector2>() { Vector2.zero };    
 
         Vector2 selectedRoomPos = Vector2.zero;     //用于储存随机选择到的房间的坐标
         int attemptCount = 0;                       //表示尝试了多少次
@@ -270,7 +265,7 @@ public class HellsCall : BaseScreenplay<HellsCall>
 
     public void SetCanStartRitual(bool isTrue)
     {
-        Debug.Log("Can player start the ritual?" + isTrue);
+        //Debug.Log("Can player start the ritual?" + isTrue);
 
         m_CanStartRitual = isTrue;
     }
