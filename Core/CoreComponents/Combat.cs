@@ -42,7 +42,7 @@ public class Combat : CoreComponent, Idamageable, IKnockbackable    //用于管�
         m_HitResistance = core.HitResistance;   //从Core那里获得参数
     }
 
-    public void Damage(float amount, bool doesIgnoreDefense)
+    public void Damage(float amount, bool doesIgnoreDefense)        //造成伤害
     {
         IsHit = true;
 
