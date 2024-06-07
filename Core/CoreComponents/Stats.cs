@@ -44,8 +44,7 @@ public class Stats : CoreComponent      //用于管理生命，魔力等状态�
         if (currentHealth != 0)      //生命值为0时就不会继续受伤了
         {
             if (doesIgnoreDefense)      //无视防御
-            {
-                
+            {              
                 currentHealth -= amount;
             }
             else      //根据防御力减免受到的伤害
@@ -89,12 +88,14 @@ public class Stats : CoreComponent      //用于管理生命，魔力等状态�
         return 1 - m_Defense * m_DefenseRate;       //计算伤害减免
     }
 
+
     #region Getters
     public float GetCurrentHealth()
     {
         return currentHealth;
     }
     #endregion
+
 
     #region Setters
     public void SetCurrentHealth(float health)

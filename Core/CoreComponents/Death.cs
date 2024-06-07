@@ -16,12 +16,12 @@ public class Death : CoreComponent      //如果需要不同的死亡效果，�
         }
 
 
-        Stats.OnHealthZero += Die;    //将函数加进事件
+        stats.OnHealthZero += Die;    //将函数加进事件
     }
 
     private void OnDisable()
     {
-        Stats.OnHealthZero -= Die;    //物体禁用后从事件中移除函数，防止因为找不到函数所在的脚本而报错
+        stats.OnHealthZero -= Die;    //物体禁用后从事件中移除函数，防止因为找不到函数所在的脚本而报错
     }
 
 
@@ -31,8 +31,11 @@ public class Death : CoreComponent      //如果需要不同的死亡效果，�
     {
         //core.transform.parent.gameObject.SetActive(false);  //禁用游戏物体
 
-        Movement.Rigidbody2d.constraints = RigidbodyConstraints2D.FreezeAll;        //死亡后禁止物体的一切移动和旋转
-                  
+        if (movement != null)
+        {
+            movement.Rigidbody2d.constraints = RigidbodyConstraints2D.FreezeAll;        //死亡后禁止物体的一切移动和旋转
+        }
+                       
         combat.gameObject.SetActive(false);     //取消激活战斗组件，防止出现鞭尸现象
 
         core.Animator.SetBool("Death", true);

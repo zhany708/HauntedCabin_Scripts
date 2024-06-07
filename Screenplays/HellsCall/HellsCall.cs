@@ -33,7 +33,7 @@ public class HellsCall : BaseScreenplay<HellsCall>
     bool m_NeedGenerateStone = false;   //判断是否需要生成祷告石
     bool m_CanStartRitual = false;      //判断是否可以开始仪式
 
-    public int m_NeededStoneNum = 2;    //需要生成的祷告石的数量
+    int m_NeededStoneNum = 2;    //需要生成的祷告石的数量
     int m_GeneratedStoneNum = 0;        //表示当前生成了多少祷告石
     int m_MaxAllowedRoomNum = 0;        //一楼可以生成的最大房间数
 

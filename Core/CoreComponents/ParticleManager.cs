@@ -1,7 +1,7 @@
 using Unity.Mathematics;
 using UnityEngine;
 
-public class ParticleManager : CoreComponent    //用于生成特效
+public class ParticleManager : ManagerTemplate<ParticleManager>     //用于管理特效
 {
 
 

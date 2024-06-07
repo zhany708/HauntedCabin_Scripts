@@ -1,5 +1,7 @@
 using System.Collections;
+using UnityEditorInternal;
 using UnityEngine;
+using UnityEngine.SocialPlatforms.Impl;
 using ZhangYu.Utilities;
 
 
@@ -7,24 +9,55 @@ using ZhangYu.Utilities;
 public class Altar : MonoBehaviour     //放在仪式台上的脚本
 {
     public GameObject EnemyPrefab;      //敌人的预制件
+    public Core Core { get; private set; }
 
+    public Combat Combat
+    {
+        get
+        {
+            if (m_Combat) { return m_Combat; }
+            m_Combat = Core.GetCoreComponent<Combat>();
+            return m_Combat;
+        }
+    }
+    private Combat m_Combat;
+
+
+
+    Coroutine m_EnemySpawnCoroutine;    //敌人生成的协程
 
     Timer m_DurationTimer;      //用于计时仪式时长的计时器
 
+    [SerializeField] float m_RitualMaxHealth = 0f;     //仪式台的生命值上限
+    [SerializeField] float m_HitResistance = 99f;       //仪式台的受击抗性
 
     float m_RitualDuration = 9f;        //仪式时间
     float m_EnemySpawnInterval = 3f;    //敌人生成的冷却
 
-    Coroutine m_EnemySpawnCoroutine;    //敌人生成的协程
+    bool m_IsHit = false;
 
 
 
 
-
+    #region Unity内部函数
     private void Awake()
     {
+        //初始化Core组件
+        Core = GetComponentInChildren<Core>();      //从子物体那调用Core脚本
+        Core.SetParameters(m_RitualMaxHealth, 0, m_HitResistance);   //将参数传给Core
+
         //初始化计数器
         m_DurationTimer = new Timer(m_RitualDuration);
+    }
+
+    private void Update()
+    {
+        if (Combat.IsHit && !m_IsHit)    //检查是否受到攻击，且当前是否处于受击状态
+        {
+            Core.Animator.SetBool("Hit", true);
+
+            m_IsHit = true;
+        }
     }
 
     private void OnEnable()
@@ -50,8 +83,10 @@ public class Altar : MonoBehaviour     //放在仪式台上的脚本
             }           
         }
     }
+    #endregion
 
 
+    #region 仪式相关
     private void StartRitual()
     {
         HellsCall.Instance.SetCanStartRitual(false);        //仪式开始后将布尔设置为false，防止玩家反复开始仪式
@@ -96,4 +131,16 @@ public class Altar : MonoBehaviour     //放在仪式台上的脚本
             StopCoroutine(m_EnemySpawnCoroutine);
         }
     }
+    #endregion
+
+
+    #region 动画帧事件
+    private void SetAnimatorBool()
+    {
+        Core.Animator.SetBool("Hit", false);    //放在受击动画的最后几帧
+
+        m_IsHit = false;
+    }
+
+    #endregion
 }

@@ -5,7 +5,7 @@ public class CoreComponent : MonoBehaviour
 {
     protected Core core;
 
-    protected Movement Movement
+    protected Movement movement
     {
         get
         {
@@ -29,7 +29,7 @@ public class CoreComponent : MonoBehaviour
     private Combat m_Combat;
 
 
-    protected Stats Stats
+    protected Stats stats
     {
         get
         {
@@ -40,10 +40,6 @@ public class CoreComponent : MonoBehaviour
     }
     private Stats m_Stats;
 
-
-    protected ParticleManager particleManager => m_ParticleManager ? m_ParticleManager : core.GetCoreComponent(ref m_ParticleManager);      //问号表示如果问号左边变量为空，则返还冒号右边的函数，否则返还冒号左边的变量
-
-    private ParticleManager m_ParticleManager;
 
 
 
@@ -56,12 +52,12 @@ public class CoreComponent : MonoBehaviour
 
         if (!core)
         {
-            Debug.LogError("There is no Core on the parent");
+            Debug.LogError("There is no Core component on the parent");
         }
 
-        if (!Movement || !particleManager || !Stats)
+        if (!combat || !stats)
         {
-            Debug.Log("Something is wrong in the CoreComponent!");
+            Debug.Log("Some component is not assigned correctly in the CoreComponent!");
         }
 
         core.Addcomponent(this);    //将所有需要运用LogicUpdate函数的组件加进List     

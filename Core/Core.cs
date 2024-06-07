@@ -2,6 +2,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 
+
+
 public class Core : MonoBehaviour
 {
     public Animator Animator { get; private set; }
@@ -28,8 +30,7 @@ public class Core : MonoBehaviour
         if (!Animator)
         {
             Debug.LogError("Animator is missing!");
-        }
-        
+        }   
     }
 
 
