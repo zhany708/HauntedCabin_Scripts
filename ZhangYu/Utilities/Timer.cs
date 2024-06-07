@@ -73,10 +73,6 @@ namespace ZhangYu.Utilities     //张煜文件夹用于以后所有游戏都可�
         }
 
 
-
-
-
-
         #region Getters
         public bool GetIsTimerDone()
         {

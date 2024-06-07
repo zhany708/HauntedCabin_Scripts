@@ -42,6 +42,13 @@ public class DoorController : MonoBehaviour
 
         if (EnemyObjects.Length != 0)   //如果房间有怪物
         {
+            //如果这两个变量没有正确赋值，则敌人永远只会固定生成在房间中心
+            if (EnemySpawnPosNegativeOffset == Vector2.zero || EnemySpawnPosPositiveOffset == Vector2.zero)
+            {
+                Debug.LogError("You havn't assigned the EnemySpawnPosOffset correctly in this room: " + m_MainRoom);
+            }
+
+
             //敌人生成的x范围为房间坐标的x加变量中的值；生成的y范围为房间坐标的y加变量中的值
             Vector2 leftDownPos = new Vector2(m_MainRoom.transform.position.x + EnemySpawnPosNegativeOffset.x, m_MainRoom.transform.position.y + EnemySpawnPosNegativeOffset.y);
             Vector2 rightTopPos = new Vector2(m_MainRoom.transform.position.x + EnemySpawnPosPositiveOffset.x, m_MainRoom.transform.position.y + EnemySpawnPosPositiveOffset.y);
