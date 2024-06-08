@@ -29,7 +29,7 @@ public class Altar : MonoBehaviour     //放在仪式台上的脚本
     Timer m_DurationTimer;      //用于计时仪式时长的计时器
 
     [SerializeField] float m_RitualMaxHealth = 0f;     //仪式台的生命值上限
-    [SerializeField] float m_HitResistance = 99f;       //仪式台的受击抗性
+    [SerializeField] float m_HitResistance = 99f;      //仪式台的受击抗性
 
     float m_RitualDuration = 9f;        //仪式时间
     float m_EnemySpawnInterval = 3f;    //敌人生成的冷却
@@ -130,6 +130,7 @@ public class Altar : MonoBehaviour     //放在仪式台上的脚本
         }
 
         //需要做的：给玩家回血；并且增加仪式完成的计数（在HellsCall脚本里），增加计数后判断剧本目标是否达成
+        
     }
     #endregion
 
@@ -150,7 +151,7 @@ public class Altar : MonoBehaviour     //放在仪式台上的脚本
         m_IsHit = false;
     }
 
-    private void GameOver()     //放在死亡动画里
+    private void GameOver()     //放在仪式台死亡动画里
     {
         //需要做的：打开剧本失败面板
     }
