@@ -33,9 +33,10 @@ public class HellsCall : BaseScreenplay<HellsCall>
     bool m_NeedGenerateStone = false;   //判断是否需要生成祷告石
     bool m_CanStartRitual = false;      //判断是否可以开始仪式
 
-    int m_NeededStoneNum = 2;    //需要生成的祷告石的数量
+    int m_NeededStoneNum = 2;           //需要生成的祷告石的数量（也是玩家需要达成的仪式数量）
     int m_GeneratedStoneNum = 0;        //表示当前生成了多少祷告石
     int m_MaxAllowedRoomNum = 0;        //一楼可以生成的最大房间数
+    int m_FinishedRitualCount = 0;      //玩家需要完成的仪式数量
 
 
 
@@ -112,6 +113,17 @@ public class HellsCall : BaseScreenplay<HellsCall>
         }
 
         m_TempRoomPos.Remove(EventManager.Instance.GetRoomPosWhereEnterSecondStage());   //移除触发进入二阶段的房间的坐标，防止玩家立刻获得祷告石
+    }
+
+
+    public void IncrementRitualCount()
+    {
+        m_FinishedRitualCount++;
+
+        if (m_FinishedRitualCount >= m_NeededStoneNum)
+        {
+            //UIManager.Instance.OpenPanel();     //需要做的：打开剧本胜利面板
+        }
     }
 
 
