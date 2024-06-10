@@ -37,6 +37,7 @@ public class Stats : CoreComponent      //用于管理生命，魔力等状态�
         CurrentHealth = Mathf.Clamp(CurrentHealth + amount, 0, MaxHealth);    //确保生命值不会超过最大上限
     }
 
+    //需要做的：根据当前血量变化调用特定的时间函数，从而让角色根据血量改变一些属性和特点
     public virtual void DecreaseHealth(float amount, bool doesIgnoreDefense)
     {
         if (CurrentHealth != 0)      //生命值为0时就不会继续受伤了
@@ -88,10 +89,12 @@ public class Stats : CoreComponent      //用于管理生命，魔力等状态�
 
 
     #region Getters
+    /*
     public float GetCurrentHealth()
     {
         return CurrentHealth;
     }
+    */
     #endregion
 
 
