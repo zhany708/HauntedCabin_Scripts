@@ -19,7 +19,7 @@ public class EnemyHitState : EnemyState
 
     public override void LogicUpdate()
     {
-        //受击结束后进入攻击状态
+        //受击结束后储存玩家的坐标，并进入追击状态
         if (core.AnimatorInfo.IsName("Hit"))
         {
             if (core.AnimatorInfo.normalizedTime >= 0.95f)

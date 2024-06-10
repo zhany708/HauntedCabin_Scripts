@@ -73,6 +73,14 @@ namespace ZhangYu.Utilities     //张煜文件夹用于以后所有游戏都可�
         }
 
 
+        #region Setters
+        public void SetDuration(float duration)     //用于赋值新的持续时长
+        {
+            m_Duration = duration;
+        }
+        #endregion
+
+
         #region Getters
         public bool GetIsTimerDone()
         {

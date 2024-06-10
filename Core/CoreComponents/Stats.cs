@@ -10,10 +10,8 @@ public class Stats : CoreComponent      //用于管理生命，魔力等状态�
     public event Action OnHealthZero;       //接收方为Death脚本
 
     public float MaxHealth { get; private set; }
+    public float CurrentHealth { get; private set; }
 
-
-
-    protected float currentHealth;
 
     float m_Defense;
     float m_DefenseRate = 0.01f;     //每一点防御对应1%的伤害减免
@@ -28,7 +26,7 @@ public class Stats : CoreComponent      //用于管理生命，魔力等状态�
         MaxHealth = core.MaxHealth;     //从Core那里获得参数
         m_Defense = core.Defense;
 
-        currentHealth = MaxHealth;      //游戏开始时重置当前生命值
+        CurrentHealth = MaxHealth;      //游戏开始时重置当前生命值
     }
 
 
@@ -36,27 +34,27 @@ public class Stats : CoreComponent      //用于管理生命，魔力等状态�
 
     public virtual void IncreaseHealth(float amount)
     {
-        currentHealth = Mathf.Clamp(currentHealth + amount, 0, MaxHealth);    //确保生命值不会超过最大上限
+        CurrentHealth = Mathf.Clamp(CurrentHealth + amount, 0, MaxHealth);    //确保生命值不会超过最大上限
     }
 
     public virtual void DecreaseHealth(float amount, bool doesIgnoreDefense)
     {
-        if (currentHealth != 0)      //生命值为0时就不会继续受伤了
+        if (CurrentHealth != 0)      //生命值为0时就不会继续受伤了
         {
             if (doesIgnoreDefense)      //无视防御
             {              
-                currentHealth -= amount;
+                CurrentHealth -= amount;
             }
             else      //根据防御力减免受到的伤害
             {
-                currentHealth -= (amount * GetDefenseAddition());      
+                CurrentHealth -= (amount * GetDefenseAddition());      
             }
             
             
 
-            if (currentHealth <= 0)
+            if (CurrentHealth <= 0)
             {
-                currentHealth = 0;
+                CurrentHealth = 0;
 
                 OnHealthZero?.Invoke();     //先检查是否为空，再调用延时函数
 
@@ -92,7 +90,7 @@ public class Stats : CoreComponent      //用于管理生命，魔力等状态�
     #region Getters
     public float GetCurrentHealth()
     {
-        return currentHealth;
+        return CurrentHealth;
     }
     #endregion
 
@@ -100,7 +98,7 @@ public class Stats : CoreComponent      //用于管理生命，魔力等状态�
     #region Setters
     public void SetCurrentHealth(float health)
     {
-        currentHealth = health;
+        CurrentHealth = health;
     }
     #endregion
 }

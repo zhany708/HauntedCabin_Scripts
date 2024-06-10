@@ -1,7 +1,7 @@
 using UnityEngine;
 
 
-public class FireBat : Enemy
+public class FireBat_DefenseWar : Enemy_DefenseWar
 {
     public GameObject FireBallPrefab;
 
@@ -10,7 +10,7 @@ public class FireBat : Enemy
     {
         base.Start();
 
-        AttackState = new FireBatAttackState(this, StateMachine, enemyData, "Attack");    //将普通攻击状态改成火蝙蝠攻击状态
+        AttackState = new FireBatAttackState_DefenseWar(this, StateMachine, enemyData, "Attack");    //将普通攻击状态改成火蝙蝠攻击状态
     }
 
 

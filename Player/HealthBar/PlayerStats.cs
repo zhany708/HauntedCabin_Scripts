@@ -17,13 +17,13 @@ public class PlayerStats : Stats
     {
         base.DecreaseHealth(amount, doesIgnoreDefense);
 
-        m_PlayerHealthBar.SetCurrentHealth(currentHealth);      //调用血条脚本中的更新生命值函数
+        m_PlayerHealthBar.SetCurrentHealth(CurrentHealth);      //调用血条脚本中的更新生命值函数
     }
 
     public override void IncreaseHealth(float amount)
     {
         base.IncreaseHealth(amount);
 
-        m_PlayerHealthBar.SetCurrentHealth(currentHealth);
+        m_PlayerHealthBar.SetCurrentHealth(CurrentHealth);
     }
 }
