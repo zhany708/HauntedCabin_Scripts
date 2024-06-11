@@ -42,8 +42,11 @@ public class Enemy_DefenseWar : MonoBehaviour
     public Movement Movement => m_Movement ? m_Movement : Core.GetCoreComponent(ref m_Movement);   //检查m_Movement是否为空，不是的话则返回它，是的话则调用GetCoreComponent函数以获取组件
     private Movement m_Movement;
 
-    public Combat Combat => m_Combat ? m_Combat : Core.GetCoreComponent(ref m_Combat);   //检查m_Movement是否为空，不是的话则返回它，是的话则调用GetCoreComponent函数以获取组件
+    public Combat Combat => m_Combat ? m_Combat : Core.GetCoreComponent(ref m_Combat);             //检查m_Combat是否为空，不是的话则返回它，是的话则调用GetCoreComponent函数以获取组件
     private Combat m_Combat;
+
+    public Stats Stats => m_Stats ? m_Stats : Core.GetCoreComponent(ref m_Stats);                  //检查m_Stats是否为空，不是的话则返回它，是的话则调用GetCoreComponent函数以获取组件
+    private Stats m_Stats;
 
     /*  基础调用核心组件的方法
     public EnemyDeath Death
@@ -149,7 +152,8 @@ public class Enemy_DefenseWar : MonoBehaviour
         */
 
         CanAttack = true;   //重新激活时将可攻击设置为true
-        AttackTimer.OnTimerDone += SetCanAttackTrue;        //触发事件，使敌人可以重新攻击
+        AttackTimer.OnTimerDone += SetCanAttackTrue;        //连接事件，使敌人可以重新攻击
+        Stats.OnHalfHealth += ChangeAttackInterval;         //连接事件，使敌人的攻击间隔缩短
 
 
         if (m_IsReactivate)     //敌人重新激活后才会在这里初始化追击状态，否则第一次生成时如果在这初始化会因为脚本的实施顺序出现null错误
@@ -167,6 +171,7 @@ public class Enemy_DefenseWar : MonoBehaviour
         m_IsReactivate = true;      //表示已经重新激活
 
         AttackTimer.OnTimerDone -= SetCanAttackTrue;
+        Stats.OnHalfHealth -= ChangeAttackInterval;   
     }
     #endregion
 
@@ -186,6 +191,12 @@ public class Enemy_DefenseWar : MonoBehaviour
     private void SetCanAttackTrue()     //用于Action，由于不能传参数，因此不能用下面Setters里的函数
     {
         CanAttack = true;
+    }
+
+    private void ChangeAttackInterval()     //改变攻击间隔
+    {
+        //根据当前血量百分比缩短攻击间隔（比如当前20%的血量就对应着原本攻击间隔的20%的时长）
+        AttackTimer.SetDuration(enemyData.AttackInterval * Stats.GetCurrentHelathRate() );
     }
     #endregion
 

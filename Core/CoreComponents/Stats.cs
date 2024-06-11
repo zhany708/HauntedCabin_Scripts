@@ -8,6 +8,9 @@ using ZhangYu.Utilities;
 public class Stats : CoreComponent      //用于管理生命，魔力等状态信息
 {
     public event Action OnHealthZero;       //接收方为Death脚本
+    public event Action OnHighHealth;       //接收方为
+    public event Action OnHalfHealth;       //接收方为Enemy_DefenseWar脚本
+    public event Action OnLowHealth;        //接收方为
 
     public float MaxHealth { get; private set; }
     public float CurrentHealth { get; private set; }
@@ -37,7 +40,7 @@ public class Stats : CoreComponent      //用于管理生命，魔力等状态�
         CurrentHealth = Mathf.Clamp(CurrentHealth + amount, 0, MaxHealth);    //确保生命值不会超过最大上限
     }
 
-    //需要做的：根据当前血量变化调用特定的时间函数，从而让角色根据血量改变一些属性和特点
+    //需要做的：根据当前血量变化调用特定的事件函数，从而让角色根据血量改变一些属性和特点
     public virtual void DecreaseHealth(float amount, bool doesIgnoreDefense)
     {
         if (CurrentHealth != 0)      //生命值为0时就不会继续受伤了
@@ -52,8 +55,24 @@ public class Stats : CoreComponent      //用于管理生命，魔力等状态�
             }
             
             
+            
 
-            if (CurrentHealth <= 0)
+            if (CurrentHealth <= MaxHealth * 0.66)      //当血量只有三分之二时
+            {
+                OnHighHealth?.Invoke();     //调用事件函数
+            }
+
+            else if (CurrentHealth <= MaxHealth * 0.5)      //当血量只有一半时
+            {
+                OnHalfHealth?.Invoke();     //调用事件函数
+            }
+
+            else if (CurrentHealth <= MaxHealth * 0.33)      //当血量只有三分之一时
+            {
+                OnLowHealth?.Invoke();      //调用事件函数
+            }
+
+            else if (CurrentHealth <= 0)     //当血量归零时
             {
                 CurrentHealth = 0;
 
@@ -95,6 +114,11 @@ public class Stats : CoreComponent      //用于管理生命，魔力等状态�
         return CurrentHealth;
     }
     */
+
+    public float GetCurrentHelathRate()     //获取当前血量百分比
+    {
+        return CurrentHealth / MaxHealth;
+    }
     #endregion
 
 
