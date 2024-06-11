@@ -15,17 +15,16 @@ public class FireBatAttackState_DefenseWar : EnemyAttackState_DefenseWar
 
     public override void Enter()
     {
-        //Debug.Log("FireBatAttackState");
         //检查是否有玩家的坐标
-        if (enemy.Parameter.PlayerTarget != null)
+        if (enemy.Parameter_DefenseWar.PlayerTarget != null)
         {
-            m_Target = enemy.Parameter.PlayerTarget;           //储存玩家坐标信息，防止发射火球时丢失坐标
+            m_Target = enemy.Parameter_DefenseWar.PlayerTarget;           //储存玩家坐标信息，防止发射火球时丢失坐标
         }
         
         //检查是否有祷告石的坐标
-        else if (enemy.Parameter.AltarTarget != null)
+        else if (enemy.Parameter_DefenseWar.AltarTarget != null)
         {
-            m_Target = enemy.Parameter.AltarTarget;      //储存祷告石坐标信息，防止发射火球时丢失坐标
+            m_Target = enemy.Parameter_DefenseWar.AltarTarget;      //储存祷告石坐标信息，防止发射火球时丢失坐标
         }
 
         base.Enter();

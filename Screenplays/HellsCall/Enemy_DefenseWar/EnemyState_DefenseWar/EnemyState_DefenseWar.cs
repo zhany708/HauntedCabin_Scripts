@@ -23,4 +23,19 @@ public class EnemyState_DefenseWar : EnemyState
             Debug.LogError("Core is missing in the EnemyState!");
         }
     }
+
+
+    public override void LogicUpdate()
+    {
+        //先判断是否死亡（不能放在受击状态中判断，因为敌人攻击时不会进入受击状态）
+        if (enemyStats.CurrentHealth <= 0)
+        {
+            stateMachine.ChangeState(enemy.DeathState);
+        }
+
+        else if (enemyCombat.IsHit && !isHit)
+        {
+            stateMachine.ChangeState(enemy.HitState);
+        }
+    }
 }

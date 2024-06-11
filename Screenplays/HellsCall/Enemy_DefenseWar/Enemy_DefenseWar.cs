@@ -22,6 +22,9 @@ public class Enemy_DefenseWar : Enemy
     #region FSM States
     public new EnemyChaseState_DefenseWar ChaseState { get; private set; }
     public new EnemyAttackState_DefenseWar AttackState { get; protected set; }
+    public new EnemyHitState_DefenseWar HitState { get; protected set; }
+    public new EnemyDeathState_DefenseWar DeathState { get; protected set; }
+
 
     //检查m_Stats是否为空，不是的话则返回它，是的话则调用GetCoreComponent函数以获取组件
     public Stats Stats => m_Stats ? m_Stats : Core.GetCoreComponent(ref m_Stats);       
@@ -30,7 +33,7 @@ public class Enemy_DefenseWar : Enemy
 
 
     #region Variables
-    public new EnemyParameter_DefenseWar Parameter;
+    public EnemyParameter_DefenseWar Parameter_DefenseWar;
     #endregion
 
 
@@ -41,6 +44,8 @@ public class Enemy_DefenseWar : Enemy
 
         ChaseState = new EnemyChaseState_DefenseWar(this, StateMachine, enemyData, "Idle");
         AttackState = new EnemyAttackState_DefenseWar(this, StateMachine, enemyData, "Attack");
+        HitState = new EnemyHitState_DefenseWar(this, StateMachine, enemyData, "Hit");
+        DeathState = new EnemyDeathState_DefenseWar(this, StateMachine, enemyData, "Death");
     }
 
     protected override void Start()      //只在第一帧运行前运行一次这个函数
@@ -55,9 +60,9 @@ public class Enemy_DefenseWar : Enemy
 
 
         //激活前提前把祷告石的位置赋予敌人
-        if (Parameter.AltarTarget == null)
+        if (Parameter_DefenseWar.AltarTarget == null)
         {
-            Parameter.AltarTarget = Altar.Instance.gameObject.transform;
+            Parameter_DefenseWar.AltarTarget = FindAnyObjectByType<Altar>().gameObject.transform;
         }
 
 
@@ -94,10 +99,23 @@ public class Enemy_DefenseWar : Enemy
     //各种物理检测
     protected override void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.CompareTag("Altar") && Parameter.AltarTarget == null)
+        if (other.CompareTag("Altar") && Parameter_DefenseWar.AltarTarget == null)
         {
-            Parameter.AltarTarget = other.transform;     //储存祷告石的位置信息
+            Parameter_DefenseWar.AltarTarget = other.transform;     //储存祷告石的位置信息
         }
+    }
+
+    protected override void OnTriggerExit2D(Collider2D other)
+    {
+        if (other.CompareTag("Player"))
+        {
+            Parameter_DefenseWar.PlayerTarget = null;     //玩家退出范围时清空
+        }
+    }
+
+    protected override void OnDrawGizmos()
+    {
+        Gizmos.DrawWireSphere(Parameter_DefenseWar.AttackPoint.position, enemyData.AttackArea);    //设置攻击范围的圆心和半径
     }
     #endregion
 
@@ -108,6 +126,6 @@ public class Enemy_DefenseWar : Enemy
 
 
     #region Setters
-    
+
     #endregion
 }

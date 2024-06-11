@@ -39,7 +39,7 @@ public class Enemy : MonoBehaviour
 
 
     #region Components
-    public EnemyParameter Parameter;
+    public EnemyParameter Parameter { get; private set; }
     public Core Core { get; private set; }
 
     public Movement Movement => m_Movement ? m_Movement : Core.GetCoreComponent(ref m_Movement);   //检查m_Movement是否为空，不是的话则返回它，是的话则调用GetCoreComponent函数以获取组件
@@ -225,7 +225,7 @@ public class Enemy : MonoBehaviour
     }
 
 
-    protected void OnDrawGizmos()
+    protected virtual void OnDrawGizmos()
     {
         Gizmos.DrawWireSphere(Parameter.AttackPoint.position, enemyData.AttackArea);    //设置攻击范围的圆心和半径
     }

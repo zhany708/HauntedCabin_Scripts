@@ -8,9 +8,6 @@ using ZhangYu.Utilities;
 
 public class Altar : MonoBehaviour     //放在仪式台上的脚本
 {
-    public static Altar Instance { get; private set; }
-
-
     public GameObject EnemyPrefab;      //敌人的预制件
     public Core Core { get; private set; }
 
@@ -45,6 +42,7 @@ public class Altar : MonoBehaviour     //放在仪式台上的脚本
     #region Unity内部函数
     private void Awake()
     {
+        /*
         //单例模式
         if (Instance != null && Instance != this)
         {
@@ -55,7 +53,7 @@ public class Altar : MonoBehaviour     //放在仪式台上的脚本
         {
             Instance = this;      
         }
-
+        */
 
         //初始化Core组件
         Core = GetComponentInChildren<Core>();      //从子物体那调用Core脚本

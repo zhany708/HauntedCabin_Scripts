@@ -26,10 +26,11 @@ public class FireBat_DefenseWar : Enemy_DefenseWar
 
             Vector2 attackX = transform.localScale.x >= 0 ? Vector2.right : Vector2.left;      //根据动画参数MoveX判断敌人朝向
             float deviation = 0.2f;     //偏离参数（偏离嘴部多少）
-            Vector2 attackPosition = Movement.Rigidbody2d.position + Vector2.up * 0.8f + attackX * deviation;       //火球生成位置在y轴上应位于头部，x轴上应偏离敌人的位置（嘴部发射）
+            //火球生成位置在y轴上应位于头部，x轴上应偏离敌人的位置（嘴部发射）
+            Vector2 attackPosition = Movement.Rigidbody2d.position + Vector2.up * 0.8f + attackX * deviation;
 
-
-            float angle = Mathf.Atan2((tempPos.y + 0.5f - attackPosition.y), (tempPos.x - attackPosition.x)) * Mathf.Rad2Deg;      //计算火球与目标中心之间的夹角
+            //计算火球与目标中心之间的夹角
+            float angle = Mathf.Atan2((tempPos.y + 0.5f - attackPosition.y), (tempPos.x - attackPosition.x)) * Mathf.Rad2Deg;      
 
             //生成火球，并设置坐标和旋转
             GameObject FireBallObject = ParticlePool.Instance.GetObject(FireBallPrefab);
