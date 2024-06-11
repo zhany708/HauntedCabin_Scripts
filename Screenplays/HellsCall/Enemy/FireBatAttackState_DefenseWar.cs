@@ -6,7 +6,7 @@ public class FireBatAttackState_DefenseWar : EnemyAttackState
     FireBat_DefenseWar m_FireBat;
     Transform m_Target;
 
-    public FireBatAttackState(FireBat_DefenseWar fireBat, EnemyStateMachine stateMachine, SO_EnemyData enemyData, string animBoolName) : base(fireBat, stateMachine, enemyData, animBoolName)
+    public FireBatAttackState_DefenseWar(FireBat_DefenseWar fireBat, EnemyStateMachine stateMachine, SO_EnemyData enemyData, string animBoolName) : base(fireBat, stateMachine, enemyData, animBoolName)
     {
         m_FireBat = fireBat;
     }
@@ -17,9 +17,9 @@ public class FireBatAttackState_DefenseWar : EnemyAttackState
     {
         //Debug.Log("FireBatAttackState");
         //检查是否有玩家的坐标
-        if (enemy.Parameter.Target != null)
+        if (enemy.Parameter.PlayerTarget != null)
         {
-            m_Target = enemy.Parameter.Target;           //储存玩家坐标信息，防止发射火球时丢失坐标
+            m_Target = enemy.Parameter.PlayerTarget;           //储存玩家坐标信息，防止发射火球时丢失坐标
         }
         
         //检查是否有祷告石的坐标

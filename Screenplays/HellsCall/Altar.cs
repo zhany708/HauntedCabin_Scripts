@@ -102,7 +102,7 @@ public class Altar : MonoBehaviour     //放在仪式台上的脚本
 
 
     #region 仪式相关
-    private SetAnimatorStart()      //先调用这个函数，随后才会在动画中调用开始仪式的函数
+    private void SetAnimatorStart()      //先调用这个函数，随后才会在动画中调用开始仪式的函数
     {
         //仪式台动画：先是符号开始发亮，随后仪式台周围的光波会开始循环的环绕仪式台（无需设置环绕参数为true，因为发光动画结束后会直接过渡到环绕动画）
         Core.Animator.SetBool("Glow", true);    //播放符号发光动画

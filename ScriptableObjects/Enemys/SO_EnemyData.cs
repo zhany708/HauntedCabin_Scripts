@@ -22,4 +22,7 @@ public class SO_EnemyData : ScriptableObject
     [Header("Hit Values")]
     public float HitResistance = 0;
     public float HitInterval = 0;   //无敌时间
+
+    [Header("剧本相关")]
+    public LayerMask AltarLayer = 0;
 }

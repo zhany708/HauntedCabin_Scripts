@@ -16,13 +16,13 @@ public class EnemyChaseState_DefenseWar : EnemyState
     public override void LogicUpdate()
     {
         //检查是否有玩家的坐标
-        if (enemy.Parameter.Target != null)
+        if (enemy.Parameter.PlayerTarget != null)
         {
             //使敌人朝向玩家
-            enemy.EnemyFlip.FlipX( enemy.Movement.GetFlipNum(enemy.Parameter.Target.position, enemy.transform.position) );
+            enemy.EnemyFlip.FlipX( enemy.Movement.GetFlipNum(enemy.Parameter.PlayerTarget.position, enemy.transform.position) );
 
             //计算敌人与玩家的距离
-            m_DistanceToPlayer = Vector2.Distance(enemy.transform.position, enemy.Parameter.Target.position);       
+            m_DistanceToPlayer = Vector2.Distance(enemy.transform.position, enemy.Parameter.PlayerTarget.position);       
         }
         
         //检查是否有祷告石的坐标
@@ -57,9 +57,9 @@ public class EnemyChaseState_DefenseWar : EnemyState
         base.PhysicsUpdate();
 
         //有玩家坐标且与玩家距离大于最小距离时持续追击玩家
-        if (enemy.Parameter.Target && m_DistanceToPlayer > enemyData.StoppingDistance)     
+        if (enemy.Parameter.PlayerTarget && m_DistanceToPlayer > enemyData.StoppingDistance)     
         {
-            enemy.transform.position = Vector2.MoveTowards(enemy.transform.position, enemy.Parameter.Target.position, enemyData.ChaseSpeed * Time.deltaTime);
+            enemy.transform.position = Vector2.MoveTowards(enemy.transform.position, enemy.Parameter.PlayerTarget.position, enemyData.ChaseSpeed * Time.deltaTime);
         }
 
         //有祷告石坐标且与祷告石距离大于最小距离时持续追击祷告石

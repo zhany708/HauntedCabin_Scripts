@@ -14,18 +14,18 @@ public class EnemyChaseState : EnemyState
 
     public override void LogicUpdate()
     {
-        if (enemy.Parameter.Target != null)
+        if (enemy.Parameter.PlayerTarget != null)
         {
             //使敌人朝向玩家
-            enemy.EnemyFlip.FlipX( enemy.Movement.GetFlipNum(enemy.Parameter.Target.position, enemy.transform.position) );
+            enemy.EnemyFlip.FlipX( enemy.Movement.GetFlipNum(enemy.Parameter.PlayerTarget.position, enemy.transform.position) );
 
             //计算敌人与玩家的距离
-            m_DistanceToPlayer = Vector2.Distance(enemy.transform.position, enemy.Parameter.Target.position);       
+            m_DistanceToPlayer = Vector2.Distance(enemy.transform.position, enemy.Parameter.PlayerTarget.position);       
         }
 
         base.LogicUpdate();
 
-        if (enemy.Parameter.Target == null) //|| enemy.CheckOutside())  可添加：玩家啊超出追击范围时切换到待机状态
+        if (enemy.Parameter.PlayerTarget == null) //|| enemy.CheckOutside())  可添加：玩家啊超出追击范围时切换到待机状态
         {
             stateMachine.ChangeState(enemy.IdleState);      //丢失目标后切换到待机状态
         }
@@ -42,9 +42,9 @@ public class EnemyChaseState : EnemyState
         base.PhysicsUpdate();
 
         //有玩家坐标且与玩家距离大于最小距离时持续追击玩家
-        if (enemy.Parameter.Target && m_DistanceToPlayer > enemyData.StoppingDistance)     
+        if (enemy.Parameter.PlayerTarget && m_DistanceToPlayer > enemyData.StoppingDistance)     
         {
-            enemy.transform.position = Vector2.MoveTowards(enemy.transform.position, enemy.Parameter.Target.position, enemyData.ChaseSpeed * Time.deltaTime);
+            enemy.transform.position = Vector2.MoveTowards(enemy.transform.position, enemy.Parameter.PlayerTarget.position, enemyData.ChaseSpeed * Time.deltaTime);
         }
     }
 }

@@ -90,7 +90,7 @@ public class PlayerState
 
 
         //检查玩家是否死亡（不能放在受击状态里判断，因为玩家攻击时不会进入受击状态）
-        if (playerStats.GetCurrentHealth() <= 0)
+        if (playerStats.CurrentHealth <= 0)
         {
             stateMachine.ChangeState(player.DeathState);
         }     

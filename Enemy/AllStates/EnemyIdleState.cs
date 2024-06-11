@@ -24,7 +24,7 @@ public class EnemyIdleState : EnemyState
 
         base.LogicUpdate();
 
-        if (enemy.Parameter.Target != null)      //&& !enemy.CheckOutside())
+        if (enemy.Parameter.PlayerTarget != null)      //&& !enemy.CheckOutside())
         {
             stateMachine.ChangeState(enemy.ChaseState);     //如果检测到玩家则切换为追击状态（如果有反应动画可以先切换为反应状态。然后再反应动画播完后切换成追击状态）
         }

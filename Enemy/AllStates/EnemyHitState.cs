@@ -24,7 +24,7 @@ public class EnemyHitState : EnemyState
         {
             if (core.AnimatorInfo.normalizedTime >= 0.95f)
             {
-                enemy.Parameter.Target = GameObject.FindWithTag("Player").transform;        //寻找有Player标签的物件坐标
+                enemy.Parameter.PlayerTarget = GameObject.FindWithTag("Player").transform;        //寻找有Player标签的物件坐标
                 stateMachine.ChangeState(enemy.ChaseState);
             }
 

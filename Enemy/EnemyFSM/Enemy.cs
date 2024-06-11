@@ -12,9 +12,12 @@ public class EnemyParameter
     public Transform[] PatrolPoints;    //巡逻范围
 
     //攻击相关
-    public Transform Target;     //玩家的坐标
+    public Transform PlayerTarget;     //玩家的坐标
     //public Transform[] ChasePoints;     //追击范围
     public Transform AttackPoint;   //攻击范围的圆心位置
+
+    //剧本相关
+    public Transform AltarTarget;     //祷告石的坐标
 }
 #endregion
 
@@ -33,6 +36,7 @@ public class Enemy : MonoBehaviour
     public EnemyHitState HitState { get; private set; }
     public EnemyDeathState DeathState { get; protected set;}
     #endregion
+
 
     #region Components
     public EnemyParameter Parameter;
@@ -59,9 +63,9 @@ public class Enemy : MonoBehaviour
 
     public DoorController DoorController { get; private set; }      //用于敌人死亡状态中增加DoorController脚本中敌人死亡计数的整数
 
-    public Timer AttackTimer { get; private set; }
+    public Timer AttackTimer { get; protected set; }
     public RandomPosition PatrolRandomPos { get; private set; }
-    public Flip EnemyFlip { get; private set; }
+    public Flip EnemyFlip { get; protected set; }
 
 
 
@@ -69,15 +73,17 @@ public class Enemy : MonoBehaviour
     protected SO_EnemyData enemyData;
     #endregion
 
+
     #region Variables
-    public bool CanAttack { get; private set; } = true;        //用于攻击间隔
+    public bool CanAttack { get; protected set; } = true;        //用于攻击间隔
 
     //float m_LastHitTime;        //上次受击时间
-    bool m_IsReactivate = false;    //判断敌人是否为重新激活
+    protected bool isReactivate = false;    //判断敌人是否为重新激活
     #endregion
 
+
     #region Unity Callback Functions
-    private void Awake()    //最早实施的函数（只实施一次）
+    protected virtual void Awake()    //最早实施的函数（只实施一次）
     {  
         Core = GetComponentInChildren<Core>();      //从子物体那调用Core脚本
         Core.SetParameters(enemyData.MaxHealth, enemyData.Defense, enemyData.HitResistance);    //设置参数
@@ -98,7 +104,7 @@ public class Enemy : MonoBehaviour
         StateMachine.Initialize(IdleState);     //初始化状态为闲置
     }
 
-    private void Update()
+    protected void Update()
     {
         Core.LogicUpdate();     //获取当前速度
 
@@ -107,7 +113,7 @@ public class Enemy : MonoBehaviour
         AttackTimer.Tick();
     }
 
-    private void FixedUpdate()
+    protected void FixedUpdate()
     {
         StateMachine.CurrentState.PhysicsUpdate();
     }
@@ -144,23 +150,24 @@ public class Enemy : MonoBehaviour
         AttackTimer.OnTimerDone += SetCanAttackTrue;        //触发事件，使敌人可以重新攻击
 
 
-        if (m_IsReactivate)     //敌人重新激活后才会在这里初始化闲置状态，否则第一次生成时如果在这初始化会因为脚本的实施顺序出现null错误
+        if (isReactivate)     //敌人重新激活后才会在这里初始化闲置状态，否则第一次生成时如果在这初始化会因为脚本的实施顺序出现null错误
         {
             StateMachine.Initialize(IdleState);
         }
     }
 
-    private void OnDisable()
+    protected virtual void OnDisable()
     {
         Movement.SetVelocityZero();     //取消激活后将刚体速度重置，防止报错
 
         Combat.SetIsHit(false);  //敌人死亡后设置Combat中的受击布尔为false，以便及时进入死亡状态，且防止重新激活后直接进入受击状态
 
-        m_IsReactivate = true;      //表示已经重新激活
+        isReactivate = true;      //表示已经重新激活
 
         AttackTimer.OnTimerDone -= SetCanAttackTrue;
     }
     #endregion
+
 
     #region Main Functions
     /*
@@ -175,14 +182,15 @@ public class Enemy : MonoBehaviour
         return Parameter.Target.position.x < minX || Parameter.Target.position.x > maxX || Parameter.Target.position.y < minY || Parameter.Target.position.y > maxY;
     }
     */
-    private void SetCanAttackTrue()     //用于Action，由于不能传参数，因此不能用下面Setters里的函数
+    protected void SetCanAttackTrue()     //用于Action，由于不能传参数，因此不能用下面Setters里的函数
     {
         CanAttack = true;
     }
     #endregion
 
+
     #region Animation Event Functions
-    private void DeathLogicForAnimation()      //用于动画事件，摧毁物体
+    protected void DeathLogicForAnimation()      //用于动画事件，摧毁物体
     {
         if (transform.parent != null)
         {
@@ -197,30 +205,32 @@ public class Enemy : MonoBehaviour
     }
     #endregion
 
+
     #region Trigger Detections
     //各种物理检测
-    private void OnTriggerEnter2D(Collider2D other)
+    protected virtual void OnTriggerEnter2D(Collider2D other)
     {
         if (other.CompareTag("Player"))
         {
-            Parameter.Target = other.transform;     //储存玩家的位置信息
+            Parameter.PlayerTarget = other.transform;     //储存玩家的位置信息
         }
     }
 
-    private void OnTriggerExit2D(Collider2D other)
+    protected virtual void OnTriggerExit2D(Collider2D other)
     {
         if (other.CompareTag("Player"))
         {
-            Parameter.Target = null;     //玩家退出范围时清空
+            Parameter.PlayerTarget = null;     //玩家退出范围时清空
         }
     }
 
 
-    private void OnDrawGizmos()
+    protected void OnDrawGizmos()
     {
         Gizmos.DrawWireSphere(Parameter.AttackPoint.position, enemyData.AttackArea);    //设置攻击范围的圆心和半径
     }
     #endregion
+
 
     #region Getters
     //获取成员变量
@@ -231,6 +241,7 @@ public class Enemy : MonoBehaviour
     }
     */
     #endregion
+
 
     #region Setters
     //设置成员变量

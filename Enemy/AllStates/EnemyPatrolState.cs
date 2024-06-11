@@ -42,7 +42,7 @@ public class EnemyPatrolState : EnemyState
 
         enemy.EnemyFlip.FlipX(enemyMovement.GetFlipNum(m_RandomPosition, enemy.transform.position) );  //朝向巡逻点的方向
 
-        if (enemy.Parameter.Target != null)     // && !enemy.CheckOutside())
+        if (enemy.Parameter.PlayerTarget != null)     // && !enemy.CheckOutside())
         {
             stateMachine.ChangeState(enemy.ChaseState);     //巡逻时如果检测到玩家则切换为追击状态
         }

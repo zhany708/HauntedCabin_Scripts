@@ -17,7 +17,7 @@ public class FireBatAttackState : EnemyAttackState
     {
         //Debug.Log("FireBatAttackState");
 
-        m_Target = enemy.Parameter.Target;      //储存玩家坐标信息，防止发射火球时丢失坐标
+        m_Target = enemy.Parameter.PlayerTarget;      //储存玩家坐标信息，防止发射火球时丢失坐标
         base.Enter();
     }
 

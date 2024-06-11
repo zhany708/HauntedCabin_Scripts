@@ -17,7 +17,7 @@ public class EnemyDeathState : EnemyState
 
     public override void Enter()
     {
-        enemy.Parameter.Target = null;      //敌人进入死亡状态后将Target坐标清零，防止出现bug
+        enemy.Parameter.PlayerTarget = null;      //敌人进入死亡状态后将Target坐标清零，防止出现bug
 
         m_AnimatorStateInfo = core.Animator.GetCurrentAnimatorStateInfo(0);       //获取当前动画
 
