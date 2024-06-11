@@ -11,7 +11,7 @@ public class SO_EnemyData : ScriptableObject
     public float StoppingDistance = 0;  //敌人与玩家的最小距离
 
     [Header("Attack Values")]
-    public LayerMask TargetLayer = 0;
+    public LayerMask PlayerLayer = 0;
     public float AttackArea = 0;        //攻击检测圆的半径参数
     public float AttackInterval = 0;    //攻击间隔
 

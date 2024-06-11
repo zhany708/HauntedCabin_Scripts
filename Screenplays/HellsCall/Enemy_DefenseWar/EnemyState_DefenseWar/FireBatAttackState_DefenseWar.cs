@@ -1,7 +1,7 @@
 using UnityEngine;
 
 
-public class FireBatAttackState_DefenseWar : EnemyAttackState
+public class FireBatAttackState_DefenseWar : EnemyAttackState_DefenseWar
 {
     FireBat_DefenseWar m_FireBat;
     Transform m_Target;

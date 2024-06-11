@@ -2,12 +2,12 @@ using UnityEngine;
 
 
 
-public class EnemyChaseState_DefenseWar : EnemyState
+public class EnemyChaseState_DefenseWar : EnemyState_DefenseWar
 {
     float m_DistanceToAltar;
     float m_DistanceToPlayer;
 
-    public EnemyChaseState_DefenseWar(Enemy enemy, EnemyStateMachine stateMachine, SO_EnemyData enemyData, string animBoolName) : base(enemy, stateMachine, enemyData, animBoolName)
+    public EnemyChaseState_DefenseWar(Enemy_DefenseWar enemy, EnemyStateMachine stateMachine, SO_EnemyData enemyData, string animBoolName) : base(enemy, stateMachine, enemyData, animBoolName)
     {
     }
 
@@ -40,7 +40,7 @@ public class EnemyChaseState_DefenseWar : EnemyState
 
 
         //检查玩家是否进入攻击范围
-        if (Physics2D.OverlapCircle(enemy.Parameter.AttackPoint.position, enemyData.AttackArea, enemyData.TargetLayer) && enemy.CanAttack)
+        if (Physics2D.OverlapCircle(enemy.Parameter.AttackPoint.position, enemyData.AttackArea, enemyData.PlayerLayer) && enemy.CanAttack)
         {
             stateMachine.ChangeState(enemy.AttackState);
         }

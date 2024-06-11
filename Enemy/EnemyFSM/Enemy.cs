@@ -17,7 +17,7 @@ public class EnemyParameter
     public Transform AttackPoint;   //攻击范围的圆心位置
 
     //剧本相关
-    public Transform AltarTarget;     //祷告石的坐标
+    //public Transform AltarTarget;     //祷告石的坐标
 }
 #endregion
 

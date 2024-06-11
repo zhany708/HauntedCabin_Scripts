@@ -47,7 +47,7 @@ public class EnemyState
     protected bool isHit = false;
 
 
-    string m_AnimationBoolName;     //告诉动画器应该播放哪个动画
+    protected string animationBoolName;     //告诉动画器应该播放哪个动画
 
 
 
@@ -63,7 +63,7 @@ public class EnemyState
         this.enemy = enemy;
         this.stateMachine = stateMachine;
         this.enemyData = enemyData;
-        m_AnimationBoolName = animBoolName;
+        animationBoolName = animBoolName;
         core = enemy.Core;
 
         if (!core)
@@ -81,7 +81,7 @@ public class EnemyState
         }
 
 
-        core.Animator.SetBool(m_AnimationBoolName, true);     //播放状态的动画
+        core.Animator.SetBool(animationBoolName, true);     //播放状态的动画
         
         //Debug.Log(m_AnimationBoolName);
     }
@@ -118,6 +118,6 @@ public class EnemyState
 
     public virtual void Exit()
     {
-        enemy.Core.Animator.SetBool(m_AnimationBoolName, false);        //设置当前状态布尔为false以进入下个状态
+        enemy.Core.Animator.SetBool(animationBoolName, false);        //设置当前状态布尔为false以进入下个状态
     }
 }

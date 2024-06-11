@@ -31,7 +31,7 @@ public class EnemyChaseState : EnemyState
         }
 
         //检测攻击范围：第一个参数为圆心位置，第二个为半径，第三个为目标图层.玩家处于攻击范围且攻击间隔结束则进入攻击状态
-        else if (Physics2D.OverlapCircle(enemy.Parameter.AttackPoint.position, enemyData.AttackArea, enemyData.TargetLayer) && enemy.CanAttack)
+        else if (Physics2D.OverlapCircle(enemy.Parameter.AttackPoint.position, enemyData.AttackArea, enemyData.PlayerLayer) && enemy.CanAttack)
         {
             stateMachine.ChangeState(enemy.AttackState);
         }
