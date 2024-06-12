@@ -42,10 +42,12 @@ public class Enemy : MonoBehaviour
     public EnemyParameter Parameter { get; private set; }
     public Core Core { get; private set; }
 
-    public Movement Movement => m_Movement ? m_Movement : Core.GetCoreComponent(ref m_Movement);   //检查m_Movement是否为空，不是的话则返回它，是的话则调用GetCoreComponent函数以获取组件
+    //检查m_Movement是否为空，不是的话则返回它，是的话则调用GetCoreComponent函数以获取组件
+    public Movement Movement => m_Movement ? m_Movement : Core.GetCoreComponent(ref m_Movement);
     private Movement m_Movement;
 
-    public Combat Combat => m_Combat ? m_Combat : Core.GetCoreComponent(ref m_Combat);   //检查m_Movement是否为空，不是的话则返回它，是的话则调用GetCoreComponent函数以获取组件
+    //检查m_Combat是否为空，不是的话则返回它，是的话则调用GetCoreComponent函数以获取组件
+    public Combat Combat => m_Combat ? m_Combat : Core.GetCoreComponent(ref m_Combat);
     private Combat m_Combat;
 
     /*  基础调用核心组件的方法

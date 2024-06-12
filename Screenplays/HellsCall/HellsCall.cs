@@ -14,7 +14,7 @@ public class HellsCall : BaseScreenplay<HellsCall>
         {
             if (m_PlayerStats == null)
             {
-                m_PlayerStats = FindObjectOfType<PlayerStats>();
+                m_PlayerStats = FindAnyObjectByType<PlayerStats>();
             }
             return m_PlayerStats;
         }
@@ -36,7 +36,7 @@ public class HellsCall : BaseScreenplay<HellsCall>
     int m_NeededStoneNum = 2;           //需要生成的祷告石的数量（也是玩家需要达成的仪式数量）
     int m_GeneratedStoneNum = 0;        //表示当前生成了多少祷告石
     int m_MaxAllowedRoomNum = 0;        //一楼可以生成的最大房间数
-    int m_FinishedRitualCount = 0;      //玩家需要完成的仪式数量
+    int m_FinishedRitualCount = 0;      //玩家完成的仪式数量
 
 
 

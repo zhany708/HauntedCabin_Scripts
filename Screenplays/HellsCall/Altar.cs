@@ -11,16 +11,13 @@ public class Altar : MonoBehaviour     //放在仪式台上的脚本
     public GameObject EnemyPrefab;      //敌人的预制件
     public Core Core { get; private set; }
 
-    public Combat Combat
-    {
-        get
-        {
-            if (m_Combat) { return m_Combat; }
-            m_Combat = Core.GetCoreComponent<Combat>();
-            return m_Combat;
-        }
-    }
+
+    //检查m_Combat是否为空，不是的话则返回它，是的话则调用GetCoreComponent函数以获取组件
+    public Combat Combat => m_Combat ? m_Combat : Core.GetCoreComponent(ref m_Combat);
     private Combat m_Combat;
+
+    public Stats Stats => m_Stats ? m_Stats : Core.GetCoreComponent(ref m_Stats);
+    private Stats m_Stats;
 
 
 
@@ -33,6 +30,7 @@ public class Altar : MonoBehaviour     //放在仪式台上的脚本
 
     float m_RitualDuration = 9f;        //仪式时间
     float m_EnemySpawnInterval = 3f;    //敌人生成的冷却
+    float m_RestoreHealthAmout = 0f;    //玩家完成仪式后恢复的生命值
 
     bool m_IsHit = false;
 
@@ -42,19 +40,6 @@ public class Altar : MonoBehaviour     //放在仪式台上的脚本
     #region Unity内部函数
     private void Awake()
     {
-        /*
-        //单例模式
-        if (Instance != null && Instance != this)
-        {
-            Destroy(gameObject);
-        }
-
-        else
-        {
-            Instance = this;      
-        }
-        */
-
         //初始化Core组件
         Core = GetComponentInChildren<Core>();      //从子物体那调用Core脚本
         Core.SetParameters(m_RitualMaxHealth, 0, m_HitResistance);   //将参数传给Core
@@ -67,21 +52,21 @@ public class Altar : MonoBehaviour     //放在仪式台上的脚本
     {
         if (Combat.IsHit && !m_IsHit)    //检查是否受到攻击，且当前是否处于受击状态
         {
-            Core.Animator.SetBool("Hit", true);
-
-            m_IsHit = true;
+            //将祷告石受击时的逻辑放在这
+            HitLogic();
         }
     }
 
     private void OnEnable()
     {
-        //将函数绑定到计时结束的事件
         m_DurationTimer.OnTimerDone += FinishRitual;          //计时结束后进行仪式结束的逻辑
+        Stats.OnHealthZero += GameOver;
     }
 
     private void OnDisable()
     {
         m_DurationTimer.OnTimerDone -= FinishRitual;
+        Stats.OnHealthZero -= GameOver;
     }
 
 
@@ -132,6 +117,16 @@ public class Altar : MonoBehaviour     //放在仪式台上的脚本
 
 
 
+
+    private void HitLogic()      //受击相关的逻辑
+    {
+        Core.Animator.SetBool("Hit", true);     //需要做的：决定要不要画祷告石的受击动画
+
+        m_IsHit = true;
+    }
+
+
+
     private void FinishRitual()   //仪式结束后的逻辑
     {
         Core.Animator.SetBool("Circle", false);      //将环绕参数设置为false，以结束仪式台的环绕
@@ -142,8 +137,14 @@ public class Altar : MonoBehaviour     //放在仪式台上的脚本
             StopCoroutine(m_EnemySpawnCoroutine);
         }
 
-        //需要做的：给玩家回血；并且增加仪式完成的计数（在HellsCall脚本里），增加计数后判断剧本目标是否达成
-        
+        HellsCall.Instance.PlayerStats.IncreaseHealth(m_RestoreHealthAmout);      //给玩家增加一定的血量
+        HellsCall.Instance.IncrementRitualCount();            //增加仪式完成的计数
+    }
+
+
+    private void GameOver()     //跟Stats状态函数里的事件绑定在一起，或者放在仪式台死亡动画里
+    {
+        //需要做的：打开剧本失败面板
     }
     #endregion
 
@@ -153,7 +154,7 @@ public class Altar : MonoBehaviour     //放在仪式台上的脚本
     {
         HellsCall.Instance.SetCanStartRitual(false);        //仪式开始后将布尔设置为false，防止玩家反复开始仪式
 
-        //在一定时间内，定期在房间内生成敌人（生成位置随机）    需要做的：敌人只会攻击仪式台，即使受到了玩家攻击（敌人相关的逻辑放在敌人脚本里）
+        //在一定时间内，定期在房间内生成敌人（生成位置随机）
         GenerateEnemyThroughTime(m_RitualDuration, m_EnemySpawnInterval);
     }
     
@@ -162,11 +163,6 @@ public class Altar : MonoBehaviour     //放在仪式台上的脚本
         Core.Animator.SetBool("Hit", false);    //放在受击动画的最后几帧
 
         m_IsHit = false;
-    }
-
-    private void GameOver()     //放在仪式台死亡动画里
-    {
-        //需要做的：打开剧本失败面板
     }
     #endregion
 }
