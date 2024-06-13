@@ -73,12 +73,13 @@ public class Altar : MonoBehaviour     //放在仪式台上的脚本
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (other.gameObject.CompareTag("Player"))
-        {
+        {          
             //只有当玩家拿到祷告石后，才允许玩家开始仪式
             if (HellsCall.Instance.GetCanStartRitual() )
             {
                 SetAnimatorStart();     //设置动画器参数，以开始仪式
-            }           
+            }
+            
         }
     }
     #endregion
@@ -87,8 +88,7 @@ public class Altar : MonoBehaviour     //放在仪式台上的脚本
     #region 仪式相关
     private void SetAnimatorStart()      //先调用这个函数，随后才会在动画中调用开始仪式的函数
     {
-        //仪式台动画：先是符号开始发亮，随后仪式台周围的光波会开始循环的环绕仪式台（无需设置环绕参数为true，因为发光动画结束后会直接过渡到环绕动画）
-        Core.Animator.SetBool("Glow", true);    //播放符号发光动画
+        Core.Animator.SetBool("RitualStart", true);    //播放符号发光动画
     }
 
     private void GenerateEnemyThroughTime(float duration, float spawnInterval)      //仪式期间持续生成敌人
@@ -129,7 +129,7 @@ public class Altar : MonoBehaviour     //放在仪式台上的脚本
 
     private void FinishRitual()   //仪式结束后的逻辑
     {
-        Core.Animator.SetBool("Circle", false);      //将环绕参数设置为false，以结束仪式台的环绕
+        Core.Animator.SetBool("RitualStart", false);      //将参数设置为false，以结束仪式台的环绕
 
         //停止敌人生成的循环
         if (m_EnemySpawnCoroutine != null)
