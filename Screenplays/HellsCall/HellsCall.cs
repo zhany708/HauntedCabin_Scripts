@@ -26,12 +26,14 @@ public class HellsCall : BaseScreenplay<HellsCall>
 
 
     Coroutine m_HealthDrainCoroutine;       //玩家持续掉血的协程
+    Coroutine m_FireEffectCoroutine;        //火焰滤镜的协程
 
     List<Vector2> m_TempRoomPos = new List<Vector2>();    //用于储存所有房间字典里的坐标
 
 
     bool m_NeedGenerateStone = false;   //判断是否需要生成祷告石
     bool m_CanStartRitual = false;      //判断是否可以开始仪式
+
 
     int m_NeededStoneNum = 2;           //需要生成的祷告石的数量（也是玩家需要达成的仪式数量）
     int m_GeneratedStoneNum = 0;        //表示当前生成了多少祷告石
@@ -84,12 +86,13 @@ public class HellsCall : BaseScreenplay<HellsCall>
 
 
     #region 玩家持续掉血相关
-    public void StartHealthDrain()      //开始持续掉血
+    public void StartHealthDrain()      //开始持续掉血   需要做的：将火焰滤镜与持续掉血联系起来，从而让它们可以同步
     {
         if (PlayerStats != null)
         {
-            //持续10秒，每次掉5点血，每5秒掉一次
-            m_HealthDrainCoroutine = StartCoroutine(PlayerStats.HealthDrain(10f, 5f, 12f));
+            //持续xx秒，每次掉5点血，每5秒掉一次
+            m_HealthDrainCoroutine = StartCoroutine(PlayerStats.HealthDrain(999999999f, 1f, 12f));
+            m_FireEffectCoroutine = StartCoroutine(PostProcessController.Instance.StartFireEffect() );      //一直显示滤镜
         }
     }
 
@@ -99,6 +102,11 @@ public class HellsCall : BaseScreenplay<HellsCall>
         {
             //Debug.Log("Coroutine stopped!!");
             StopCoroutine(m_HealthDrainCoroutine);
+        }
+
+        if (m_FireEffectCoroutine != null)
+        {
+            StopCoroutine(m_FireEffectCoroutine);
         }
     }
     #endregion
@@ -122,7 +130,10 @@ public class HellsCall : BaseScreenplay<HellsCall>
 
         if (m_FinishedRitualCount >= m_NeededStoneNum)
         {
-            //UIManager.Instance.OpenPanel();     //需要做的：打开剧本胜利面板
+            DestroyCoroutine();     //停止玩家掉血和播放火焰滤镜
+
+            //需要做的打开入口大堂的大门，在玩家离开大宅后打开剧本胜利面板
+            //await UIManager.Instance.OpenPanel(UIManager.Instance.UIKeys.GameWinningPanel);     
         }
     }
 

@@ -1,4 +1,5 @@
 using DG.Tweening;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.Rendering.PostProcessing;
 
@@ -6,6 +7,9 @@ using UnityEngine.Rendering.PostProcessing;
 
 public class PostProcessController : MonoBehaviour
 {
+    public static PostProcessController Instance { get; private set; }
+
+
     //更改颜色滤镜相关   
     public Color OrangeFilter = new Color(250, 107, 58);   //橙色
     public Color RedFilter = new Color(214, 53, 56);       //红色
@@ -28,9 +32,26 @@ public class PostProcessController : MonoBehaviour
 
     private void Awake()
     {
-        m_PostProcessVolume = GetComponent<PostProcessVolume>();
+        //单例模式
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+        }
 
-        
+        else
+        {
+            Instance = this;
+
+            //只有在没有父物体时才运行防删函数，否则会出现提醒
+            if (gameObject.transform.parent == null)
+            {
+                DontDestroyOnLoad(gameObject);
+            }
+        }
+
+
+        m_PostProcessVolume = GetComponent<PostProcessVolume>();
+    
         if (m_PostProcessVolume != null )
         {
             //尝试获取所有组件，有一个没有获取到的话则报错
@@ -45,15 +66,6 @@ public class PostProcessController : MonoBehaviour
             Debug.LogError("The PostProcess volume component is missing.");
         }
     }
-
-    private void Update()
-    {
-        //FireEffect();
-    }
-
-
-
-
 
 
     #region ColorGrading相关
@@ -102,11 +114,13 @@ public class PostProcessController : MonoBehaviour
 
 
     #region Vignette相关
-    private void FireEffect()       //通过调整颜色滤镜来模拟玩家被火焰包围
+    public void FireEffect()       //通过调整颜色滤镜来模拟玩家被火焰包围
     {
         if (m_Vignette != null)
         {
-            //更新计时器
+            m_Vignette.active = enabled;    //打开Vignette
+
+            //更新频率
             m_Timer += Time.deltaTime * m_FireEffectFrequency;
 
             //根据频率在红色和橙色之间转换
@@ -116,6 +130,16 @@ public class PostProcessController : MonoBehaviour
             //赋值新的颜色
             m_Vignette.color.Override(currentColor);
         }
+    }
+
+    public IEnumerator StartFireEffect()
+    {
+        while(true)
+        {
+            FireEffect();
+
+            yield return new WaitForFixedUpdate();      //保证逻辑的频率不变
+        }       
     }
     #endregion
 }

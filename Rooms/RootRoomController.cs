@@ -47,12 +47,13 @@ public class RootRoomController : MonoBehaviour
             Debug.LogError("Cannot find the Gameobject 'RoomManager'.");
         }
 
+        /*
         m_PostProcessController = GameObject.Find("PostProcess").GetComponent<PostProcessController>();
         if (m_PostProcessController == null)
         {
             Debug.LogError("Cannot find the Gameobject 'PostProcess'.");
         }
-
+        */
 
         m_RoomType = GetComponent<RoomType>();
     }
@@ -117,7 +118,7 @@ public class RootRoomController : MonoBehaviour
             if (SceneManager.GetActiveScene().isLoaded)
             {
                 //将相机亮度一瞬间的变暗
-                m_PostProcessController.DarkenThenBrighten(m_DarkPostProcessColorValue, m_PostProcessDuration);
+                PostProcessController.Instance.DarkenThenBrighten(m_DarkPostProcessColorValue, m_PostProcessDuration);
             }
             
 

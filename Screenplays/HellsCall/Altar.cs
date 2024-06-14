@@ -1,7 +1,5 @@
 using System.Collections;
-using UnityEditorInternal;
 using UnityEngine;
-using UnityEngine.SocialPlatforms.Impl;
 using ZhangYu.Utilities;
 
 
@@ -11,11 +9,11 @@ public class Altar : MonoBehaviour     //放在仪式台上的脚本
     public GameObject EnemyPrefab;      //敌人的预制件
     public Core Core { get; private set; }
 
-    /*
+    
     //检查m_Combat是否为空，不是的话则返回它，是的话则调用GetCoreComponent函数以获取组件
     public Combat Combat => m_Combat ? m_Combat : Core.GetCoreComponent(ref m_Combat);
     private Combat m_Combat;
-    */
+    
 
     public Stats Stats => m_Stats ? m_Stats : Core.GetCoreComponent(ref m_Stats);
     private Stats m_Stats;
@@ -34,6 +32,7 @@ public class Altar : MonoBehaviour     //放在仪式台上的脚本
     float m_RestoreHealthAmout = 0f;    //玩家完成仪式后恢复的生命值
 
     //bool m_IsHit = false;
+    bool m_IsGameLost = false;      //表示是否游戏失败（祷告石被摧毁）
 
 
 
@@ -139,16 +138,20 @@ public class Altar : MonoBehaviour     //放在仪式台上的脚本
             StopCoroutine(m_EnemySpawnCoroutine);
         }
 
-        EnemyPool.Instance.KillAllEnemy_DefenseWar();     //立刻消灭所有敌人
+        if (!m_IsGameLost)      //只有在游戏没有失败的时候才会进行下面的逻辑
+        {
+            EnemyPool.Instance.KillAllEnemy_DefenseWar();     //立刻消灭所有敌人
 
-        HellsCall.Instance.PlayerStats.IncreaseHealth(m_RestoreHealthAmout);      //给玩家增加一定的血量
-        HellsCall.Instance.IncrementRitualCount();            //增加仪式完成的计数
+            HellsCall.Instance.PlayerStats.IncreaseHealth(m_RestoreHealthAmout);      //给玩家增加一定的血量
+            HellsCall.Instance.IncrementRitualCount();            //增加仪式完成的计数
+        }     
     }
 
 
     private async void GameLost()     //跟Stats状态函数里的事件绑定在一起，或者放在仪式台死亡动画里
     {
-        //Debug.Log("You failed protecting the altar and ritual!");
+        m_IsGameLost = true;                    //设置布尔，以防止执行正常仪式结束的逻辑
+        Combat.gameObject.SetActive(false);     //禁用战斗组件，防止鞭尸
 
         //需要做的：打开剧本失败面板
         await UIManager.Instance.OpenPanel(UIManager.Instance.UIKeys.GameLostPanel);

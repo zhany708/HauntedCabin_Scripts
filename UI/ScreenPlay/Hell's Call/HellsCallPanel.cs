@@ -103,8 +103,9 @@ public class HellsCallPanel : BasePanel
 
 
 
-    private void StartHealthDrain()     //开始持续掉血
+    private void StartHealthDrain()     //开始持续掉血，并且播放火焰滤镜
     {
+        //HellsCall.Instance.SetDoFireEffect(true);       //设置布尔，从而开始火焰滤镜
         HellsCall.Instance.StartHealthDrain();       
     }
 }

@@ -62,14 +62,6 @@ public class RoomManager : ManagerTemplate<RoomManager>
             return;          
         }
 
-        if (BlockDoorBarrel == null)
-        {
-            Debug.LogError("BlockDoorBarrel is not assigned in the RoomManager.");
-            return;
-        }
-
-
-
         //赋值房间跟物体给脚本
         SetupRootGameObject(ref m_AllRooms, "AllRooms");
     }
@@ -78,6 +70,17 @@ public class RoomManager : ManagerTemplate<RoomManager>
     {
         //自动设置层级
         //RoomLayerMask = LayerMask.GetMask("OnlyTriggerPlayerAndEnemy");
+    }
+
+
+    private void OnEnable()
+    {
+        //该物体检查如果放在Awake函数中的话会报错
+        if (BlockDoorBarrel == null)
+        {
+            Debug.LogError("BlockDoorBarrel is not assigned in the RoomManager.");
+            return;
+        }
     }
     #endregion
 
