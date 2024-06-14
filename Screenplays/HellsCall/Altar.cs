@@ -33,7 +33,7 @@ public class Altar : MonoBehaviour     //放在仪式台上的脚本
     float m_EnemySpawnInterval = 3f;    //敌人生成的冷却
     float m_RestoreHealthAmout = 0f;    //玩家完成仪式后恢复的生命值
 
-    bool m_IsHit = false;
+    //bool m_IsHit = false;
 
 
 
@@ -81,8 +81,7 @@ public class Altar : MonoBehaviour     //放在仪式台上的脚本
             if (HellsCall.Instance.GetCanStartRitual() )
             {
                 SetAnimatorStart();     //设置动画器参数，以开始仪式
-            }
-            
+            }           
         }
     }
     #endregion
@@ -125,7 +124,7 @@ public class Altar : MonoBehaviour     //放在仪式台上的脚本
     {
         Core.Animator.SetBool("Hit", true);     //需要做的：决定要不要画祷告石的受击动画
 
-        m_IsHit = true;      
+        //m_IsHit = true;      
     }
 
 
@@ -149,6 +148,8 @@ public class Altar : MonoBehaviour     //放在仪式台上的脚本
 
     private async void GameLost()     //跟Stats状态函数里的事件绑定在一起，或者放在仪式台死亡动画里
     {
+        //Debug.Log("You failed protecting the altar and ritual!");
+
         //需要做的：打开剧本失败面板
         await UIManager.Instance.OpenPanel(UIManager.Instance.UIKeys.GameLostPanel);
     }
@@ -168,7 +169,7 @@ public class Altar : MonoBehaviour     //放在仪式台上的脚本
     {
         Core.Animator.SetBool("Hit", false);    //放在受击动画的最后几帧
 
-        m_IsHit = false;
+        //m_IsHit = false;
     }
     #endregion
 }

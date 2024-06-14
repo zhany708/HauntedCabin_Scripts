@@ -54,17 +54,16 @@ public class Stats : CoreComponent      //用于管理生命，魔力等状态�
                 CurrentHealth -= (amount * GetDefenseAddition());      
             }
             
+                                          
             
-            
-
-            if (CurrentHealth <= MaxHealth * 0.66)      //当血量只有三分之二时
+            //以下这些条件的顺序很重要，如果顺序反过来的话就永远只会进入一个条件！
+            if (CurrentHealth <= 0)     //当血量归零时
             {
-                OnHighHealth?.Invoke();     //调用事件函数
-            }
+                CurrentHealth = 0;
 
-            else if (CurrentHealth <= MaxHealth * 0.5)      //当血量只有一半时
-            {
-                OnHalfHealth?.Invoke();     //调用事件函数
+                OnHealthZero?.Invoke();     //先检查是否为空，再调用延时函数
+
+                //Debug.Log("Health is zero!!");
             }
 
             else if (CurrentHealth <= MaxHealth * 0.33)      //当血量只有三分之一时
@@ -72,13 +71,14 @@ public class Stats : CoreComponent      //用于管理生命，魔力等状态�
                 OnLowHealth?.Invoke();      //调用事件函数
             }
 
-            else if (CurrentHealth <= 0)     //当血量归零时
+            else if (CurrentHealth <= MaxHealth * 0.5)      //当血量只有一半时
             {
-                CurrentHealth = 0;
+                OnHalfHealth?.Invoke();     //调用事件函数
+            }
 
-                OnHealthZero?.Invoke();     //先检查是否为空，再调用延时函数
-
-                //Debug.Log("Health is zero!!");
+            else if (CurrentHealth <= MaxHealth * 0.66)      //当血量只有三分之二时
+            {
+                OnHighHealth?.Invoke();     //调用事件函数
             }
         }
     }

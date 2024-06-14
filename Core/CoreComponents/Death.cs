@@ -15,7 +15,6 @@ public class Death : CoreComponent      //如果需要不同的死亡效果，�
             combat.gameObject.SetActive(true);
         }
 
-
         stats.OnHealthZero += Die;    //将函数加进事件
     }
 
