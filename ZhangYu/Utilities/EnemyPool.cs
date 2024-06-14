@@ -133,9 +133,9 @@ public class EnemyPool : MonoBehaviour       //用于生成敌人的对象池，
         }
     }
 
-    public void EndGame()     //结束游戏（在玩家胜利时调用此函数）
+    public void KillAllEnemy()     //结束游戏（在玩家胜利时调用此函数）
     {
-        //在场景中让所有激活的敌人进入死亡状态
+        //让所有对象池中的敌人立刻进入死亡状态
         foreach (Transform child in transform)
         {
             foreach (Transform child2 in child)     //检索每一个子物体的子物体
@@ -144,6 +144,30 @@ public class EnemyPool : MonoBehaviour       //用于生成敌人的对象池，
                 if (child2.CompareTag("Enemy") && child2.gameObject.activeSelf)
                 {
                     Enemy enemyScript = child2.GetComponentInChildren<Enemy>();     //从子物体那获取敌人脚本
+
+                    if (enemyScript == null)
+                    {
+                        Debug.LogError("Cannot get the Enemy script from the children Objects.");
+                        return;
+                    }
+
+                    enemyScript.StateMachine.ChangeState(enemyScript.DeathState);   //强行让敌人进入死亡状态                 
+                }
+            }
+        }
+    }
+
+    public void KillAllEnemy_DefenseWar()     //结束游戏（在玩家胜利时调用此函数）
+    {
+        //让所有对象池中的保卫战中的敌人立刻进入死亡状态
+        foreach (Transform child in transform)
+        {
+            foreach (Transform child2 in child)     //检索每一个子物体的子物体
+            {
+                //检查物体是否有敌人标签，且处于激活状态
+                if (child2.CompareTag("Enemy") && child2.gameObject.activeSelf)
+                {
+                    Enemy_DefenseWar enemyScript = child2.GetComponentInChildren<Enemy_DefenseWar>();     //从子物体那获取敌人脚本
 
                     if (enemyScript == null)
                     {

@@ -5,7 +5,7 @@ using ZhangYu.Utilities;
 
 
 #region Parameters
-[Serializable]      //让编辑器序列化这个类
+[Serializable]      //让编辑器序列化这个类，从而可以直接在编辑器里编辑
 public class EnemyParameter
 {
     //基础信息
@@ -39,7 +39,7 @@ public class Enemy : MonoBehaviour
 
 
     #region Components
-    public EnemyParameter Parameter { get; private set; }
+    public EnemyParameter Parameter;
     public Core Core { get; private set; }
 
     //检查m_Movement是否为空，不是的话则返回它，是的话则调用GetCoreComponent函数以获取组件
