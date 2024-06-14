@@ -26,7 +26,7 @@ public class Death : CoreComponent      //如果需要不同的死亡效果，�
 
 
 
-    public virtual void Die()
+    private void Die()
     {
         //core.transform.parent.gameObject.SetActive(false);  //禁用游戏物体
 
