@@ -12,18 +12,6 @@ public class HellsCallPanel : BasePanel
     public TextMeshProUGUI TipText;             //提示文本
 
 
-    public HellsCall HellsCall     //Lazy load
-    {
-        get
-        {
-            if (m_HellsCall == null)
-            {
-                m_HellsCall = FindObjectOfType<HellsCall>();
-            }
-            return m_HellsCall;
-        }
-    }
-    private HellsCall m_HellsCall;
 
 
 
@@ -117,9 +105,6 @@ public class HellsCallPanel : BasePanel
 
     private void StartHealthDrain()     //开始持续掉血
     {
-        if (HellsCall != null)
-        {
-            HellsCall.StartHealthDrain();
-        }
+        HellsCall.Instance.StartHealthDrain();       
     }
 }
