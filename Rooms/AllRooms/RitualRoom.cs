@@ -1,10 +1,10 @@
-public class RitualRoom : RootRoomController
+public class RitualRoom : RootRoomController        //仪式房脚本
 {
     protected override void OnEnable()
     {
         base.OnEnable();
 
-        //因为仪式房只有一个，所以生成后将仪式房从列表中移除
+        //因为仪式房只有一个，所以生成后将仪式房从Key中移除
         if (RoomManager.Instance.RoomKeys.FirstFloorRoomKeys.Contains(HellsCall.Instance.RitualRoomName) )
         {
             RoomManager.Instance.RoomKeys.FirstFloorRoomKeys.Remove(HellsCall.Instance.RitualRoomName);

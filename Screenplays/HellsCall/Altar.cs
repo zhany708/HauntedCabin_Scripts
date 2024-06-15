@@ -153,8 +153,8 @@ public class Altar : MonoBehaviour     //放在仪式台上的脚本
         m_IsGameLost = true;                    //设置布尔，以防止执行正常仪式结束的逻辑
         Combat.gameObject.SetActive(false);     //禁用战斗组件，防止鞭尸
 
-        //需要做的：打开剧本失败面板
-        await UIManager.Instance.OpenPanel(UIManager.Instance.UIKeys.GameLostPanel);
+        //打开剧本失败界面
+        await UIManager.Instance.OpenPanel(UIManager.Instance.UIKeys.HellsCall_GameLostPanel);
     }
     #endregion
 

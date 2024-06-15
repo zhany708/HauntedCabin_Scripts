@@ -28,7 +28,8 @@ public class HellsCall_GameLostPanel : BasePanel
 
     private void Update()
     {
-        SetBothMoveableAndAttackable(false);        //界面打开时禁止玩家移动和攻击
+        //界面打开时禁止玩家移动和攻击（放在Update函数中，防止玩家打开关闭带按钮的界面后重新允许移动和攻击）
+        SetBothMoveableAndAttackable(false);
     }
 
     protected override void OnEnable()

@@ -132,8 +132,8 @@ public class HellsCall : BaseScreenplay<HellsCall>
         {
             DestroyCoroutine();     //停止玩家掉血和火焰滤镜的协程
 
-            //需要做的打开入口大堂的大门，在玩家离开大宅后打开剧本胜利面板
-            //await UIManager.Instance.OpenPanel(UIManager.Instance.UIKeys.GameWinningPanel);     
+            //需要做的：打开入口大堂的大门，在玩家离开大宅后打开剧本胜利面板
+            //await UIManager.Instance.OpenPanel(UIManager.Instance.UIKeys.GameWinningPanel);
         }
     }
 

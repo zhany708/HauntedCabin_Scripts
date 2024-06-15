@@ -25,12 +25,14 @@ public class TeleportController : MonoBehaviour
             //获取玩家组件
             Player player = other.GetComponentInParent<Player>();
 
-            if (player != null)
+            if (player == null)
             {
-                Vector2 teleportPos = CalculateTeleportPosition(player.transform.position);
-                player.transform.position = teleportPos;
+                Debug.LogError("Player component not found in the parent gameObject.");
+                return;     
             }
 
+            Vector2 teleportPos = CalculateTeleportPosition(player.transform.position);
+            player.transform.position = teleportPos;
         }
     }
 
