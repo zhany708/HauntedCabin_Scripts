@@ -53,15 +53,13 @@ public class HellsCall_GameLostPanel : BasePanel
 
     private void Restart()
     {
-        //重置玩家的坐标
+        //获取玩家组件
         Player player = FindAnyObjectByType<Player>();
-        if (player != null)
+        if (player == null)
         {
             Debug.LogError("Player component not found.");
             return;          
         }
-
-        player.gameobject.transform.position = Vector2.zero;    //将玩家传送回入口大堂
 
 
         //重置玩家的各个状态和数值（血量，属性）      
@@ -79,6 +77,9 @@ public class HellsCall_GameLostPanel : BasePanel
 
         //重置游戏的各个系统（房间，事件等）
         ResetGameSystems();
+
+        //将玩家传送回入口大堂（必须在重置游戏后，否则顺序错误会导致无法正常生成新的房间）
+        player.gameobject.transform.position = Vector2.zero;    
 
         SetBothMoveableAndAttackable(true);    //使玩家可以移动和攻击
     }
