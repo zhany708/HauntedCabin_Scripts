@@ -19,9 +19,9 @@ public class RootRoomController : MonoBehaviour
 
     List<SpriteRenderer> m_AllSprites;
   
-    RoomManager m_RoomManager;
+    RoomManager RoomManager;
     RoomType m_RoomType;
-    PostProcessController m_PostProcessController;
+
 
     //默认透明度为1
     const float m_DefaultTransparency = 1f; 
@@ -40,21 +40,6 @@ public class RootRoomController : MonoBehaviour
         m_AllSprites = new List<SpriteRenderer>(GetComponentsInChildren<SpriteRenderer>() );
 
         doorControllerInsideThisRoom = GetComponentInChildren<DoorController>();
-
-        m_RoomManager = GameObject.Find("RoomManager").GetComponent<RoomManager>();   //寻找场景中这个名字的物体，并获得相应的组件
-        if (m_RoomManager == null)
-        {
-            Debug.LogError("Cannot find the Gameobject 'RoomManager'.");
-        }
-
-        /*
-        m_PostProcessController = GameObject.Find("PostProcess").GetComponent<PostProcessController>();
-        if (m_PostProcessController == null)
-        {
-            Debug.LogError("Cannot find the Gameobject 'PostProcess'.");
-        }
-        */
-
         m_RoomType = GetComponent<RoomType>();
     }
 
@@ -69,18 +54,18 @@ public class RootRoomController : MonoBehaviour
 
         
         //每当房间激活时，将当前房间的坐标加进字典
-        if (!m_RoomManager.GeneratedRoomDict.ContainsKey(transform.position) )
+        if (!RoomManager.Instance.GeneratedRoomDict.ContainsKey(transform.position) )
         {
-            m_RoomManager.GeneratedRoomDict.Add(transform.position, gameObject);
+            RoomManager.Instance.GeneratedRoomDict.Add(transform.position, gameObject);
         }          
     }
 
     private void OnDisable()
     {
         //每当房间取消激活时，从字典中移除当前房间的坐标
-        if (m_RoomManager.GeneratedRoomDict.ContainsKey(transform.position))
+        if (RoomManager.Instance.GeneratedRoomDict.ContainsKey(transform.position))
         {
-            m_RoomManager.GeneratedRoomDict.Remove(transform.position);
+            RoomManager.Instance.GeneratedRoomDict.Remove(transform.position);
         }
     }
 
@@ -99,7 +84,7 @@ public class RootRoomController : MonoBehaviour
             //房间周围生成过一次房间后就不会再生成了
             if (!m_HasGeneratedRoom)
             {
-                m_RoomManager.GenerateRoomAround(transform, m_RoomType);  //在当前房间周围生成新的房间
+                RoomManager.Instance.GenerateRoomAround(transform, m_RoomType);  //在当前房间周围生成新的房间
             }
 
             RoomManager.Instance.CheckIfConnectSurroundingRooms(transform);  //每当玩家进入房间时，检查当前房间是否连接周围的房间
