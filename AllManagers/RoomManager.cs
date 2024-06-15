@@ -423,13 +423,13 @@ public class RoomManager : ManagerTemplate<RoomManager>
             }
 
             //如果是不可删除的房间
-            if (ImportantRoomPos.Contains((Vector2)childScript.gameobject.transform.position))
+            if (ImportantRoomPos.Contains((Vector2)childScript.gameObject.transform.position))
             {
                 childScript.SetHasGeneratorRoom(false);     //重置布尔，以便玩家进入后可以重新生成房间
             }    
             else        //只删除非初始房间
             {
-                Destroy(childScript.gameobject); 
+                Destroy(childScript.gameObject); 
             }  
         }
     }

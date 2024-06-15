@@ -79,7 +79,7 @@ public class HellsCall_GameLostPanel : BasePanel
         ResetGameSystems();
 
         //将玩家传送回入口大堂（必须在重置游戏后，否则顺序错误会导致无法正常生成新的房间）
-        player.gameobject.transform.position = Vector2.zero;    
+        player.gameObject.transform.position = Vector2.zero;    
 
         SetBothMoveableAndAttackable(true);    //使玩家可以移动和攻击
     }

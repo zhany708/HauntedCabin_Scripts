@@ -34,7 +34,6 @@ public class EvilTelephonePanel : PanelWithButton
     TextMeshProUGUI m_OptionDText;
 
 
-    PlayerStatusBar m_PlayerStatusBar;      //玩家的状态栏UI
 
 
 
@@ -114,7 +113,7 @@ public class EvilTelephonePanel : PanelWithButton
                 SetLocalizedText(ResultA_PhraseKey);
 
                 //改变玩家的属性
-                m_PlayerStatusBar.ChangePropertyValue(PlayerProperty.Sanity, 1f);
+                PlayerStatusBar.ChangePropertyValue(PlayerProperty.Sanity, 1f);
 
                 CommonLogicForOptions();
                 break;
@@ -124,7 +123,7 @@ public class EvilTelephonePanel : PanelWithButton
                 SetLocalizedText(ResultB_PhraseKey);
 
                 //改变玩家的属性
-                m_PlayerStatusBar.ChangePropertyValue(PlayerProperty.Knowledge, 1f);
+                PlayerStatusBar.ChangePropertyValue(PlayerProperty.Knowledge, 1f);
 
                 CommonLogicForOptions();
                 break;
@@ -134,7 +133,7 @@ public class EvilTelephonePanel : PanelWithButton
                 SetLocalizedText(ResultC_PhraseKey);
 
                 //改变玩家的属性
-                m_PlayerStatusBar.ChangePropertyValue(PlayerProperty.Sanity, -1f);
+                PlayerStatusBar.ChangePropertyValue(PlayerProperty.Sanity, -1f);
 
                 CommonLogicForOptions();
                 break;
@@ -144,7 +143,7 @@ public class EvilTelephonePanel : PanelWithButton
                 SetLocalizedText(ResultD_PhraseKey);
 
                 //改变玩家的属性
-                m_PlayerStatusBar.ChangePropertyValue(PlayerProperty.Strength, -1f);
+                PlayerStatusBar.ChangePropertyValue(PlayerProperty.Strength, -1f);
 
                 CommonLogicForOptions();
                 break;
@@ -199,7 +198,7 @@ public class EvilTelephonePanel : PanelWithButton
     }
 
 
-    private void SetButtons(bool isActive)
+    private void SetButtons(bool isActive)      //激活或隐藏按钮
     {
         OptionA.gameObject.SetActive(isActive);
         OptionB.gameObject.SetActive(isActive);
@@ -273,19 +272,10 @@ public class EvilTelephonePanel : PanelWithButton
         m_OptionDText = OptionD.GetComponentInChildren<TextMeshProUGUI>();
 
 
-        m_PlayerStatusBar = FindObjectOfType<PlayerStatusBar>();    //寻找带有此脚本的物体
-
-
         //检查按钮的文本组件是否存在
         if (m_OptionAText == null || m_OptionBText == null || m_OptionCText == null || m_OptionDText == null)
         {
             Debug.LogError("Some option texts are not assigned on the buttons in the EvilTelephonePanel.");
-            return;
-        }
-
-        if (m_PlayerStatusBar == null)
-        {
-            Debug.LogError("Cannot find any GameObject with component PlayerStatusBar.");
             return;
         }
     }

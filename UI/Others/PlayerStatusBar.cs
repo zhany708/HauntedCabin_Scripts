@@ -99,7 +99,7 @@ public class PlayerStatusBar : BasePanel
 
 
 
-    public void ChangePropertyValue(PlayerProperty property, float changeValue)
+    public static void ChangePropertyValue(PlayerProperty property, float changeValue)
     {
         switch (property)
         {
