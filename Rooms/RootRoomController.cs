@@ -34,7 +34,7 @@ public class RootRoomController : MonoBehaviour
 
 
     #region Unity内部函数循环
-    private void Awake()
+    protected virtual void Awake()
     {
         //获取该物体以及所有子物体的精灵图组件
         m_AllSprites = new List<SpriteRenderer>(GetComponentsInChildren<SpriteRenderer>() );
@@ -71,7 +71,7 @@ public class RootRoomController : MonoBehaviour
 
 
 
-    private void OnTriggerEnter2D(Collider2D other)
+    protected virtual void OnTriggerEnter2D(Collider2D other)
     {
         if (other.CompareTag("Player"))
         {
@@ -91,7 +91,7 @@ public class RootRoomController : MonoBehaviour
         }
     }
 
-    private void OnTriggerExit2D(Collider2D other)
+    protected virtual void OnTriggerExit2D(Collider2D other)
     {
         if (other.CompareTag("Player"))
         {
