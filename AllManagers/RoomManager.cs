@@ -24,6 +24,8 @@ public class RoomManager : ManagerTemplate<RoomManager>
     //储存加载过的房间的坐标和物体，用于检查是否有连接的门
     public Dictionary<Vector2, GameObject> GeneratedRoomDict { get; private set; } = new Dictionary<Vector2, GameObject>();
 
+    //用于储存所有不可更改的房间坐标（比如初始房间等），并将入口大堂加进列表    后面要做的：添加其余的一楼初始板块
+    public List<Vector2> ImportantRoomPos { get; private set; } = new List<Vector2>() { Vector2.zero }; 
 
 
     
@@ -397,7 +399,7 @@ public class RoomManager : ManagerTemplate<RoomManager>
     #endregion
 
 
-    #region 房间规格函数
+    #region 其余房间函数（规格，重置游戏等）
     public int MaxAllowedRoomNum()
     {
         //一行可以生成的房间数量。FloorToInt函数用于将结果向下取整（无论小数部分有多大）
@@ -407,6 +409,25 @@ public class RoomManager : ManagerTemplate<RoomManager>
 
         int maxAllowedRoomNum = allowedRoomNumOnRow * allowedRoomNumOnColumn;       //一楼可以生成的最大房间数（当前为35）
         return maxAllowedRoomNum;
+    }
+
+    public void ResetGame()
+    {
+        foreach (Transform child in m_AllRooms)    //在场景中删除所有AllRoom下的房间（除了初始房间）
+        {
+            RootRoomController childScript = child.GetComponent<RootRoomController>();
+            if (childScript == null)
+            {
+                Debug.LogError("Cannot get the RootRoomController script from the: " + child.name);
+                return;
+            }
+
+            //只删除非初始板块
+            if (!ImportantRoomPos.Contains((Vector2)childScript.gameobject.transform.position))
+            {
+                Destroy(childScript.gameobject); 
+            }      
+        }
     }
     #endregion
 }

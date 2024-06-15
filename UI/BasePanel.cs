@@ -220,4 +220,15 @@ public class BasePanel : MonoBehaviour
         IsPlayerMoveable = isTrue;
         IsPlayerAttackable = isTrue;
     }
+
+
+
+    protected void ResetGameSystems()
+    {
+        //重置游戏的各种系统
+        EventManager.Instance.ResetGame();
+        UIManager.Instance.ResetGame();
+        RoomManager.Instance.ResetGame();
+        EnemyPool.Instance.ResetGame();
+    }
 }

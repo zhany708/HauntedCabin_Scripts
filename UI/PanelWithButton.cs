@@ -116,17 +116,6 @@ public class PanelWithButton : BasePanel        //专门用于有按钮的界面
         SetBothMoveableAndAttackable(!m_IsPanelWithButtonOpened);
     }
 
-
-
-
-    protected void ResetGameSystems()
-    {
-        //重置游戏的各种系统
-        EventManager.Instance.ResetGame();
-        UIManager.Instance.ResetGame();
-        EnemyPool.Instance.ResetGame();
-    }
-
     /*
     //用于调试
     private void PrintList()

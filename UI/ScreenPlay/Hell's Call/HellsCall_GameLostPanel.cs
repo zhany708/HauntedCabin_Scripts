@@ -1,18 +1,15 @@
-using TMPro;
+using UnityEngine.UI;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 
 
-
-public class HellsCallPanel : BasePanel
+public class HellsCall_GameLostPanel : BasePanel
 {
-    public TextMeshProUGUI TitleText;           //剧本标题文本
     public TextMeshProUGUI FirstPartText;       //第一段文本
     public TextMeshProUGUI SecondPartText;      //第二段文本  
     public TextMeshProUGUI TipText;             //提示文本
-
-
-
+    
 
 
 
@@ -21,9 +18,10 @@ public class HellsCallPanel : BasePanel
 
     protected override void Awake()
     {
-        if (TitleText == null || FirstPartText == null || SecondPartText == null || TipText == null)
+        //检查文本组件是否存在
+        if (FirstPartText == null || SecondPartText == null || TipText == null)
         {
-            Debug.LogError("Some TMP components are not assigned in the GameBackgroundPanel.");
+            Debug.LogError("Some TMP components are not assigned in the " + name);
             return;
         }
     }
@@ -33,12 +31,11 @@ public class HellsCallPanel : BasePanel
         SetBothMoveableAndAttackable(false);        //界面打开时禁止玩家移动和攻击
     }
 
-
-    private void OnEnable()
+    protected override void OnEnable()
     {
-        
-        OnFadeOutFinished += ClosePanel;        //界面完全淡出后调用的函数
-        OnFadeOutFinished += StartHealthDrain;
+        base.OnEnable();
+
+        OnFadeOutFinished += Restart;        //界面淡入后执行函数以重置系统
 
         OnFadeInFinished += StartTextAnimations;    //界面完全淡入后调用此函数
     }
@@ -46,23 +43,45 @@ public class HellsCallPanel : BasePanel
     protected override void OnDisable()
     {
         base.OnDisable();
-        OnFadeOutFinished -= ClosePanel;
-        OnFadeOutFinished -= StartHealthDrain;
-        OnFadeInFinished -= StartTextAnimations;
+
+        OnFadeOutFinished -= Restart;
+        OnFadeInFinished -= StartTextAnimations;    //界面完全淡入后调用此函数
     }
-
-
     
-    public async override void ClosePanel()
-    {
-        base.ClosePanel();
 
-        await UIManager.Instance.OpenPanel(UIManager.Instance.UIKeys.TaskPanel);        //打开任务界面
+
+
+    private void Restart()
+    {
+        //重置玩家的坐标
+        Player player = FindAnyObjectByType<Player>();
+        if (player != null)
+        {
+            Debug.LogError("Player component not found.");
+            return;          
+        }
+
+        player.gameobject.transform.position = Vector2.zero;    //将玩家传送回入口大堂
+
+
+        //重置玩家的各个状态和数值（血量，属性）      
+        PlayerStats playerStats = player.GetComponentInChildren<PlayerStats>();     //获取玩家血条的脚本组件
+        if (playerStats == null)
+        {
+            Debug.LogError("PlayerStats component not found under Player object.");
+            return;
+        }
+
+        playerStats.SetCurrentHealth(playerStats.MaxHealth);    //重置玩家的血量
+        PlayerStatusBar.ResetGame();                            //重置玩家的属性
+
+
+
+        //重置游戏的各个系统（房间，事件等）
+        ResetGameSystems();
 
         SetBothMoveableAndAttackable(true);    //使玩家可以移动和攻击
     }
-    
-
 
 
     private void StartTextAnimations()
@@ -99,13 +118,5 @@ public class HellsCallPanel : BasePanel
         }));
 
         generatedCoroutines.Add(firstPartTextCoroutine);      //将协程加进列表
-    }
-
-
-
-    private void StartHealthDrain()     //开始持续掉血，并且播放火焰滤镜
-    {
-        //HellsCall.Instance.SetDoFireEffect(true);       //设置布尔，从而开始火焰滤镜
-        HellsCall.Instance.StartHealthDrain();       
     }
 }

@@ -11,7 +11,10 @@ public class UIManager : ManagerTemplate<UIManager>
     public SO_UIKeys UIKeys;
 
     //存放已打开界面的字典（里面存储的都是正在打开的界面）
-    public Dictionary<string, BasePanel> PanelDict = new Dictionary<string, BasePanel>();      
+    public Dictionary<string, BasePanel> PanelDict = new Dictionary<string, BasePanel>();    
+
+    //用于储存所有不可删除的UI（比如玩家状态等）
+    public List<BasePanel> ImportantPanel { get; private set; } = new List<BasePanel>();   
 
 
     Transform m_UIRoot;     //用于储存所有的UI（为了美观）
@@ -159,7 +162,10 @@ public class UIManager : ManagerTemplate<UIManager>
                 return;
             }
 
-            childScript.ClosePanel();    
+            if (!ImportantPanel.Contains(childScript))      //只关闭不重要的界面
+            {
+                childScript.ClosePanel();    
+            }           
         }
     }
 }

@@ -7,7 +7,7 @@ using UnityEngine.Rendering.PostProcessing;
 
 public class PostProcessController : MonoBehaviour
 {
-    public static PostProcessController Instance { get; private set; }
+    public static PostProcessController Instance { get; private set; }  //目前只有一个后期处理，所以可以用单例模式
 
 
     //更改颜色滤镜相关   
@@ -20,7 +20,7 @@ public class PostProcessController : MonoBehaviour
 
 
 
-    PostProcessVolume m_PostProcessVolume;
+    PostProcessVolume m_PostProcessVolume;      //当前后期处理的Volume（可以有多个）
     ColorGrading m_ColorGrading;                //颜色处理相关
     Vignette m_Vignette;                        //屏幕聚焦相关（比如模拟手电筒，只让玩家看到周围一小块面积）
 
@@ -50,7 +50,7 @@ public class PostProcessController : MonoBehaviour
         }
 
 
-        m_PostProcessVolume = GetComponent<PostProcessVolume>();
+        m_PostProcessVolume = GetComponent<PostProcessVolume>();    //先获取Volume，随后再获取Volume内的组件
     
         if (m_PostProcessVolume != null )
         {
@@ -84,7 +84,7 @@ public class PostProcessController : MonoBehaviour
 
         else
         {
-            Debug.LogError("The Color grading component component is missing.");
+            Debug.LogError("The Color grading component is missing.");
         }
     }
 
@@ -118,9 +118,12 @@ public class PostProcessController : MonoBehaviour
     {
         if (m_Vignette != null)
         {
-            m_Vignette.active = enabled;    //打开Vignette
+            if (m_Vignette.active != enabled)
+            {
+                m_Vignette.active = enabled;    //打开Vignette
+            }
 
-            //更新频率
+            //根据当前时间更新闪烁频率
             m_Timer += Time.deltaTime * m_FireEffectFrequency;
 
             //根据频率在红色和橙色之间转换
@@ -138,7 +141,7 @@ public class PostProcessController : MonoBehaviour
         {
             FireEffect();
 
-            yield return new WaitForFixedUpdate();      //保证逻辑的频率不变
+            yield return new WaitForFixedUpdate();      //保证火焰滤镜的频率不变
         }       
     }
     #endregion

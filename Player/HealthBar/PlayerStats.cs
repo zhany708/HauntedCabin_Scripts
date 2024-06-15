@@ -8,6 +8,11 @@ public class PlayerStats : Stats
         base.Awake();
 
         m_PlayerHealthBar = GetComponentInChildren<HealthBar>();      //获取血条组件的血条缓冲脚本
+        if (m_PlayerHealthBar == null)
+        {
+            Debug.LogError("HealthBar component not found in children.");
+            return;
+        }
     }
 
 
@@ -26,4 +31,13 @@ public class PlayerStats : Stats
 
         m_PlayerHealthBar.SetCurrentHealth(CurrentHealth);
     }
+
+
+    #region Setters
+    public override void SetCurrentHealth(float health)
+    {
+        base.SetCurrentHealth(health);
+        m_PlayerHealthBar.SetCurrentHealth(CurrentHealth);
+    }
+    #endregion
 }

@@ -58,46 +58,43 @@ public class PlayerStatusBar : BasePanel
         UpdateStatusUI();       //进入游戏前更新显示的数值
     }
 
+    private void OnEnable() 
+    {
+        UIManager.Instance.ImportantPanel.Add(this);    //将该界面加进列表，以在重置游戏时不被删除
+    }
+
+
 
 
     //初始化血条相关的部分
     private void InitializePlayerStatus()
     {
-        //获取PlayerHealthBar游戏物体
-        GameObject playerHealthBarObject = GameObject.Find("PlayerHealthBar");
-
-        if (playerHealthBarObject == null)
-        {
-            Debug.LogError("PlayerHealthBar object not found.");
-            return;
-        }
-
-        //获取脚本组件
-        m_PlayerHealthBar = playerHealthBarObject.GetComponent<HealthBar>();
-        if (m_PlayerHealthBar == null)
-        {
-            Debug.LogError("HealthBar component not found on PlayerHealthBar.");
-            return;
-        }
-
-        //传递生命值图片
-        m_PlayerHealthBar.SetHpImage(HpImage);
-        m_PlayerHealthBar.SetHpEffectImage(HpEffectImage);
-
-
-        m_Player = FindObjectOfType<Player>();
+        m_Player = FindAnyObjectByType<Player>();
         if (m_Player == null)
         {
             Debug.LogError("Player component not found.");
             return;
         }
 
-
         //从PlayerData哪里获取属性值
         StrengthValue = m_Player.PlayerData.Strength;
         SpeedValue = m_Player.PlayerData.Speed;
         SanityValue = m_Player.PlayerData.Sanity;
         KnowledgeValue = m_Player.PlayerData.Knowledge;
+
+
+
+        //获取玩家血条的脚本组件
+        m_PlayerHealthBar = m_Player.GetComponentInChildren<HealthBar>();
+        if (m_PlayerHealthBar == null)
+        {
+            Debug.LogError("HealthBar component not found under Player object.");
+            return;
+        }
+
+        //传递生命值图片
+        m_PlayerHealthBar.SetHpImage(HpImage);
+        m_PlayerHealthBar.SetHpEffectImage(HpEffectImage);
     }
 
 
@@ -184,6 +181,17 @@ public class PlayerStatusBar : BasePanel
     public static float GetSpeedAddition()   //每当玩家移动时都需要调用此函数
     {
         return 1 + SpeedValue * 0.05f;       //每一点速度对应5%的移速加成
+    }
+
+
+
+    public static void ResetGame()      //重置游戏
+    {
+        //重新赋予玩家的所有属性
+        StrengthValue = m_Player.PlayerData.Strength;
+        SpeedValue = m_Player.PlayerData.Speed;
+        SanityValue = m_Player.PlayerData.Sanity;
+        KnowledgeValue = m_Player.PlayerData.Knowledge;
     }
 }
 

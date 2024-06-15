@@ -108,13 +108,6 @@ public class Stats : CoreComponent      //用于管理生命，魔力等状态�
 
 
     #region Getters
-    /*
-    public float GetCurrentHealth()
-    {
-        return CurrentHealth;
-    }
-    */
-
     public float GetCurrentHelathRate()     //获取当前血量百分比
     {
         return CurrentHealth / MaxHealth;
@@ -123,7 +116,7 @@ public class Stats : CoreComponent      //用于管理生命，魔力等状态�
 
 
     #region Setters
-    public void SetCurrentHealth(float health)
+    public virtual void SetCurrentHealth(float health)
     {
         CurrentHealth = health;
     }

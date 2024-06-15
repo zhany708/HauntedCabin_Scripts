@@ -86,13 +86,13 @@ public class HellsCall : BaseScreenplay<HellsCall>
 
 
     #region 玩家持续掉血相关
-    public void StartHealthDrain()      //开始持续掉血   需要做的：将火焰滤镜与持续掉血联系起来，从而让它们可以同步
+    public void StartHealthDrain()      //开始持续掉血（将火焰滤镜与持续掉血联系起来，从而让它们可以同步）
     {
         if (PlayerStats != null)
         {
-            //持续xx秒，每次掉5点血，每5秒掉一次
-            m_HealthDrainCoroutine = StartCoroutine(PlayerStats.HealthDrain(999999999f, 1f, 12f));
-            m_FireEffectCoroutine = StartCoroutine(PostProcessController.Instance.StartFireEffect() );      //一直显示滤镜
+            //持续10000000秒，每次掉1点血，每5秒掉一次
+            m_HealthDrainCoroutine = StartCoroutine(PlayerStats.HealthDrain(10000000f, 1f, 12f));
+            m_FireEffectCoroutine = StartCoroutine(PostProcessController.Instance.StartFireEffect() );      //一直显示火焰滤镜
         }
     }
 
@@ -119,8 +119,8 @@ public class HellsCall : BaseScreenplay<HellsCall>
         {
             m_TempRoomPos.Add(room);
         }
-
-        m_TempRoomPos.Remove(EventManager.Instance.GetRoomPosWhereEnterSecondStage());   //移除触发进入二阶段的房间的坐标，防止玩家立刻获得祷告石
+        //移除触发进入二阶段的房间的坐标，防止玩家立刻获得祷告石
+        m_TempRoomPos.Remove(EventManager.Instance.GetRoomPosWhereEnterSecondStage());   
     }
 
 
@@ -128,9 +128,9 @@ public class HellsCall : BaseScreenplay<HellsCall>
     {
         m_FinishedRitualCount++;
 
-        if (m_FinishedRitualCount >= m_NeededStoneNum)
+        if (m_FinishedRitualCount >= m_NeededStoneNum)      //当玩家完成所有仪式后
         {
-            DestroyCoroutine();     //停止玩家掉血和播放火焰滤镜
+            DestroyCoroutine();     //停止玩家掉血和火焰滤镜的协程
 
             //需要做的打开入口大堂的大门，在玩家离开大宅后打开剧本胜利面板
             //await UIManager.Instance.OpenPanel(UIManager.Instance.UIKeys.GameWinningPanel);     
@@ -198,15 +198,12 @@ public class HellsCall : BaseScreenplay<HellsCall>
 
     private Vector2 GenerateSuitableRandomRoomPos()    //生成合适的随机房间坐标（因为某些房间不可更改）
     {
-        //用于储存所有不可更改的房间坐标（比如初始房间等），并将入口大堂加进列表    后面要做的：添加其余的一楼初始板块
-        List<Vector2> importantRoomPos = new List<Vector2>() { Vector2.zero };    
-
         Vector2 selectedRoomPos = Vector2.zero;     //用于储存随机选择到的房间的坐标
         int attemptCount = 0;                       //表示尝试了多少次
         const int maxAttemptCount = 50;             //最大尝试次数
 
         //只要随机到不可更改的房间坐标，就重新获取随机索引
-        while (importantRoomPos.Contains(selectedRoomPos) && attemptCount <= maxAttemptCount)
+        while (RoomManager.Instance.ImportantRoomPos.Contains(selectedRoomPos) && attemptCount <= maxAttemptCount)
         {
             int randomNum = Random.Range(0, m_TempRoomPos.Count);   //随机房间索引
             selectedRoomPos = m_TempRoomPos[randomNum];     //获取随机选择的房间的坐标
