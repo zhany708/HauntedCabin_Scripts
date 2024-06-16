@@ -6,15 +6,15 @@ using ZhangYu.Utilities;
 public class DoorController : MonoBehaviour
 {
     public Animator[] DoorAnimators;        //当前房间内所有门的动画器
-    public GameObject[] EnemyObjects;       //当前房间内所有会生成的敌人
+    public GameObject[] EnemyObjects;       //当前房间内所有会生成的敌人   后续更改：用词典表示要生成的敌人名字和数量，随后异步加载
     public Vector2 EnemySpawnPosNegativeOffset = Vector2.zero;     //敌人生成的负坐标范围（最左边和最下边的范围，x和y都是负数）
     public Vector2 EnemySpawnPosPositiveOffset = Vector2.zero;     //敌人生成的正坐标范围（最右边和最上边的范围，x和y都是正数）
 
     public Collider2D RoomTrigger { get; private set; }
-    public LayerMask FurnitureLayerMask { get; private set; }    //家具的Layer
+    public LayerMask FurnitureLayerMask { get; private set; }      //家具的Layer
     public RandomPosition EnemySpwanPos { get; private set; }
-    public int KilledEnemyCount { get; private set; } = 0;          //表示当前房间内击杀了多少敌人
-    public bool HasGeneratedEvent { get; private set; } = false;    //表示当前房间是否生成过事件
+    public int KilledEnemyCount { get; private set; } = 0;         //表示当前房间内击杀了多少敌人
+    public bool HasGeneratedEvent { get; private set; } = false;   //表示当前房间是否生成过事件
 
     //运用Physics2D检查重复坐标时需要的X和Y的值（火蝙蝠Y轴上有0.5的偏差，因为坐标点位于脚底）
     public float PhysicsCheckingXPos { get; private set; } = 2f;

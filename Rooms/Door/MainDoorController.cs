@@ -17,7 +17,7 @@ public class MainDoorController : MonoBehaviour        //用于大宅大门
     }
 
 
-    private void OnTriggerExit2D(Collider2D other)
+    private void OnTriggerEnter2D(Collider2D other)     //需要做的：触发器不能太靠上，防止玩家横向经过的时候不小心触发了逻辑
     {
         if (other.CompareTag("Player"))     //玩家离开大宅后
         {
