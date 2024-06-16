@@ -82,7 +82,6 @@ public class PauseMenuPanel : PanelWithButton       //整个游戏过程中都�
         if (CanvasGroup.alpha == FadeInAlpha)
         {
             base.Update();
-
         }
 
 
