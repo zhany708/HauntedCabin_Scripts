@@ -6,7 +6,7 @@ using UnityEngine.SceneManagement;
 
 public class ConfirmPanel : PanelWithButton     //用于询问玩家是否确认自己的选择（每当调用这个界面前，需要先将逻辑绑定到事件）
 {
-    public static event Action OnYesButton;     //接收方为需要选择的所有UI界面（比如事件中的选项，拾取武器等）
+    public static event Action OnYesButtonPressed;     //接收方为需要选择的所有UI界面（比如事件中的选项，拾取武器等）
 
     public Button YesButton;
     public Button NoButton;
@@ -40,13 +40,12 @@ public class ConfirmPanel : PanelWithButton     //用于询问玩家是否确认
 
     private void OnYesButtonClick()
     {
-        OnYesButton?.Invoke();      //回调事件，将逻辑绑定到这个事件，从而进行不同的逻辑
+        OnYesButtonPressed?.Invoke();      //回调事件，将逻辑绑定到这个事件，从而进行不同的逻辑
     }
-
 
     private void OnNoButtonClick()
     {
-        //关闭界面
+        //淡出界面
         Fade(CanvasGroup, FadeOutAlpha, FadeDuration, false);
     }    
 }
