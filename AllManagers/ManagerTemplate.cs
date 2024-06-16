@@ -11,7 +11,7 @@ public abstract class ManagerTemplate<T> : MonoBehaviour where T : Component
 
 
     //预制件缓存字典，所有的管理器加载完物体后都会保存进这个字典（每个管理器都有一个单独且分开的字典，只是名字一样）
-    protected Dictionary<string, GameObject> m_PrefabDict = new Dictionary<string, GameObject>();
+    protected Dictionary<string, GameObject> m_PrefabDict = new Dictionary<string, GameObject>();       //需要做的：更改变量名
 
 
 

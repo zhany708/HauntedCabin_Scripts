@@ -11,7 +11,7 @@ using UnityEngine;
 public class BasePanel : MonoBehaviour
 {
     public event Action OnFadeInFinished;       //界面完全淡入时调用的事件，接收方为子类
-    public event Action OnFadeOutFinished;       //界面完全淡出时调用的事件，接收方为子类
+    public event Action OnFadeOutFinished;      //界面完全淡出时调用的事件，接收方为子类
 
 
     public static bool IsPlayerMoveable { get; protected set; } = true;     //是否允许玩家移动
@@ -83,7 +83,7 @@ public class BasePanel : MonoBehaviour
         Fade(CanvasGroup, FadeInAlpha, FadeDuration, true);
     }
 
-    public virtual void ClosePanel()
+    public virtual void ClosePanel()        //关闭界面时，不经常用的界面调用ClosePanel，经常用的界面调用Fade
     {
         //Debug.Log("Panel is closed: " + panelName);
 
