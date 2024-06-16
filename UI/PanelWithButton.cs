@@ -6,10 +6,6 @@ using UnityEngine.EventSystems;
 
 public class PanelWithButton : BasePanel        //专门用于有按钮的界面UI
 {
-    
-
-
-
     //打开界面后让EventSystem第一个选择的按钮
     protected GameObject firstSelectedButton = null;
 
@@ -18,7 +14,7 @@ public class PanelWithButton : BasePanel        //专门用于有按钮的界面
 
 
     //用于储存所有正在打开的有按钮的界面（加static从而让所有子类共用同一个列表）
-    protected static List<PanelWithButton> m_OpenedPanelsWithButton = new List<PanelWithButton>();
+    protected static List<PanelWithButton> m_OpenedPanelsWithButton = new List<PanelWithButton>();      //需要做的：改变量名
 
 
 

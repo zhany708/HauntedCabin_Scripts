@@ -4,9 +4,9 @@ using UnityEngine.SceneManagement;
 
 
 
-public class ConfirmPanel : PanelWithButton     //用于询问玩家是否确认自己的选择
+public class ConfirmPanel : PanelWithButton     //用于询问玩家是否确认自己的选择（每当调用这个界面前，需要先将逻辑绑定到事件）
 {
-    public static event Action OnYesButton;     //接收方为需要选择的所有UI界面（比如事件，拾取武器等）
+    public static event Action OnYesButton;     //接收方为需要选择的所有UI界面（比如事件中的选项，拾取武器等）
 
     public Button YesButton;
     public Button NoButton;
