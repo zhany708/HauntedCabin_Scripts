@@ -130,7 +130,7 @@ public class HellsCall : BaseScreenplay<HellsCall>
             }          
         }
         //移除触发进入二阶段的房间的坐标，防止玩家立刻获得祷告石
-        m_TempRoomPos.Remove(EventManager.Instance.GetRoomPosWhereEnterSecondStage());   
+        m_TempRoomPos.Remove(EventManager.Instance.GetRoomPosWhereEnterSecondStage());
     }
 
 

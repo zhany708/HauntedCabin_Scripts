@@ -149,6 +149,12 @@ public class UIManager : ManagerTemplate<UIManager>
     #endregion
 
 
+    public void OpenConfirmPanel(Action onYesAction)        //专门用于打开确认界面
+    {
+        ConfirmPanel.ClearAllSubscriptions();               //先清空所有事件绑定的之前的函数
+        ConfirmPanel.OnYesButtonClick += onYesAction;       //将参数中的函数绑定到事件
+        OpenPanel(UIKeys.ConfirmPanel);                     //打开确认界面
+    }
 
 
     public void ResetGame()

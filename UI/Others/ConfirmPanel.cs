@@ -41,6 +41,9 @@ public class ConfirmPanel : PanelWithButton     //用于询问玩家是否确认
     private void OnYesButtonClick()
     {
         OnYesButtonPressed?.Invoke();      //回调事件，将逻辑绑定到这个事件，从而进行不同的逻辑
+
+        //淡出界面
+        Fade(CanvasGroup, FadeOutAlpha, FadeDuration, false);
     }
 
     private void OnNoButtonClick()
@@ -48,4 +51,11 @@ public class ConfirmPanel : PanelWithButton     //用于询问玩家是否确认
         //淡出界面
         Fade(CanvasGroup, FadeOutAlpha, FadeDuration, false);
     }    
+
+
+
+    public static void ClearAllSubscriptions()         //删除所有事件绑定的函数
+    {
+        OnYesButtonPressed = null;
+    }
 }

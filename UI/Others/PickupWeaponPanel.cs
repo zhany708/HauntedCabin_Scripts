@@ -113,10 +113,16 @@ public class PickupWeaponPanel : PanelWithButton
         switch (action)
         {
             case ButtonAction.EquipOnPrimary:
+                
+                //UIManager.Instance.OpenConfirmPanel(() => EquipWeapon(true));     //打开确认面板
+                
                 EquipWeapon(true);
                 break;
 
             case ButtonAction.EquipOnSecondary:
+                
+                //UIManager.Instance.OpenConfirmPanel(() => EquipWeapon(false));    //打开确认面板
+                
                 EquipWeapon(false);
                 break;
 
