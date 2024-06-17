@@ -49,6 +49,8 @@ public class RootRoomController : MonoBehaviour
         if (!RoomManager.Instance.GeneratedRoomDict.ContainsKey(transform.position))
         {
             RoomManager.Instance.GeneratedRoomDict.Add(transform.position, gameObject);
+
+            //Debug.Log("Now we have this number of rooms in the dict: " + RoomManager.Instance.GeneratedRoomDict.Count);
         }
         
     }

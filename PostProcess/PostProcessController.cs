@@ -118,10 +118,7 @@ public class PostProcessController : MonoBehaviour
     {
         if (m_Vignette != null)
         {
-            if (m_Vignette.active != enabled)
-            {
-                m_Vignette.active = enabled;    //打开Vignette
-            }
+            m_Vignette.enabled.value = true;    //打开Vignette
 
             //根据当前时间更新闪烁频率
             m_Timer += Time.deltaTime * m_FireEffectFrequency;
@@ -143,6 +140,12 @@ public class PostProcessController : MonoBehaviour
 
             yield return new WaitForFixedUpdate();      //保证火焰滤镜的频率不变
         }       
+    }
+
+
+    public void TurnOffVignette()
+    {
+        m_Vignette.enabled.value = false;    //关闭Vignette
     }
     #endregion
 }

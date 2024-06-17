@@ -408,15 +408,15 @@ public class RoomManager : ManagerTemplate<RoomManager>
 
 
     #region 其余房间函数（规格，重置游戏等）
-    public int MaxAllowedRoomNum()
+    public void GetMaxAllowedRoomNum(ref int thisNum)
     {
         //一行可以生成的房间数量。FloorToInt函数用于将结果向下取整（无论小数部分有多大）
         int allowedRoomNumOnRow = Mathf.FloorToInt(MaximumXPos * 2 / RoomLength) + 1;
+
         //一列可以生成的房间数量
         int allowedRoomNumOnColumn = Mathf.FloorToInt(MaximumYPos * 2 / RoomWidth) + 1;
 
-        int maxAllowedRoomNum = allowedRoomNumOnRow * allowedRoomNumOnColumn;       //一楼可以生成的最大房间数（当前为35）
-        return maxAllowedRoomNum;
+        thisNum = allowedRoomNumOnRow * allowedRoomNumOnColumn;       //一楼可以生成的最大房间数（当前为35）
     }
 
     public void ResetGame()

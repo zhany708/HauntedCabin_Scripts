@@ -106,6 +106,7 @@ public class HellsCall : BaseScreenplay<HellsCall>
 
         if (m_FireEffectCoroutine != null)
         {
+            PostProcessController.Instance.TurnOffVignette();       //关闭滤镜
             StopCoroutine(m_FireEffectCoroutine);
         }
     }
@@ -114,6 +115,8 @@ public class HellsCall : BaseScreenplay<HellsCall>
 
     private void AddAllRoomPosIntoList()
     {
+        Debug.Log("Now we have this number of rooms in the dict: " + RoomManager.Instance.GeneratedRoomDict.Count);
+
         //将字典里的所有坐标储存在列表中
         foreach (var room in RoomManager.Instance.GeneratedRoomDict.Keys)
         {
@@ -142,8 +145,7 @@ public class HellsCall : BaseScreenplay<HellsCall>
     #region 仪式房相关
     private void GenerateRitualRoom()       //生成仪式房（整个地图只有一个）
     {
-        int m_MaxAllowedRoomNum = RoomManager.Instance.MaxAllowedRoomNum();       //一楼可以生成的最大房间数（当前为35）
-
+        RoomManager.Instance.GetMaxAllowedRoomNum(ref m_MaxAllowedRoomNum);       //一楼可以生成的最大房间数（当前为35）
 
         //当没有新的房间可以生成时
         if (RoomManager.Instance.GeneratedRoomDict.Count >= m_MaxAllowedRoomNum)
