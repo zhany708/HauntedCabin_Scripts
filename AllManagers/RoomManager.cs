@@ -72,14 +72,6 @@ public class RoomManager : ManagerTemplate<RoomManager>
     {
         //自动设置层级
         //RoomLayerMask = LayerMask.GetMask("OnlyTriggerPlayerAndEnemy");
-
-        /*
-        //最后运行前激活初始房间，防止因为顺序导致开头的报错
-        foreach (Transform child in m_AllRooms)
-        {
-            child.gameObject.SetActive(true);
-        }
-        */
     }
 
 
@@ -418,6 +410,24 @@ public class RoomManager : ManagerTemplate<RoomManager>
 
         thisNum = allowedRoomNumOnRow * allowedRoomNumOnColumn;       //一楼可以生成的最大房间数（当前为35）
     }
+
+    public void PrintGeneratedRoomDict()        //用于DEBUG
+    {
+        //将字典里的所有房间的名字和对应的坐标打印出来
+        foreach (var room in GeneratedRoomDict.Keys)
+        {
+            if (GeneratedRoomDict.TryGetValue(room, out GameObject tempEoomName))
+            {
+                Debug.Log(tempEoomName.name + "is at this position: " + room);
+            }
+
+            else
+            {
+                Debug.LogError("Key not fount in the dict: " + room);
+            }
+        }
+    }
+
 
     public void ResetGame()
     {

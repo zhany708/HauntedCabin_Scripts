@@ -19,7 +19,6 @@ public class RootRoomController : MonoBehaviour
 
     List<SpriteRenderer> m_AllSprites;
   
-    RoomManager RoomManager;
     RoomType m_RoomType;
 
 
@@ -45,14 +44,13 @@ public class RootRoomController : MonoBehaviour
 
     private void Start()
     {
-        
+        //在这里加进字典，防止字典还没实例化就尝试获取引用导致报错
         if (!RoomManager.Instance.GeneratedRoomDict.ContainsKey(transform.position))
         {
             RoomManager.Instance.GeneratedRoomDict.Add(transform.position, gameObject);
 
             //Debug.Log("Now we have this number of rooms in the dict: " + RoomManager.Instance.GeneratedRoomDict.Count);
         }
-        
     }
 
     protected virtual void OnEnable()
@@ -61,14 +59,6 @@ public class RootRoomController : MonoBehaviour
 
         //房间激活时将房间精灵图变得透明
         ChangeRoomTransparency(HiddenTransparency);
-
-        /*
-        //每当房间激活时，将当前房间的坐标加进字典
-        if (!RoomManager.Instance.GeneratedRoomDict.ContainsKey(transform.position) )
-        {
-            RoomManager.Instance.GeneratedRoomDict.Add(transform.position, gameObject);
-        }     
-        */
     }
 
     private void OnDisable()

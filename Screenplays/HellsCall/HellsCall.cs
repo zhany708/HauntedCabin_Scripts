@@ -115,12 +115,16 @@ public class HellsCall : BaseScreenplay<HellsCall>
 
     private void AddAllRoomPosIntoList()
     {
-        Debug.Log("Now we have this number of rooms in the dict: " + RoomManager.Instance.GeneratedRoomDict.Count);
+        //Debug.Log("Now we have this number of rooms in the dict: " + RoomManager.Instance.GeneratedRoomDict.Count);
+        //RoomManager.Instance.PrintGeneratedRoomDict();      //打印出字典里的所有房间
 
         //将字典里的所有坐标储存在列表中
         foreach (var room in RoomManager.Instance.GeneratedRoomDict.Keys)
         {
-            m_TempRoomPos.Add(room);
+            if (!m_TempRoomPos.Contains(room) )     //只有当列表中没有字典里的坐标时，才储存坐标
+            {
+                m_TempRoomPos.Add(room);
+            }          
         }
         //移除触发进入二阶段的房间的坐标，防止玩家立刻获得祷告石
         m_TempRoomPos.Remove(EventManager.Instance.GetRoomPosWhereEnterSecondStage());   
