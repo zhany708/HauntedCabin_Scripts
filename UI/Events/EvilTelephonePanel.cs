@@ -113,7 +113,7 @@ public class EvilTelephonePanel : PanelWithButton
                 SetLocalizedText(ResultA_PhraseKey);
 
                 //改变玩家的属性
-                PlayerStatusBar.ChangePropertyValue(PlayerProperty.Sanity, 1f);
+                PlayerStatusBar.Instance.ChangePropertyValue(PlayerProperty.Sanity, 1f);
 
                 CommonLogicForOptions();
                 break;
@@ -123,7 +123,7 @@ public class EvilTelephonePanel : PanelWithButton
                 SetLocalizedText(ResultB_PhraseKey);
 
                 //改变玩家的属性
-                PlayerStatusBar.ChangePropertyValue(PlayerProperty.Knowledge, 1f);
+                PlayerStatusBar.Instance.ChangePropertyValue(PlayerProperty.Knowledge, 1f);
 
                 CommonLogicForOptions();
                 break;
@@ -133,7 +133,7 @@ public class EvilTelephonePanel : PanelWithButton
                 SetLocalizedText(ResultC_PhraseKey);
 
                 //改变玩家的属性
-                PlayerStatusBar.ChangePropertyValue(PlayerProperty.Sanity, -1f);
+                PlayerStatusBar.Instance.ChangePropertyValue(PlayerProperty.Sanity, -1f);
 
                 CommonLogicForOptions();
                 break;
@@ -143,7 +143,7 @@ public class EvilTelephonePanel : PanelWithButton
                 SetLocalizedText(ResultD_PhraseKey);
 
                 //改变玩家的属性
-                PlayerStatusBar.ChangePropertyValue(PlayerProperty.Strength, -1f);
+                PlayerStatusBar.Instance.ChangePropertyValue(PlayerProperty.Strength, -1f);
 
                 CommonLogicForOptions();
                 break;

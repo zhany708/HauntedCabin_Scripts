@@ -43,7 +43,15 @@ public class RootRoomController : MonoBehaviour
         m_RoomType = GetComponent<RoomType>();
     }
 
-
+    private void Start()
+    {
+        
+        if (!RoomManager.Instance.GeneratedRoomDict.ContainsKey(transform.position))
+        {
+            RoomManager.Instance.GeneratedRoomDict.Add(transform.position, gameObject);
+        }
+        
+    }
 
     protected virtual void OnEnable()
     {
@@ -52,12 +60,13 @@ public class RootRoomController : MonoBehaviour
         //房间激活时将房间精灵图变得透明
         ChangeRoomTransparency(HiddenTransparency);
 
-        
+        /*
         //每当房间激活时，将当前房间的坐标加进字典
         if (!RoomManager.Instance.GeneratedRoomDict.ContainsKey(transform.position) )
         {
             RoomManager.Instance.GeneratedRoomDict.Add(transform.position, gameObject);
-        }          
+        }     
+        */
     }
 
     private void OnDisable()

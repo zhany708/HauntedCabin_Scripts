@@ -72,6 +72,14 @@ public class RoomManager : ManagerTemplate<RoomManager>
     {
         //自动设置层级
         //RoomLayerMask = LayerMask.GetMask("OnlyTriggerPlayerAndEnemy");
+
+        /*
+        //最后运行前激活初始房间，防止因为顺序导致开头的报错
+        foreach (Transform child in m_AllRooms)
+        {
+            child.gameObject.SetActive(true);
+        }
+        */
     }
 
 

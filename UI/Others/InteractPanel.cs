@@ -1,6 +1,6 @@
 using UnityEngine.UI;
 using UnityEngine;
-using UnityEngine.SceneManagement;
+using System;
 
 
 
@@ -19,6 +19,9 @@ public class InteractPanel : BasePanel     //互动按键，给予玩家自己�
             OnInteractKeyPressed?.Invoke();     //调用事件
         }
     }
+
+
+
 
     //需要做的：玩家靠近一些物体后打开此界面，离开物体后淡出此界面。且此界面的坐标应更改为物体坐标（随触发的物体改变）
     public override void ClosePanel()

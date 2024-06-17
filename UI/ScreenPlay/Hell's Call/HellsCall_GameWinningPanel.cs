@@ -1,6 +1,7 @@
 using UnityEngine.UI;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using TMPro;
 
 
 
@@ -41,6 +42,7 @@ public class HellsCall_GameWinningPanel : PanelWithButton
         base.OnEnable();
 
         OnFadeOutFinished += HandleFadeOutFinished;        //彻底淡出时执行函数
+        OnFadeInFinished += StartTextAnimations;           //淡入后执行文本逻辑
     }
 
     protected override void OnDisable()
@@ -48,6 +50,7 @@ public class HellsCall_GameWinningPanel : PanelWithButton
         base.OnDisable();
 
         OnFadeOutFinished -= HandleFadeOutFinished;
+        OnFadeInFinished -= StartTextAnimations;
     }
     
 
@@ -99,7 +102,7 @@ public class HellsCall_GameWinningPanel : PanelWithButton
         {
             WinningText.gameObject.SetActive(true);       //激活胜利文本
 
-            Coroutine winningTextCoroutine = StartCoroutine(TypeText(WinningText, EventInfo.text, () =>
+            Coroutine winningTextCoroutine = StartCoroutine(TypeText(WinningText, WinningText.text, () =>
             {
                 SetButtons(true);       //事件介绍完毕后，激活所有按钮
             }));

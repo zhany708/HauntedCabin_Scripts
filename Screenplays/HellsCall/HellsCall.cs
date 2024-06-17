@@ -133,7 +133,7 @@ public class HellsCall : BaseScreenplay<HellsCall>
             DestroyCoroutine();     //停止玩家掉血和火焰滤镜的协程
 
             //打开入口大堂的大门
-            MainDoorController.SetDoOpenMainDoor(true);       //设置布尔，以便玩家再次进入入口大堂后，大门会开启
+            MainDoorController.Instance.SetDoOpenMainDoor(true);       //设置布尔，以便玩家再次进入入口大堂后，大门会开启
         }
     }
 

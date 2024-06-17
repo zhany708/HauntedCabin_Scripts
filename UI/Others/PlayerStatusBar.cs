@@ -7,6 +7,9 @@ using UnityEngine.UI;
 
 public class PlayerStatusBar : BasePanel
 {
+    public static PlayerStatusBar Instance;
+
+
     public Image HpImage;
     public Image HpEffectImage;     //血量缓冲图片
 
@@ -40,6 +43,24 @@ public class PlayerStatusBar : BasePanel
 
     protected override void Awake()
     {
+        //单例模式
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+        }
+
+        else
+        {
+            Instance = this;
+
+            //只有在没有父物体时才运行防删函数，否则会出现提醒
+            if (gameObject.transform.parent == null)
+            {
+                DontDestroyOnLoad(gameObject);
+            }
+        }
+
+
         base.Awake();
 
         CheckComponents();              //检查公有组件是否都存在
@@ -99,7 +120,7 @@ public class PlayerStatusBar : BasePanel
 
 
 
-    public static void ChangePropertyValue(PlayerProperty property, float changeValue)
+    public void ChangePropertyValue(PlayerProperty property, float changeValue)
     {
         switch (property)
         {
@@ -185,7 +206,7 @@ public class PlayerStatusBar : BasePanel
 
 
 
-    public static void ResetGame()      //重置游戏
+    public void ResetGame()      //重置游戏
     {
         //重新赋予玩家的所有属性
         StrengthValue = m_Player.PlayerData.Strength;

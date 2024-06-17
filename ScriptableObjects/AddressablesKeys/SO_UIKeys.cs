@@ -17,8 +17,10 @@ public class SO_UIKeys : ScriptableObject
 
     //剧本相关
     [Header("ScreenPlay")]
-    public string GameBackgroundPanel;      //游戏底层剧本界面
-    public string HellsCallPanel;           //地域的呼唤剧本背景界面
+    public string GameBackgroundPanel;          //游戏底层剧本界面
+    public string HellsCallPanel;               //地域的呼唤剧本背景界面
+    public string HellsCall_GameLostPanel;      //地域的呼唤剧本失败界面
+    public string HellsCall_GameWinningPanel;   //地域的呼唤剧本胜利界面
 
 
     //人物相关
@@ -35,4 +37,10 @@ public class SO_UIKeys : ScriptableObject
     //武器相关
     [Header("Weapon")]
     public string PickupWeaponPanelKey;       //用于玩家拾取武器  
+
+
+    //其他
+    [Header("Other")]
+    public string ConfirmPanel;       //确认界面
+    public string InteractPanel;      //交互界面
 }

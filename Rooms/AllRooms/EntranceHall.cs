@@ -1,3 +1,6 @@
+using UnityEngine;
+
+
 public class EntranceHall : RootRoomController      //入口大堂脚本
 {
     MainDoorController m_MainDoor;      //大门控制器
@@ -5,14 +8,14 @@ public class EntranceHall : RootRoomController      //入口大堂脚本
 
     
 
-
+    
     protected override void Awake()
     {
         base.Awake();
 
         m_MainDoor = GetComponentInChildren<MainDoorController>();
     }
-
+    
 
     protected override void OnTriggerEnter2D(Collider2D other)
     {

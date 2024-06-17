@@ -1,4 +1,4 @@
-using UnityEngine.UI;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -32,11 +32,9 @@ public class HellsCall_GameLostPanel : BasePanel
         SetBothMoveableAndAttackable(false);
     }
 
-    protected override void OnEnable()
+    private void OnEnable()
     {
-        base.OnEnable();
-
-        OnFadeOutFinished += Restart;        //界面淡入后执行函数以重置系统
+        OnFadeOutFinished += Restart;        //界面淡出后执行函数以重置系统
 
         OnFadeInFinished += StartTextAnimations;    //界面完全淡入后调用此函数
     }
@@ -72,7 +70,7 @@ public class HellsCall_GameLostPanel : BasePanel
         }
 
         playerStats.SetCurrentHealth(playerStats.MaxHealth);    //重置玩家的血量
-        PlayerStatusBar.ResetGame();                            //重置玩家的属性
+        PlayerStatusBar.Instance.ResetGame();                            //重置玩家的属性
 
 
 
