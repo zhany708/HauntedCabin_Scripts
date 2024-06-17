@@ -77,6 +77,7 @@ public class HellsCall : BaseScreenplay<HellsCall>
     {
         await UIManager.Instance.OpenPanel(UIManager.Instance.UIKeys.HellsCallPanel);   //打开剧本背景界面
 
+        AddAllRoomPosIntoList()
         GenerateRitualStones();     //生成祷告石                                                                                                                                                                                                                                                                                                                                                                                                 666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666
         GenerateRitualRoom();       //生成仪式房
     }
@@ -118,6 +119,8 @@ public class HellsCall : BaseScreenplay<HellsCall>
         //Debug.Log("Now we have this number of rooms in the dict: " + RoomManager.Instance.GeneratedRoomDict.Count);
         //RoomManager.Instance.PrintGeneratedRoomDict();      //打印出字典里的所有房间
 
+        m_TempRoomPos.Clear();      //开始复制坐标前先清空列表
+
         //将字典里的所有坐标储存在列表中
         foreach (var room in RoomManager.Instance.GeneratedRoomDict.Keys)
         {
@@ -154,7 +157,7 @@ public class HellsCall : BaseScreenplay<HellsCall>
         //当没有新的房间可以生成时
         if (RoomManager.Instance.GeneratedRoomDict.Count >= m_MaxAllowedRoomNum)
         {
-            AddAllRoomPosIntoList();
+            //AddAllRoomPosIntoList();
 
             Vector2 selectedRoomPos = GenerateSuitableRandomRoomPos();     //随机选择的房间的坐标
 
@@ -231,7 +234,7 @@ public class HellsCall : BaseScreenplay<HellsCall>
     //尝试生成所有的祷告石（整个剧本只调用一次）
     public void GenerateRitualStones()       //在随机房间生成祷告石
     {
-        AddAllRoomPosIntoList();    //将字典里的所有坐标储存在列表中
+        //AddAllRoomPosIntoList();    //将字典里的所有坐标储存在列表中
 
 
         //判断房间数量是否足够生成所有祷告石
