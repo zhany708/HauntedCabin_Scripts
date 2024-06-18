@@ -137,7 +137,6 @@ public class EventManager : ManagerTemplate<EventManager>
     #endregion
 
 
-
     //检查是否进入二阶段
     private void CheckIfTranstionToSecondStage()
     {
@@ -152,7 +151,6 @@ public class EventManager : ManagerTemplate<EventManager>
     }
 
     
-
     #region AnimationEvents
     private async void DisplayTransitionStageText()       //用于阶段动画中决定何时生成剧本物体
     {

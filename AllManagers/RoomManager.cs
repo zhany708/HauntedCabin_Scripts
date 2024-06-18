@@ -72,6 +72,11 @@ public class RoomManager : ManagerTemplate<RoomManager>
     {
         //自动设置层级
         //RoomLayerMask = LayerMask.GetMask("OnlyTriggerPlayerAndEnemy");
+
+        if (RoomKeys.FirstFloorRoomKeys.Contains("RitualRoom"))     //开始游戏前检查是否有只在剧本中才会生成的房间名，防止出现错误
+        {
+            RoomKeys.FirstFloorRoomKeys.Remove("RitualRoom");
+        }
     }
 
 

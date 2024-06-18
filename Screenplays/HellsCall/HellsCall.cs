@@ -28,7 +28,7 @@ public class HellsCall : BaseScreenplay<HellsCall>
     Coroutine m_HealthDrainCoroutine;       //玩家持续掉血的协程
     Coroutine m_FireEffectCoroutine;        //火焰滤镜的协程
 
-    List<Vector2> m_TempRoomPos = new List<Vector2>();    //用于储存所有房间字典里的坐标
+    List<Vector2> m_RoomPos = new List<Vector2>();    //用于储存所有房间字典里的坐标
 
 
     bool m_NeedGenerateStone = false;   //判断是否需要生成祷告石
@@ -79,7 +79,7 @@ public class HellsCall : BaseScreenplay<HellsCall>
 
         AddAllRoomPosIntoList();
         GenerateRitualStones();     //生成祷告石                                                                                                                                                                                                                                                                                                                                                                                                 666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666
-        GenerateRitualRoom();       //生成仪式房
+        GenerateRitualRoom();         //生成仪式房
     }
 
 
@@ -113,24 +113,18 @@ public class HellsCall : BaseScreenplay<HellsCall>
 
     private void AddAllRoomPosIntoList()
     {
-        //Debug.Log("Now we have this number of rooms in the dict: " + RoomManager.Instance.GeneratedRoomDict.Count);
-        //RoomManager.Instance.PrintGeneratedRoomDict();      //打印出字典里的所有房间
-
-        m_TempRoomPos.Clear();      //开始复制坐标前先清空列表
+        m_RoomPos.Clear();      //开始复制坐标前先清空列表
 
         //将字典里的所有坐标储存在列表中
         foreach (var room in RoomManager.Instance.GeneratedRoomDict.Keys)
         {
-            m_TempRoomPos.Add(room);
-            /*
-            if (!m_TempRoomPos.Contains(room) )     //只有当列表中没有字典里的坐标时，才储存坐标
+            if (!m_RoomPos.Contains(room) )     //只有当列表中没有字典里的坐标时，才储存坐标
             {
-                m_TempRoomPos.Add(room);
-            }  
-            */
+                m_RoomPos.Add(room);
+            }            
         }
         //移除触发进入二阶段的房间的坐标，防止玩家立刻获得祷告石
-        m_TempRoomPos.Remove(EventManager.Instance.GetRoomPosWhereEnterSecondStage());
+        m_RoomPos.Remove(EventManager.Instance.GetRoomPosWhereEnterSecondStage());
     }
 
 
@@ -213,8 +207,8 @@ public class HellsCall : BaseScreenplay<HellsCall>
         //只要随机到不可更改的房间坐标，就重新获取随机索引
         while (RoomManager.Instance.ImportantRoomPos.Contains(selectedRoomPos) && attemptCount <= maxAttemptCount)
         {
-            int randomNum = Random.Range(0, m_TempRoomPos.Count);   //随机房间索引
-            selectedRoomPos = m_TempRoomPos[randomNum];     //获取随机选择的房间的坐标
+            int randomNum = Random.Range(0, m_RoomPos.Count);   //随机房间索引
+            selectedRoomPos = m_RoomPos[randomNum];     //获取随机选择的房间的坐标
 
             attemptCount++;     //增加尝试计数
         }
@@ -233,31 +227,46 @@ public class HellsCall : BaseScreenplay<HellsCall>
     //尝试生成所有的祷告石（整个剧本只调用一次）
     public void GenerateRitualStones()       //在随机房间生成祷告石
     {
-        //AddAllRoomPosIntoList();    //将字典里的所有坐标储存在列表中
-
-
         //判断房间数量是否足够生成所有祷告石
-        if (m_TempRoomPos.Count <= m_NeededStoneNum)      //房间数量不足以生成所有祷告石时
+        if (m_RoomPos.Count <= m_NeededStoneNum)      //房间数量不足以生成所有祷告石时
         {
-            GenerateSeveralStones(m_TempRoomPos.Count, m_TempRoomPos);      //能生成多少祷告石，就生成多少
+            GenerateSeveralStones(m_RoomPos.Count);      //能生成多少祷告石，就生成多少
 
             m_NeedGenerateStone = true;     //在后续房间生成后强行生成祷告石
         }
 
         else
         {
-            GenerateSeveralStones(m_NeededStoneNum, m_TempRoomPos);       //生成所有祷告石
+            GenerateSeveralStones(m_NeededStoneNum);       //生成所有祷告石
         }
     }
 
-    private void GenerateSeveralStones(int generatedNum, List<Vector2> roomPosList)     //生成参数中的数量的祷告石
+    private void GenerateSeveralStones(int generatedNum)     //生成参数中的数量的祷告石
     {
+        List<int> alreadyGeneratedRoomCount = new List<int>();       //创建一个临时列表，储存所有已经生成的房间的索引（用于防止重复生成祷告石）
+        int randomNum = 0;
+
         //将所需的祷告石全部生成出来
         for (int i = 0; i < generatedNum; i++)
         {
-            int randomNum = Random.Range(0, roomPosList.Count);     //随机房间索引
-            Vector2 selectedRoomPos = roomPosList[randomNum];       //获取随机选择的房间的坐标
-            roomPosList.RemoveAt(randomNum);                        //移除已选择的房间以防止重复
+            bool isDone = false;
+
+            while (!isDone)     //该while循环用于生成随机房间索引
+            {
+                randomNum = Random.Range(0, m_RoomPos.Count);       //随机房间索引
+
+                if (alreadyGeneratedRoomCount.Contains(randomNum) )     //判断是否随机到了之前生成过的房间索引
+                {
+                    isDone = false;
+                }
+                else
+                {
+                    isDone = true;
+                }
+            }
+
+            Vector2 selectedRoomPos = m_RoomPos[randomNum];       //获取随机选择的房间的坐标
+            alreadyGeneratedRoomCount.Add(randomNum);             //将随机到的索引加进临时列表
 
             //在选中的房间生成祷告石
             EnvironmentManager.Instance.GenerateObjectWithParent(RitualStone, RoomManager.Instance.GeneratedRoomDict[selectedRoomPos].transform, selectedRoomPos);
