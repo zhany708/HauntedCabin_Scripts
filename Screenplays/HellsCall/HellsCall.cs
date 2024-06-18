@@ -83,9 +83,6 @@ public class HellsCall : BaseScreenplay<HellsCall>
     }
 
 
-
-
-
     #region 玩家持续掉血相关
     public void StartHealthDrain()      //开始持续掉血（将火焰滤镜与持续掉血联系起来，从而让它们可以同步）
     {
@@ -124,10 +121,13 @@ public class HellsCall : BaseScreenplay<HellsCall>
         //将字典里的所有坐标储存在列表中
         foreach (var room in RoomManager.Instance.GeneratedRoomDict.Keys)
         {
+            m_TempRoomPos.Add(room);
+            /*
             if (!m_TempRoomPos.Contains(room) )     //只有当列表中没有字典里的坐标时，才储存坐标
             {
                 m_TempRoomPos.Add(room);
-            }          
+            }  
+            */
         }
         //移除触发进入二阶段的房间的坐标，防止玩家立刻获得祷告石
         m_TempRoomPos.Remove(EventManager.Instance.GetRoomPosWhereEnterSecondStage());
@@ -146,7 +146,6 @@ public class HellsCall : BaseScreenplay<HellsCall>
             MainDoorController.Instance.SetDoOpenMainDoor(true);       //设置布尔，以便玩家再次进入入口大堂后，大门会开启
         }
     }
-
 
 
     #region 仪式房相关

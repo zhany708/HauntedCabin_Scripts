@@ -13,11 +13,12 @@ public class EventManager : ManagerTemplate<EventManager>
 
 
     Animator m_Animator;
-    GameObject m_EventPrefab;       //事件预制件
-    Vector2 m_RoomPosition;         //表示事件发生的房间的坐标
+    GameObject m_EventPrefab;                                  //事件预制件
+    Vector2 m_RoomPosWhereEventOccur;                          //表示事件发生的房间的坐标
+    Vector2 m_RoomPosWhereEnterSecondStage = Vector2.zero;     //表示进入二阶段时的房间的坐标
 
-    int m_EventCount = 0;                 //生成过多少事件  
-    int m_RandomGeneratedNum = -1;         //随机生成的数（用于新的事件生成的索引）
+    int m_EventCount = 0;                                      //表示生成过了多少事件
+    int m_RandomGeneratedNum = -1;                             //随机生成的数（用于新的事件生成的索引）
 
 
 
@@ -57,7 +58,7 @@ public class EventManager : ManagerTemplate<EventManager>
     #region 事件相关
     public async void GenerateRandomEvent(Vector2 position, DoorController thisDoor)
     {
-        m_RoomPosition = position;
+        m_RoomPosWhereEventOccur = position;
 
         m_RandomGeneratedNum = UnityEngine.Random.Range(0, EventKeys.EvilEventKeys.Count);       //根据列表的数量随机生成预兆事件    Todo:等事件足够多后需要决定触发预兆事件的频率
         
@@ -85,7 +86,7 @@ public class EventManager : ManagerTemplate<EventManager>
 
 
 
-        m_EventPrefab.transform.parent.position = m_RoomPosition;      //赋值事件触发的房间的坐标给事件的父物体（因为对象池的缘故）
+        m_EventPrefab.transform.parent.position = m_RoomPosWhereEventOccur;      //赋值事件触发的房间的坐标给事件的父物体（因为对象池的缘故）
 
         Event eventScript = m_EventPrefab.GetComponent<Event>();
         if (eventScript == null)
@@ -142,8 +143,9 @@ public class EventManager : ManagerTemplate<EventManager>
     {
         if (m_EventCount >= EnterSecondStageCount && !IsSecondStage)   //检查是否触发了足够次数的事件，并且目前不是二阶段
         {
-            transform.position = m_RoomPosition;            //将事件管理器的坐标移到当前房间
-            m_Animator.SetTrigger("TranstionSecondStage");  //随后播放过渡阶段的动画
+            transform.position = m_RoomPosWhereEventOccur;          //将事件管理器的坐标移到当前房间
+            m_RoomPosWhereEnterSecondStage = transform.position;    //储存进入二阶段的房间的坐标
+            m_Animator.SetTrigger("TranstionSecondStage");          //随后播放过渡阶段的动画
 
             IsSecondStage = true;
         }
@@ -193,7 +195,7 @@ public class EventManager : ManagerTemplate<EventManager>
     #region Getters
     public Vector2 GetRoomPosWhereEnterSecondStage()        //获取触发进入二阶段的房间
     {
-        return m_RoomPosition;
+        return m_RoomPosWhereEnterSecondStage;
     }
     #endregion
 }
