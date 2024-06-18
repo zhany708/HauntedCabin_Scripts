@@ -251,7 +251,8 @@ public class HellsCall : BaseScreenplay<HellsCall>
         {
             bool isDone = false;
 
-            while (!isDone)     //该while循环用于生成随机房间索引
+            //该while循环用于生成随机房间索引（由于调用这个函数前就已经判断过当前的房间数量，因此无需担心房间不够的情况）
+            while (!isDone)     
             {
                 randomNum = Random.Range(0, m_RoomPos.Count);       //随机房间索引
 
