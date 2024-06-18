@@ -29,4 +29,10 @@ public class InteractPanel : BasePanel     //互动按键，给予玩家自己�
         //淡出界面
         Fade(CanvasGroup, FadeOutAlpha, FadeDuration, false);
     }
+
+
+    public static void ClearAllSubscriptions()         //删除所有事件绑定的函数
+    {
+        OnInteractKeyPressed = null;
+    }
 }

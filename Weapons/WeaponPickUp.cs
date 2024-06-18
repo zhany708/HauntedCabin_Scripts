@@ -57,11 +57,16 @@ public class WeaponPickUp : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
+        //UIManager.Instance.OpenInteractPanel(() => ProcessWeaponPickup(other));     //打开互动面板
+
         ProcessWeaponPickup(other);
     }
 
 
-
+    private void OnTriggerExit2D(Collider2D other)
+    {
+        //UIManager.Instance.ClosePanel(UIManager.Instance.UIKeys.InteractPanel);      //关闭互动界面
+    }
 
 
 

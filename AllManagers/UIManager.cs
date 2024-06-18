@@ -150,12 +150,20 @@ public class UIManager : ManagerTemplate<UIManager>
     #endregion
 
 
-    public async void OpenConfirmPanel(Action onYesAction)        //专门用于打开确认界面
+    public async void OpenConfirmPanel(Action onYesAction)      //专门用于打开确认界面
     {
-        ConfirmPanel.ClearAllSubscriptions();               //先清空所有事件绑定的之前的函数
-        ConfirmPanel.OnYesButtonPressed += onYesAction;     //将参数中的函数绑定到事件
-        await OpenPanel(UIKeys.ConfirmPanel);               //打开确认界面
+        ConfirmPanel.ClearAllSubscriptions();                   //先清空所有事件绑定的之前的函数
+        ConfirmPanel.OnYesButtonPressed += onYesAction;         //将参数中的函数绑定到事件
+        await OpenPanel(UIKeys.ConfirmPanel);                   //打开确认界面
     }
+
+    public async void OpenInteractPanel(Action onYesAction)     //专门用于打开互动界面
+    {
+        InteractPanel.ClearAllSubscriptions();                  //先清空所有事件绑定的之前的函数
+        InteractPanel.OnInteractKeyPressed += onYesAction;      //将参数中的函数绑定到事件
+        await OpenPanel(UIKeys.InteractPanel);                  //打开互动界面
+    }
+
 
 
     public void ResetGame()
