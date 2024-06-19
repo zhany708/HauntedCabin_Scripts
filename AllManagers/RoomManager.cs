@@ -94,7 +94,7 @@ public class RoomManager : ManagerTemplate<RoomManager>
 
     #region 房间生成函数
     //生成房间
-    public void GenerateRoomAround(Transform currentRoomTransform, RoomType currentRoomType)
+    public void GenerateRoomAtAround(Transform currentRoomTransform, RoomType currentRoomType)
     {
         DoorFlags currentDoorFlags = currentRoomType.GetDoorFlags();
 
@@ -187,7 +187,7 @@ public class RoomManager : ManagerTemplate<RoomManager>
                 RootRoomController currentRoomController = currentRoomTransform.GetComponent<RootRoomController>();
                 if (currentRoomController != null)
                 {
-                    currentRoomController.SetHasGeneratorRoom(true);
+                    currentRoomController.SetHasGenerateRoom(true);
                 }
 
                 else
@@ -448,7 +448,7 @@ public class RoomManager : ManagerTemplate<RoomManager>
             //如果是不可删除的房间
             if (ImportantRoomPos.Contains((Vector2)childScript.gameObject.transform.position))
             {
-                childScript.SetHasGeneratorRoom(false);     //重置布尔，以便玩家进入后可以重新生成房间
+                childScript.SetHasGenerateRoom(false);     //重置布尔，以便玩家进入后可以重新生成房间
             }    
             else        //只删除非初始房间
             {

@@ -14,7 +14,7 @@ public class RootRoomController : MonoBehaviour
     public float m_PostProcessDuration = 1f;
 
 
-    protected DoorController doorControllerInsideThisRoom;
+    public DoorController DoorControllerInsideThisRoom { get; private set; }
 
 
     List<SpriteRenderer> m_AllSprites;
@@ -38,7 +38,7 @@ public class RootRoomController : MonoBehaviour
         //获取该物体以及所有子物体的精灵图组件
         m_AllSprites = new List<SpriteRenderer>(GetComponentsInChildren<SpriteRenderer>() );
 
-        doorControllerInsideThisRoom = GetComponentInChildren<DoorController>();
+        DoorControllerInsideThisRoom = GetComponentInChildren<DoorController>();
         m_RoomType = GetComponent<RoomType>();
     }
 
@@ -85,7 +85,7 @@ public class RootRoomController : MonoBehaviour
             //房间周围生成过一次房间后就不会再生成了
             if (!m_HasGeneratedRoom)
             {
-                RoomManager.Instance.GenerateRoomAround(transform, m_RoomType);  //在当前房间周围生成新的房间
+                RoomManager.Instance.GenerateRoomAtAround(transform, m_RoomType);  //在当前房间周围生成新的房间
             }
 
             RoomManager.Instance.CheckIfConnectSurroundingRooms(transform);  //每当玩家进入房间时，检查当前房间是否连接周围的房间
@@ -108,9 +108,9 @@ public class RootRoomController : MonoBehaviour
             }
             
 
-            if (doorControllerInsideThisRoom != null)
+            if (DoorControllerInsideThisRoom != null)
             {
-                doorControllerInsideThisRoom.RoomTrigger.enabled = true;    //玩家离开房间后重新激活门的触发器，从而让玩家之后再进入时生成敌人             
+                DoorControllerInsideThisRoom.RoomTrigger.enabled = true;    //玩家离开房间后重新激活门的触发器，从而让玩家之后再进入时生成敌人             
             }             
         }
     }
@@ -150,7 +150,7 @@ public class RootRoomController : MonoBehaviour
 
 
     #region Setters
-    public void SetHasGeneratorRoom(bool isTrue)
+    public void SetHasGenerateRoom(bool isTrue)
     {
         m_HasGeneratedRoom = isTrue;
     }

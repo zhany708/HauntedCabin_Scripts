@@ -140,10 +140,11 @@ public class Altar : MonoBehaviour     //放在仪式台上的脚本
 
         if (!m_IsGameLost)      //只有在游戏没有失败的时候才会进行下面的逻辑
         {
-            EnemyPool.Instance.KillAllEnemy_DefenseWar();     //立刻消灭所有敌人
+            EnemyPool.Instance.KillAllEnemy_DefenseWar();                           //立刻消灭所有敌人
+            RitualRoom.Instance.DoorControllerInsideThisRoom.OpenDoors();           //仪式结束后打开房间的门
 
-            HellsCall.Instance.PlayerStats.IncreaseHealth(m_RestoreHealthAmout);      //给玩家增加一定的血量
-            HellsCall.Instance.IncrementRitualCount();            //增加仪式完成的计数
+            HellsCall.Instance.PlayerStats.IncreaseHealth(m_RestoreHealthAmout);    //给玩家增加一定的血量
+            HellsCall.Instance.IncrementRitualCount();                              //增加仪式完成的计数
         }     
     }
 
@@ -162,7 +163,8 @@ public class Altar : MonoBehaviour     //放在仪式台上的脚本
     #region 动画帧事件
     private void StartRitual()      //放在仪式台发亮的那一帧
     {
-        HellsCall.Instance.SetCanStartRitual(false);        //仪式开始后将布尔设置为false，防止玩家反复开始仪式
+        HellsCall.Instance.SetCanStartRitual(false);                      //仪式开始后将布尔设置为false，防止玩家反复开始仪式
+        RitualRoom.Instance.DoorControllerInsideThisRoom.CloseDoors();    //仪式开始后关闭房间的门
 
         //在一定时间内，定期在房间内生成敌人（生成位置随机）
         GenerateEnemyThroughTime(m_RitualDuration, m_EnemySpawnInterval);

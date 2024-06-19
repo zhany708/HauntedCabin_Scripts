@@ -125,7 +125,7 @@ public class DoorController : MonoBehaviour
 
     public void OpenDoors() => SetDoorAnimation(true);
 
-    private void CloseDoors() => SetDoorAnimation(false);
+    public void CloseDoors() => SetDoorAnimation(false);
 
 
 

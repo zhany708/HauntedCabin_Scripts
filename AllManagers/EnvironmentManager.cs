@@ -11,7 +11,7 @@ public class EnvironmentManager : ManagerTemplate<EnvironmentManager>
 
 
     public int KilledEnemyCount { get; private set; } = 0;     //表示杀死过多少敌人
-    public int RequiredEnemyCount { get; private set; } = 6;   //表示需要杀死多少敌人，游戏才胜利
+    public int RequiredEnemyCount { get; private set; } = 99;   //表示需要杀死多少敌人，游戏才胜利
     public bool IsGameOver { get; private set; } = false;
 
 
