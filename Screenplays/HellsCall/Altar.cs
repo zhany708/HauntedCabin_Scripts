@@ -79,10 +79,22 @@ public class Altar : MonoBehaviour     //放在仪式台上的脚本
             //只有当玩家拿到祷告石后，才允许玩家开始仪式
             if (HellsCall.Instance.GetCanStartRitual() )
             {
+                //UIManager.Instance.OpenInteractPanel(() => SetAnimatorStart());     //打开互动面板
+
                 SetAnimatorStart();     //设置动画器参数，以开始仪式
             }           
         }
     }
+
+    /*
+    private void OnTriggerExit2D(Collider2D other)
+    {
+        if (other.CompareTag("Player") && !InteractPanel.Instance.isRemoved)        //只有在界面打开时才关闭界面
+        {
+            //UIManager.Instance.ClosePanel(UIManager.Instance.UIKeys.InteractPanel);      //关闭互动界面
+        }      
+    }
+    */
     #endregion
 
 

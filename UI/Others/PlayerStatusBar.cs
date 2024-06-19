@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 public class PlayerStatusBar : BasePanel
 {
-    public static PlayerStatusBar Instance;
+    public static PlayerStatusBar Instance { get; private set; }
 
 
     public Image HpImage;
@@ -20,7 +20,7 @@ public class PlayerStatusBar : BasePanel
     public TextMeshProUGUI KnowledgeText;
 
     //四个属性的值
-    public static float StrengthValue {  get; private set; }
+    public static float StrengthValue { get; private set; }
     public static float SpeedValue { get; private set; }
     public static float SanityValue { get; private set; }
     public static float KnowledgeValue { get; private set; }

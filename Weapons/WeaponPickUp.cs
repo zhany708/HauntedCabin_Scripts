@@ -65,15 +65,15 @@ public class WeaponPickUp : MonoBehaviour
         }              
     }
 
-
+    /*
     private void OnTriggerExit2D(Collider2D other)
     {
-        if (other.CompareTag("Player"))
+        if (other.CompareTag("Player") && !InteractPanel.Instance.isRemoved)
         {
             //UIManager.Instance.ClosePanel(UIManager.Instance.UIKeys.InteractPanel);      //关闭互动界面
         }      
     }
-
+    */
 
 
     //玩家碰撞地上的武器后，显示武器拾取UI

@@ -17,6 +17,8 @@ public class BasePanel : MonoBehaviour
     public static bool IsPlayerMoveable { get; protected set; } = true;     //是否允许玩家移动
     public static bool IsPlayerAttackable { get; protected set; } = true;   //是否允许玩家攻击
 
+    //需要做的：将变量开头字母大写
+    public bool isRemoved { get; protected set; } = false;       //表示UI是否被移除
 
     private CanvasGroup m_CanvasGroup;
     public CanvasGroup CanvasGroup      //Lazy Load（只在需要使用组件时才加载组件（而不是在Awake函数里默认加载），节省内存）
@@ -50,7 +52,7 @@ public class BasePanel : MonoBehaviour
  
 
     protected bool isTyping = false;        //表示是否正在显示文本
-    protected bool isRemoved = false;       //表示UI是否被移除
+    
 
     protected string panelName;             //界面名字
 

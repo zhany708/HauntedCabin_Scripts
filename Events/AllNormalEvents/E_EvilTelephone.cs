@@ -50,14 +50,15 @@ public class E_EvilTelephone : Event    //E开头的脚本表示跟事件相关
         }      
     }
 
+    /*
     private void OnTriggerExit2D(Collider2D other)
     {
-        if (other.CompareTag("Player"))
+        if (other.CompareTag("Player") && !InteractPanel.Instance.isRemoved)
         {
             //UIManager.Instance.ClosePanel(UIManager.Instance.UIKeys.InteractPanel);      //关闭互动界面
         }      
     }
-
+    */
 
     private void OnDestroy()
     {       

@@ -6,11 +6,32 @@ using System;
 
 public class InteractPanel : BasePanel     //互动按键，给予玩家自己决定是否打开某些界面（比如拾取武器），而不是触发了触发器后自动打开界面
 {
-    public static event Action OnInteractKeyPressed;     //接收方为需要选择的所有UI界面（比如事件中的选项，拾取武器等）
+    public event Action OnInteractKeyPressed;     //接收方为需要选择的所有UI界面（比如事件中的选项，拾取武器等）
+
+    public static InteractPanel Instance { get; private set; }
 
 
 
 
+    protected override void Awake()
+    {
+        //单例模式
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+        }
+
+        else
+        {
+            Instance = this;
+
+            //只有在没有父物体时才运行防删函数，否则会出现提醒
+            if (gameObject.transform.parent == null)
+            {
+                DontDestroyOnLoad(gameObject);
+            }
+        }
+    }
 
     private void Update() 
     {
@@ -31,7 +52,7 @@ public class InteractPanel : BasePanel     //互动按键，给予玩家自己�
     }
 
 
-    public static void ClearAllSubscriptions()         //删除所有事件绑定的函数
+    public void ClearAllSubscriptions()         //删除所有事件绑定的函数
     {
         OnInteractKeyPressed = null;
     }
