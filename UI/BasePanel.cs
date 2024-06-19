@@ -164,12 +164,12 @@ public class BasePanel : MonoBehaviour
                 textComponent.maxVisibleCharacters = totalLength;  //玩家按下空格后，瞬间显示所有文本
 
                 //等待0.15秒再退出，否则如果此函数结束后的下一个函数也需要按空格时，可能会导致按一次空格响应多个函数
-                yield return new WaitForSeconds(0.15f);        
+                yield return new WaitForSeconds(0.15f);  
                 break;  //退出循环
             }
 
             //检查是否在标签的开头
-            if (fullText[visibleCount] == '<') 
+            if (fullText[visibleCount] == '<')
             {
                 //跳过整个标签，直到标签的结尾（也就是>符号）。跳过的方式为不更新可以显示的文字数量，但是依然增加visibleCount变量
                 while (visibleCount < totalLength && fullText[visibleCount] != '>')
@@ -231,6 +231,7 @@ public class BasePanel : MonoBehaviour
         EventManager.Instance.ResetGame();
         UIManager.Instance.ResetGame();
         RoomManager.Instance.ResetGame();
+        ScreenplayManager.Instance.ResetGame();
         EnemyPool.Instance.ResetGame();
     }
 }

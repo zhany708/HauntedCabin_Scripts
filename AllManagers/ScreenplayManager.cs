@@ -33,4 +33,14 @@ public class ScreenplayManager : ManagerTemplate<ScreenplayManager>     //用于
             return;
         }
     }
+
+
+    public void ResetGame()     //重置游戏，删除所有剧本物体
+    {
+        BaseScreenplay currentScreenplay = FindAnyObjectByType<BaseScreenplay>();
+        if (currentScreenplay != null)
+        {
+            Destroy(currentScreenplay);
+        }
+    }
 }

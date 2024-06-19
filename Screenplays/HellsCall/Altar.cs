@@ -4,9 +4,9 @@ using ZhangYu.Utilities;
 
 
 
-public class Altar : MonoBehaviour     //放在仪式台上的脚本
+public class Altar : MonoBehaviour      //放在仪式台上的脚本
 {
-    public GameObject EnemyPrefab;      //敌人的预制件
+    public GameObject EnemyPrefab;      //敌人的预制件（用于在仪式期间生成）
     public Core Core { get; private set; }
 
     
@@ -22,17 +22,17 @@ public class Altar : MonoBehaviour     //放在仪式台上的脚本
 
     Coroutine m_EnemySpawnCoroutine;    //敌人生成的协程
 
-    Timer m_DurationTimer;      //用于计时仪式时长的计时器
+    Timer m_DurationTimer;              //用于计时仪式时长的计时器
 
-    [SerializeField] float m_RitualMaxHealth = 0f;     //仪式台的生命值上限
-    [SerializeField] float m_HitResistance = 99f;      //仪式台的受击抗性
+    [SerializeField] float m_RitualMaxHealth = 0f;       //仪式台的生命值上限
+    [SerializeField] float m_HitResistance = 99f;        //仪式台的受击抗性
 
-    float m_RitualDuration = 9f;        //仪式时间
-    float m_EnemySpawnInterval = 3f;    //敌人生成的冷却
+    [SerializeField] float m_RitualDuration = 9f;        //仪式时间
+    [SerializeField] float m_EnemySpawnInterval = 3f;    //敌人生成的冷却
     float m_RestoreHealthAmout = 0f;    //玩家完成仪式后恢复的生命值
 
     //bool m_IsHit = false;
-    bool m_IsGameLost = false;      //表示是否游戏失败（祷告石被摧毁）
+    bool m_IsGameLost = false;          //表示是否游戏失败（祷告石被摧毁）
 
 
 
@@ -130,10 +130,10 @@ public class Altar : MonoBehaviour     //放在仪式台上的脚本
 
 
 
-
+    //需要做的：决定要不要画祷告石的受击动画,不使用的话则需要通过某种方式表示祷告石被攻击了（特效，屏幕震动等）
     private void HitLogic()      //受击相关的逻辑
     {
-        Core.Animator.SetBool("Hit", true);     //需要做的：决定要不要画祷告石的受击动画
+        Core.Animator.SetBool("Hit", true);
 
         //m_IsHit = true;      
     }
