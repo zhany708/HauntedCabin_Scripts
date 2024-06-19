@@ -6,6 +6,7 @@ using UnityEngine.SceneManagement;
 
 public class HellsCall_GameLostPanel : BasePanel
 {
+    public TextMeshProUGUI TitleText;           //标题文本
     public TextMeshProUGUI FirstPartText;       //第一段文本
     public TextMeshProUGUI SecondPartText;      //第二段文本  
     public TextMeshProUGUI TipText;             //提示文本
@@ -19,7 +20,7 @@ public class HellsCall_GameLostPanel : BasePanel
     protected override void Awake()
     {
         //检查文本组件是否存在
-        if (FirstPartText == null || SecondPartText == null || TipText == null)
+        if (TitleText == null || FirstPartText == null || SecondPartText == null || TipText == null)
         {
             Debug.LogError("Some TMP components are not assigned in the " + name);
             return;

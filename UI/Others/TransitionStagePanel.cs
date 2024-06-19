@@ -79,6 +79,6 @@ public class TransitionStagePanel : BasePanel
 
     private async void OpenScreenPlayBackgroundPanel()        
     {
-        await UIManager.Instance.OpenPanel(UIManager.Instance.UIKeys.HellsCallPanel);   //打开剧本背景界面
+        await UIManager.Instance.OpenPanel(UIManager.Instance.UIKeys.HellsCallBackground);   //打开剧本背景界面
     }
 }

@@ -41,9 +41,9 @@ public class EventManager : ManagerTemplate<EventManager>
     private async void Start()
     {
         //提前加载剧本背景，但不实例化   
-        if (UIManager.Instance.UIKeys != null && !string.IsNullOrEmpty(UIManager.Instance.UIKeys.HellsCallPanel))
+        if (UIManager.Instance.UIKeys != null && !string.IsNullOrEmpty(UIManager.Instance.UIKeys.HellsCallBackground))
         {
-            await UIManager.Instance.InitPanel(UIManager.Instance.UIKeys.HellsCallPanel);
+            await UIManager.Instance.InitPanel(UIManager.Instance.UIKeys.HellsCallBackground);
         }
 
         else

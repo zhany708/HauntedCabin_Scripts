@@ -4,7 +4,7 @@ using UnityEngine;
 
 
 
-public class HellsCallPanel : BasePanel
+public class HellsCallBackground : BasePanel
 {
     public TextMeshProUGUI TitleText;           //剧本标题文本
     public TextMeshProUGUI FirstPartText;       //第一段文本

@@ -12,13 +12,13 @@ public class SO_UIKeys : ScriptableObject
     public string GameLostPanel;        //游戏失败界面
     public string GameWinningPanel;     //游戏胜利界面
 
-    public string TaskPanel;                //游戏任务界面
+    public string TaskPanel;            //游戏任务界面
 
 
     //剧本相关
     [Header("ScreenPlay")]
     public string GameBackgroundPanel;          //游戏底层剧本界面
-    public string HellsCallPanel;               //地域的呼唤剧本背景界面
+    public string HellsCallBackground;          //地域的呼唤剧本背景界面
     public string HellsCall_GameLostPanel;      //地域的呼唤剧本失败界面
     public string HellsCall_GameWinningPanel;   //地域的呼唤剧本胜利界面
 
