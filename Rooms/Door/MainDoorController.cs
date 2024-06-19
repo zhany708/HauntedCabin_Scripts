@@ -1,4 +1,6 @@
+using System;
 using UnityEngine;
+
 
 
 public class MainDoorController : MonoBehaviour        //用于大宅大门
@@ -8,7 +10,7 @@ public class MainDoorController : MonoBehaviour        //用于大宅大门
 
     public Animator MainDoorAnimator { get; private set; }
 
-    public bool DoOpenMainDoor { get; private set; } = false;      //表示是否打开大宅大门
+    [SerializeField] public bool DoOpenMainDoor { get; private set; } = false;      //表示是否打开大宅大门
 
 
 
