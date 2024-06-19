@@ -44,7 +44,17 @@ public class E_EvilTelephone : Event    //E开头的脚本表示跟事件相关
     {
         if (other.CompareTag("Player"))
         {
-            TriggerPlayerInteraction(other);    //跟玩家交互的逻辑
+            //UIManager.Instance.OpenInteractPanel(() => TriggerPlayerInteraction());     //打开互动面板
+
+            TriggerPlayerInteraction();    //玩家出发后交互的逻辑
+        }      
+    }
+
+    private void OnTriggerExit2D(Collider2D other)
+    {
+        if (other.CompareTag("Player"))
+        {
+            //UIManager.Instance.ClosePanel(UIManager.Instance.UIKeys.InteractPanel);      //关闭互动界面
         }      
     }
 
@@ -67,7 +77,7 @@ public class E_EvilTelephone : Event    //E开头的脚本表示跟事件相关
 
 
 
-    private async void TriggerPlayerInteraction(Collider2D playerCollider)
+    private async void TriggerPlayerInteraction()
     {
         m_Animator.SetBool("Ringing", false);       //角色触碰电话后取消震动
 
