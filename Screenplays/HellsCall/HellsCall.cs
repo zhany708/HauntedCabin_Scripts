@@ -77,7 +77,7 @@ public class HellsCall : BaseScreenplay<HellsCall>
     {
         await UIManager.Instance.OpenPanel(UIManager.Instance.UIKeys.HellsCallBackground);   //打开剧本背景界面
 
-        AddAllRoomPosIntoList();
+        AddAllRoomPosIntoList();    //先将当前所有房间的坐标储存进一个列表（除了触发进入二阶段事件的房间）
         GenerateRitualStones();     //生成祷告石                                                                                                                                                                                                                                                                                                                                                                                                 666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666
         GenerateRitualRoom();       //生成仪式房
     }
@@ -150,8 +150,6 @@ public class HellsCall : BaseScreenplay<HellsCall>
         //当没有新的房间可以生成时
         if (RoomManager.Instance.GeneratedRoomDict.Count >= m_MaxAllowedRoomNum)
         {
-            //AddAllRoomPosIntoList();
-
             Vector2 selectedRoomPos = GenerateSuitableRandomRoomPos();     //随机选择的房间的坐标
 
             //尝试从字典中获取对应的房间
@@ -254,7 +252,7 @@ public class HellsCall : BaseScreenplay<HellsCall>
             //该while循环用于生成随机房间索引（由于调用这个函数前就已经判断过当前的房间数量，因此无需担心房间不够的情况）
             while (!isDone)     
             {
-                randomNum = Random.Range(0, m_RoomPos.Count);       //随机房间索引
+                randomNum = Random.Range(0, m_RoomPos.Count);           //随机房间索引
 
                 if (alreadyGeneratedRoomCount.Contains(randomNum) )     //判断是否随机到了之前生成过的房间索引
                 {

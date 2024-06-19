@@ -135,7 +135,7 @@ public class Altar : MonoBehaviour      //放在仪式台上的脚本
     {
         Core.Animator.SetBool("Hit", true);
 
-        //m_IsHit = true;      
+        //m_IsHit = true; 
     }
 
 
