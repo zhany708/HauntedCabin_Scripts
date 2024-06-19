@@ -105,6 +105,8 @@ public class PauseMenuPanel : PanelWithButton       //整个游戏过程中都�
     //重写函数，因为此界面游戏开始时就存在
     protected override void OnEnable() 
     {
+        UIManager.Instance.ImportantPanel.Add(this);    //将该界面加进列表，以在重置游戏时不被删除
+
         OnFadeInFinished += base.OnEnable;
         OnFadeOutFinished += base.OnDisable;
     }

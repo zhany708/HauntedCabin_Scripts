@@ -56,6 +56,12 @@ public class ConfirmPanel : PanelWithButton     //用于询问玩家是否确认
     }
 
 
+    protected override void OnEnable() 
+    {
+        base.OnEnable();
+
+        UIManager.Instance.ImportantPanel.Add(this);    //将该界面加进列表，以在重置游戏时不被删除
+    }
 
 
     private void OnYesButtonClick()

@@ -12,10 +12,10 @@ public class UIManager : ManagerTemplate<UIManager>
     public SO_UIKeys UIKeys;
 
     //存放已打开界面的字典（里面存储的都是正在打开的界面）
-    public Dictionary<string, BasePanel> PanelDict { get; private set; } = new Dictionary<string, BasePanel>();    
+    public Dictionary<string, BasePanel> PanelDict { get; private set; } = new Dictionary<string, BasePanel>();
 
     //用于储存所有不可删除的UI（比如玩家状态等）
-    public List<BasePanel> ImportantPanel { get; private set; } = new List<BasePanel>();   
+    public List<BasePanel> ImportantPanel { get; private set; } = new List<BasePanel>();
 
 
     Transform m_UIRoot;     //用于储存所有的UI（为了美观）
@@ -151,18 +151,18 @@ public class UIManager : ManagerTemplate<UIManager>
 
 
     #region 打开特定面板
-    public async void OpenConfirmPanel(Action onYesAction)      //专门用于打开确认界面
+    public async void OpenConfirmPanel(Action onYesAction)              //专门用于打开确认界面
     {
-        ConfirmPanel.Instance.ClearAllSubscriptions();                   //先清空所有事件绑定的之前的函数
-        ConfirmPanel.Instance.OnYesButtonPressed += onYesAction;         //将参数中的函数绑定到事件
-        await OpenPanel(UIKeys.ConfirmPanel);                   //打开确认界面
+        ConfirmPanel.Instance.ClearAllSubscriptions();                  //先清空所有事件绑定的之前的函数
+        ConfirmPanel.Instance.OnYesButtonPressed += onYesAction;        //将参数中的函数绑定到事件
+        await OpenPanel(UIKeys.ConfirmPanel);                           //打开确认界面
     }
 
-    public async void OpenInteractPanel(Action onYesAction)     //专门用于打开互动界面
+    public async void OpenInteractPanel(Action onYesAction)             //专门用于打开互动界面
     {
-        InteractPanel.Instance.ClearAllSubscriptions();                  //先清空所有事件绑定的之前的函数
-        InteractPanel.Instance.OnInteractKeyPressed += onYesAction;      //将参数中的函数绑定到事件
-        await OpenPanel(UIKeys.InteractPanel);                  //打开互动界面
+        InteractPanel.Instance.ClearAllSubscriptions();                 //先清空所有事件绑定的之前的函数
+        InteractPanel.Instance.OnInteractKeyPressed += onYesAction;     //将参数中的函数绑定到事件
+        await OpenPanel(UIKeys.InteractPanel);                          //打开互动界面
     }
     #endregion
 
