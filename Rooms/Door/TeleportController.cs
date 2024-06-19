@@ -58,5 +58,4 @@ public class TeleportController : MonoBehaviour
                 return playerPosition;  //默认返回原始位置，防止报错
         }
     }
-
 }

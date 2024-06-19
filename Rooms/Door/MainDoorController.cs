@@ -37,6 +37,11 @@ public class MainDoorController : MonoBehaviour        //用于大宅大门
         MainDoorAnimator = GetComponent<Animator>();
     }
 
+    private void Start()
+    {
+        CloseMainDoor();        //游戏开始时关闭大门
+    }
+
 
     private async void OnTriggerEnter2D(Collider2D other)     //需要做的：触发器不能太靠上，防止玩家横向经过的时候不小心触发了逻辑
     {
@@ -53,6 +58,12 @@ public class MainDoorController : MonoBehaviour        //用于大宅大门
     {
         MainDoorAnimator.SetBool("isOpen", true);
         MainDoorAnimator.SetBool("isClose", false);
+    }
+
+    private void CloseMainDoor()     //关闭大门
+    {
+        MainDoorAnimator.SetBool("isOpen", false);
+        MainDoorAnimator.SetBool("isClose", true);
     }
 
 
