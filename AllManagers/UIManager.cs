@@ -3,6 +3,7 @@ using UnityEngine;
 using System.Threading.Tasks;
 using UnityEngine.SceneManagement;
 using System;
+using UnityEngine.InputSystem;
 
 
 
@@ -34,9 +35,6 @@ public class UIManager : ManagerTemplate<UIManager>
 
         //寻找画布跟物体，没有的话就创建一个
         SetupRootGameObject(ref m_UIRoot, "Canvas");
-
-        //加载新场景时不删除Canvas总组件
-        DontDestroyOnLoad(m_UIRoot);
     }
 
 
@@ -53,7 +51,7 @@ public class UIManager : ManagerTemplate<UIManager>
         {
             //不在主菜单时，则播放一楼BGM
             await SoundManager.Instance.PlayBGMAsync(SoundManager.Instance.AudioClipKeys.StopForAMoment, true);
-        }
+        }       
     }
     #endregion
 
@@ -180,7 +178,8 @@ public class UIManager : ManagerTemplate<UIManager>
 
             if (!ImportantPanel.Contains(childScript))      //只关闭不重要的界面
             {
-                childScript.ClosePanel();    
+                //Debug.Log("This panel will be deleted: " + childScript.name);
+                childScript.ClosePanel();
             }           
         }
     }

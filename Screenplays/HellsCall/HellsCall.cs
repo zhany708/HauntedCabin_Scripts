@@ -68,7 +68,9 @@ public class HellsCall : BaseScreenplay<HellsCall>
         if (RoomManager.Instance.RoomKeys.FirstFloorRoomKeys.Contains(RitualRoomName) )
         {
             RoomManager.Instance.RoomKeys.FirstFloorRoomKeys.Remove(RitualRoomName);
-        }      
+        }
+
+        DestroyCoroutine();     //停止持续掉血的协程
     }
     #endregion
 

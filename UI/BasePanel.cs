@@ -232,6 +232,7 @@ public class BasePanel : MonoBehaviour
         UIManager.Instance.ResetGame();
         RoomManager.Instance.ResetGame();
         ScreenplayManager.Instance.ResetGame();
+        PostProcessController.Instance.ResetGame();
         EnemyPool.Instance.ResetGame();
     }
 }

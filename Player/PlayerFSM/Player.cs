@@ -48,7 +48,7 @@ public class Player : MonoBehaviour
     string m_CurrentState;
     #endregion
 
-    #region Unity Callback Functions
+    #region Unity内部函数
     private void Awake()
     {
         FootAnimator = transform.Find("PlayerFoot").GetComponent<Animator>();   //获取脚上的动画器组件

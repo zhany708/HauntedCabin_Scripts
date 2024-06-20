@@ -148,4 +148,10 @@ public class PostProcessController : MonoBehaviour
         m_Vignette.enabled.value = false;    //关闭Vignette
     }
     #endregion
+
+
+    public void ResetGame()     //重置游戏
+    {
+        TurnOffVignette();
+    }
 }

@@ -11,7 +11,7 @@ public class PlayerStatusBar : BasePanel
 
 
     public Image HpImage;
-    public Image HpEffectImage;     //血量缓冲图片
+    public Image HpEffectImage;    
 
     //四个属性相关的UI
     public TextMeshProUGUI StrengthText;
@@ -74,6 +74,12 @@ public class PlayerStatusBar : BasePanel
         {
             Debug.LogError("Some Status Text is not assigned.");
             return;
+        }
+
+        //设置当前界面的名字
+        if (panelName == null)
+        {
+            panelName = UIManager.Instance.UIKeys.PlayerStatusBarKey;
         }
 
         UpdateStatusUI();       //进入游戏前更新显示的数值
@@ -213,6 +219,8 @@ public class PlayerStatusBar : BasePanel
         SpeedValue = m_Player.PlayerData.Speed;
         SanityValue = m_Player.PlayerData.Sanity;
         KnowledgeValue = m_Player.PlayerData.Knowledge;
+
+        UpdateStatusUI();
     }
 }
 

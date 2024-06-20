@@ -1,6 +1,5 @@
 using TMPro;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 
 
@@ -8,7 +7,7 @@ public class HellsCall_GameLostPanel : BasePanel
 {
     public TextMeshProUGUI TitleText;           //标题文本
     public TextMeshProUGUI FirstPartText;       //第一段文本
-    public TextMeshProUGUI SecondPartText;      //第二段文本  
+    public TextMeshProUGUI SecondPartText;      //第二段文本
     public TextMeshProUGUI TipText;             //提示文本
     
 
@@ -27,11 +26,12 @@ public class HellsCall_GameLostPanel : BasePanel
         }
     }
 
-    private void Update()
+    private void Start()
     {
-        //界面打开时禁止玩家移动和攻击（放在Update函数中，防止玩家打开关闭带按钮的界面后重新允许移动和攻击）
-        SetBothMoveableAndAttackable(false);
+        //测试    需要做的：等完善后删除这一块
+        OpenPanel(UIManager.Instance.UIKeys.HellsCall_GameLostPanel);
     }
+
 
     private void OnEnable()
     {
@@ -53,6 +53,10 @@ public class HellsCall_GameLostPanel : BasePanel
 
     private void Restart()
     {
+        //重置游戏的各个系统（房间，事件等）
+        ResetGameSystems();
+
+
         //获取玩家组件
         Player player = FindAnyObjectByType<Player>();
         if (player == null)
@@ -61,7 +65,7 @@ public class HellsCall_GameLostPanel : BasePanel
             return;          
         }
 
-
+        
         //重置玩家的各个状态和数值（血量，属性）      
         PlayerStats playerStats = player.GetComponentInChildren<PlayerStats>();     //获取玩家血条的脚本组件
         if (playerStats == null)
@@ -70,13 +74,9 @@ public class HellsCall_GameLostPanel : BasePanel
             return;
         }
 
-        playerStats.SetCurrentHealth(playerStats.MaxHealth);    //重置玩家的血量
+        playerStats.SetCurrentHealth(playerStats.MaxHealth);             //重置玩家的血量      
         PlayerStatusBar.Instance.ResetGame();                            //重置玩家的属性
 
-
-
-        //重置游戏的各个系统（房间，事件等）
-        ResetGameSystems();
 
         //将玩家传送回入口大堂（必须在重置游戏后，否则顺序错误会导致无法正常生成新的房间）
         player.gameObject.transform.position = Vector2.zero;    
@@ -87,6 +87,7 @@ public class HellsCall_GameLostPanel : BasePanel
 
     private void StartTextAnimations()
     {
+        SetBothMoveableAndAttackable(false);            //界面打开时禁止玩家移动和攻击
         FirstPartText.gameObject.SetActive(true);       //激活第一段文本
 
         //先开始第一段文本的打字效果

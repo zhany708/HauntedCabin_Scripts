@@ -3,6 +3,14 @@ using UnityEngine;
 
 public class EntranceHall : RootRoomController      //入口大堂脚本
 {
+    protected override void Start()
+    {
+        base.Start();
+
+        RoomManager.Instance.ImportantRoomPos.Add(transform.position);
+    }
+
+
     protected override void OnTriggerEnter2D(Collider2D other)
     {
         base.OnTriggerEnter2D(other);

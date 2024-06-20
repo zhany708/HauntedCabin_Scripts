@@ -42,7 +42,7 @@ public class RootRoomController : MonoBehaviour
         m_RoomType = GetComponent<RoomType>();
     }
 
-    private void Start()
+    protected virtual void Start()
     {
         //在这里加进字典，防止字典还没实例化就尝试获取引用导致报错
         if (!RoomManager.Instance.GeneratedRoomDict.ContainsKey(transform.position))

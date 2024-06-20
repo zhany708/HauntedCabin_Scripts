@@ -9,7 +9,18 @@ public class ScreenplayManager : ManagerTemplate<ScreenplayManager>     //用于
     public SO_ScreenplayKeys ScreenplayKeys;
 
 
+    Transform m_ScreenplayRoot;     //用于储存所有的剧本（为了美观）
 
+
+
+
+    protected override void Awake()
+    {
+        base.Awake();
+
+        //寻找画布跟物体，没有的话就创建一个
+        SetupRootGameObject(ref m_ScreenplayRoot, "ScreenplayRoot");
+    }
 
 
 
@@ -24,8 +35,8 @@ public class ScreenplayManager : ManagerTemplate<ScreenplayManager>     //用于
         }
 
 
-        //异步加载后生成物体并获取物体身上的组件（物体位于初始坐标，且无旋转）
-        GameObject screenplayObject = GameObject.Instantiate(screenPlayPrefab, Vector3.zero, Quaternion.identity);
+        //异步加载后生成物体并获取物体身上的组件（物体放在m_ScreenplayRoot下面）
+        GameObject screenplayObject = GameObject.Instantiate(screenPlayPrefab, m_ScreenplayRoot, false);
 
         if (screenplayObject == null)
         {
@@ -35,12 +46,13 @@ public class ScreenplayManager : ManagerTemplate<ScreenplayManager>     //用于
     }
 
 
+
+
     public void ResetGame()     //重置游戏，删除所有剧本物体
     {
-        BaseScreenplay currentScreenplay = FindAnyObjectByType<BaseScreenplay>();
-        if (currentScreenplay != null)
+        foreach (Transform child in m_ScreenplayRoot)    //在场景中删除所有剧本物体
         {
-            Destroy(currentScreenplay);
+            Destroy(child.gameObject);
         }
     }
 }

@@ -29,7 +29,7 @@ public class RoomManager : ManagerTemplate<RoomManager>
 
 
     
-    Transform m_AllRooms;       //所有生成的房间的父物体（为了整洁美观）
+    Transform m_FirstFloorRooms;       //所有生成的房间的父物体（为了整洁美观）
 
     //用于生成挡住玩家进入门的障碍物的坐标
     Vector2 m_BlockUpDoor = new Vector2(0f, 3.7f);
@@ -65,7 +65,7 @@ public class RoomManager : ManagerTemplate<RoomManager>
         }
 
         //赋值房间跟物体给脚本
-        SetupRootGameObject(ref m_AllRooms, "AllRooms");
+        SetupRootGameObject(ref m_FirstFloorRooms, "FirstFloorRooms");
     }
 
     private void Start()
@@ -152,14 +152,14 @@ public class RoomManager : ManagerTemplate<RoomManager>
                 if (loadedRoom != null)
                 {
                     //如果因为场景加载等原因导致房间跟物体被删除过，就重新获取
-                    if (m_AllRooms == null)
+                    if (m_FirstFloorRooms == null)
                     {
                         //赋值房间跟物体给脚本
-                        SetupRootGameObject(ref m_AllRooms, "AllRooms");
+                        SetupRootGameObject(ref m_FirstFloorRooms, "FirstFloorRooms");
                     }
 
                     //加载成功后，将房间生成出来
-                    newRoom = Instantiate(loadedRoom, newRoomPos, Quaternion.identity, m_AllRooms);
+                    newRoom = Instantiate(loadedRoom, newRoomPos, Quaternion.identity, m_FirstFloorRooms);
                 }
 
                 else
@@ -221,14 +221,14 @@ public class RoomManager : ManagerTemplate<RoomManager>
             if (loadedRoom != null)
             {
                 //如果因为场景加载等原因导致房间跟物体被删除过，就重新获取
-                if (m_AllRooms == null)
+                if (m_FirstFloorRooms == null)
                 {
                     //赋值房间跟物体给脚本
-                    SetupRootGameObject(ref m_AllRooms, "AllRooms");
+                    SetupRootGameObject(ref m_FirstFloorRooms, "FirstFloorRooms");
                 }
 
                 //加载成功后，将房间生成出来
-                GameObject newRoom = Instantiate(loadedRoom, newRoomPos, Quaternion.identity, m_AllRooms);
+                GameObject newRoom = Instantiate(loadedRoom, newRoomPos, Quaternion.identity, m_FirstFloorRooms);
             }
 
             else
@@ -436,7 +436,7 @@ public class RoomManager : ManagerTemplate<RoomManager>
 
     public void ResetGame()
     {
-        foreach (Transform child in m_AllRooms)    //在场景中删除所有AllRoom下的房间（除了初始房间）
+        foreach (Transform child in m_FirstFloorRooms)    //在场景中删除所有AllRoom下的房间（除了初始房间）
         {
             RootRoomController childScript = child.GetComponent<RootRoomController>();
             if (childScript == null)
@@ -452,7 +452,7 @@ public class RoomManager : ManagerTemplate<RoomManager>
             }    
             else        //只删除非初始房间
             {
-                Destroy(childScript.gameObject); 
+                Destroy(childScript.gameObject);
             }  
         }
     }

@@ -22,20 +22,8 @@ public class HealthBar : MonoBehaviour
 
 
 
-
-
-    
-    private async void Start()     
-    {
-        await InitializeHealthBarAsync();
-    }
-    
-
-
-
-
-    //因为需要异步加载UI。所以使用async（如果不使用的话，可能会出现还没加载完就接着跑下面的代码的情况）
-    private async Task InitializeHealthBarAsync()   
+    /*
+    private async void Awake()
     {
         //检查UIKeys是否为空且要加载的名字是否存在，随后等待UI加载完毕
         if (UIManager.Instance.UIKeys != null && !string.IsNullOrEmpty(UIManager.Instance.UIKeys.PlayerStatusBarKey))
@@ -47,9 +35,36 @@ public class HealthBar : MonoBehaviour
         {
             Debug.LogError("UIKeys not set or playerStatusBarKey is empty.");
         }
+    }
+    */
+
+    private void Start()     
+    {
+        InitializeHealthBarAsync();
+    }
+    
 
 
-        //UI加载完毕后才会获取组件
+
+
+    //因为需要异步加载UI。所以使用async（如果不使用的话，可能会出现还没加载完就接着跑下面的代码的情况）
+    private async void InitializeHealthBarAsync()   
+    {
+        
+        //检查UIKeys是否为空且要加载的名字是否存在，随后等待UI加载完毕
+        if (UIManager.Instance.UIKeys != null && !string.IsNullOrEmpty(UIManager.Instance.UIKeys.PlayerStatusBarKey))
+        {
+            await UIManager.Instance.OpenPanel(UIManager.Instance.UIKeys.PlayerStatusBarKey);    //显示玩家状态栏
+        }
+
+        else
+        {
+            Debug.LogError("UIKeys not set or playerStatusBarKey is empty.");
+        }
+        
+
+
+        //获取组件
         m_Player = GetComponentInParent<Player>();
         if (m_Player == null)
         {
