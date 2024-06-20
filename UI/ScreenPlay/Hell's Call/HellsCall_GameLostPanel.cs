@@ -26,16 +26,17 @@ public class HellsCall_GameLostPanel : BasePanel
         }
     }
 
+    //需要做的：等完善后删除这一函数
     private void Start()
     {
-        //测试    需要做的：等完善后删除这一块
+        //测试    
         OpenPanel(UIManager.Instance.UIKeys.HellsCall_GameLostPanel);
     }
 
 
     private void OnEnable()
     {
-        OnFadeOutFinished += Restart;        //界面淡出后执行函数以重置系统
+        OnFadeOutFinished += Restart;               //界面淡出后执行函数以重置系统
 
         OnFadeInFinished += StartTextAnimations;    //界面完全淡入后调用此函数
     }
@@ -79,7 +80,7 @@ public class HellsCall_GameLostPanel : BasePanel
 
 
         //将玩家传送回入口大堂（必须在重置游戏后，否则顺序错误会导致无法正常生成新的房间）
-        player.gameObject.transform.position = Vector2.zero;    
+        player.gameObject.transform.position = new Vector2(0, -3.5f); 
 
         SetBothMoveableAndAttackable(true);    //使玩家可以移动和攻击
     }

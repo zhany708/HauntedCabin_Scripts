@@ -39,7 +39,7 @@ public class BasePanel : MonoBehaviour
 
     //储存所有当前界面进行过的协程，防止删除界面时某些协程仍在继续，占用内存（不加static，从而让每个界面都有一个单独的列表）
     protected List<Coroutine> generatedCoroutines = new List<Coroutine>();
-    protected List<Tween> generatedDOTweens = new List<Tween>();        //跟上面同理
+    protected List<Tween> generatedDOTweens = new List<Tween>();                //跟上面同理
 
 
 
@@ -212,7 +212,7 @@ public class BasePanel : MonoBehaviour
         }
 
         generatedCoroutines.Clear();       //清除列表
-        generatedDOTweens.Clear();       //清除列表
+        generatedDOTweens.Clear();         //清除列表
     }
 
 

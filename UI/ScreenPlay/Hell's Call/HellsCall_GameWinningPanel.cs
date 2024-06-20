@@ -33,7 +33,9 @@ public class HellsCall_GameWinningPanel : PanelWithButton
     {
         //将按钮和函数绑定起来
         RestartButton.onClick.AddListener(() => OnRestartButtonClick());
-        QuitButton.onClick.AddListener(() => OnQuitButtonClick());       
+        QuitButton.onClick.AddListener(() => OnQuitButtonClick());
+
+        SetButtons(false);      //先隐藏按钮
     }
 
 
