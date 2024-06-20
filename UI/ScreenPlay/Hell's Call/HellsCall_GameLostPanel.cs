@@ -21,16 +21,9 @@ public class HellsCall_GameLostPanel : BasePanel
         //检查文本组件是否存在
         if (TitleText == null || FirstPartText == null || SecondPartText == null || TipText == null)
         {
-            Debug.LogError("Some TMP components are not assigned in the " + name);
+            Debug.LogError("Some Text components are not assigned in the " + name);
             return;
         }
-    }
-
-    //需要做的：等完善后删除这一函数
-    private void Start()
-    {
-        //测试    
-        OpenPanel(UIManager.Instance.UIKeys.HellsCall_GameLostPanel);
     }
 
 

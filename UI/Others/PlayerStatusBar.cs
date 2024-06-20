@@ -72,7 +72,7 @@ public class PlayerStatusBar : BasePanel
         //检查四个属性组件是否有的为空
         if (StrengthText == null || SpeedText == null || SanityText == null || KnowledgeText == null)
         {
-            Debug.LogError("Some Status Text is not assigned.");
+            Debug.LogError("Some Text components are not assigned in the " + name);
             return;
         }
 

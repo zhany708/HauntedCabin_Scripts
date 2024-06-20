@@ -106,7 +106,7 @@ public class EvilTelephonePanel : PanelWithButton
 
     private void OnButtonClicked(ButtonAction action)
     {
-        //需要做的：等确认面板做好后，只需要保存这一行即可，下面的都可以删除（因为判断玩家选项和相关的逻辑都已经在传递到确认面板中的事件里了）
+        //需要做的：等确认面板完善好后，只需要保存这一行即可，下面的都可以删除（因为判断玩家选项和相关的逻辑都已经在传递到确认面板中的事件里了）
         //UIManager.Instance.OpenConfirmPanel(() => LogicPassToConfirmPanel(action));
 
 

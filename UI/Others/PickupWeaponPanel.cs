@@ -36,14 +36,14 @@ public class PickupWeaponPanel : PanelWithButton
         m_ItemNameText = GetComponentInChildren<TextMeshProUGUI>();
         if (m_ItemNameText == null)
         {
-            Debug.LogError("ItemName text is not assigned in the PickupWeaponPanel.");
+            Debug.LogError("ItemName text is not assigned in the " + name);
             return;
         }
 
 
         if (EquipOnPrimary == null || EquipOnSecondary == null || Leave == null)
         {
-            Debug.LogError("Some buttons are not assigned in the PickupWeaponPanel.");
+            Debug.LogError("Some buttons are not assigned in the " + name);
             return;
         }
 
