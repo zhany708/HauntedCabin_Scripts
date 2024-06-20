@@ -20,7 +20,6 @@ public class RitualRoom : RootRoomController        //仪式房脚本
             Instance = this;
         }
 
-
         base.Awake();
     }
 

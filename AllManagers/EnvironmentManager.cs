@@ -183,7 +183,7 @@ public class EnvironmentManager : ManagerTemplate<EnvironmentManager>
 
         if (KilledEnemyCount >= RequiredEnemyCount)     //检查是否杀死了足够的敌人
         {
-            //Debug.Log("You win!");      //需要做的：打开游戏胜利界面，将敌人对象池中的所有敌人强行进入死亡状态
+            //Debug.Log("You win!");
             IsGameOver = true;
 
             EnemyPool.Instance.KillAllEnemy();       //在场景中让所有激活的敌人进入死亡状态

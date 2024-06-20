@@ -10,7 +10,7 @@ public class MainDoorController : MonoBehaviour        //用于大宅大门
 
     public Animator MainDoorAnimator { get; private set; }
 
-    [SerializeField] public bool DoOpenMainDoor { get; private set; } = false;      //表示是否打开大宅大门
+    public bool DoOpenMainDoor { get; private set; } = false;      //表示是否打开大宅大门
 
 
 

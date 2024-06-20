@@ -14,12 +14,12 @@ public class PanelWithButton : BasePanel        //专门用于有按钮的界面
 
 
     //用于储存所有正在打开的有按钮的界面（加static从而让所有子类共用同一个列表）
-    protected static List<PanelWithButton> m_OpenedPanelsWithButton = new List<PanelWithButton>();      //需要做的：改变量名
+    protected static List<PanelWithButton> openedPanelsWithButton = new List<PanelWithButton>();
 
 
 
     //用于表示是否有带按钮的界面打开
-    bool m_IsPanelWithButtonOpened => m_OpenedPanelsWithButton.Count > 0;
+    bool m_IsPanelWithButtonOpened => openedPanelsWithButton.Count > 0;
 
 
 
@@ -50,11 +50,11 @@ public class PanelWithButton : BasePanel        //专门用于有按钮的界面
     protected virtual void OnEnable()
     {
         //界面打开后加进列表
-        if (!m_OpenedPanelsWithButton.Contains(this) )
+        if (!openedPanelsWithButton.Contains(this) )
         {
             //Debug.Log("Panel with button added to the list: " + this.name);
 
-            m_OpenedPanelsWithButton.Add(this);
+            openedPanelsWithButton.Add(this);
         }
 
         //每次界面重新加载后都设置新的按钮给EventSystem
@@ -66,11 +66,11 @@ public class PanelWithButton : BasePanel        //专门用于有按钮的界面
         base.OnDisable();
 
         //界面关闭后移出列表
-        if (m_OpenedPanelsWithButton.Contains(this))
+        if (openedPanelsWithButton.Contains(this))
         {
             //Debug.Log("Panel with button removed from the list: " + this.name);
 
-            m_OpenedPanelsWithButton.Remove(this);
+            openedPanelsWithButton.Remove(this);
         }
 
         SetTopPriorityButton();
@@ -96,10 +96,10 @@ public class PanelWithButton : BasePanel        //专门用于有按钮的界面
 
         //PrintList();
 
-        if (m_OpenedPanelsWithButton.Count > 0)
+        if (openedPanelsWithButton.Count > 0)
         {
             //将最后加进列表的按钮（最近一次打开的界面）设置为上一个选择的按钮
-            lastSelectedButton = m_OpenedPanelsWithButton[m_OpenedPanelsWithButton.Count - 1].firstSelectedButton;
+            lastSelectedButton = openedPanelsWithButton[openedPanelsWithButton.Count - 1].firstSelectedButton;
         }
 
         if (EventSystem.current != null)

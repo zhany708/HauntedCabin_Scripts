@@ -17,8 +17,8 @@ public class BasePanel : MonoBehaviour
     public static bool IsPlayerMoveable { get; protected set; } = true;     //是否允许玩家移动
     public static bool IsPlayerAttackable { get; protected set; } = true;   //是否允许玩家攻击
 
-    //需要做的：将变量开头字母大写
-    public bool isRemoved { get; protected set; } = false;       //表示UI是否被移除
+
+    public bool IsRemoved { get; protected set; } = false;       //表示UI是否被移除
 
     private CanvasGroup m_CanvasGroup;
     public CanvasGroup CanvasGroup      //Lazy Load（只在需要使用组件时才加载组件（而不是在Awake函数里默认加载），节省内存）
@@ -89,7 +89,7 @@ public class BasePanel : MonoBehaviour
     {
         //Debug.Log("Panel is closed: " + panelName);
 
-        isRemoved = true;
+        IsRemoved = true;
 
         ClearAllCoroutinesAndTweens();        //清除所有当前界面正在进行的协程
 
@@ -122,7 +122,7 @@ public class BasePanel : MonoBehaviour
             {
                 OnFadeInFinished?.Invoke();
 
-                isRemoved = false;
+                IsRemoved = false;
 
                 //添加缓存进字典，表示界面正在打开
                 UIManager.Instance.PanelDict[panelName] = this;
@@ -133,7 +133,7 @@ public class BasePanel : MonoBehaviour
             {
                 OnFadeOutFinished?.Invoke();
 
-                isRemoved = true;
+                IsRemoved = true;
 
                 //从字典中移除缓存，表示界面没打开
                 UIManager.Instance.PanelDict.Remove(panelName);

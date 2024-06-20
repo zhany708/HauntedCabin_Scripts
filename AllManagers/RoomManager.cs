@@ -24,8 +24,8 @@ public class RoomManager : ManagerTemplate<RoomManager>
     //储存加载过的房间的坐标和物体，用于检查是否有连接的门
     public Dictionary<Vector2, GameObject> GeneratedRoomDict { get; private set; } = new Dictionary<Vector2, GameObject>();
 
-    //用于储存所有不可更改的房间坐标（比如初始房间等），并将入口大堂加进列表    后面要做的：添加其余的一楼初始板块
-    public List<Vector2> ImportantRoomPos { get; private set; } = new List<Vector2>() { Vector2.zero }; 
+    //用于储存所有不可更改的房间坐标（比如初始房间等）              后面要做的：添加其余的一楼初始板块
+    public List<Vector2> ImportantRoomPos { get; private set; } = new List<Vector2>();
 
 
     
