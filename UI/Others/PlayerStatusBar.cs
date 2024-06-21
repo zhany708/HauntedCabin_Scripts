@@ -30,6 +30,7 @@ public class PlayerStatusBar : BasePanel
             }
             return m_Player;
         }
+        private set { }
     }
     private Player m_Player;
 
