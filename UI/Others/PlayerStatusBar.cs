@@ -94,7 +94,7 @@ public class PlayerStatusBar : BasePanel
 
 
     //初始化血条相关的部分
-    private void InitializePlayerStatus()
+    public void InitializePlayerStatus()
     {
         m_Player = FindAnyObjectByType<Player>();
         if (m_Player == null)

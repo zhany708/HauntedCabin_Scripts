@@ -24,7 +24,20 @@ public class PanelWithButton : BasePanel        //专门用于有按钮的界面
 
 
 
-
+    /*
+    protected override void Awake()
+    {
+        base.Awake();
+        * 需要做的: 将所有按钮的选择,按下,切换的颜色和透明度根据类型进行统一
+        * Highlighted Color和Selected Color的颜色和透明度: 颜色序列号: 6493DE, 透明度: 127
+        * Pressed Color: 颜色序列号跟上面一样, 透明度: 45
+        * Disabled Color: 颜色序列号: C8C8C8, 透明度: 127
+        * 
+        * 
+        * 颜色序列号: 普通按钮: 6493DE, 退出按钮: DE7164
+        * /    
+    }
+    */
     protected virtual void Update()
     {      
         //先检查事件系统是否为空

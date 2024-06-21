@@ -49,12 +49,22 @@ public class HealthBar : MonoBehaviour
 
     //因为需要异步加载UI。所以使用async（如果不使用的话，可能会出现还没加载完就接着跑下面的代码的情况）
     private async void InitializeHealthBarAsync()   
-    {
-        
+    {       
         //检查UIKeys是否为空且要加载的名字是否存在，随后等待UI加载完毕
         if (UIManager.Instance.UIKeys != null && !string.IsNullOrEmpty(UIManager.Instance.UIKeys.PlayerStatusBarKey))
         {
-            await UIManager.Instance.OpenPanel(UIManager.Instance.UIKeys.PlayerStatusBarKey);    //显示玩家状态栏
+            //检查界面是否已经打开,没有的话则打开
+            if (!UIManager.Instance.PanelDict.ContainsKey(UIManager.Instance.UIKeys.PlayerStatusBarKey) )
+            {
+                await UIManager.Instance.OpenPanel(UIManager.Instance.UIKeys.PlayerStatusBarKey);    //打开玩家状态栏
+            }
+
+            //如果已经打开的话,则重新初始化玩家状态栏
+            else
+            {
+                PlayerStatusBar.Instance.InitializePlayerStatus();
+                PlayerStatusBar.Instance.UpdateStatusUI();
+            }
         }
 
         else
