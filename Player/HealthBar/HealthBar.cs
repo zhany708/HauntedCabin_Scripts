@@ -53,7 +53,7 @@ public class HealthBar : MonoBehaviour
         //检查UIKeys是否为空且要加载的名字是否存在，随后等待UI加载完毕
         if (UIManager.Instance.UIKeys != null && !string.IsNullOrEmpty(UIManager.Instance.UIKeys.PlayerStatusBarKey))
         {
-            //检查界面是否已经打开,没有的话则打开
+            //检查界面是否已经打开,没有的话则打开界面
             if (!UIManager.Instance.PanelDict.ContainsKey(UIManager.Instance.UIKeys.PlayerStatusBarKey) )
             {
                 await UIManager.Instance.OpenPanel(UIManager.Instance.UIKeys.PlayerStatusBarKey);    //打开玩家状态栏
@@ -63,13 +63,13 @@ public class HealthBar : MonoBehaviour
             else
             {
                 PlayerStatusBar.Instance.InitializePlayerStatus();
-                PlayerStatusBar.Instance.UpdateStatusUI();
+                PlayerStatusBar.Instance.ResetGame();
             }
         }
 
         else
         {
-            Debug.LogError("UIKeys not set or playerStatusBarKey is empty.");
+            Debug.LogError("UIKeys not set or PlayerStatusBarKey is empty.");
         }
         
 

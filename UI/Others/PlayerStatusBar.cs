@@ -19,6 +19,21 @@ public class PlayerStatusBar : BasePanel
     public TextMeshProUGUI SanityText;
     public TextMeshProUGUI KnowledgeText;
 
+
+    public Player Player      //Lazy load
+    {
+        get
+        {
+            if (m_Player == null)
+            {
+                m_Player = FindAnyObjectByType<Player>();
+            }
+            return m_Player;
+        }
+    }
+    private Player m_Player;
+
+
     //四个属性的值
     public static float StrengthValue { get; private set; }
     public static float SpeedValue { get; private set; }
@@ -34,7 +49,6 @@ public class PlayerStatusBar : BasePanel
 
 
     HealthBar m_PlayerHealthBar;
-    Player m_Player;
 
 
 
@@ -96,23 +110,16 @@ public class PlayerStatusBar : BasePanel
     //初始化血条相关的部分
     public void InitializePlayerStatus()
     {
-        m_Player = FindAnyObjectByType<Player>();
-        if (m_Player == null)
-        {
-            Debug.LogError("Player component not found.");
-            return;
-        }
-
         //从PlayerData哪里获取属性值
-        StrengthValue = m_Player.PlayerData.Strength;
-        SpeedValue = m_Player.PlayerData.Speed;
-        SanityValue = m_Player.PlayerData.Sanity;
-        KnowledgeValue = m_Player.PlayerData.Knowledge;
+        StrengthValue = Player.PlayerData.Strength;
+        SpeedValue = Player.PlayerData.Speed;
+        SanityValue = Player.PlayerData.Sanity;
+        KnowledgeValue = Player.PlayerData.Knowledge;
 
 
 
         //获取玩家血条的脚本组件
-        m_PlayerHealthBar = m_Player.GetComponentInChildren<HealthBar>();
+        m_PlayerHealthBar = Player.GetComponentInChildren<HealthBar>();
         if (m_PlayerHealthBar == null)
         {
             Debug.LogError("HealthBar component not found under Player object.");
@@ -165,7 +172,7 @@ public class PlayerStatusBar : BasePanel
     //更新玩家的属性UI
     public void UpdateStatusUI()
     {
-        if (m_Player != null)
+        if (Player != null)
         {
             //获取翻译的文本组件
             string strengthFormat = LeanLocalization.GetTranslationText(StrengthPhraseKey);
@@ -215,10 +222,10 @@ public class PlayerStatusBar : BasePanel
     public void ResetGame()      //重置游戏
     {
         //重新赋予玩家的所有属性
-        StrengthValue = m_Player.PlayerData.Strength;
-        SpeedValue = m_Player.PlayerData.Speed;
-        SanityValue = m_Player.PlayerData.Sanity;
-        KnowledgeValue = m_Player.PlayerData.Knowledge;
+        StrengthValue = Player.PlayerData.Strength;
+        SpeedValue = Player.PlayerData.Speed;
+        SanityValue = Player.PlayerData.Sanity;
+        KnowledgeValue = Player.PlayerData.Knowledge;
 
         UpdateStatusUI();
     }
