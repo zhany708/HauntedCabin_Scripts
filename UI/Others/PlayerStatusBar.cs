@@ -20,13 +20,18 @@ public class PlayerStatusBar : BasePanel
     public TextMeshProUGUI KnowledgeText;
 
 
-    public Player Player      //Lazy load
+    public Player Player      //Lazy load（只在需要变量时才尝试获取组件，而不是一次性的放在某个Unity内部函数中）
     {
         get
         {
             if (m_Player == null)
             {
                 m_Player = FindAnyObjectByType<Player>();
+                //如果尝试获取组件后Player变量仍然为空的话，则报错
+                if (m_Player == null)
+                {
+                    Debug.Log("Cannot get the reference of the Player component in the " + name);
+                }
             }
             return m_Player;
         }
@@ -49,7 +54,7 @@ public class PlayerStatusBar : BasePanel
 
 
 
-    HealthBar m_PlayerHealthBar;
+    PlayerHealthBar m_PlayerHealthBar;
 
 
 
@@ -113,7 +118,7 @@ public class PlayerStatusBar : BasePanel
     public void SetImagesToHealthBar()      //用于将照片组件传递给玩家血条
     {
         //获取玩家血条的脚本组件
-        m_PlayerHealthBar = Player.GetComponentInChildren<HealthBar>();
+        m_PlayerHealthBar = Player.GetComponentInChildren<PlayerHealthBar>();
         if (m_PlayerHealthBar == null)
         {
             Debug.LogError("HealthBar component not found under Player object.");
@@ -212,7 +217,7 @@ public class PlayerStatusBar : BasePanel
 
     public void ResetGame()      //重置游戏
     {
-        //重新赋予玩家的所有属性
+        //重新赋予玩家的所有属性（如果在换场景前调用此函数，则Player引用仍然存在）
         StrengthValue = Player.PlayerData.Strength;
         SpeedValue = Player.PlayerData.Speed;
         SanityValue = Player.PlayerData.Sanity;
