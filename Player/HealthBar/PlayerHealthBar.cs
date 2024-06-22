@@ -29,7 +29,7 @@ public class PlayerHealthBar : HealthBar      //用于玩家的血条控制
     protected override void Start()     
     {
         //初始化最大生命值等变量后，随后再调用父类中的Start函数
-        InitializePlayerHealthBarAsync();
+        InitializePlayerHealthBarAsync();       //Start等Unity内部函数调用异步加载函数时，无需使用await
 
         base.Start();
     }
