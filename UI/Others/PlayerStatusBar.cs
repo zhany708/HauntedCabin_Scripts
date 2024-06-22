@@ -9,7 +9,7 @@ public class PlayerStatusBar : BasePanel
 {
     public static PlayerStatusBar Instance { get; private set; }
 
-
+    //传递给HealthBar脚本的照片
     public Image HpImage;
     public Image HpEffectImage;    
 
@@ -34,7 +34,7 @@ public class PlayerStatusBar : BasePanel
     }
     private Player m_Player;
 
-
+    //需要做的：删除这里的static，随后更改外部函数调用这些变量的地方
     //四个属性的值
     public static float StrengthValue { get; private set; }
     public static float SpeedValue { get; private set; }
@@ -55,7 +55,7 @@ public class PlayerStatusBar : BasePanel
 
 
 
-
+    #region Unity内部函数
     protected override void Awake()
     {
         //单例模式
@@ -75,22 +75,12 @@ public class PlayerStatusBar : BasePanel
             }
         }
 
-
-        base.Awake();
-
         CheckComponents();              //检查公有组件是否都存在
         InitializePlayerStatus();       //初始化
     }   
 
     private void Start()
     {
-        //检查四个属性组件是否有的为空
-        if (StrengthText == null || SpeedText == null || SanityText == null || KnowledgeText == null)
-        {
-            Debug.LogError("Some Text components are not assigned in the " + name);
-            return;
-        }
-
         //设置当前界面的名字
         if (panelName == null)
         {
@@ -104,7 +94,7 @@ public class PlayerStatusBar : BasePanel
     {
         UIManager.Instance.ImportantPanel.Add(this);    //将该界面加进列表，以在重置游戏时不被删除
     }
-
+    #endregion
 
 
 
@@ -117,8 +107,11 @@ public class PlayerStatusBar : BasePanel
         SanityValue = Player.PlayerData.Sanity;
         KnowledgeValue = Player.PlayerData.Knowledge;
 
+        SetImagesToHealthBar();            
+    }
 
-
+    public void SetImagesToHealthBar()      //用于将照片组件传递给玩家血条
+    {
         //获取玩家血条的脚本组件
         m_PlayerHealthBar = Player.GetComponentInChildren<HealthBar>();
         if (m_PlayerHealthBar == null)
@@ -131,7 +124,6 @@ public class PlayerStatusBar : BasePanel
         m_PlayerHealthBar.SetHpImage(HpImage);
         m_PlayerHealthBar.SetHpEffectImage(HpEffectImage);
     }
-
 
 
     public void ChangePropertyValue(PlayerProperty property, float changeValue)
@@ -170,44 +162,42 @@ public class PlayerStatusBar : BasePanel
 
 
 
-    //更新玩家的属性UI
+    //更新玩家的属性UI（用于正确的显示数值）
     public void UpdateStatusUI()
     {
-        if (Player != null)
-        {
-            //获取翻译的文本组件
-            string strengthFormat = LeanLocalization.GetTranslationText(StrengthPhraseKey);
-            string speedFormat = LeanLocalization.GetTranslationText(SpeedPhraseKey);
-            string sanityFormat = LeanLocalization.GetTranslationText(SanityPhraseKey);
-            string knowledgeFormat = LeanLocalization.GetTranslationText(KnowledgePhraseKey);
+        //获取翻译的文本组件
+        string strengthFormat = LeanLocalization.GetTranslationText(StrengthPhraseKey);
+        string speedFormat = LeanLocalization.GetTranslationText(SpeedPhraseKey);
+        string sanityFormat = LeanLocalization.GetTranslationText(SanityPhraseKey);
+        string knowledgeFormat = LeanLocalization.GetTranslationText(KnowledgePhraseKey);
 
-            //赋值所有属性的数值
-            StrengthText.text = string.Format(strengthFormat, StrengthValue);
-            SpeedText.text = string.Format(speedFormat, SpeedValue);
-            SanityText.text = string.Format(sanityFormat, SanityValue);
-            KnowledgeText.text = string.Format(knowledgeFormat, KnowledgeValue);
-        }
+        //赋值所有属性的数值
+        StrengthText.text = string.Format(strengthFormat, StrengthValue);
+        SpeedText.text = string.Format(speedFormat, SpeedValue);
+        SanityText.text = string.Format(sanityFormat, SanityValue);
+        KnowledgeText.text = string.Format(knowledgeFormat, KnowledgeValue);       
     }
 
 
 
     private void CheckComponents()
     {
+        //检查四个属性组件是否有的为空
         if (StrengthText == null || SpeedText == null || SanityText == null || KnowledgeText == null)
         {
-            Debug.LogError("Some TMP components are not assigned in the PlayerStatusBar.");
+            Debug.LogError("Some Text components are not assigned in the " + name);
             return;
         }
 
         if (StrengthPhraseKey == "" || SpeedPhraseKey == "" || SanityPhraseKey == "" || KnowledgePhraseKey == "")
         {
-            Debug.LogError("Some Lean Localization phrase keys are not written in the PlayerStatusBar.");
+            Debug.LogError("Some Lean Localization phrase keys are not written in the " + name);
             return;
         }
     }
 
 
-
+    //需要做的：删除这里的static，随后更改所有调用这两个函数的地方
     public static float GetStrengthAddition()   //每当玩家造成伤害时都需要调用此函数
     {
         return 1 + StrengthValue * 0.05f;       //每一点力量对应5%的伤害加成

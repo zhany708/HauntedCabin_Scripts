@@ -68,8 +68,7 @@ public class HellsCall_GameLostPanel : BasePanel
             return;
         }
 
-        playerStats.SetCurrentHealth(playerStats.MaxHealth);             //重置玩家的血量      
-        PlayerStatusBar.Instance.ResetGame();                            //重置玩家的属性
+        playerStats.SetCurrentHealth(playerStats.MaxHealth);             //重置玩家的血量
 
 
         //将玩家传送回入口大堂（必须在重置游戏后，否则顺序错误会导致无法正常生成新的房间）

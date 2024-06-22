@@ -59,11 +59,10 @@ public class HealthBar : MonoBehaviour
                 await UIManager.Instance.OpenPanel(UIManager.Instance.UIKeys.PlayerStatusBarKey);    //打开玩家状态栏
             }
 
-            //如果已经打开的话,则重新初始化玩家状态栏
+            //如果已经打开的话,则重新传递照片组件给当前脚本
             else
             {
-                PlayerStatusBar.Instance.InitializePlayerStatus();
-                PlayerStatusBar.Instance.ResetGame();
+                PlayerStatusBar.Instance.SetImagesToHealthBar();
             }
         }
 

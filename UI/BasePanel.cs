@@ -225,14 +225,17 @@ public class BasePanel : MonoBehaviour
 
 
 
-    protected void ResetGameSystems()
+    protected void ResetGameSystems()       //重置游戏的各种系统
     {
-        //重置游戏的各种系统
+        //先重置各大管理器脚本
         EventManager.Instance.ResetGame();
         UIManager.Instance.ResetGame();
         RoomManager.Instance.ResetGame();
         ScreenplayManager.Instance.ResetGame();
         PostProcessController.Instance.ResetGame();
         EnemyPool.Instance.ResetGame();
+
+        //再重置具体的某个UI脚本
+        PlayerStatusBar.Instance,ResetGame();       //在返回主界面之前重置玩家状态栏可以防止再次游戏时状态栏无法正常显示数值
     }
 }
