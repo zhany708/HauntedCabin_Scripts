@@ -236,6 +236,6 @@ public class BasePanel : MonoBehaviour
         EnemyPool.Instance.ResetGame();
 
         //再重置具体的某个UI脚本
-        PlayerStatusBar.Instance,ResetGame();       //在返回主界面之前重置玩家状态栏可以防止再次游戏时状态栏无法正常显示数值
+        PlayerStatusBar.Instance.ResetGame();       //在返回主界面之前重置玩家状态栏可以防止再次游戏时状态栏无法正常显示数值
     }
 }
