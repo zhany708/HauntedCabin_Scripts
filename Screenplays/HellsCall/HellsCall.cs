@@ -7,7 +7,7 @@ public class HellsCall : BaseScreenplay<HellsCall>
 {
     public GameObject RitualStone;      //祷告石物体
 
-    public DoorController RitualRoomDoorController { get; private set; }    //仪式房的DoorController脚本
+    
     public PlayerStats PlayerStats      //Lazy load
     {
         get
@@ -21,7 +21,10 @@ public class HellsCall : BaseScreenplay<HellsCall>
     }
     private PlayerStats m_PlayerStats;
 
-    public string RitualRoomName { get; private set; } = "RitualRoom";      //加进Key里的仪式房的名字
+    public const string RitualRoomName = "RitualRoom";      //加进Key里的仪式房的名字
+
+
+    public DoorController RitualRoomDoorController { get; private set; }    //仪式房的DoorController脚本
 
 
 
