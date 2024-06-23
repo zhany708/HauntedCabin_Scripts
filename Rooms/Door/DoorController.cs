@@ -6,13 +6,13 @@ using ZhangYu.Utilities;
 public class DoorController : MonoBehaviour
 {
     public Animator[] DoorAnimators;        //当前房间内所有门的动画器
-    public GameObject[] EnemyObjects;       //当前房间内所有会生成的敌人   后续更改：用词典表示要生成的敌人名字和数量，随后异步加载
+    public GameObject[] EnemyObjects;       //当前房间内所有会生成的敌人      需要做的：用词典表示要生成的敌人名字和数量，随后异步加载
     public Vector2 EnemySpawnPosNegativeOffset = Vector2.zero;     //敌人生成的负坐标范围（最左边和最下边的范围，x和y都是负数）
     public Vector2 EnemySpawnPosPositiveOffset = Vector2.zero;     //敌人生成的正坐标范围（最右边和最上边的范围，x和y都是正数）
 
     public Collider2D RoomTrigger { get; private set; }
     public LayerMask FurnitureLayerMask { get; private set; }      //家具的Layer
-    public RandomPosition EnemySpwanPos { get; private set; }
+    public RandomPosition EnemySpwanPos { get; private set; }      //用于随机生成敌人坐标的脚本组件
     public int KilledEnemyCount { get; private set; } = 0;         //表示当前房间内击杀了多少敌人
     public bool HasGeneratedEvent { get; private set; } = false;   //表示当前房间是否生成过事件
 
@@ -22,7 +22,7 @@ public class DoorController : MonoBehaviour
 
 
 
-    RootRoomController m_MainRoom; 
+    RootRoomController m_MainRoom;          //父物体中用于控制房间的脚本组件
 
     bool m_IsRootRoom = false;              //表示当前门所在的房间是否为初始房间
     bool m_HasGeneratedEnemy = false;       //表示当前房间是否生成过敌人
@@ -46,6 +46,7 @@ public class DoorController : MonoBehaviour
             if (EnemySpawnPosNegativeOffset == Vector2.zero || EnemySpawnPosPositiveOffset == Vector2.zero)
             {
                 Debug.LogError("You havn't assigned the EnemySpawnPosOffset correctly in this room: " + m_MainRoom);
+                return;
             }
 
 
