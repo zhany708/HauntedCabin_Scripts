@@ -29,7 +29,7 @@ public class SO_RoomKeys : ScriptableObject
 
 
 
-    //通用房间（当因为逻辑错误需要重新生成一些房间时，同一调用下面这个房间）
+    //通用房间（当因为逻辑错误需要重新生成一些房间时，统一调用下面这个房间）
     [Header("Generic Room")]
     public string GenericRoomKey;
 }

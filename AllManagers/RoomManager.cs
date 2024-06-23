@@ -18,8 +18,17 @@ public class RoomManager : ManagerTemplate<RoomManager>
     public float MaximumXPos = 35f;
     public float MaximumYPos = 35f;
 
+
+    //以下是所有房间里的门的统一名字
+    public const string LeftDoorName = "LeftDoor";
+    public const string RightDoorName = "RightDoor";
+    public const string DownDoorName = "DownDoor";
+    public const string UpDoorName = "UpDoor";
+
     public const float RoomLength = 17f;        //房间的长
     public const float RoomWidth = 10.7f;       //房间的宽
+
+       
 
     //储存加载过的房间的坐标和物体，用于检查是否有连接的门
     public Dictionary<Vector2, GameObject> GeneratedRoomDict { get; private set; } = new Dictionary<Vector2, GameObject>();
@@ -29,7 +38,7 @@ public class RoomManager : ManagerTemplate<RoomManager>
 
 
     
-    Transform m_FirstFloorRooms;       //所有生成的房间的父物体（为了整洁美观）
+    Transform m_FirstFloorRooms;       //所有生成的一楼房间的父物体（为了整洁美观）
 
     //用于生成挡住玩家进入门的障碍物的坐标
     Vector2 m_BlockUpDoor = new Vector2(0f, 3.7f);
@@ -64,7 +73,7 @@ public class RoomManager : ManagerTemplate<RoomManager>
             return;          
         }
 
-        //赋值房间跟物体给脚本
+        //赋值房间跟物体给脚本中的变量
         SetupRootGameObject(ref m_FirstFloorRooms, "FirstFloorRooms");
     }
 
@@ -85,7 +94,7 @@ public class RoomManager : ManagerTemplate<RoomManager>
         //该物体检查如果放在Awake函数中的话会报错
         if (BlockDoorBarrel == null)
         {
-            Debug.LogError("BlockDoorBarrel is not assigned in the RoomManager.");
+            Debug.LogError("BlockDoorBarrel is not assigned in the " + name);
             return;
         }
     }
@@ -98,10 +107,10 @@ public class RoomManager : ManagerTemplate<RoomManager>
     {
         DoorFlags currentDoorFlags = currentRoomType.GetDoorFlags();
 
-        GenerateRoomInDirection( currentRoomTransform, (currentDoorFlags & DoorFlags.Left) != 0, new Vector2(-RoomLength, 0), "RightDoor");
-        GenerateRoomInDirection( currentRoomTransform, (currentDoorFlags & DoorFlags.Right) != 0, new Vector2(RoomLength, 0), "LeftDoor");
-        GenerateRoomInDirection( currentRoomTransform, (currentDoorFlags & DoorFlags.Up) != 0, new Vector2(0, RoomWidth), "DownDoor");
-        GenerateRoomInDirection( currentRoomTransform, (currentDoorFlags & DoorFlags.Down) != 0, new Vector2(0, -RoomWidth), "UpDoor");
+        GenerateRoomInDirection( currentRoomTransform, (currentDoorFlags & DoorFlags.Left) != 0, new Vector2(-RoomLength, 0), RightDoorName);
+        GenerateRoomInDirection( currentRoomTransform, (currentDoorFlags & DoorFlags.Right) != 0, new Vector2(RoomLength, 0), LeftDoorName);
+        GenerateRoomInDirection( currentRoomTransform, (currentDoorFlags & DoorFlags.Up) != 0, new Vector2(0, RoomWidth), DownDoorName);
+        GenerateRoomInDirection( currentRoomTransform, (currentDoorFlags & DoorFlags.Down) != 0, new Vector2(0, -RoomWidth), UpDoorName);
     }
 
     private void GenerateRoomInDirection(Transform currentRoomTransform, bool hasDoor, Vector2 offset, string neededDoorName)
@@ -192,7 +201,7 @@ public class RoomManager : ManagerTemplate<RoomManager>
 
                 else
                 {
-                    Debug.LogError("Tried to set this room has generated rooms, but cannot get the RootRoomController: " + currentRoomTransform.name);
+                    Debug.LogError("Cannot get the RootRoomController component in the: " + currentRoomTransform.name);
                 }
 
                 //触发事件
@@ -206,9 +215,11 @@ public class RoomManager : ManagerTemplate<RoomManager>
             }
         }
 
-        if (!isRoomPlaced)        //如果超过最大尝试次数后依然没有合适的房间，则实施一些功能
+        if (!isRoomPlaced)        //如果超过最大尝试次数后依然没有合适的房间
         {
-            Debug.Log("Failed to place a suitable room after " + maxAttempts + " attempts!");
+            Debug.Log("Failed to generate a suitable room after " + maxAttempts + " attempts for the: " + currentRoomTransform.name);
+
+            GenerateRoomAtThisPos(newRoomPos, RoomKeys.GenericRoomKey);     //强行生成通用房间
         }
     }
 
@@ -234,12 +245,14 @@ public class RoomManager : ManagerTemplate<RoomManager>
             else
             {
                 Debug.LogError("Failed to load room: " + roomKey);
+                return;
             }
         }
 
         catch (Exception ex)
         {
             Debug.LogError("Error loading room: " + ex.Message);
+            return;
         }
     }
     #endregion
@@ -250,31 +263,37 @@ public class RoomManager : ManagerTemplate<RoomManager>
     //检查当前房间是否连接周围的房间（玩家每进入一个房间时都需要调用此函数）
     public void CheckIfConnectSurroundingRooms(Transform thisRoomTransform)       
     {
-        RoomType currentRoomType = thisRoomTransform.GetComponent<RoomType>();   //获取当前房间物体上挂载的房间类型脚本      
+        RoomType currentRoomType = thisRoomTransform.GetComponent<RoomType>();   //获取当前房间物体上挂载的房间类型脚本
+        if (currentRoomType == null)
+        {
+            Debug.LogError("Cannot get the RoomType component in the " + currentRoomType.gameObject.name);
+            break;
+        }    
+
 
         if (!currentRoomType.HasCheckFlag(CheckFlags.Left))     //如果当前房间没有检查过左边
         {
-            CheckRequiredDoorAtOverlapPosition(thisRoomTransform, (Vector2)thisRoomTransform.position + new Vector2(-17f, 0), "RightDoor");
+            CheckRequiredDoorAtOverlapPosition(thisRoomTransform, (Vector2)thisRoomTransform.position + new Vector2(-RoomLength, 0), RightDoorName);
         }
 
         if (!currentRoomType.HasCheckFlag(CheckFlags.Right))    //如果当前房间没有检查过右边
         {
-            CheckRequiredDoorAtOverlapPosition(thisRoomTransform, (Vector2)thisRoomTransform.position + new Vector2(17f, 0), "LeftDoor");
+            CheckRequiredDoorAtOverlapPosition(thisRoomTransform, (Vector2)thisRoomTransform.position + new Vector2(RoomLength, 0), LeftDoorName);
         }
 
         if (!currentRoomType.HasCheckFlag(CheckFlags.Up))       //如果当前房间没有检查过上面
         {
-            CheckRequiredDoorAtOverlapPosition(thisRoomTransform, (Vector2)thisRoomTransform.position + new Vector2(0, 10.7f), "DownDoor");
+            CheckRequiredDoorAtOverlapPosition(thisRoomTransform, (Vector2)thisRoomTransform.position + new Vector2(0, RoomWidth), DownDoorName);
         }
 
         if (!currentRoomType.HasCheckFlag(CheckFlags.Down))     //如果当前房间没有检查过下面
         {
-            CheckRequiredDoorAtOverlapPosition(thisRoomTransform, (Vector2)thisRoomTransform.position + new Vector2(0, -10.7f), "UpDoor");
+            CheckRequiredDoorAtOverlapPosition(thisRoomTransform, (Vector2)thisRoomTransform.position + new Vector2(0, -RoomWidth), UpDoorName);
         }       
     }
     
 
-    //检查参数中坐标对应的房间是否有连接当前房间的门
+    //检查参数中坐标处是否已经有房间，有的话则检查该房间是否有连接当前房间的门
     private void CheckRequiredDoorAtOverlapPosition(Transform currentRoomTransform, Vector2 checkPos, string neededDoorName)
     {
         if (GeneratedRoomDict.ContainsKey(checkPos))
@@ -294,28 +313,28 @@ public class RoomManager : ManagerTemplate<RoomManager>
                 //根据需要的房间名设置当前房间的RoomType脚本里检查旗帜里对应的布尔值，以及木桶的坐标
                 switch (neededDoorName)
                 {
-                    case "LeftDoor":
+                    case LeftDoorName:
                         currentRoomType.SetCheckFlag(CheckFlags.Right);   //表示检查过是否连接右边的房间了
 
                         blockObjectPos = m_BlockRightDoor;
                         //closedDoorName = "RightDoor";
                         break;
 
-                    case "RightDoor":
+                    case RightDoorName:
                         currentRoomType.SetCheckFlag(CheckFlags.Left);    //表示检查过是否连接左边的房间了
 
                         blockObjectPos = m_BlockLeftDoor;
                         //closedDoorName = "LeftDoor";
                         break;
 
-                    case "UpDoor":
+                    case UpDoorName:
                         currentRoomType.SetCheckFlag(CheckFlags.Down);    //表示检查过是否连接下面的房间了
 
                         blockObjectPos = m_BlockDownDoor;
                         //closedDoorName = "DownDoor";
                         break;
 
-                    case "DownDoor":
+                    case DownDoorName:
                         currentRoomType.SetCheckFlag(CheckFlags.Up);      //表示检查过是否连接上面的房间了
 
                         blockObjectPos = m_BlockUpDoor;
@@ -323,7 +342,7 @@ public class RoomManager : ManagerTemplate<RoomManager>
                         break;
 
                     default:
-                        Debug.Log("There is a room want to generated at repeated position: " + checkPos + ", but none of its door match the neededDoorName: " + neededDoorName);
+                        Debug.Log("There is a room generated at this position: " + checkPos + ", but none of its door match the neededDoorName: " + neededDoorName);
                         break;
                 };
 
@@ -337,7 +356,7 @@ public class RoomManager : ManagerTemplate<RoomManager>
                     RootRoomController currentRoomController = currentRoomTransform.GetComponent<RootRoomController>();
                     if (currentRoomController == null)
                     {
-                        Debug.Log("Cannot get the RootRoomController component in the " + currentRoomTransform.name);
+                        Debug.LogError("Cannot get the RootRoomController component in the " + currentRoomTransform.gameObject.name);
                         break;
                     }
 
@@ -356,7 +375,7 @@ public class RoomManager : ManagerTemplate<RoomManager>
     //运用物理函数，检查要生成的坐标是否已经有房间了
     private bool IsPositionEmpty(Vector2 positionToCheck, Vector2 roomSize)
     {
-        //第一个参数为中心点，第二个参数为正方形大小，第三个参数为角度，第四个参数为检测的目标层级
+        //第一个参数为中心点，第二个参数为检查的正方形大小，第三个参数为角度，第四个参数为检测的目标层级
         Collider2D overlapCheck = Physics2D.OverlapBox(positionToCheck, roomSize, 0f, RoomLayerMask);
         return overlapCheck == null;
     }
@@ -382,10 +401,10 @@ public class RoomManager : ManagerTemplate<RoomManager>
 
         return neededDoorName switch        //根据需要的房间名返回对应的布尔值
         {
-            "LeftDoor" => (newDoorFlags & DoorFlags.Left) != 0,
-            "RightDoor" => (newDoorFlags & DoorFlags.Right) != 0,
-            "UpDoor" => (newDoorFlags & DoorFlags.Up) != 0,
-            "DownDoor" => (newDoorFlags & DoorFlags.Down) != 0,
+            LeftDoorName => (newDoorFlags & DoorFlags.Left) != 0,
+            RightDoorName => (newDoorFlags & DoorFlags.Right) != 0,
+            UpDoorName => (newDoorFlags & DoorFlags.Up) != 0,
+            DownDoorName => (newDoorFlags & DoorFlags.Down) != 0,
             _ => false,     //相当于default case，如果上面四个都没有实施，则实施这一行
         };
     }
@@ -433,7 +452,7 @@ public class RoomManager : ManagerTemplate<RoomManager>
             RootRoomController currentRoomController = currentRoomTransform.GetComponent<RootRoomController>();
             if (currentRoomController == null)
             {
-                Debug.Log("Cannot get the RootRoomController component in the " + currentRoomTransform.name);
+                Debug.LogError("Cannot get the RootRoomController component in the " + currentRoomTransform.name);
                 break;
             }
 
@@ -443,12 +462,12 @@ public class RoomManager : ManagerTemplate<RoomManager>
             if (Mathf.Abs(newRoomPos.x) >= MaximumXPos)
             {           
                 //根据生成的坐标判断哪个门应该关闭
-                closedDoorName = newRoomPos.x <= 0 ? "LeftDoor" : "RightDoor";
+                closedDoorName = newRoomPos.x <= 0 ? LeftDoorName : RightDoorName;
             }
 
             else if (Mathf.Abs(newRoomPos.y) >= MaximumYPos)
             {
-                closedDoorName = newRoomPos.y <= 0 ? "DownDoor" : "UpDoor";               
+                closedDoorName = newRoomPos.y <= 0 ? DownDoorName : UpDoorName;               
             }
 
             currentRoomController.DoorController.AlwaysClosedDoorNames.Add(closedDoorName);
@@ -488,7 +507,8 @@ public class RoomManager : ManagerTemplate<RoomManager>
 
             else
             {
-                Debug.LogError("Key not fount in the dict: " + room);
+                Debug.LogError("This Key is not found in the dictionary: " + room);
+                return;
             }
         }
     }

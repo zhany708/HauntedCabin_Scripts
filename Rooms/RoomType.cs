@@ -40,7 +40,7 @@ public enum DoorFlags   //通过Bit Flag判断房间的种类
     Left = 1 << 0,  //1
     Right = 1 << 1, //2
     Up = 1 << 2,    //4
-    Down = 1 << 3  //8
+    Down = 1 << 3   //8
 }
 
 [Flags]
@@ -51,7 +51,7 @@ public enum CheckFlags      //判断当前房间是否检查过自己是否连�
     Left = 1 << 0,  //1
     Right = 1 << 1, //2
     Up = 1 << 2,    //4
-    Down = 1 << 3  //8
+    Down = 1 << 3   //8
 }
 #endregion
 
@@ -88,6 +88,7 @@ public class RoomType : MonoBehaviour
 
 
     #region 枚举相关函数
+    /*
     public RoomTypeName GetRoomType()
     {
         
@@ -146,7 +147,7 @@ public class RoomType : MonoBehaviour
 
         return RoomTypeName.None;   //默认返回空
     }
-
+    */
 
 
 
@@ -177,7 +178,7 @@ public class RoomType : MonoBehaviour
 
 
 
-    public bool HasCheckFlag(CheckFlags flag)       //检查是否有检查参数中的方向
+    public bool HasCheckFlag(CheckFlags flag)       //用于检查是否有检查过参数中的方向的房间是否连接当前房间
     {
         return (m_CheckFlags & flag) == flag;
     }
