@@ -5,18 +5,19 @@ using UnityEngine.UI;
 
 
 
-//所有血条的跟类
+//所有血条的跟类（用于控制血条UI）
 public class HealthBar : MonoBehaviour
 {
     Image m_HpImage;
     Image m_HpEffectImage;          //血量缓冲图片
 
+    Coroutine m_UpdateCoroutine;    //防止上一轮协程还没结束就开始新的协程（扣血）
 
     float m_MaxHp = 0f;             //最大血量默认0（需要在不同的子类中设置）
     float m_CurrentHp = 0f;
     float m_BuffTime = 0.5f;        //缓冲时间
 
-    Coroutine m_UpdateCoroutine;    //防止上一轮协程还没结束就开始新的协程（扣血）
+    
 
 
 

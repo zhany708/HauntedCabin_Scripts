@@ -16,13 +16,22 @@ public class Stats : CoreComponent      //用于管理生命，魔力等状态�
     public float CurrentHealth { get; private set; }
 
 
+
+
+    HealthBar m_HealthBar;                  //用于控制血条的脚本（默认放在Stats物体的子物体中，没有的话也不影响当前脚本）
+
     float m_Defense;
     float m_DefenseRate = 0.01f;     //每一点防御对应1%的伤害减免
 
 
 
 
+    protected override void Awake()
+    {
+        base.Awake();
 
+        m_HealthBar = GetComponentInChildren<HealthBar>();      //获取血条组件的血条缓冲脚本
+    }
 
     private void Start()
     {
@@ -38,6 +47,11 @@ public class Stats : CoreComponent      //用于管理生命，魔力等状态�
     public virtual void IncreaseHealth(float amount)
     {
         CurrentHealth = Mathf.Clamp(CurrentHealth + amount, 0, MaxHealth);    //确保生命值不会超过最大上限
+
+        if (m_HealthBar != null)
+        {
+            m_HealthBar.SetCurrentHealth(CurrentHealth);        //调用血条脚本中的更新生命值函数
+        }
     }
 
     //需要做的：根据当前血量变化调用特定的事件函数，从而让角色根据血量改变一些属性和特点
@@ -66,7 +80,7 @@ public class Stats : CoreComponent      //用于管理生命，魔力等状态�
                 //Debug.Log("Health is zero!!");
             }
 
-            else if (CurrentHealth <= MaxHealth * 0.33)      //当血量只有三分之一时
+            else if (CurrentHealth <= MaxHealth * 0.33)     //当血量只有三分之一时
             {
                 OnLowHealth?.Invoke();      //调用事件函数
             }
@@ -76,11 +90,18 @@ public class Stats : CoreComponent      //用于管理生命，魔力等状态�
                 OnHalfHealth?.Invoke();     //调用事件函数
             }
 
-            else if (CurrentHealth <= MaxHealth * 0.66)      //当血量只有三分之二时
+            else if (CurrentHealth <= MaxHealth * 0.66)     //当血量只有三分之二时
             {
                 OnHighHealth?.Invoke();     //调用事件函数
             }
-        }
+
+
+
+            if (m_HealthBar != null)
+            {
+                m_HealthBar.SetCurrentHealth(CurrentHealth);        //调用血条脚本中的更新生命值函数
+            }
+        }       
     }
 
 
@@ -119,6 +140,11 @@ public class Stats : CoreComponent      //用于管理生命，魔力等状态�
     public virtual void SetCurrentHealth(float health)
     {
         CurrentHealth = health;
+
+        if (m_HealthBar != null)
+        {
+            m_HealthBar.SetCurrentHealth(CurrentHealth);        //调用血条脚本中的更新生命值函数
+        }
     }
     #endregion
 }

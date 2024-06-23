@@ -129,7 +129,7 @@ public class Altar : MonoBehaviour      //放在仪式台上的脚本
     }
 
 
-
+    /*
     //需要做的：决定要不要画祷告石的受击动画,不使用的话则需要通过某种方式表示祷告石被攻击了（特效，屏幕震动等）
     private void HitLogic()      //受击相关的逻辑
     {
@@ -137,7 +137,7 @@ public class Altar : MonoBehaviour      //放在仪式台上的脚本
 
         //m_IsHit = true; 
     }
-
+    */
 
 
     private void FinishRitual()   //仪式结束后的逻辑
@@ -182,11 +182,21 @@ public class Altar : MonoBehaviour      //放在仪式台上的脚本
         GenerateEnemyThroughTime(m_RitualDuration, m_EnemySpawnInterval);
     }
     
+    /*
     private void SetAnimatorBool()
     {
         Core.Animator.SetBool("Hit", false);    //放在受击动画的最后几帧
 
         //m_IsHit = false;
+    }
+    */
+    #endregion
+
+
+    #region Getters
+    public float GetMaxHealth()
+    {
+        return m_RitualMaxHealth;
     }
     #endregion
 }
