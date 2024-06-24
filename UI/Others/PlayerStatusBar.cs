@@ -118,7 +118,7 @@ public class PlayerStatusBar : BasePanel
     #endregion
 
 
-
+    #region 初始化相关
     //初始化血条相关的部分
     public void InitializePlayerStatus()
     {
@@ -149,7 +149,25 @@ public class PlayerStatusBar : BasePanel
         m_PlayerHealthBar.SetHpEffectImage(HpEffectImage);
     }
 
+    private void CheckComponents()
+    {
+        //检查四个属性组件是否有的为空
+        if (StrengthText == null || SpeedText == null || SanityText == null || KnowledgeText == null)
+        {
+            Debug.LogError("Some Text components are not assigned in the " + name);
+            return;
+        }
 
+        if (StrengthPhraseKey == "" || SpeedPhraseKey == "" || SanityPhraseKey == "" || KnowledgePhraseKey == "")
+        {
+            Debug.LogError("Some Lean Localization phrase keys are not written in the " + name);
+            return;
+        }
+    }
+    #endregion
+
+
+    #region 更改属性相关
     public void ChangePropertyValue(PlayerProperty property, float changeValue)
     {
         switch (property)
@@ -185,7 +203,6 @@ public class PlayerStatusBar : BasePanel
     }
 
 
-
     //更新玩家的属性UI（用于正确的显示数值）
     public void UpdateStatusUI()
     {
@@ -195,7 +212,7 @@ public class PlayerStatusBar : BasePanel
         string sanityFormat = LeanLocalization.GetTranslationText(SanityPhraseKey);
         string knowledgeFormat = LeanLocalization.GetTranslationText(KnowledgePhraseKey);
 
-        Debug.Log("The translation format are: " + "\n" + strengthFormat + "\n" + speedFormat + "\n" + sanityFormat + "\n" + knowledgeFormat);
+        //Debug.Log("The translation format are: " + "\n" + strengthFormat + "\n" + speedFormat + "\n" + sanityFormat + "\n" + knowledgeFormat);
 
         //赋值所有属性的数值
         StrengthText.text = string.Format(strengthFormat, StrengthValue);
@@ -203,7 +220,7 @@ public class PlayerStatusBar : BasePanel
         SanityText.text = string.Format(sanityFormat, SanityValue);
         KnowledgeText.text = string.Format(knowledgeFormat, KnowledgeValue);
 
-        Debug.Log("The four texts are: " + "\n" + StrengthText.text + "\n" + SpeedText.text + "\n" + SanityText.text + "\n" + KnowledgeText.text);
+        //Debug.Log("The four texts are: " + "\n" + StrengthText.text + "\n" + SpeedText.text + "\n" + SanityText.text + "\n" + KnowledgeText.text);
     }
 
     //用于防止因为换场景等原因导致重新加载后无法正常显示数值的情况
@@ -212,24 +229,10 @@ public class PlayerStatusBar : BasePanel
         yield return new WaitForEndOfFrame();       //等待一帧的结束，以便所有其余的所需内容都已初始化完成
         UpdateStatusUI();
     }
+    #endregion
 
 
-
-    private void CheckComponents()
-    {
-        //检查四个属性组件是否有的为空
-        if (StrengthText == null || SpeedText == null || SanityText == null || KnowledgeText == null)
-        {
-            Debug.LogError("Some Text components are not assigned in the " + name);
-            return;
-        }
-
-        if (StrengthPhraseKey == "" || SpeedPhraseKey == "" || SanityPhraseKey == "" || KnowledgePhraseKey == "")
-        {
-            Debug.LogError("Some Lean Localization phrase keys are not written in the " + name);
-            return;
-        }
-    }
+    
 
 
 

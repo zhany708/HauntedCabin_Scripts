@@ -12,7 +12,6 @@ public class RoomManager : ManagerTemplate<RoomManager>
 
     public SO_RoomKeys RoomKeys;            //生成房间需要的所有房间名
     public LayerMask RoomLayerMask;         //房间的图层
-    public GameObject BlockDoorBarrel;      //挡住玩家进入门的障碍物
 
     //限制墙壁的大小，可根据难度的不同调整
     public float MaximumXPos = 35f;
@@ -39,12 +38,6 @@ public class RoomManager : ManagerTemplate<RoomManager>
 
     
     Transform m_FirstFloorRooms;       //所有生成的一楼房间的父物体（为了整洁美观）
-
-    //用于生成挡住玩家进入门的障碍物的坐标
-    Vector2 m_BlockUpDoor = new Vector2(0f, 3.7f);
-    Vector2 m_BlockDownDoor = new Vector2(0f, -4.65f);
-    Vector2 m_BlockLeftDoor = new Vector2(-7.55f, -0.7f);
-    Vector2 m_BlockRightDoor = new Vector2(7.55f, -0.7f);
 
 
     //运用Physics2D检查重复坐标时需要的X和Y的值
@@ -85,17 +78,6 @@ public class RoomManager : ManagerTemplate<RoomManager>
         if (RoomKeys.FirstFloorRoomKeys.Contains("RitualRoom"))     //开始游戏前检查是否有只在剧本中才会生成的房间名，防止出现错误
         {
             RoomKeys.FirstFloorRoomKeys.Remove("RitualRoom");
-        }
-    }
-
-
-    private void OnEnable()
-    {
-        //该物体检查如果放在Awake函数中的话会报错
-        if (BlockDoorBarrel == null)
-        {
-            Debug.LogError("BlockDoorBarrel is not assigned in the " + name);
-            return;
         }
     }
     #endregion
@@ -300,15 +282,12 @@ public class RoomManager : ManagerTemplate<RoomManager>
         {
             //Debug.Log("A room has already generated here: " + checkPos);
 
-            //GameObject repeatedRoom;
-
             //检查能否获取字典对应的坐标的房间物体
             if (GeneratedRoomDict.TryGetValue(checkPos, out GameObject repeatedRoom))
             {
                 RoomType currentRoomType = currentRoomTransform.GetComponent<RoomType>();   //获取当前房间物体上挂载的房间类型脚本  
                 RoomType targetRoomType = repeatedRoom.GetComponent<RoomType>();            //获取目标位置处房间物体上挂载的房间类型脚本       
-                Vector2 blockObjectPos = Vector2.zero;      //表示生成的木桶的坐标
-                //string closedDoorName;                      //表示要关闭的房间门的名字
+                string closedDoorName = null;                      //表示要关闭的房间门的名字
 
                 //根据需要的房间名设置当前房间的RoomType脚本里检查旗帜里对应的布尔值，以及木桶的坐标
                 switch (neededDoorName)
@@ -316,29 +295,25 @@ public class RoomManager : ManagerTemplate<RoomManager>
                     case LeftDoorName:
                         currentRoomType.SetCheckFlag(CheckFlags.Right);   //表示检查过是否连接右边的房间了
 
-                        blockObjectPos = m_BlockRightDoor;
-                        //closedDoorName = "RightDoor";
+                        closedDoorName = RightDoorName;
                         break;
 
                     case RightDoorName:
                         currentRoomType.SetCheckFlag(CheckFlags.Left);    //表示检查过是否连接左边的房间了
 
-                        blockObjectPos = m_BlockLeftDoor;
-                        //closedDoorName = "LeftDoor";
+                        closedDoorName = LeftDoorName;
                         break;
 
                     case UpDoorName:
                         currentRoomType.SetCheckFlag(CheckFlags.Down);    //表示检查过是否连接下面的房间了
 
-                        blockObjectPos = m_BlockDownDoor;
-                        //closedDoorName = "DownDoor";
+                        closedDoorName = DownDoorName;
                         break;
 
                     case DownDoorName:
                         currentRoomType.SetCheckFlag(CheckFlags.Up);      //表示检查过是否连接上面的房间了
 
-                        blockObjectPos = m_BlockUpDoor;
-                        //closedDoorName = "UpDoor";
+                        closedDoorName = UpDoorName;
                         break;
 
                     default:
@@ -351,20 +326,19 @@ public class RoomManager : ManagerTemplate<RoomManager>
                 //检查重复坐标的房间是否有连接此房间的门，如果没有则生成障碍物防止玩家穿过门
                 if (!HasRequiredDoor(targetRoomType, neededDoorName))
                 {
-                    /*
+                    
                     //获取当前房间的控制器脚本
                     RootRoomController currentRoomController = currentRoomTransform.GetComponent<RootRoomController>();
                     if (currentRoomController == null)
                     {
                         Debug.LogError("Cannot get the RootRoomController component in the " + currentRoomTransform.gameObject.name);
-                        break;
+                        return;
                     }
 
-                    currentRoomController.DoorController.AlwaysClosedDoorNames.Add(closedDoorName);     //将需要关闭的门加进列表
-                    */
-
-                    //在指定的门前生成障碍物
-                    EnvironmentManager.Instance.GenerateObjectWithParent(BlockDoorBarrel, currentRoomTransform, (Vector2)currentRoomTransform.position + blockObjectPos);
+                    currentRoomController.DoorControllerInsideThisRoom.AlwaysClosedDoorNames.Add(closedDoorName);     //将需要关闭的门加进列表
+                    
+                    //加进列表后立刻调用指定的函数，从而确保玩家进入该房间时永久关闭的门处于关闭状态
+                    currentRoomController.DoorControllerInsideThisRoom.CloseNecessaryDoors();
                 }
             }
         }
@@ -410,50 +384,20 @@ public class RoomManager : ManagerTemplate<RoomManager>
     }
 
 
-    //检查要生成的房间的坐标是否超出了限制墙壁
-    private bool CheckIfBreakMaximumPos(Transform currentRoomTransform, Vector2 newRoomPos)
-    {
-        //如果要生成的房间的坐标超出了限制墙壁时，则在进入那个房间的门口处生成障碍物阻止玩家前进
-        if (Mathf.Abs(newRoomPos.x) >= MaximumXPos)
-        {
-            //Debug.Log("Cannot generate new room at this position: " + newRoomPos);
-
-            //生成木桶，用于阻止玩家穿过门
-            Vector2 blockObjectPos = newRoomPos.x <= 0 ? m_BlockLeftDoor : m_BlockRightDoor;
-            EnvironmentManager.Instance.GenerateObjectWithParent(BlockDoorBarrel, currentRoomTransform, (Vector2)currentRoomTransform.position + blockObjectPos);
-
-            return true;
-        }
-
-        else if (Mathf.Abs(newRoomPos.y) >= MaximumYPos)
-        {
-            //生成木桶，用于阻止玩家穿过门
-            Vector2 blockObjectPos = newRoomPos.y <= 0 ? m_BlockDownDoor : m_BlockUpDoor;
-            EnvironmentManager.Instance.GenerateObjectWithParent(BlockDoorBarrel, currentRoomTransform, (Vector2)currentRoomTransform.position + blockObjectPos);
-
-            return true;
-        }
-
-        return false;
-    }
-
-    /*
     //该函数在房间超出墙壁时会永久关闭对应的门，而不是生成木桶阻碍玩家前进
     private bool CheckIfBreakMaximumPos(Transform currentRoomTransform, Vector2 newRoomPos)
     {
         //如果要生成的房间的坐标超出了限制墙壁时，则关闭该房间对应的门
         if (Mathf.Abs(newRoomPos.x) >= MaximumXPos || Mathf.Abs(newRoomPos.y) >= MaximumYPos)
         {
-            //Debug.Log("Cannot generate new room at this position: " + newRoomPos);
-
-            string closedDoorName;       //永久关闭的门的名字
+            string closedDoorName = null;       //永久关闭的门的名字
             
             //获取当前房间的控制器脚本
             RootRoomController currentRoomController = currentRoomTransform.GetComponent<RootRoomController>();
             if (currentRoomController == null)
             {
                 Debug.LogError("Cannot get the RootRoomController component in the " + currentRoomTransform.name);
-                break;
+                return true;
             }
 
 
@@ -470,7 +414,10 @@ public class RoomManager : ManagerTemplate<RoomManager>
                 closedDoorName = newRoomPos.y <= 0 ? DownDoorName : UpDoorName;               
             }
 
-            currentRoomController.DoorController.AlwaysClosedDoorNames.Add(closedDoorName);
+            currentRoomController.DoorControllerInsideThisRoom.AlwaysClosedDoorNames.Add(closedDoorName);
+
+            //加进列表后立刻调用指定的函数，从而确保玩家进入该房间时永久关闭的门处于关闭状态
+            currentRoomController.DoorControllerInsideThisRoom.CloseNecessaryDoors();
             return true;
         } 
 
@@ -479,7 +426,7 @@ public class RoomManager : ManagerTemplate<RoomManager>
             return false;
         }
     }
-    */
+    
     #endregion
 
 
