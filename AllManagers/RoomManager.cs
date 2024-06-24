@@ -267,7 +267,7 @@ public class RoomManager : ManagerTemplate<RoomManager>
         if (currentRoomType == null)
         {
             Debug.LogError("Cannot get the RoomType component in the " + currentRoomType.gameObject.name);
-            break;
+            return;
         }    
 
 

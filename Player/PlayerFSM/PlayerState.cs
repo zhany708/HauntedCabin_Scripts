@@ -30,16 +30,16 @@ public class PlayerState
     private Combat m_Combat;
 
 
-    protected PlayerStats playerStats
+    protected Stats playerStats
     {
         get
         {
             if (m_PlayerStats) { return m_PlayerStats; }
-            m_PlayerStats = core.GetCoreComponent<PlayerStats>();
+            m_PlayerStats = core.GetCoreComponent<Stats>();
             return m_PlayerStats;
         }
     }
-    private PlayerStats m_PlayerStats;
+    private Stats m_PlayerStats;
 
 
     protected AnimatorStateInfo animatorStateInfo;
@@ -107,7 +107,7 @@ public class PlayerState
         if (BasePanel.IsPlayerMoveable)
         {
             //将移动逻辑放在跟状态中，这样玩家无需进入移动状态也可以移动（某些状态需要覆盖此函数，如受击状态）
-            movement.SetVelocity(playerData.MovementVelocity * PlayerStatusBar.GetSpeedAddition(), input);
+            movement.SetVelocity(playerData.MovementVelocity * PlayerStatusBar.Instance.GetSpeedAddition(), input);
         }
 
         //否则暂停玩家的移动

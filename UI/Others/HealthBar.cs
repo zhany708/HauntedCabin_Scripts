@@ -8,8 +8,8 @@ using UnityEngine.UI;
 //所有血条的跟类（用于控制血条UI）
 public class HealthBar : MonoBehaviour
 {
-    Image m_HpImage;
-    Image m_HpEffectImage;          //血量缓冲图片
+    protected Image hpImage { get; private set; }           //最上层的血条图片（红色的）
+    protected Image hpEffectImage { get; private set; }     //血量缓冲图片（白色的）
 
     Coroutine m_UpdateCoroutine;    //防止上一轮协程还没结束就开始新的协程（扣血）
 
@@ -63,14 +63,14 @@ public class HealthBar : MonoBehaviour
     private void UpdateHealthBar()
     {
         //使用组件前检查是否为空
-        if (m_HpImage == null || m_HpEffectImage == null)
+        if (hpImage == null || hpEffectImage == null)
         {
             Debug.LogError("Health bar images are not set.");
             return;
         }
 
         //调整最上层血条所占的比例
-        m_HpImage.fillAmount = m_CurrentHp / m_MaxHp;
+        hpImage.fillAmount = m_CurrentHp / m_MaxHp;
 
         if (m_UpdateCoroutine != null)      
         {
@@ -84,7 +84,7 @@ public class HealthBar : MonoBehaviour
     //用于缓冲血条的动画
     private IEnumerator UpdateHpEffect()
     {
-        float effectLength = m_HpEffectImage.fillAmount - m_HpImage.fillAmount;     //缓冲的血量（缓冲血条的比例减去血条比例）
+        float effectLength = hpEffectImage.fillAmount - hpImage.fillAmount;     //缓冲的血量（缓冲血条的比例减去血条比例）
         float elapsedTime = 0f;     //用于确保缓冲时间在0.5秒内
 
         //此while循环用于将缓冲血条比例在缓冲时间内从一个值降到另一个值
@@ -93,12 +93,12 @@ public class HealthBar : MonoBehaviour
             //持续增加变量值，直到抵达预定的缓冲时间为止
             elapsedTime += Time.deltaTime;
             //返回值根据第三个参数决定， 0则返回参数一，1则返回参数二，0.5则返回中点
-            m_HpEffectImage.fillAmount = Mathf.Lerp(m_HpImage.fillAmount + effectLength, m_HpImage.fillAmount, elapsedTime/m_BuffTime);
+            hpEffectImage.fillAmount = Mathf.Lerp(hpImage.fillAmount + effectLength, hpImage.fillAmount, elapsedTime/m_BuffTime);
 
             yield return null;      //等待一帧的时间
         }
 
-        m_HpEffectImage.fillAmount = m_HpImage.fillAmount;      //防止缓冲血条超过红色血条
+        hpEffectImage.fillAmount = hpImage.fillAmount;      //防止缓冲血条超过红色血条
     }
     #endregion
 
@@ -111,12 +111,12 @@ public class HealthBar : MonoBehaviour
 
     public void SetHpImage(Image thisImage)
     {
-        m_HpImage = thisImage;
+        hpImage = thisImage;
     }
 
     public void SetHpEffectImage(Image thisImage)
     {
-        m_HpEffectImage = thisImage;
+        hpEffectImage = thisImage;
     }
     #endregion
 }

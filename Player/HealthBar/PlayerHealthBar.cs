@@ -37,21 +37,21 @@ public class PlayerHealthBar : HealthBar      //用于玩家的血条控制
 
 
     //因为需要异步加载UI。所以使用async（如果不使用的话，可能会出现还没加载完就接着跑下面的代码的情况）
-    private async void InitializePlayerHealthBarAsync()   
+    private void InitializePlayerHealthBarAsync()   
     {       
         //检查UIKeys是否为空且要加载的名字是否存在，随后等待UI加载完毕
         if (UIManager.Instance.UIKeys != null && !string.IsNullOrEmpty(UIManager.Instance.UIKeys.PlayerStatusBarKey))
         {
-            //检查界面是否已经打开,没有的话则打开界面
-            if (!UIManager.Instance.PanelDict.ContainsKey(UIManager.Instance.UIKeys.PlayerStatusBarKey) )
+            //检查界面是否已经打开,打开的话则进行以下逻辑
+            if (UIManager.Instance.PanelDict.ContainsKey(UIManager.Instance.UIKeys.PlayerStatusBarKey) )
             {
-                await UIManager.Instance.OpenPanel(UIManager.Instance.UIKeys.PlayerStatusBarKey);    //打开玩家状态栏
-            }
+                //检查图片组件是否为空（也就是说重新加载了场景）
+                if (hpImage == null || hpEffectImage == null)
+                {
+                    PlayerStatusBar.Instance.SetImagesToHealthBar();      //重新赋值图片
+                }
 
-            //如果已经打开的话,则重新传递照片组件给当前脚本
-            else
-            {
-                PlayerStatusBar.Instance.SetImagesToHealthBar();
+                //PlayerStatusBar.Instance.UpdateStatusUI();
             }
         }
 

@@ -8,18 +8,18 @@ public class HellsCall : BaseScreenplay<HellsCall>
     public GameObject RitualStone;      //祷告石物体
 
     
-    public PlayerStats PlayerStats      //Lazy load
+    public Stats PlayerStats      //Lazy load
     {
         get
         {
             if (m_PlayerStats == null)
             {
-                m_PlayerStats = FindAnyObjectByType<PlayerStats>();
+                m_PlayerStats = FindAnyObjectByType<Stats>();
             }
             return m_PlayerStats;
         }
     }
-    private PlayerStats m_PlayerStats;
+    private Stats m_PlayerStats;
 
     public const string RitualRoomName = "RitualRoom";      //加进Key里的仪式房的名字
 

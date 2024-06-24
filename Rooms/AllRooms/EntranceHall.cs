@@ -4,6 +4,31 @@ using UnityEngine;
 
 public class EntranceHall : RootRoomController      //入口大堂脚本
 {
+    public static EntranceHall Instance { get; private set; }
+
+
+
+
+
+
+
+    protected override void Awake()
+    {
+        //单例模式
+        if (Instance != null && Instance != this)
+        {
+            //当重复生成入口大堂时，删除重复的
+            Destroy(gameObject);
+        }
+
+        else
+        {
+            Instance = this;
+        }
+
+        base.Awake();
+    }
+
     protected override void Start()
     {
         base.Start();

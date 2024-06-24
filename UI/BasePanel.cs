@@ -54,7 +54,7 @@ public class BasePanel : MonoBehaviour
     protected bool isTyping = false;        //表示是否正在显示文本
     
 
-    protected string panelName;             //界面名字
+    protected string panelName = null;             //界面名字
 
 
 

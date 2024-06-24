@@ -61,7 +61,7 @@ public class HellsCall_GameLostPanel : BasePanel
 
         
         //重置玩家的各个状态和数值（血量，属性）      
-        PlayerStats playerStats = player.GetComponentInChildren<PlayerStats>();     //获取玩家血条的脚本组件
+        Stats playerStats = player.GetComponentInChildren<Stats>();     //获取玩家血条的脚本组件
         if (playerStats == null)
         {
             Debug.LogError("PlayerStats component not found under Player object.");

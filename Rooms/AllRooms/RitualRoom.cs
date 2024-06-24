@@ -4,6 +4,10 @@ public class RitualRoom : RootRoomController        //仪式房脚本
 
 
 
+
+
+
+
     protected override void Awake()
     {      
         //单例模式
@@ -29,9 +33,9 @@ public class RitualRoom : RootRoomController        //仪式房脚本
         base.OnEnable();
 
         //因为仪式房只有一个，所以生成后将仪式房从Key中移除
-        if (RoomManager.Instance.RoomKeys.FirstFloorRoomKeys.Contains(HellsCall.Instance.RitualRoomName) )
+        if (RoomManager.Instance.RoomKeys.FirstFloorRoomKeys.Contains(HellsCall.RitualRoomName) )
         {
-            RoomManager.Instance.RoomKeys.FirstFloorRoomKeys.Remove(HellsCall.Instance.RitualRoomName);
+            RoomManager.Instance.RoomKeys.FirstFloorRoomKeys.Remove(HellsCall.RitualRoomName);
         }
 
         HellsCall.Instance.SetRitualRoomDoorController(DoorControllerInsideThisRoom);   //将仪式房的门控制器脚本传给剧本脚本

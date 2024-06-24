@@ -1,6 +1,7 @@
 using Lean.Localization;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 
@@ -39,12 +40,12 @@ public class PlayerStatusBar : BasePanel
     }
     private Player m_Player;
 
-    //需要做的：删除这里的static，随后更改外部函数调用这些变量的地方
+
     //四个属性的值
-    public static float StrengthValue { get; private set; }
-    public static float SpeedValue { get; private set; }
-    public static float SanityValue { get; private set; }
-    public static float KnowledgeValue { get; private set; }
+    public float StrengthValue { get; private set; } = 0;
+    public float SpeedValue { get; private set; } = 0;
+    public float SanityValue { get; private set; } = 0;
+    public float KnowledgeValue { get; private set; } = 0;
 
     //四个属性对应的翻译文本的string
     public string StrengthPhraseKey;
@@ -63,6 +64,13 @@ public class PlayerStatusBar : BasePanel
     #region Unity内部函数
     protected override void Awake()
     {
+        //设置当前界面的名字
+        if (panelName == null)
+        {
+            panelName = "PlayerStatusBar";
+        }
+
+
         //单例模式
         if (Instance != null && Instance != this)
         {
@@ -86,18 +94,26 @@ public class PlayerStatusBar : BasePanel
 
     private void Start()
     {
-        //设置当前界面的名字
-        if (panelName == null)
+        UpdateStatusUI();       //进入游戏前更新显示的数值
+
+        if (!UIManager.Instance.PanelDict.ContainsKey(panelName) && Instance == this)
         {
-            panelName = UIManager.Instance.UIKeys.PlayerStatusBarKey;
+            //将界面加进字典，表示界面已经打开
+            UIManager.Instance.PanelDict.Add(panelName, this);
         }
 
-        UpdateStatusUI();       //进入游戏前更新显示的数值
+        UIManager.Instance.ImportantPanel.Add(this);    //将该界面加进列表，以在重置游戏时不被删除
     }
 
-    private void OnEnable() 
+
+    protected override void OnDisable() 
     {
-        UIManager.Instance.ImportantPanel.Add(this);    //将该界面加进列表，以在重置游戏时不被删除
+        //只有当前界面是唯一时且被删除后，才运行以下逻辑
+        if (UIManager.Instance.PanelDict.ContainsKey(panelName) && Instance == this)
+        {
+            //从字典中移除，表示界面没打开
+            UIManager.Instance.PanelDict.Remove(panelName);
+        }
     }
     #endregion
 
@@ -106,13 +122,16 @@ public class PlayerStatusBar : BasePanel
     //初始化血条相关的部分
     public void InitializePlayerStatus()
     {
-        //从PlayerData哪里获取属性值
-        StrengthValue = Player.PlayerData.Strength;
-        SpeedValue = Player.PlayerData.Speed;
-        SanityValue = Player.PlayerData.Sanity;
-        KnowledgeValue = Player.PlayerData.Knowledge;
+        if (Player != null)
+        {
+            //从PlayerData获取属性值
+            StrengthValue = Player.PlayerData.Strength;
+            SpeedValue = Player.PlayerData.Speed;
+            SanityValue = Player.PlayerData.Sanity;
+            KnowledgeValue = Player.PlayerData.Knowledge;
 
-        SetImagesToHealthBar();            
+            SetImagesToHealthBar();
+        }            
     }
 
     public void SetImagesToHealthBar()      //用于将照片组件传递给玩家血条
@@ -176,11 +195,15 @@ public class PlayerStatusBar : BasePanel
         string sanityFormat = LeanLocalization.GetTranslationText(SanityPhraseKey);
         string knowledgeFormat = LeanLocalization.GetTranslationText(KnowledgePhraseKey);
 
+        Debug.Log("The translation format are: " + "\n" + strengthFormat + "\n" + speedFormat + "\n" + sanityFormat + "\n" + knowledgeFormat);
+
         //赋值所有属性的数值
         StrengthText.text = string.Format(strengthFormat, StrengthValue);
         SpeedText.text = string.Format(speedFormat, SpeedValue);
         SanityText.text = string.Format(sanityFormat, SanityValue);
-        KnowledgeText.text = string.Format(knowledgeFormat, KnowledgeValue);       
+        KnowledgeText.text = string.Format(knowledgeFormat, KnowledgeValue);
+
+        Debug.Log("The four texts are: " + "\n" + StrengthText.text + "\n" + SpeedText.text + "\n" + SanityText.text + "\n" + KnowledgeText.text);
     }
 
 
@@ -202,13 +225,13 @@ public class PlayerStatusBar : BasePanel
     }
 
 
-    //需要做的：删除这里的static，随后更改所有调用这两个函数的地方
-    public static float GetStrengthAddition()   //每当玩家造成伤害时都需要调用此函数
+
+    public float GetStrengthAddition()   //每当玩家造成伤害时都需要调用此函数
     {
         return 1 + StrengthValue * 0.05f;       //每一点力量对应5%的伤害加成
     }
 
-    public static float GetSpeedAddition()   //每当玩家移动时都需要调用此函数
+    public float GetSpeedAddition()   //每当玩家移动时都需要调用此函数
     {
         return 1 + SpeedValue * 0.05f;       //每一点速度对应5%的移速加成
     }
@@ -218,12 +241,14 @@ public class PlayerStatusBar : BasePanel
     public void ResetGame()      //重置游戏
     {
         //重新赋予玩家的所有属性（如果在换场景前调用此函数，则Player引用仍然存在）
-        StrengthValue = Player.PlayerData.Strength;
-        SpeedValue = Player.PlayerData.Speed;
-        SanityValue = Player.PlayerData.Sanity;
-        KnowledgeValue = Player.PlayerData.Knowledge;
-
-        UpdateStatusUI();
+        if (Player != null)
+        {
+            //从PlayerData获取属性值
+            StrengthValue = Player.PlayerData.Strength;
+            SpeedValue = Player.PlayerData.Speed;
+            SanityValue = Player.PlayerData.Sanity;
+            KnowledgeValue = Player.PlayerData.Knowledge;
+        }
     }
 }
 

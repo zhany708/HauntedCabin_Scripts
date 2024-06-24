@@ -90,7 +90,7 @@ public class MeleeWeapon : Weapon
             }
 
             //对被检测到碰撞体造成伤害（伤害受玩家力量和敌人防御影响）
-            item.Damage(details.DamageAmount * PlayerStatusBar.GetStrengthAddition(), false);      
+            item.Damage(details.DamageAmount * PlayerStatusBar.Instance.GetStrengthAddition(), false);      
         }
 
         foreach (IKnockbackable item in detectedKnockbackables.ToList())
