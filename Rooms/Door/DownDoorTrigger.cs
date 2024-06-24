@@ -1,7 +1,9 @@
 using UnityEngine;
 
 
-public class DownDoorTrigger : SideDoorController        //用于下侧门的子物体
+
+//用于下侧门的子物体（因为下侧门如果不将碰撞框与物体分离的的话就会出现子弹无法穿过门的情况）
+public class DownDoorTrigger : SideDoorController
 {
 
 

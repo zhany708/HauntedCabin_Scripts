@@ -4,21 +4,19 @@ using UnityEngine;
 
 public class SideDoorController : MonoBehaviour
 {
-    //角色传送时需要的数值，用于表示将要传送的房间坐标的偏移
-    public float XOffset = 17f;
-    public float YOffset = 10.7f;
-
-    //房间隐藏时透明度的值
+    //房间门隐藏时透明度的值
     public float HiddenTransparency = 0.5f;
 
 
 
     protected SpriteRenderer sprite;
 
-    //用于储存所有触发了门的碰撞器
-    List<Collider2D> m_AllObjects;
 
-    const float m_DefaultTransparency = 1f;
+
+    //用于储存所有触发了门的碰撞器
+    List<Collider2D> m_AllObjects = new List<Collider2D>();
+
+    const float m_DefaultTransparency = 1f;     //默认透明度
 
 
 
@@ -29,13 +27,6 @@ public class SideDoorController : MonoBehaviour
     {
         sprite = GetComponent<SpriteRenderer>();     
     }
-
-    private void Start()
-    {
-        //初始化
-        m_AllObjects = new List<Collider2D>();
-    }
-
 
 
     private void OnTriggerEnter2D(Collider2D other)

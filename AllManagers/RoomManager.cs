@@ -325,8 +325,7 @@ public class RoomManager : ManagerTemplate<RoomManager>
 
                 //检查重复坐标的房间是否有连接此房间的门，如果没有则生成障碍物防止玩家穿过门
                 if (!HasRequiredDoor(targetRoomType, neededDoorName))
-                {
-                    
+                {                  
                     //获取当前房间的控制器脚本
                     RootRoomController currentRoomController = currentRoomTransform.GetComponent<RootRoomController>();
                     if (currentRoomController == null)

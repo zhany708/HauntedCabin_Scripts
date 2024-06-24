@@ -24,7 +24,6 @@ public class TeleportController : MonoBehaviour
         {
             //获取玩家组件
             Player player = other.GetComponentInParent<Player>();
-
             if (player == null)
             {
                 Debug.LogError("Player component not found in the parent gameObject.");

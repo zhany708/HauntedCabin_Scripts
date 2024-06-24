@@ -56,6 +56,7 @@ public class PlayerHealthBar : HealthBar      //用于玩家的血条控制
         else
         {
             Debug.LogError("UIKeys not set or PlayerStatusBarKey is empty.");
+            return;
         }
         
 

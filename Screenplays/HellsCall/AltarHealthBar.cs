@@ -52,12 +52,14 @@ public class AltarHealthBar : HealthBar      //用于祷告石的血条控制
             else
             {
                 Debug.LogError("AltarHealthBar is already openend.");
+                return;
             }
         }
 
         else
         {
             Debug.LogError("UIKeys not set or the key for AltarHealthBar is empty.");
+            return;
         }
         
 
