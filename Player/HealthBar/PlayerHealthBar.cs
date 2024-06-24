@@ -1,7 +1,4 @@
-using System.Collections;
-using System.Threading.Tasks;
 using UnityEngine;
-using UnityEngine.UI;
 
 
 
@@ -51,7 +48,8 @@ public class PlayerHealthBar : HealthBar      //用于玩家的血条控制
                     PlayerStatusBar.Instance.SetImagesToHealthBar();      //重新赋值图片
                 }
 
-                //PlayerStatusBar.Instance.UpdateStatusUI();
+                //这里重新加载时需要用协程，否则会出现重新加载后无法正常显示数值的情况
+                StartCoroutine(PlayerStatusBar.Instance.DelayedUpdateStatusUI() );
             }
         }
 

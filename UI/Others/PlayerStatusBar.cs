@@ -1,7 +1,7 @@
 using Lean.Localization;
+using System.Collections;
 using TMPro;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 
@@ -204,6 +204,13 @@ public class PlayerStatusBar : BasePanel
         KnowledgeText.text = string.Format(knowledgeFormat, KnowledgeValue);
 
         Debug.Log("The four texts are: " + "\n" + StrengthText.text + "\n" + SpeedText.text + "\n" + SanityText.text + "\n" + KnowledgeText.text);
+    }
+
+    //用于防止因为换场景等原因导致重新加载后无法正常显示数值的情况
+    public IEnumerator DelayedUpdateStatusUI()
+    {
+        yield return new WaitForEndOfFrame();       //等待一帧的结束，以便所有其余的所需内容都已初始化完成
+        UpdateStatusUI();
     }
 
 
