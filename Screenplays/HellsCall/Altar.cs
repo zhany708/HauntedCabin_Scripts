@@ -29,7 +29,7 @@ public class Altar : MonoBehaviour      //放在仪式台上的脚本
 
     [SerializeField] float m_RitualDuration = 9f;        //仪式时间
     [SerializeField] float m_EnemySpawnInterval = 3f;    //敌人生成的冷却
-    float m_RestoreHealthAmout = 0f;                     //玩家完成仪式后恢复的生命值
+    [SerializeField] float m_RestoreHealthAmout = 0f;    //玩家完成仪式后恢复的生命值
 
     //bool m_IsHit = false;
     bool m_IsGameLost = false;          //表示是否游戏失败（祷告石被摧毁）

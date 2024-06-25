@@ -64,13 +64,6 @@ public class PlayerStatusBar : BasePanel
     #region Unity内部函数
     protected override void Awake()
     {
-        //设置当前界面的名字
-        if (panelName == null)
-        {
-            panelName = "PlayerStatusBar";
-        }
-
-
         //单例模式
         if (Instance != null && Instance != this)
         {
@@ -96,8 +89,17 @@ public class PlayerStatusBar : BasePanel
     {
         UpdateStatusUI();       //进入游戏前更新显示的数值
 
+        //设置当前界面的名字
+        if (panelName == null)
+        {
+            panelName = UIManager.Instance.UIKeys.PlayerStatusBarKey;
+        }
+
+
         if (!UIManager.Instance.PanelDict.ContainsKey(panelName) && Instance == this)
         {
+            //Debug.Log(panelName + " added into the PanelDict!");
+
             //将界面加进字典，表示界面已经打开
             UIManager.Instance.PanelDict.Add(panelName, this);
         }
@@ -108,12 +110,16 @@ public class PlayerStatusBar : BasePanel
 
     protected override void OnDisable() 
     {
-        //只有当前界面是唯一时且被删除后，才运行以下逻辑
-        if (UIManager.Instance.PanelDict.ContainsKey(panelName) && Instance == this)
+        //先检查界面名字是否为空（为空的话则代表当前界面是重复的，因为是在Start函数中赋值名字）
+        if (panelName != null)
         {
-            //从字典中移除，表示界面没打开
-            UIManager.Instance.PanelDict.Remove(panelName);
-        }
+            //只有当前界面是唯一时且被删除后，才运行以下逻辑
+            if (UIManager.Instance.PanelDict.ContainsKey(panelName) && Instance == this)
+            {
+                //从字典中移除，表示界面没打开
+                UIManager.Instance.PanelDict.Remove(panelName);
+            }
+        }       
     }
     #endregion
 
@@ -258,6 +264,17 @@ public class PlayerStatusBar : BasePanel
             SpeedValue = Player.PlayerData.Speed;
             SanityValue = Player.PlayerData.Sanity;
             KnowledgeValue = Player.PlayerData.Knowledge;
+
+
+            //重置玩家的血量
+            Stats playerStats = Player.GetComponentInChildren<Stats>();      //获取玩家血条的脚本组件
+            if (playerStats == null)
+            {
+                Debug.LogError("PlayerStats component not found under Player object.");
+                return;
+            }
+
+            playerStats.SetCurrentHealth(playerStats.MaxHealth);             //重置玩家的血量（以及血条占比）
         }
     }
 }

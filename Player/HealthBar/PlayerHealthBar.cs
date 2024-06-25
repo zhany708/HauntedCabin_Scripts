@@ -42,17 +42,15 @@ public class PlayerHealthBar : HealthBar      //用于玩家的血条控制
             //检查界面是否已经打开,打开的话则进行以下逻辑
             if (UIManager.Instance.PanelDict.ContainsKey(UIManager.Instance.UIKeys.PlayerStatusBarKey) )
             {
-                //检查图片组件是否为空（也就是说重新加载了场景）
-                if (hpImage == null || hpEffectImage == null)
-                {
-                    PlayerStatusBar.Instance.SetImagesToHealthBar();      //重新赋值图片
-                }
+                //Debug.Log("PlayerStatusBarKey again set the images to the " + name);
+
+                PlayerStatusBar.Instance.SetImagesToHealthBar();      //重新赋值图片
 
                 //这里重新加载时需要用协程，否则会出现重新加载后无法正常显示数值的情况
                 StartCoroutine(PlayerStatusBar.Instance.DelayedUpdateStatusUI() );
             }
         }
-
+        //如果查找不到界面对应的Key
         else
         {
             Debug.LogError("UIKeys not set or PlayerStatusBarKey is empty.");

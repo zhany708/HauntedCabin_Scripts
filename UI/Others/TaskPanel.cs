@@ -12,10 +12,10 @@ public class TaskPanel : BasePanel
     
 
     TextMeshProUGUI m_TaskText;
-    EnvironmentManager m_EnvironmentManager;       //此函数需要环境管理器中的回调函数，因此需要获取引用，而不能直接调用
 
-    int m_FinishedTaskCount => EnvironmentManager.Instance.KilledEnemyCount;    //当前完成的任务数量
-    int m_RequiredTaskCount => EnvironmentManager.Instance.RequiredEnemyCount;  //需要完成的任务数量
+
+    int m_FinishedTaskCount => HellsCall.Instance.GetFinishedRitualCount();    //当前完成的任务数量
+    int m_RequiredTaskCount => HellsCall.Instance.GetNeededStoneNum();         //需要完成的任务数量
 
 
 
@@ -26,17 +26,16 @@ public class TaskPanel : BasePanel
         base.Awake();
 
         m_TaskText = GetComponentInChildren<TextMeshProUGUI>();     //从子物体那获取文本组件
-        m_EnvironmentManager = FindAnyObjectByType<EnvironmentManager>();     //寻找环境管理器组件
 
-        if (m_TaskText == null || m_EnvironmentManager == null)
+        if (m_TaskText == null)
         {
-            Debug.LogError("Some components are not assigned in the TaskPanel.");
+            Debug.LogError("TaskText component is not assigned in the " + name);
             return;
         }
-
+        
         if (TaskPhraseKey == "")
         {
-            Debug.LogError("Lean Localization phrase key is not assigned or written in the TaskPanel.");
+            Debug.LogError("Lean Localization phrase key is not assigned or written in the " + name);
             return;
         }
     }
@@ -49,13 +48,13 @@ public class TaskPanel : BasePanel
 
     private void OnEnable()
     {
-        m_EnvironmentManager.OnEnemyKilled += UpdateTaskText;
+        HellsCall.Instance.OnRitualFinished += UpdateTaskText;
     }
 
     protected override void OnDisable()
     {
         base.OnDisable();
-        m_EnvironmentManager.OnEnemyKilled -= UpdateTaskText;
+        HellsCall.Instance.OnRitualFinished -= UpdateTaskText;
     }
 
 

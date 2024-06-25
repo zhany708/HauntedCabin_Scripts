@@ -58,7 +58,7 @@ public class RootRoomController : MonoBehaviour
         //Debug.Log(transform.position);
 
         //房间激活时将房间精灵图变得透明
-        ChangeRoomTransparency(HiddenTransparency);
+        //ChangeRoomTransparency(HiddenTransparency);
     }
 
     private void OnDisable()

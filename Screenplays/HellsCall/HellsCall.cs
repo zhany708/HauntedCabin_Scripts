@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -5,6 +6,9 @@ using UnityEngine;
 
 public class HellsCall : BaseScreenplay<HellsCall>
 {
+    public event Action OnRitualFinished;       //接收方为TaskPanel
+
+
     public GameObject RitualStone;      //祷告石物体
 
     
@@ -137,6 +141,8 @@ public class HellsCall : BaseScreenplay<HellsCall>
     {
         m_FinishedRitualCount++;
 
+        OnRitualFinished?.Invoke();        //调用回调函数
+
         if (m_FinishedRitualCount >= m_NeededStoneNum)      //当玩家完成所有仪式后
         {
             DestroyCoroutine();     //停止玩家掉血和火焰滤镜的协程
@@ -182,8 +188,8 @@ public class HellsCall : BaseScreenplay<HellsCall>
 
     private void CheckRitualRoomGeneration(Vector2 roomPos)        //检查仪式房是否已经生成
     {
-        //当生成了最后一个房间后，仪式房还没有出现时
-        if (m_MaxAllowedRoomNum - RoomManager.Instance.GeneratedRoomDict.Count <= 0 && RoomManager.Instance.RoomKeys.FirstFloorRoomKeys.Contains(RitualRoomName))
+        //当生成了最后一个房间后，仪式房还没有出现时（因为运行顺序的原因，这里要大于等于1，而不是0。否则会出现生成完所有房间后依然没有仪式房的情况）
+        if (m_MaxAllowedRoomNum - RoomManager.Instance.GeneratedRoomDict.Count <= 1 && RoomManager.Instance.RoomKeys.FirstFloorRoomKeys.Contains(RitualRoomName))
         {
             //删除最后的房间，将仪式房生成在这里
             if (RoomManager.Instance.GeneratedRoomDict.TryGetValue(roomPos, out GameObject deletedRoom))   //尝试从字典中获取对应的房间
@@ -210,7 +216,7 @@ public class HellsCall : BaseScreenplay<HellsCall>
         //只要随机到不可更改的房间坐标，就重新获取随机索引
         while (RoomManager.Instance.ImportantRoomPos.Contains(selectedRoomPos) && attemptCount <= maxAttemptCount)
         {
-            int randomNum = Random.Range(0, m_RoomPos.Count);   //随机房间索引
+            int randomNum = UnityEngine.Random.Range(0, m_RoomPos.Count);   //随机房间索引
             selectedRoomPos = m_RoomPos[randomNum];     //获取随机选择的房间的坐标
 
             attemptCount++;     //增加尝试计数
@@ -257,7 +263,7 @@ public class HellsCall : BaseScreenplay<HellsCall>
             //该while循环用于生成随机房间索引（由于调用这个函数前就已经判断过当前的房间数量，因此无需担心房间不够的情况）
             while (!isDone)     
             {
-                randomNum = Random.Range(0, m_RoomPos.Count);           //随机房间索引
+                randomNum = UnityEngine.Random.Range(0, m_RoomPos.Count);           //随机房间索引
 
                 if (alreadyGeneratedRoomCount.Contains(randomNum) )     //判断是否随机到了之前生成过的房间索引
                 {
@@ -317,6 +323,16 @@ public class HellsCall : BaseScreenplay<HellsCall>
     public bool GetCanStartRitual()
     {
         return m_CanStartRitual;
+    }
+
+    public int GetNeededStoneNum()
+    {
+        return m_NeededStoneNum;
+    }
+
+    public int GetFinishedRitualCount()
+    {
+        return m_FinishedRitualCount;
     }
     #endregion
 }

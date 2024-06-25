@@ -50,8 +50,6 @@ public class HealthBar : MonoBehaviour
     }
 
 
-
-
     #region 管理血条相关
     public void SetCurrentHealth(float health)
     {
@@ -60,7 +58,7 @@ public class HealthBar : MonoBehaviour
     }
 
 
-    private void UpdateHealthBar()
+    protected void UpdateHealthBar()
     {
         //使用组件前检查是否为空
         if (hpImage == null || hpEffectImage == null)
@@ -87,18 +85,20 @@ public class HealthBar : MonoBehaviour
         float effectLength = hpEffectImage.fillAmount - hpImage.fillAmount;     //缓冲的血量（缓冲血条的比例减去血条比例）
         float elapsedTime = 0f;     //用于确保缓冲时间在0.5秒内
 
+
         //此while循环用于将缓冲血条比例在缓冲时间内从一个值降到另一个值
         while (elapsedTime < m_BuffTime && effectLength != 0f)
         {
             //持续增加变量值，直到抵达预定的缓冲时间为止
             elapsedTime += Time.deltaTime;
-            //返回值根据第三个参数决定， 0则返回参数一，1则返回参数二，0.5则返回中点
-            hpEffectImage.fillAmount = Mathf.Lerp(hpImage.fillAmount + effectLength, hpImage.fillAmount, elapsedTime/m_BuffTime);
 
+            //血条从高往低降：返回值根据第三个参数决定， 0则返回参数一，1则返回参数二，0.5则返回中点
+            hpEffectImage.fillAmount = Mathf.Lerp(hpImage.fillAmount + effectLength, hpImage.fillAmount, elapsedTime / m_BuffTime);             
+                
             yield return null;      //等待一帧的时间
         }
 
-        hpEffectImage.fillAmount = hpImage.fillAmount;      //防止缓冲血条超过红色血条
+        hpEffectImage.fillAmount = hpImage.fillAmount;      //防止缓冲血条超过红色血条        
     }
     #endregion
 

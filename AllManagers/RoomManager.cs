@@ -396,7 +396,6 @@ public class RoomManager : ManagerTemplate<RoomManager>
             if (currentRoomController == null)
             {
                 Debug.LogError("Cannot get the RootRoomController component in the " + currentRoomTransform.name);
-                return true;
             }
 
 
