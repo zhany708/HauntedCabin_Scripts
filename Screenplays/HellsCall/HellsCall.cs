@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -163,18 +164,7 @@ public class HellsCall : BaseScreenplay<HellsCall>
         {
             Vector2 selectedRoomPos = GenerateSuitableRandomRoomPos();     //随机选择的房间的坐标
 
-            //尝试从字典中获取对应的房间
-            if (RoomManager.Instance.GeneratedRoomDict.TryGetValue(selectedRoomPos, out GameObject deletedRoom))   
-            {
-                Destroy(deletedRoom);       //删除随机坐标对应的房间
-
-                RoomManager.Instance.GenerateRoomAtThisPos(selectedRoomPos, RitualRoomName);    //将仪式房生成在这里
-            }
-
-            else
-            {
-                Debug.LogError("A room has generated here, but cannot get the corresponding gameobject: " + selectedRoomPos);
-            }
+            StartCoroutine(DelayedRegenerateRoom(selectedRoomPos) );           //删除参数中坐标处的房间，随后在该坐标生成仪式房
         }
 
         else
@@ -191,19 +181,26 @@ public class HellsCall : BaseScreenplay<HellsCall>
         //当生成了最后一个房间后，仪式房还没有出现时（因为运行顺序的原因，这里要大于等于1，而不是0。否则会出现生成完所有房间后依然没有仪式房的情况）
         if (m_MaxAllowedRoomNum - RoomManager.Instance.GeneratedRoomDict.Count <= 1 && RoomManager.Instance.RoomKeys.FirstFloorRoomKeys.Contains(RitualRoomName))
         {
-            //删除最后的房间，将仪式房生成在这里
-            if (RoomManager.Instance.GeneratedRoomDict.TryGetValue(roomPos, out GameObject deletedRoom))   //尝试从字典中获取对应的房间
-            {
-                Destroy(deletedRoom);       //删除最后的房间
-
-                RoomManager.Instance.GenerateRoomAtThisPos(roomPos, RitualRoomName);    //将仪式房生成在这里
-            }
-
-            else
-            {
-                Debug.LogError("A room has generated here, but cannot get the corresponding gameobject: " + roomPos);
-            }
+            StartCoroutine(DelayedRegenerateRoom(roomPos) );           //删除参数中坐标处的房间，随后在该坐标生成仪式房
         }
+    }
+
+    private IEnumerator DelayedRegenerateRoom(Vector2 roomPos)         //用于等待一帧后删除已有的房间，随后生成仪式房
+    {
+        yield return new WaitForEndOfFrame();       //等待一帧的结束，以便所有其余的所需内容都已初始化完成
+
+        //删除最后的房间，将仪式房生成在这里
+        if (RoomManager.Instance.GeneratedRoomDict.TryGetValue(roomPos, out GameObject deletedRoom))   //尝试从字典中获取对应的房间
+        {
+            Destroy(deletedRoom);       //删除最后的房间
+
+            RoomManager.Instance.GenerateRoomAtThisPos(roomPos, RitualRoomName);    //将仪式房生成在这里
+        }
+
+        else
+        {
+            Debug.LogError("A room has generated here, but cannot get the corresponding gameObject: " + roomPos);
+        }        
     }
 
 

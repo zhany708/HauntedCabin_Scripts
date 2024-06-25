@@ -61,7 +61,7 @@ public class RootRoomController : MonoBehaviour
         //ChangeRoomTransparency(HiddenTransparency);
     }
 
-    private void OnDisable()
+    protected virtual void OnDisable()
     {
         //每当房间取消激活时，从字典中移除当前房间的坐标
         if (RoomManager.Instance.GeneratedRoomDict.ContainsKey(transform.position))

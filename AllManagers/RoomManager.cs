@@ -340,6 +340,12 @@ public class RoomManager : ManagerTemplate<RoomManager>
                     currentRoomController.DoorControllerInsideThisRoom.CloseNecessaryDoors();
                 }
             }
+
+            else
+            {
+                Debug.LogError("A room has generated here, but cannot get the corresponding gameObject: " + checkPos);
+                return;
+            }
         }
     }
 

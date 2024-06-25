@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 
 
@@ -37,11 +38,20 @@ public class EntranceHall : RootRoomController      //入口大堂脚本
     }
 
 
+    protected override void OnDisable()
+    {
+        //每当房间不因为重复而取消激活时，从字典中移除当前房间的坐标
+        if (RoomManager.Instance.GeneratedRoomDict.ContainsKey(transform.position) && Instance == this)
+        {
+            RoomManager.Instance.GeneratedRoomDict.Remove(transform.position);
+        }
+    }
+
 
     protected override void OnTriggerEnter2D(Collider2D other)
     {
         base.OnTriggerEnter2D(other);
-
+        
         if (other.CompareTag("Player") && MainDoorController.Instance.DoOpenMainDoor)     //当大门允许打开时，在玩家进入入口大堂后再打开大门
         {
             MainDoorController.Instance.OpenMainDoor();
