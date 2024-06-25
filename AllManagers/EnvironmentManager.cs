@@ -94,7 +94,7 @@ public class EnvironmentManager : ManagerTemplate<EnvironmentManager>
         Vector2 checkSize = new Vector2(doorController.PhysicsCheckingXPos, doorController.PhysicsCheckingYPos);      //物理检测的大小
 
         float adaptiveTolerance = doorController.EnemySpwanPos.GetOverlapTolerance();        //获取检查重复的距离
-        int attemptCount = 0;       //用于防止进入无限循环的变量
+        int attemptCount = 0;           //用于防止进入无限循环的变量
 
 
         while (attemptCount < 100)      //确保不超过最大尝试次数
@@ -109,11 +109,11 @@ public class EnvironmentManager : ManagerTemplate<EnvironmentManager>
 
                     doorController.EnemySpwanPos.SetOverlapTolerance(adaptiveTolerance);     //设置新的检查重复的距离
 
-                    isOverlap = true;  //设置布尔以继续检查
+                    isOverlap = true;   //设置布尔以继续检查
                 }
             }
 
-            if (!isOverlap) break;  //当没有重复时则退出循环
+            if (!isOverlap) break;      //当没有重复时则退出循环
 
             attemptCount++;
             adaptiveTolerance -= 0.1f;  //如果实在难以生成不会重复的坐标的话，减少检查重复的距离
@@ -158,18 +158,27 @@ public class EnvironmentManager : ManagerTemplate<EnvironmentManager>
     private void InitializeEnemy(GameObject enemyObject, DoorController doorController)
     {
         Enemy enemyScript = enemyObject.GetComponentInChildren<Enemy>();
-
-        if (enemyScript != null)
+        if (enemyScript == null)
         {
-            //重置敌人脚本绑定的物体的本地（相对于父物体）坐标。因为敌人从对象池重新生成后，本地坐标会继承死亡前的本地坐标
-            enemyScript.ResetLocalPos();
-
-            //设置门控制器的脚本
-            enemyScript.SetDoorController(doorController);
+            Debug.LogError("Cannot get the Enemy reference in the " + enemyObject.name);
+            return;
         }
 
+        //重置敌人脚本绑定的物体的本地（相对于父物体）坐标。因为敌人从对象池重新生成后，本地坐标会继承死亡前的本地坐标
+        enemyScript.ResetLocalPos();
+
+        //设置门控制器的脚本
+        enemyScript.SetDoorController(doorController);
+
         //生成敌人后重置生命，否则重新激活的敌人生命依然为0
-        enemyObject.GetComponentInChildren<Stats>().SetCurrentHealth(enemyObject.GetComponentInChildren<Stats>().MaxHealth);
+        Stats enemyStats = enemyObject.GetComponentInChildren<Stats>();
+        if (enemyStats == null)
+        {
+            Debug.LogError("Cannot get the Stats reference in the " + enemyObject.name);
+            return;
+        }
+
+        enemyStats.SetCurrentHealth(enemyStats.MaxHealth);
     }
 
     #endregion

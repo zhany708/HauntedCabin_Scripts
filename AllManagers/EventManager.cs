@@ -33,7 +33,7 @@ public class EventManager : ManagerTemplate<EventManager>
 
         if (EnterSecondStageCount <= 0)
         {
-            Debug.LogError("The event counts for entering second stage cannot less or equal to 0.");
+            Debug.LogError("The event counts for entering second stage cannot be less or equal to 0.");
             return;
         }
     }
@@ -48,7 +48,7 @@ public class EventManager : ManagerTemplate<EventManager>
 
         else
         {
-            Debug.LogError("UIKeys not set or TransitionStagePanelKey is empty.");
+            Debug.LogError("UIKeys not set or the key for HellsCallBackground is empty.");
             return;
         }
     }
