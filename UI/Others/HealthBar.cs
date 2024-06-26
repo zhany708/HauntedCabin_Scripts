@@ -9,7 +9,7 @@ using UnityEngine.UI;
 public class HealthBar : MonoBehaviour
 {
     protected Image hpImage { get; private set; }                   //最上层的血条图片（红色的）
-    protected Image hpEffectImage { get; private set; }             //扣血缓冲图片（白色的）
+    protected Image decreaseHpEffectImage { get; private set; }             //扣血缓冲图片（白色的）
     protected Image increaseHpEffectImage { get; private set; }     //回血的缓冲图片（绿色的）
 
     Coroutine m_IncreaseCoroutine;    //防止上一轮协程还没结束就开始新的协程（回血缓冲效果）
@@ -63,9 +63,9 @@ public class HealthBar : MonoBehaviour
     protected void UpdateHealthBar()
     {
         //使用组件前检查是否为空
-        if (hpImage == null || increaseHpEffectImage == null || hpEffectImage == null)
+        if (hpImage == null || increaseHpEffectImage == null || decreaseHpEffectImage == null)
         {
-            Debug.LogError("Health bar images are not set.");
+            Debug.LogError("Some health bar images are not set.");
             return;
         }
 
@@ -115,13 +115,13 @@ public class HealthBar : MonoBehaviour
             yield return null;      //等待一帧的时间
         }
 
-        increaseHpEffectImage.fillAmount = hpImage.fillAmount;      //防止回血缓冲跟红色血条占比不一致       
+        increaseHpEffectImage.fillAmount = futureHpImageFillAmount;      //防止回血缓冲跟红色血条占比不一致       
     }
 
     //用于扣血缓冲血条的动画（此时血条占比已经变化过了）
     private IEnumerator DecreaseHpEffect()
     {
-        float effectLength = hpEffectImage.fillAmount - hpImage.fillAmount;     //缓冲的血量（扣血缓冲血条的比例减去血条比例）
+        float effectLength = decreaseHpEffectImage.fillAmount - hpImage.fillAmount;     //缓冲的血量（扣血缓冲血条的比例减去血条比例）
         float elapsedTime = 0f;
 
 
@@ -129,12 +129,12 @@ public class HealthBar : MonoBehaviour
         {
             elapsedTime += Time.deltaTime;
 
-            hpEffectImage.fillAmount = Mathf.Lerp(hpImage.fillAmount + effectLength, hpImage.fillAmount, elapsedTime / m_BuffTime);             
+            decreaseHpEffectImage.fillAmount = Mathf.Lerp(hpImage.fillAmount + effectLength, hpImage.fillAmount, elapsedTime / m_BuffTime);             
                 
             yield return null;
         }
 
-        hpEffectImage.fillAmount = hpImage.fillAmount;              //防止扣血缓冲血条跟红色血条占比不一致        
+        decreaseHpEffectImage.fillAmount = hpImage.fillAmount;              //防止扣血缓冲血条跟红色血条占比不一致        
     }
     #endregion
 
@@ -150,14 +150,14 @@ public class HealthBar : MonoBehaviour
         hpImage = thisImage;
     }
 
-    public void SetIncreaseHpImage(Image thisImage)
+    public void SetIncreaseHpEffectImage(Image thisImage)
     {
         increaseHpEffectImage = thisImage;
     }
 
-    public void SetHpEffectImage(Image thisImage)
+    public void SetDecreaseHpEffectImage(Image thisImage)
     {
-        hpEffectImage = thisImage;
+        decreaseHpEffectImage = thisImage;
     }
     #endregion
 }

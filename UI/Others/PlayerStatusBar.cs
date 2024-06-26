@@ -12,7 +12,8 @@ public class PlayerStatusBar : BasePanel
 
     //传递给HealthBar脚本的照片
     public Image HpImage;
-    public Image HpEffectImage;    
+    public Image IncreaseHpEffectImage;
+    public Image DecreaseHpEffectImage;    
 
     //四个属性相关的UI
     public TextMeshProUGUI StrengthText;
@@ -150,9 +151,10 @@ public class PlayerStatusBar : BasePanel
             return;
         }
 
-        //传递生命值图片
+        //传递血条和缓冲图片
         m_PlayerHealthBar.SetHpImage(HpImage);
-        m_PlayerHealthBar.SetHpEffectImage(HpEffectImage);
+        m_PlayerHealthBar.SetIncreaseHpEffectImage(IncreaseHpEffectImage);
+        m_PlayerHealthBar.SetDecreaseHpEffectImage(DecreaseHpEffectImage);
     }
 
     private void CheckComponents()
