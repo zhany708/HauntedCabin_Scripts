@@ -7,7 +7,7 @@ using UnityEngine;
  * Creator：Zhang Yu
 */
 
-public class AltarHealthBarUI : BasePanel
+public class AltarHealthBarPanel : BasePanel
 {
     public Vector3 offset;                          // Offset for the health bar position relative to the player
 
