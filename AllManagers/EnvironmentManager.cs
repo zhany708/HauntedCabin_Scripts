@@ -22,17 +22,6 @@ public class EnvironmentManager : ManagerTemplate<EnvironmentManager>
 
 
 
-
-
-    protected override void Awake()
-    {
-        base.Awake();
-    }
-
-
-
-
-
     //生成物体，同时将参数中的Transform设置为物体的父物体     需要做的：用对象池生成物体
     public void GenerateObjectWithParent(GameObject generatedObject, Transform parentTransform, Vector2 generatedPos)
     {
