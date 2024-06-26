@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -9,15 +8,16 @@ using UnityEngine.UI;
 public class HealthBar : MonoBehaviour
 {
     protected Image hpImage { get; private set; }                   //最上层的血条图片（红色的）
-    protected Image decreaseHpEffectImage { get; private set; }             //扣血缓冲图片（白色的）
+    protected Image decreaseHpEffectImage { get; private set; }     //扣血缓冲图片（白色的）
     protected Image increaseHpEffectImage { get; private set; }     //回血的缓冲图片（绿色的）
 
-    Coroutine m_IncreaseCoroutine;    //防止上一轮协程还没结束就开始新的协程（回血缓冲效果）
-    Coroutine m_DecreaseCoroutine;    //用于扣血缓冲效果的协程
 
-    float m_MaxHp = 0f;               //最大血量默认0（需要在不同的子类中设置）
+
+    Coroutine m_UpdateHealthCoroutine;      //用于血条整体变化的协程
+
+    float m_MaxHp = 0f;                     //最大血量默认0（需要在不同的子类中设置）
     float m_CurrentHp = 0f;
-    float m_BuffTime = 0.5f;          //缓冲时间
+    float m_BuffTime = 0.5f;                //缓冲时间
 
     
 
@@ -70,27 +70,26 @@ public class HealthBar : MonoBehaviour
         }
 
 
-        //永远先进行回血缓冲，随后更改血条，最后进行扣血缓冲
-        if (m_IncreaseCoroutine != null)      
+
+        if (m_UpdateHealthCoroutine != null)
         {
-            StopCoroutine(m_IncreaseCoroutine);     //如果协程正在进行，则停止它然后开始新的协程（保证只有一个协程存在）
+            StopCoroutine(m_UpdateHealthCoroutine);
         }
 
-        //调整红色血条的比例
-        m_IncreaseCoroutine = StartCoroutine(IncreaseHpEffect());
-
-
-        //调整白色扣血缓冲的比例
-        hpImage.fillAmount = m_CurrentHp / m_MaxHp;
-
-        if (m_DecreaseCoroutine != null)      
-        {
-            StopCoroutine(m_DecreaseCoroutine);     //如果协程正在进行，则停止它然后开始新的协程（保证只有一个协程存在）
-        }
-
-        m_DecreaseCoroutine = StartCoroutine(DecreaseHpEffect());
+        m_UpdateHealthCoroutine = StartCoroutine(UpdateHealthBarSequence() ); 
     }
 
+    private IEnumerator UpdateHealthBarSequence()       //用于血条整体变化的函数
+    {
+        //永远先进行回血缓冲，随后更改血条，最后进行扣血缓冲（三者不可同时执行）
+        yield return StartCoroutine(IncreaseHpEffect());
+
+        //调整红色血条的比例
+        hpImage.fillAmount = m_CurrentHp / m_MaxHp;
+
+        //等上述内容都运行完后，才执行扣血缓冲
+        yield return StartCoroutine(DecreaseHpEffect());
+    }
 
 
     //用于回血缓冲的动画（此时血条占比还没有变）
