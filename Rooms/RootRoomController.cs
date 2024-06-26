@@ -155,4 +155,12 @@ public class RootRoomController : MonoBehaviour
         m_HasGeneratedRoom = isTrue;
     }
     #endregion
+
+
+    #region Getters
+    public bool GetHasGenerateRoom()
+    {
+        return m_HasGeneratedRoom;
+    }
+    #endregion
 }

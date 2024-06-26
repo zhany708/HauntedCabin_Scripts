@@ -40,25 +40,25 @@ public class AltarHealthBar : HealthBar      //用于祷告石的血条控制
     private async void InitializeAltarHealthBarAsync()   
     {       
         //检查UIKeys是否为空且要加载的名字是否存在，随后等待UI加载完毕
-        if (UIManager.Instance.UIKeys != null && !string.IsNullOrEmpty(UIManager.Instance.UIKeys.AltarHealthBar))
+        if (UIManager.Instance.UIKeys != null && !string.IsNullOrEmpty(UIManager.Instance.UIKeys.AltarHealthBarPanel))
         {
             //检查界面是否已经打开,没有的话则打开界面
-            if (!UIManager.Instance.PanelDict.ContainsKey(UIManager.Instance.UIKeys.AltarHealthBar) )
+            if (!UIManager.Instance.PanelDict.ContainsKey(UIManager.Instance.UIKeys.AltarHealthBarPanel) )
             {
-                await UIManager.Instance.OpenPanel(UIManager.Instance.UIKeys.AltarHealthBar);    //打开祷告石血条
+                await UIManager.Instance.OpenPanel(UIManager.Instance.UIKeys.AltarHealthBarPanel);    //打开祷告石血条
             }
 
             //如果已经打开的话,则报错
             else
             {
-                Debug.LogError("AltarHealthBar is already openend.");
+                Debug.LogError("AltarHealthBarPanel is already openend.");
                 return;
             }
         }
 
         else
         {
-            Debug.LogError("UIKeys not set or the key for AltarHealthBar is empty.");
+            Debug.LogError("UIKeys not set or the key for AltarHealthBarPanel is empty.");
             return;
         }
         
