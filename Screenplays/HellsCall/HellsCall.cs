@@ -169,7 +169,7 @@ public class HellsCall : BaseScreenplay<HellsCall>
                 //移除祷告石所在的房间
                 foreach (var stonePos in m_AllStonePos)
                 {
-                    if (m_AllRoomPos,Contains(stonePos) )
+                    if (m_AllRoomPos.Contains(stonePos) )
                     {
                         m_AllRoomPos.Remove(stonePos);
                     }   
@@ -186,7 +186,7 @@ public class HellsCall : BaseScreenplay<HellsCall>
 
     private bool CheckIfAllRoomHasGenerated()           //检查字典中是否所有房间都已经生成过了
     {
-        foreach (var room in RoomManager.Instance.GeneratedRoomDict.Keys)
+        foreach (var room in RoomManager.Instance.GeneratedRoomDict.Values)
         {
             //获取房间的控制器脚本
             RootRoomController currentRoomController = room.GetComponent<RootRoomController>();
