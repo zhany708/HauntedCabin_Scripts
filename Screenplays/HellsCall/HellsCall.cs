@@ -37,7 +37,7 @@ public class HellsCall : BaseScreenplay<HellsCall>
     Coroutine m_FireEffectCoroutine;        //火焰滤镜的协程
 
     List<Vector2> m_AllRoomPos = new List<Vector2>();     //用于储存所有房间字典里的坐标
-    List<Vector2> m_AllStonePos = new List<Vector2>();    //用于储存所有祷告石的坐标
+    List<Vector2> m_AllStonePos = new List<Vector2>();    //用于储存所有仍然存在的祷告石的坐标（如果玩家拿走了则从列表中移除）
 
 
     bool m_NeedGenerateStone = false;   //判断是否需要生成祷告石
@@ -68,7 +68,8 @@ public class HellsCall : BaseScreenplay<HellsCall>
         }
 
         RoomManager.Instance.OnRoomGenerated -= GenerateStoneAtSingleRoom;
-        RoomManager.Instance.OnRoomGenerated -= CheckRitualRoomGeneration;
+        RoomManager.Instance.OnRoomGenerated -= CheckRitualRoomAfterGeneratingRoom;
+        RootRoomController.OnPlayerFirstTimeEnterRoom -= CheckRitualRoomAfterPlayerEnteringRoom;
     }
 
     private void OnDestroy()
@@ -142,13 +143,14 @@ public class HellsCall : BaseScreenplay<HellsCall>
         else
         {
             //将检查仪式房的函数绑定到房间管理器中的事件
-            RoomManager.Instance.OnRoomGenerated += CheckRitualRoomGeneration;      //新生成房间时，检查是否需要生成仪式房
+            RoomManager.Instance.OnRoomGenerated += CheckRitualRoomAfterGeneratingRoom;        //新生成房间时，检查是否需要生成仪式房
+            RootRoomController.OnPlayerFirstTimeEnterRoom += CheckRitualRoomAfterPlayerEnteringRoom;    //玩家进入房间后，检查是否需要生成仪式房
 
             RoomManager.Instance.RoomKeys.FirstFloorRoomKeys.Add(RitualRoomName);       //将仪式房的名字加进列表，以便后续可以生成
         }
     }
 
-    private void CheckRitualRoomGeneration(Vector2 roomPos)        //检查仪式房是否已经生成
+    private void CheckRitualRoomAfterGeneratingRoom(Vector2 roomPos)        //每当一个房间新生成后，检查仪式房是否已经生成
     {
         //先检查仪式房是否已经生成
         if (RoomManager.Instance.RoomKeys.FirstFloorRoomKeys.Contains(RitualRoomName) )
@@ -158,33 +160,42 @@ public class HellsCall : BaseScreenplay<HellsCall>
             {
                 StartCoroutine(DelayedRegenerateRoom(roomPos) );           //删除参数中坐标处的房间，随后在该坐标生成仪式房
             }
+        }     
+    }
 
-            //当字典中所有房间都生成过房间后
-            else if (CheckIfAllRoomHasGenerated() )
+    private void CheckRitualRoomAfterPlayerEnteringRoom(Vector2 roomPos)    //每当玩家进入房间后，检查仪式房是否已经生成
+    {
+        //先检查仪式房是否已经生成
+        if (RoomManager.Instance.RoomKeys.FirstFloorRoomKeys.Contains(RitualRoomName))
+        {
+            //当字典中所有房间玩家都已经进过时
+            if (CheckIfPlayerEnterAllRoom())
             {
                 AddAllRoomPosIntoList();    //先将当前所有房间的坐标储存进列表
 
                 //移除玩家当前所在的房间的坐标（防止玩家立刻进入仪式房）
                 m_AllRoomPos.Remove(roomPos);
+
+                //需要做的：检查玩家是否已经拾取了一个祷告石，如果拾取过了则无需删除
                 //移除祷告石所在的房间
                 foreach (var stonePos in m_AllStonePos)
                 {
-                    if (m_AllRoomPos.Contains(stonePos) )
+                    if (m_AllRoomPos.Contains(stonePos))
                     {
                         m_AllRoomPos.Remove(stonePos);
-                    }   
+                    }
                 }
 
 
 
                 Vector2 randomRoomPos = GenerateSuitableRandomRoomPos();     //随机选择的房间的坐标
 
-                StartCoroutine(DelayedRegenerateRoom(randomRoomPos) );           //删除参数中坐标处的房间，随后在该坐标生成仪式房
+                StartCoroutine(DelayedRegenerateRoom(randomRoomPos));           //删除参数中坐标处的房间，随后在该坐标生成仪式房
             }
-        }     
+        }            
     }
 
-    private bool CheckIfAllRoomHasGenerated()           //检查字典中是否所有房间都已经生成过了
+    private bool CheckIfPlayerEnterAllRoom()           //检查玩家是否进入过所有房间了
     {
         foreach (var room in RoomManager.Instance.GeneratedRoomDict.Values)
         {
@@ -195,13 +206,13 @@ public class HellsCall : BaseScreenplay<HellsCall>
                 Debug.LogError("Cannot get the RootRoomController component in the " + room.name);
             }      
 
-            if (!currentRoomController.GetHasGenerateRoom() )       //只要有一个房间还没生成过，就返回false
+            if (currentRoomController.GetFirstTimeEnterRoom() )       //只要有一个房间还没进过，就返回false
             {
                 return false;
             }
         }
 
-        //当所有房间都检查过且没有返回时（也就是说所有房间都已经生成过了），返回true
+        //当所有房间都检查过且没有返回时（也就是说所有房间都已经进过了），返回true
         return true;
     }
 
@@ -387,6 +398,11 @@ public class HellsCall : BaseScreenplay<HellsCall>
     public int GetFinishedRitualCount()
     {
         return m_FinishedRitualCount;
+    }
+
+    public List<Vector2> GetAllStonePosList()
+    {
+        return m_AllStonePos;
     }
     #endregion
 }

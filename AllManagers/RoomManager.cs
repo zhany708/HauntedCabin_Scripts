@@ -430,7 +430,29 @@ public class RoomManager : ManagerTemplate<RoomManager>
             return false;
         }
     }
-    
+
+    /*
+    public bool CheckIfAllRoomHasGenerated()           //检查字典中是否所有房间都已经生成过了
+    {
+        foreach (var room in GeneratedRoomDict.Values)
+        {
+            //获取房间的控制器脚本
+            RootRoomController currentRoomController = room.GetComponent<RootRoomController>();
+            if (currentRoomController == null)
+            {
+                Debug.LogError("Cannot get the RootRoomController component in the " + room.name);
+            }
+
+            if (!currentRoomController.GetHasGenerateRoom())       //只要有一个房间还没生成过，就返回false
+            {
+                return false;
+            }
+        }
+
+        //当所有房间都检查过且没有返回时（也就是说所有房间都已经生成过了），返回true
+        return true;
+    }
+    */
     #endregion
 
 

@@ -6,6 +6,12 @@ using UnityEngine.SceneManagement;
 
 public class RootRoomController : MonoBehaviour
 {
+    //delegate是用于限制引用事件的函数的参数（这里是必须有Vector2参数）
+    public delegate void RoomGeneratedHandler(Vector2 roomPosition);
+    //当玩家第一次进入一个房间时调用的事件，使用上面的限制。接收方为HellsCall脚本
+    public static event RoomGeneratedHandler OnPlayerFirstTimeEnterRoom;      
+
+
     //玩家离开房间后房间变成的透明度
     public float HiddenTransparency = 0.01f;
 
@@ -26,7 +32,7 @@ public class RootRoomController : MonoBehaviour
     const float m_DefaultTransparency = 1f; 
 
     bool m_HasGeneratedRoom = false;
-
+    bool m_FirstTimeEnterRoom = true;      //表示玩家是否第一次进入该房间
 
 
 
@@ -58,7 +64,7 @@ public class RootRoomController : MonoBehaviour
         //Debug.Log(transform.position);
 
         //房间激活时将房间精灵图变得透明
-        ChangeRoomTransparency(HiddenTransparency);
+        //ChangeRoomTransparency(HiddenTransparency);
     }
 
     protected virtual void OnDisable()
@@ -82,13 +88,22 @@ public class RootRoomController : MonoBehaviour
             ChangeRoomTransparency(m_DefaultTransparency);
 
 
-            //房间周围生成过一次房间后就不会再生成了
+            //检查该房间是否在周围生成过房间，当房间周围生成过一次房间后就不会再生成了
             if (!m_HasGeneratedRoom)
             {
                 RoomManager.Instance.GenerateRoomAtAround(transform, m_RoomType);  //在当前房间周围生成新的房间
             }
 
-            RoomManager.Instance.CheckIfConnectSurroundingRooms(transform);  //每当玩家进入房间时，检查当前房间是否连接周围的房间
+            //检查玩家是否第一次进入房间
+            if (m_FirstTimeEnterRoom)
+            {
+                //顺序很重要，必须先设置布尔再调用事件
+                m_FirstTimeEnterRoom = false;
+
+                OnPlayerFirstTimeEnterRoom?.Invoke(transform.position);              //将当前房间的坐标连接到事件               
+            }
+
+            RoomManager.Instance.CheckIfConnectSurroundingRooms(transform);        //每当玩家进入房间时，检查当前房间是否连接周围的房间          
         }
     }
 
@@ -97,7 +112,7 @@ public class RootRoomController : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             //玩家离开房间后，将房间变得透明
-            ChangeRoomTransparency(HiddenTransparency);
+            //ChangeRoomTransparency(HiddenTransparency);
 
 
             //确保只在场景持续存在且未卸载时，才会使用DoTeen（否则在场景卸载后会报错）
@@ -161,6 +176,11 @@ public class RootRoomController : MonoBehaviour
     public bool GetHasGenerateRoom()
     {
         return m_HasGeneratedRoom;
+    }
+
+    public bool GetFirstTimeEnterRoom()
+    {
+        return m_FirstTimeEnterRoom;
     }
     #endregion
 }
