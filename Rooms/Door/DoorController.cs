@@ -178,7 +178,5 @@ public class DoorController : MonoBehaviour
     {
         KilledEnemyCount++;
         CheckIfOpenDoors();     //增加计数后判断是否满足开门条件
-
-        EnvironmentManager.Instance.IncrementKilledEnemyCount();      //增加记录杀死的敌人数量的整数
     }
 }

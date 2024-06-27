@@ -31,13 +31,15 @@ public class HellsCall : BaseScreenplay<HellsCall>
 
     public DoorController RitualRoomDoorController { get; private set; }    //仪式房的DoorController脚本
 
+    //用于储存所有仍然存在的祷告石的坐标和物体（如果玩家拿走了则从列表中移除）
+    public Dictionary<Vector2, GameObject> AllStonePosDict { get; private set; } = new Dictionary<Vector2, GameObject>();
 
 
     Coroutine m_HealthDrainCoroutine;       //玩家持续掉血的协程
     Coroutine m_FireEffectCoroutine;        //火焰滤镜的协程
 
     List<Vector2> m_AllRoomPos = new List<Vector2>();     //用于储存所有房间字典里的坐标
-    List<Vector2> m_AllStonePos = new List<Vector2>();    //用于储存所有仍然存在的祷告石的坐标（如果玩家拿走了则从列表中移除）
+    
 
 
     bool m_NeedGenerateStone = false;   //判断是否需要生成祷告石
@@ -176,13 +178,12 @@ public class HellsCall : BaseScreenplay<HellsCall>
                 //移除玩家当前所在的房间的坐标（防止玩家立刻进入仪式房）
                 m_AllRoomPos.Remove(roomPos);
 
-                //需要做的：检查玩家是否已经拾取了一个祷告石，如果拾取过了则无需删除
                 //移除祷告石所在的房间
-                foreach (var stonePos in m_AllStonePos)
+                foreach (var stone in AllStonePosDict)
                 {
-                    if (m_AllRoomPos.Contains(stonePos))
+                    if (m_AllRoomPos.Contains(stone.Key))
                     {
-                        m_AllRoomPos.Remove(stonePos);
+                        m_AllRoomPos.Remove(stone.Key);
                     }
                 }
 
@@ -310,7 +311,6 @@ public class HellsCall : BaseScreenplay<HellsCall>
             EnvironmentManager.Instance.GenerateObjectWithParent(RitualStone, RoomManager.Instance.GeneratedRoomDict[selectedRoomPos].transform, selectedRoomPos);
 
             m_GeneratedStoneNum++;                                //增加祷告石计数
-            m_AllStonePos.Add(selectedRoomPos);                   //将祷告石坐标加进列表
         }
     }
 
@@ -323,7 +323,6 @@ public class HellsCall : BaseScreenplay<HellsCall>
             EnvironmentManager.Instance.GenerateObjectWithParent(RitualStone, RoomManager.Instance.GeneratedRoomDict[roomPos].transform, roomPos);
 
             m_GeneratedStoneNum++;                          //增加祷告石计数
-            m_AllStonePos.Add(roomPos);                     //将祷告石坐标加进列表
         }        
 
         if (m_GeneratedStoneNum >= m_NeededStoneNum)        //判断是否已经生成了足够的祷告石
@@ -366,6 +365,19 @@ public class HellsCall : BaseScreenplay<HellsCall>
             MainDoorController.Instance.SetDoOpenMainDoor(true);       //设置布尔，以便玩家再次进入入口大堂后，大宅的大门会开启
         }
     }
+
+
+    public override void ResetGame()
+    {
+        if (AllStonePosDict.Count != 0)
+        {
+            //删除所有仍然存在的祷告石
+            foreach (var stone in AllStonePosDict)
+            {
+                Destroy(stone.Value);
+            }
+        }
+    }
     #endregion
 
 
@@ -398,11 +410,6 @@ public class HellsCall : BaseScreenplay<HellsCall>
     public int GetFinishedRitualCount()
     {
         return m_FinishedRitualCount;
-    }
-
-    public List<Vector2> GetAllStonePosList()
-    {
-        return m_AllStonePos;
     }
     #endregion
 }

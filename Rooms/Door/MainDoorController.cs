@@ -62,7 +62,7 @@ public class MainDoorController : MonoBehaviour        //用于大宅大门
         MainDoorAnimator.SetBool("isClose", false);
     }
 
-    private void CloseMainDoor()     //关闭大门
+    public void CloseMainDoor()     //关闭大门
     {
         MainDoorAnimator.SetBool("isOpen", false);
         MainDoorAnimator.SetBool("isClose", true);

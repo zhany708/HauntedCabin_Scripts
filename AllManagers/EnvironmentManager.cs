@@ -7,16 +7,8 @@ using UnityEngine;
 //用于处理游戏过程中的一些动态变化（比如在某个地方生成某个新东西）
 public class EnvironmentManager : ManagerTemplate<EnvironmentManager>     
 {
-    public event Action OnEnemyKilled;       //接收方为TaskPanel
-
-
-    public int KilledEnemyCount { get; private set; } = 0;     //表示杀死过多少敌人
-    public int RequiredEnemyCount { get; private set; } = 99;   //表示需要杀死多少敌人，游戏才胜利
-    public bool IsGameOver { get; private set; } = false;
-
-
-
     
+
 
 
 
@@ -171,22 +163,4 @@ public class EnvironmentManager : ManagerTemplate<EnvironmentManager>
     }
 
     #endregion
-
-
-    public async void IncrementKilledEnemyCount()
-    {
-        KilledEnemyCount++;
-
-        OnEnemyKilled?.Invoke();        //调用回调函数
-
-        if (KilledEnemyCount >= RequiredEnemyCount)     //检查是否杀死了足够的敌人
-        {
-            //Debug.Log("You win!");
-            IsGameOver = true;
-
-            EnemyPool.Instance.KillAllEnemy();       //在场景中让所有激活的敌人进入死亡状态
-
-            await UIManager.Instance.OpenPanel(UIManager.Instance.UIKeys.GameWinningPanel);
-        }
-    }
 }

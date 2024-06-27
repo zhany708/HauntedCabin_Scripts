@@ -5,6 +5,22 @@ using UnityEngine;
 
 public class RitualStoneSpell : MonoBehaviour       //祷告石护肤
 {
+
+
+
+
+
+    private void Start()
+    {
+        //在这里加进字典，防止字典还没实例化就尝试获取引用导致报错
+        if (!HellsCall.Instance.AllStonePosDict.ContainsKey(transform.position))
+        {
+            HellsCall.Instance.AllStonePosDict.Add(transform.position, gameObject);
+        }
+    }
+
+
+
     private void OnTriggerEnter2D(Collider2D other)
     {
         //只有当玩家身上没有护符时才会触发效果
@@ -33,21 +49,13 @@ public class RitualStoneSpell : MonoBehaviour       //祷告石护肤
         //调整剧本物体中的布尔参数，表示玩家可以进行仪式
         HellsCall.Instance.SetCanStartRitual(true);
 
-        //尝试获取地狱的呼唤脚本中储存祷告石的列表
-        List<Vector2> allStonePos = HellsCall.Instance.GetAllStonePosList();
-        if (allStonePos == null)
+
+        //从地狱的呼唤剧本脚本的字典中删除坐标
+        if (HellsCall.Instance.AllStonePosDict.ContainsKey(transform.position))
         {
-            Debug.LogError("Cannot get the m_AllStonePos variable in the " + HellsCall.Instance.gameObject.name);
-            return;
+            HellsCall.Instance.AllStonePosDict.Remove(transform.position);
         }
 
-        //获取完引用后检查列表中是否有当前祷告石的坐标，有的话则删除
-        if (allStonePos.Contains(transform.position) )
-        {
-            allStonePos.Remove(transform.position);
-        }
-
-  
         Destroy(gameObject);        //删除祷告石护符物体
     }
 }

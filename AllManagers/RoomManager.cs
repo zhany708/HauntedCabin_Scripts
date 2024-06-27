@@ -501,7 +501,7 @@ public class RoomManager : ManagerTemplate<RoomManager>
             //如果是不可删除的房间
             if (ImportantRoomPos.Contains((Vector2)childScript.gameObject.transform.position))
             {
-                childScript.SetHasGenerateRoom(false);     //重置布尔，以便玩家进入后可以重新生成房间
+                childScript.ResetGame();     //调用重置游戏函数
             }    
             else        //只删除非初始房间
             {

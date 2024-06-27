@@ -17,10 +17,11 @@ public class SO_UIKeys : ScriptableObject
 
     //剧本相关
     [Header("ScreenPlay")]
-    public string GameBackgroundPanel;          //游戏底层剧本界面
-    public string HellsCallBackground;          //地域的呼唤剧本背景界面
-    public string HellsCall_GameLostPanel;      //地域的呼唤剧本失败界面
-    public string HellsCall_GameWinningPanel;   //地域的呼唤剧本胜利界面
+    public string GameBackgroundPanel;              //游戏底层剧本界面
+    public string HellsCallBackground;              //地狱的呼唤剧本背景界面
+    public string HellsCall_GameLostPanel;          //地狱的呼唤剧本失败界面
+    public string HellsCall_GameWinningPanel;       //地狱的呼唤剧本胜利界面
+    public string HellsCall_AltarHealthBarPanel;    //地狱的呼唤剧本里祷告石的血条
 
 
     //人物相关

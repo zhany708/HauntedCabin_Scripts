@@ -52,6 +52,16 @@ public class ScreenplayManager : ManagerTemplate<ScreenplayManager>     //用于
     {
         foreach (Transform child in m_ScreenplayRoot)    //在场景中删除所有剧本物体
         {
+            BaseScreenplay screenplay = child.GetComponent<BaseScreenplay>();
+            if (screenplay == null)
+            {
+                Debug.LogError("Cannot get the BaseScreenplay component in the : " + child.name);
+                return;
+            }
+
+            //先调用剧本脚本的重置游戏函数，随后再删除剧本物体
+            screenplay.ResetGame();
+
             Destroy(child.gameObject);
         }
     }

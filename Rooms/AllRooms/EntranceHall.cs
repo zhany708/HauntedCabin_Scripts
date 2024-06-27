@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 
 
@@ -12,7 +11,7 @@ public class EntranceHall : RootRoomController      //入口大堂脚本
 
 
 
-
+    #region Unity内部函数
     protected override void Awake()
     {
         //单例模式
@@ -65,5 +64,15 @@ public class EntranceHall : RootRoomController      //入口大堂脚本
         {
             base.OnTriggerExit2D(other);
         }
+    }
+    #endregion
+
+
+    public override void ResetGame()
+    {
+        base.ResetGame();
+
+        MainDoorController.Instance.CloseMainDoor();                //重置游戏时关闭大门
+        MainDoorController.Instance.SetDoOpenMainDoor(false);       //关闭大门的同时重置布尔
     }
 }

@@ -1,4 +1,3 @@
-using System.Collections;
 using UnityEngine.UI;
 using UnityEngine;
 
@@ -14,50 +13,39 @@ public class AltarHealthBarPanel : BasePanel
     public Image IncreaseHpEffectImage;
     public Image DecreaseHpEffectImage;
 
-    public Vector3 offset;                          //界面坐标与仪式台之间的偏差
-
 
 
     Transform m_AltarTransform;                     //仪式台的位置信息
-    RectTransform m_HealthBarRectTransform;         //界面的UI坐标
-    Camera m_MainCamera;
-
 
 
 
 
     protected override void Awake()
     {
-        m_AltarTransform = FindAnyObjectByType<Altar>().transform;
-        m_HealthBarRectTransform = GetComponent<RectTransform>();
-        m_MainCamera = Camera.main;
+        m_AltarTransform = GetComponentInParent<Altar>().transform;
+
+        SetImagesToHealthBar();
     }
 
     private void Start()
     {
-        SetImagesToHealthBar();
+        //赋值界面名字
+        if (panelName == null)
+        {
+            panelName = UIManager.Instance.UIKeys.HellsCall_AltarHealthBarPanel;
+        }
+
+        //添加缓存进字典，表示界面正在打开
+        UIManager.Instance.PanelDict[panelName] = this;
     }
 
-
-    public override void OpenPanel(string name)
-    {
-        base.OpenPanel(name);
-
-        //需要做的：将界面改成物体坐标（即玩家远离后不会依然显示在屏幕上）
-
-        //将仪式台的世界坐标转换成屏幕坐标
-        Vector3 screenPosition = m_MainCamera.WorldToScreenPoint(m_AltarTransform.position + offset);
-
-        //更新界面的坐标（由于仪式台不会移动，因此设置一次坐标后就不用管了）
-        m_HealthBarRectTransform.position = screenPosition;
-    }
 
 
 
     public void SetImagesToHealthBar()      //用于将照片组件传递给玩家血条
     {
         //获取玩家血条的脚本组件
-        AltarHealthBar m_AltarHealthBar = m_AltarTransform.GetComponent<AltarHealthBar>();
+        AltarHealthBar m_AltarHealthBar = m_AltarTransform.GetComponentInChildren<AltarHealthBar>();
         if (m_AltarHealthBar == null)
         {
             Debug.LogError("AltarHealthBar component not found under Altar object.");

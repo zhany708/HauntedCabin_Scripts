@@ -161,6 +161,13 @@ public class RootRoomController : MonoBehaviour
             }
         }
     }
+
+    //重置游戏
+    public virtual void ResetGame()
+    {
+        m_HasGeneratedRoom = false;
+        m_FirstTimeEnterRoom = true;
+    }
     #endregion
 
 
@@ -168,6 +175,11 @@ public class RootRoomController : MonoBehaviour
     public void SetHasGenerateRoom(bool isTrue)
     {
         m_HasGeneratedRoom = isTrue;
+    }
+
+    public void SetFirstTimeEnterRoom(bool isTrue)
+    {
+        m_FirstTimeEnterRoom = isTrue;
     }
     #endregion
 

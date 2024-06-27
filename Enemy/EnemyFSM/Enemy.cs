@@ -197,7 +197,7 @@ public class Enemy : MonoBehaviour
         if (transform.parent != null)
         {
             //检查游戏是否已经结束，如果结束则无需再进行计数
-            if (DoorController != null && !EnvironmentManager.Instance.IsGameOver)
+            if (DoorController != null)
             {
                 DoorController.IncrementEnemyCount();     //增加敌人计数器的计数
             }
