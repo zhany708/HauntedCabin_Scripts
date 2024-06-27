@@ -34,6 +34,7 @@ public class EnemyPool : MonoBehaviour       //用于生成敌人的对象池，
 
 
     //获取物体，第二个参数为敌人的生成坐标
+    
     public GameObject GetObject(GameObject prefab, Vector2 spawnPos)
     {
         //检查池中有没有物体，没有的话则新建一个并加进去
@@ -52,7 +53,7 @@ public class EnemyPool : MonoBehaviour       //用于生成敌人的对象池，
 
         return obj;
     }
-
+    
 
 
     private GameObject CreateNewObject(GameObject prefab, Vector2 spawnPos)
@@ -127,10 +128,20 @@ public class EnemyPool : MonoBehaviour       //用于生成敌人的对象池，
                 if (child2.CompareTag("Enemy"))
                 {
                     //这里必须放回池中，不能单纯的取消激活。否则在敌人存活时重置游戏后，将不会重复使用之前生成过的敌人物体
-                    PushObject(child2.gameObject);      //将敌人脚本的父物体放回池中，也将放回父物体的所有子物体
+                    //PushObject(child2.gameObject);      //将敌人脚本的父物体放回池中，也将放回父物体的所有子物体
+
+                    Destroy(child2.gameObject);
                 }
             }
         }
+
+        
+        //清除所有敌人的queue
+        foreach (var key in m_EnemyPool.Keys)
+        {
+            m_EnemyPool[key].Clear();
+        }
+        
     }
 
     public void KillAllEnemy()     //结束游戏（在玩家胜利时调用此函数）
