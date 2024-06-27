@@ -32,7 +32,7 @@ public class Altar : MonoBehaviour      //放在仪式台上的脚本
     [SerializeField] float m_RestoreHealthAmout = 0f;    //玩家完成仪式后恢复的生命值
 
     //bool m_IsHit = false;
-    bool m_IsGameLost = false;          //表示是否游戏失败（祷告石被摧毁）
+
 
 
 
@@ -150,7 +150,7 @@ public class Altar : MonoBehaviour      //放在仪式台上的脚本
             StopCoroutine(m_EnemySpawnCoroutine);
         }
 
-        if (!m_IsGameLost)      //只有在游戏没有失败的时候才会进行下面的逻辑
+        if (!EnvironmentManager.Instance.IsGameLost)      //只有在游戏没有失败的时候才会进行下面的逻辑
         {
             EnemyPool.Instance.KillAllEnemy_DefenseWar();                           //立刻消灭所有敌人
             RitualRoom.Instance.DoorControllerInsideThisRoom.OpenDoors();           //仪式结束后打开房间的门
@@ -160,14 +160,10 @@ public class Altar : MonoBehaviour      //放在仪式台上的脚本
         }     
     }
 
-
-    private async void GameLost()     //跟Stats状态函数里的事件绑定在一起，或者放在仪式台死亡动画里
+    
+    private void GameLost()       //跟Stats状态函数里的事件绑定在一起，或者放在仪式台死亡动画里
     {
-        m_IsGameLost = true;                    //设置布尔，以防止执行正常仪式结束的逻辑
-        Combat.gameObject.SetActive(false);     //禁用战斗组件，防止鞭尸
-
-        //打开剧本失败界面
-        await UIManager.Instance.OpenPanel(UIManager.Instance.UIKeys.HellsCall_GameLostPanel);
+        HellsCall.Instance.Lose();      //进行剧本的失败逻辑
     }
     #endregion
 

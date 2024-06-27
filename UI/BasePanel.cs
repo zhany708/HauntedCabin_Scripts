@@ -228,6 +228,7 @@ public class BasePanel : MonoBehaviour
     protected void ResetGameSystems()       //重置游戏的各种系统
     {
         //先重置各大管理器脚本
+        EnvironmentManager.Instance.ResetGame();
         EventManager.Instance.ResetGame();
         UIManager.Instance.ResetGame();
         RoomManager.Instance.ResetGame();

@@ -7,7 +7,7 @@ using UnityEngine;
 //用于处理游戏过程中的一些动态变化（比如在某个地方生成某个新东西）
 public class EnvironmentManager : ManagerTemplate<EnvironmentManager>     
 {
-    
+    public bool IsGameLost { get; private set; } = false;
 
 
 
@@ -161,6 +161,19 @@ public class EnvironmentManager : ManagerTemplate<EnvironmentManager>
 
         enemyStats.SetCurrentHealth(enemyStats.MaxHealth);
     }
+    #endregion
 
+
+    public void ResetGame()
+    {
+        IsGameLost = false;
+    }
+
+
+    #region Setters
+    public void SetIsGameLost(bool isTrue)
+    {
+        IsGameLost = isTrue;
+    }
     #endregion
 }

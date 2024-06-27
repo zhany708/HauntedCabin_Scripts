@@ -136,7 +136,7 @@ public class EnemyPool : MonoBehaviour       //用于生成敌人的对象池，
         }
 
         
-        //清除所有敌人的queue
+        //清除所有敌人的queue，以重进游戏后重新生成敌人
         foreach (var key in m_EnemyPool.Keys)
         {
             m_EnemyPool[key].Clear();

@@ -87,7 +87,8 @@ public class HellsCall : BaseScreenplay<HellsCall>
     #endregion
 
 
-    public async override void StartScreenplay()
+    #region 剧本模板函数
+    public override async Task StartScreenplay()
     {
         await UIManager.Instance.OpenPanel(UIManager.Instance.UIKeys.HellsCallBackground);   //打开剧本背景界面
 
@@ -99,6 +100,46 @@ public class HellsCall : BaseScreenplay<HellsCall>
         GenerateRitualStones();     //生成祷告石                                                                                                                                                                                                                                                                                                                                                                                      666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666
         GenerateRitualRoom();       //生成仪式房
     }
+
+    public override void ResetGame()
+    {
+        if (AllStonePosDict.Count != 0)
+        {
+            //删除所有仍然存在的祷告石
+            foreach (var stone in AllStonePosDict)
+            {
+                Destroy(stone.Value);
+            }
+        }
+    }
+
+    public override void Victory()
+    {
+        DestroyCoroutine();     //停止玩家掉血和火焰滤镜的协程
+
+        //打开入口大堂的大门
+        MainDoorController.Instance.SetDoOpenMainDoor(true);       //设置布尔，以便玩家再次进入入口大堂后，大宅的大门会开启
+    }
+
+    public override async Task Lose()
+    {
+        EnvironmentManager.Instance.SetIsGameLost(true);           //设置布尔，表示游戏失败，同时防止执行正常仪式结束的逻辑
+
+
+        Altar altar = FindAnyObjectByType<Altar>();
+        if (altar == null)
+        {
+            Debug.LogError("Cannot get the Altar component in the : " + name);
+            return;
+        }
+
+        altar.Combat.gameObject.SetActive(false);     //禁用祷告石的战斗组件，防止鞭尸
+
+
+        //打开剧本失败界面
+        await UIManager.Instance.OpenPanel(UIManager.Instance.UIKeys.HellsCall_GameLostPanel);
+    }
+    #endregion
 
 
     #region 玩家持续掉血相关
@@ -359,23 +400,7 @@ public class HellsCall : BaseScreenplay<HellsCall>
 
         if (m_FinishedRitualCount >= m_NeededStoneNum)      //当玩家完成所有仪式后
         {
-            DestroyCoroutine();     //停止玩家掉血和火焰滤镜的协程
-
-            //打开入口大堂的大门
-            MainDoorController.Instance.SetDoOpenMainDoor(true);       //设置布尔，以便玩家再次进入入口大堂后，大宅的大门会开启
-        }
-    }
-
-
-    public override void ResetGame()
-    {
-        if (AllStonePosDict.Count != 0)
-        {
-            //删除所有仍然存在的祷告石
-            foreach (var stone in AllStonePosDict)
-            {
-                Destroy(stone.Value);
-            }
+            Victory();
         }
     }
     #endregion
