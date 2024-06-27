@@ -126,37 +126,6 @@ public class HellsCall : BaseScreenplay<HellsCall>
     #endregion
 
 
-    private void AddAllRoomPosIntoList()
-    {
-        m_AllRoomPos.Clear();      //开始复制坐标前先清空列表
-
-        //将字典里的所有坐标储存在列表中
-        foreach (var room in RoomManager.Instance.GeneratedRoomDict.Keys)
-        {
-            if (!m_AllRoomPos.Contains(room) )     //只有当列表中没有字典里的坐标时，才储存坐标
-            {
-                m_AllRoomPos.Add(room);
-            }            
-        }      
-    }
-
-
-    public void IncrementRitualCount()
-    {
-        m_FinishedRitualCount++;
-
-        OnRitualFinished?.Invoke();        //调用回调函数
-
-        if (m_FinishedRitualCount >= m_NeededStoneNum)      //当玩家完成所有仪式后
-        {
-            DestroyCoroutine();     //停止玩家掉血和火焰滤镜的协程
-
-            //打开入口大堂的大门
-            MainDoorController.Instance.SetDoOpenMainDoor(true);       //设置布尔，以便玩家再次进入入口大堂后，大门会开启
-        }
-    }
-
-
     #region 仪式房相关
     private void GenerateRitualRoom()       //生成仪式房（整个地图只有一个）
     {
@@ -285,16 +254,16 @@ public class HellsCall : BaseScreenplay<HellsCall>
     public void GenerateRitualStones()       //在随机房间生成祷告石
     {
         //判断房间数量是否足够生成所有祷告石
-        if (m_AllRoomPos.Count <= m_NeededStoneNum)      //房间数量不足以生成所有祷告石时
+        if (m_AllRoomPos.Count <= m_NeededStoneNum)          //房间数量不足以生成所有祷告石时
         {
-            GenerateSeveralStones(m_AllRoomPos.Count);      //能生成多少祷告石，就生成多少
+            GenerateSeveralStones(m_AllRoomPos.Count);       //能生成多少祷告石，就生成多少
 
-            m_NeedGenerateStone = true;     //在后续房间生成后强行生成祷告石
+            m_NeedGenerateStone = true;                      //在后续房间生成后强行生成祷告石
         }
 
         else
         {
-            GenerateSeveralStones(m_NeededStoneNum);       //生成所有祷告石
+            GenerateSeveralStones(m_NeededStoneNum);         //生成所有祷告石
         }
     }
 
@@ -349,6 +318,41 @@ public class HellsCall : BaseScreenplay<HellsCall>
         if (m_GeneratedStoneNum >= m_NeededStoneNum)        //判断是否已经生成了足够的祷告石
         {
             m_NeedGenerateStone = false;
+        }
+    }
+    #endregion
+
+
+    #region 其余函数
+    //将房间字典里的所有坐标储存在列表中
+    private void AddAllRoomPosIntoList()
+    {
+        m_AllRoomPos.Clear();      //开始复制坐标前先清空列表
+
+        
+        foreach (var room in RoomManager.Instance.GeneratedRoomDict.Keys)
+        {
+            if (!m_AllRoomPos.Contains(room) )     //只有当列表中没有字典里的坐标时，才储存坐标（防止重复储存）
+            {
+                m_AllRoomPos.Add(room);
+            }
+        }      
+    }
+
+
+    //仪式完成后调用此函数
+    public void IncrementRitualCount()
+    {
+        m_FinishedRitualCount++;
+
+        OnRitualFinished?.Invoke();        //调用回调函数
+
+        if (m_FinishedRitualCount >= m_NeededStoneNum)      //当玩家完成所有仪式后
+        {
+            DestroyCoroutine();     //停止玩家掉血和火焰滤镜的协程
+
+            //打开入口大堂的大门
+            MainDoorController.Instance.SetDoOpenMainDoor(true);       //设置布尔，以便玩家再次进入入口大堂后，大宅的大门会开启
         }
     }
     #endregion

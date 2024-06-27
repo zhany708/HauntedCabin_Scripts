@@ -17,8 +17,8 @@ public class AltarHealthBar : HealthBar      //用于祷告石的血条控制
 
     private void Awake() 
     {
-        //获取Player组件
-        m_Altar = FindAnyObjectByType<Altar>();
+        //从父物体那获取Altar组件
+        m_Altar = GetComponentInParent<Altar>();
         if (m_Altar == null)
         {
             Debug.LogError("Altar component not found in the " + name);
