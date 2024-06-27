@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 
 
-//所有血条的跟类（用于控制血条UI）
+//所有血条的跟类（用于控制血条UI，但是自身不是UI）
 public class HealthBar : MonoBehaviour
 {
     protected Image hpImage { get; private set; }                   //最上层的血条图片（红色的）

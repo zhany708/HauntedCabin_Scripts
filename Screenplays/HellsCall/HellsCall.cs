@@ -36,7 +36,8 @@ public class HellsCall : BaseScreenplay<HellsCall>
     Coroutine m_HealthDrainCoroutine;       //玩家持续掉血的协程
     Coroutine m_FireEffectCoroutine;        //火焰滤镜的协程
 
-    List<Vector2> m_RoomPos = new List<Vector2>();    //用于储存所有房间字典里的坐标
+    List<Vector2> m_AllRoomPos = new List<Vector2>();     //用于储存所有房间字典里的坐标
+    List<Vector2> m_AllStonePos = new List<Vector2>();    //用于储存所有祷告石的坐标
 
 
     bool m_NeedGenerateStone = false;   //判断是否需要生成祷告石
@@ -87,7 +88,11 @@ public class HellsCall : BaseScreenplay<HellsCall>
     {
         await UIManager.Instance.OpenPanel(UIManager.Instance.UIKeys.HellsCallBackground);   //打开剧本背景界面
 
-        AddAllRoomPosIntoList();    //先将当前所有房间的坐标储存进一个列表（除了触发进入二阶段事件的房间）
+        //先将当前所有房间的坐标储存进一个列表
+        AddAllRoomPosIntoList();    
+        //移除触发进入二阶段的房间的坐标，防止玩家立刻获得祷告石
+        m_AllRoomPos.Remove(EventManager.Instance.GetRoomPosWhereEnterSecondStage());
+
         GenerateRitualStones();     //生成祷告石                                                                                                                                                                                                                                                                                                                                                                                      666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666
         GenerateRitualRoom();       //生成仪式房
     }
@@ -121,39 +126,6 @@ public class HellsCall : BaseScreenplay<HellsCall>
     #endregion
 
 
-    private void AddAllRoomPosIntoList()
-    {
-        m_RoomPos.Clear();      //开始复制坐标前先清空列表
-
-        //将字典里的所有坐标储存在列表中
-        foreach (var room in RoomManager.Instance.GeneratedRoomDict.Keys)
-        {
-            if (!m_RoomPos.Contains(room) )     //只有当列表中没有字典里的坐标时，才储存坐标
-            {
-                m_RoomPos.Add(room);
-            }            
-        }
-        //移除触发进入二阶段的房间的坐标，防止玩家立刻获得祷告石
-        m_RoomPos.Remove(EventManager.Instance.GetRoomPosWhereEnterSecondStage());
-    }
-
-
-    public void IncrementRitualCount()
-    {
-        m_FinishedRitualCount++;
-
-        OnRitualFinished?.Invoke();        //调用回调函数
-
-        if (m_FinishedRitualCount >= m_NeededStoneNum)      //当玩家完成所有仪式后
-        {
-            DestroyCoroutine();     //停止玩家掉血和火焰滤镜的协程
-
-            //打开入口大堂的大门
-            MainDoorController.Instance.SetDoOpenMainDoor(true);       //设置布尔，以便玩家再次进入入口大堂后，大门会开启
-        }
-    }
-
-
     #region 仪式房相关
     private void GenerateRitualRoom()       //生成仪式房（整个地图只有一个）
     {
@@ -162,9 +134,9 @@ public class HellsCall : BaseScreenplay<HellsCall>
         //当没有新的房间可以生成时
         if (RoomManager.Instance.GeneratedRoomDict.Count >= m_MaxAllowedRoomNum)
         {
-            Vector2 selectedRoomPos = GenerateSuitableRandomRoomPos();     //随机选择的房间的坐标
+            Vector2 randomRoomPos = GenerateSuitableRandomRoomPos();     //随机选择的房间的坐标
 
-            StartCoroutine(DelayedRegenerateRoom(selectedRoomPos) );           //删除参数中坐标处的房间，随后在该坐标生成仪式房
+            StartCoroutine(DelayedRegenerateRoom(randomRoomPos) );       //删除参数中坐标处的房间，随后在该坐标生成仪式房
         }
 
         else
@@ -178,11 +150,59 @@ public class HellsCall : BaseScreenplay<HellsCall>
 
     private void CheckRitualRoomGeneration(Vector2 roomPos)        //检查仪式房是否已经生成
     {
-        //当生成了最后一个房间后，仪式房还没有出现时（因为运行顺序的原因，这里要大于等于1，而不是0。否则会出现生成完所有房间后依然没有仪式房的情况）
-        if (m_MaxAllowedRoomNum - RoomManager.Instance.GeneratedRoomDict.Count <= 1 && RoomManager.Instance.RoomKeys.FirstFloorRoomKeys.Contains(RitualRoomName))
+        //先检查仪式房是否已经生成
+        if (RoomManager.Instance.RoomKeys.FirstFloorRoomKeys.Contains(RitualRoomName) )
         {
-            StartCoroutine(DelayedRegenerateRoom(roomPos) );           //删除参数中坐标处的房间，随后在该坐标生成仪式房
+            //当生成了最后一个房间后（因为运行顺序的原因，这里要大于等于1，而不是0。否则会出现生成完所有房间后依然没有仪式房的情况）
+            if (m_MaxAllowedRoomNum - RoomManager.Instance.GeneratedRoomDict.Count <= 1)
+            {
+                StartCoroutine(DelayedRegenerateRoom(roomPos) );           //删除参数中坐标处的房间，随后在该坐标生成仪式房
+            }
+
+            //当字典中所有房间都生成过房间后
+            else if (CheckIfAllRoomHasGenerated() )
+            {
+                AddAllRoomPosIntoList();    //先将当前所有房间的坐标储存进列表
+
+                //移除玩家当前所在的房间的坐标（防止玩家立刻进入仪式房）
+                m_AllRoomPos.Remove(roomPos);
+                //移除祷告石所在的房间
+                foreach (var stonePos in m_AllStonePos)
+                {
+                    if (m_AllRoomPos,Contains(stonePos) )
+                    {
+                        m_AllRoomPos.Remove(stonePos);
+                    }   
+                }
+
+
+
+                Vector2 randomRoomPos = GenerateSuitableRandomRoomPos();     //随机选择的房间的坐标
+
+                StartCoroutine(DelayedRegenerateRoom(randomRoomPos) );           //删除参数中坐标处的房间，随后在该坐标生成仪式房
+            }
+        }     
+    }
+
+    private bool CheckIfAllRoomHasGenerated()           //检查字典中是否所有房间都已经生成过了
+    {
+        foreach (var room in RoomManager.Instance.GeneratedRoomDict.Keys)
+        {
+            //获取房间的控制器脚本
+            RootRoomController currentRoomController = room.GetComponent<RootRoomController>();
+            if (currentRoomController == null)
+            {
+                Debug.LogError("Cannot get the RootRoomController component in the " + room.name);
+            }      
+
+            if (!currentRoomController.GetHasGenerateRoom() )       //只要有一个房间还没生成过，就返回false
+            {
+                return false;
+            }
         }
+
+        //当所有房间都检查过且没有返回时（也就是说所有房间都已经生成过了），返回true
+        return true;
     }
 
     private IEnumerator DelayedRegenerateRoom(Vector2 roomPos)         //用于等待一帧后删除已有的房间，随后生成仪式房
@@ -213,8 +233,8 @@ public class HellsCall : BaseScreenplay<HellsCall>
         //只要随机到不可更改的房间坐标，就重新获取随机索引
         while (RoomManager.Instance.ImportantRoomPos.Contains(selectedRoomPos) && attemptCount <= maxAttemptCount)
         {
-            int randomNum = UnityEngine.Random.Range(0, m_RoomPos.Count);   //随机房间索引
-            selectedRoomPos = m_RoomPos[randomNum];     //获取随机选择的房间的坐标
+            int randomNum = UnityEngine.Random.Range(0, m_AllRoomPos.Count);   //随机房间索引
+            selectedRoomPos = m_AllRoomPos[randomNum];     //获取随机选择的房间的坐标
 
             attemptCount++;     //增加尝试计数
         }
@@ -234,16 +254,16 @@ public class HellsCall : BaseScreenplay<HellsCall>
     public void GenerateRitualStones()       //在随机房间生成祷告石
     {
         //判断房间数量是否足够生成所有祷告石
-        if (m_RoomPos.Count <= m_NeededStoneNum)      //房间数量不足以生成所有祷告石时
+        if (m_AllRoomPos.Count <= m_NeededStoneNum)          //房间数量不足以生成所有祷告石时
         {
-            GenerateSeveralStones(m_RoomPos.Count);      //能生成多少祷告石，就生成多少
+            GenerateSeveralStones(m_AllRoomPos.Count);       //能生成多少祷告石，就生成多少
 
-            m_NeedGenerateStone = true;     //在后续房间生成后强行生成祷告石
+            m_NeedGenerateStone = true;                      //在后续房间生成后强行生成祷告石
         }
 
         else
         {
-            GenerateSeveralStones(m_NeededStoneNum);       //生成所有祷告石
+            GenerateSeveralStones(m_NeededStoneNum);         //生成所有祷告石
         }
     }
 
@@ -260,7 +280,7 @@ public class HellsCall : BaseScreenplay<HellsCall>
             //该while循环用于生成随机房间索引（由于调用这个函数前就已经判断过当前的房间数量，因此无需担心房间不够的情况）
             while (!isDone)     
             {
-                randomNum = UnityEngine.Random.Range(0, m_RoomPos.Count);           //随机房间索引
+                randomNum = UnityEngine.Random.Range(0, m_AllRoomPos.Count);           //随机房间索引
 
                 if (alreadyGeneratedRoomCount.Contains(randomNum) )     //判断是否随机到了之前生成过的房间索引
                 {
@@ -272,13 +292,14 @@ public class HellsCall : BaseScreenplay<HellsCall>
                 }
             }
 
-            Vector2 selectedRoomPos = m_RoomPos[randomNum];       //获取随机选择的房间的坐标
+            Vector2 selectedRoomPos = m_AllRoomPos[randomNum];    //获取随机选择的房间的坐标
             alreadyGeneratedRoomCount.Add(randomNum);             //将随机到的索引加进临时列表
 
             //在选中的房间生成祷告石
             EnvironmentManager.Instance.GenerateObjectWithParent(RitualStone, RoomManager.Instance.GeneratedRoomDict[selectedRoomPos].transform, selectedRoomPos);
 
-            m_GeneratedStoneNum++;      //增加祷告石计数
+            m_GeneratedStoneNum++;                                //增加祷告石计数
+            m_AllStonePos.Add(selectedRoomPos);                   //将祷告石坐标加进列表
         }
     }
 
@@ -290,12 +311,48 @@ public class HellsCall : BaseScreenplay<HellsCall>
             //在参数中的房间生成祷告石
             EnvironmentManager.Instance.GenerateObjectWithParent(RitualStone, RoomManager.Instance.GeneratedRoomDict[roomPos].transform, roomPos);
 
-            m_GeneratedStoneNum++;      //增加祷告石计数
+            m_GeneratedStoneNum++;                          //增加祷告石计数
+            m_AllStonePos.Add(roomPos);                     //将祷告石坐标加进列表
         }        
 
         if (m_GeneratedStoneNum >= m_NeededStoneNum)        //判断是否已经生成了足够的祷告石
         {
             m_NeedGenerateStone = false;
+        }
+    }
+    #endregion
+
+
+    #region 其余函数
+    //将房间字典里的所有坐标储存在列表中
+    private void AddAllRoomPosIntoList()
+    {
+        m_AllRoomPos.Clear();      //开始复制坐标前先清空列表
+
+        
+        foreach (var room in RoomManager.Instance.GeneratedRoomDict.Keys)
+        {
+            if (!m_AllRoomPos.Contains(room) )     //只有当列表中没有字典里的坐标时，才储存坐标（防止重复储存）
+            {
+                m_AllRoomPos.Add(room);
+            }
+        }      
+    }
+
+
+    //仪式完成后调用此函数
+    public void IncrementRitualCount()
+    {
+        m_FinishedRitualCount++;
+
+        OnRitualFinished?.Invoke();        //调用回调函数
+
+        if (m_FinishedRitualCount >= m_NeededStoneNum)      //当玩家完成所有仪式后
+        {
+            DestroyCoroutine();     //停止玩家掉血和火焰滤镜的协程
+
+            //打开入口大堂的大门
+            MainDoorController.Instance.SetDoOpenMainDoor(true);       //设置布尔，以便玩家再次进入入口大堂后，大宅的大门会开启
         }
     }
     #endregion
