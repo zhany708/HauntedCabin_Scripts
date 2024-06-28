@@ -105,7 +105,7 @@ public class HellsCall : BaseScreenplay<HellsCall>
     {
         if (AllStonePosDict.Count != 0)
         {
-            //删除所有仍然存在的祷告石
+            //删除所有仍然存在的祷告石物体
             foreach (var stone in AllStonePosDict)
             {
                 Destroy(stone.Value);

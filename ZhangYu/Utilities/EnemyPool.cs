@@ -8,6 +8,9 @@ public class EnemyPool : MonoBehaviour       //用于生成敌人的对象池，
     public static EnemyPool Instance { get; private set; }
 
 
+
+
+    //储存所有敌人的字典
     Dictionary<string, Queue<GameObject>> m_EnemyPool = new Dictionary<string, Queue<GameObject>>();
 
 
@@ -28,6 +31,12 @@ public class EnemyPool : MonoBehaviour       //用于生成敌人的对象池，
         else
         {
             Instance = this;
+
+            //只有在没有父物体时才运行防删函数，否则会出现提醒
+            if (gameObject.transform.parent == null)
+            {
+                DontDestroyOnLoad(gameObject);
+            }       
         }
     }
 
@@ -41,9 +50,15 @@ public class EnemyPool : MonoBehaviour       //用于生成敌人的对象池，
         if (!m_EnemyPool.TryGetValue(prefab.name, out var queue) || queue.Count == 0)
         {
             var newObject = CreateNewObject(prefab, spawnPos);
-            PushObject(newObject);
+
+            if (!PushObject(newObject))
+            {
+                Debug.LogError("The parametr you use for the PushObject function is null!");
+                return;
+            }         
         }
 
+        //从队列中获取物体
         var obj = m_EnemyPool[prefab.name].Dequeue();
 
         //在物体激活前赋予坐标给敌人的跟物体，这样才能正确的初始化生成巡逻点的脚本
@@ -58,7 +73,7 @@ public class EnemyPool : MonoBehaviour       //用于生成敌人的对象池，
 
     private GameObject CreateNewObject(GameObject prefab, Vector2 spawnPos)
     {
-        //先找用来存放每类敌人的父物体，随后再创建
+        //先找用来存放每类敌人的父物体，随后再创建物体并放在对应的父物体下面
         GameObject childContainer = FindOrCreateChildContainer(prefab.name);
         GameObject obj = Instantiate(prefab, spawnPos, Quaternion.identity, childContainer.transform);
 
@@ -102,7 +117,9 @@ public class EnemyPool : MonoBehaviour       //用于生成敌人的对象池，
                 m_EnemyPool[name] = new Queue<GameObject>();
             }
 
-            m_EnemyPool[name].Enqueue(obj);     //将创建好的物体加进字典
+            m_EnemyPool[name].Enqueue(obj);     //将创建好的物体加进队列
+
+            //Debug.Log("There are this number enemy in the queue " +);
 
             //创建完后取消激活
             obj.SetActive(false);

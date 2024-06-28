@@ -14,7 +14,7 @@ public class EnvironmentManager : ManagerTemplate<EnvironmentManager>
 
 
 
-    //生成物体，同时将参数中的Transform设置为物体的父物体     需要做的：用对象池生成物体
+    //生成物体，同时将参数中的Transform设置为物体的父物体
     public void GenerateObjectWithParent(GameObject generatedObject, Transform parentTransform, Vector2 generatedPos)
     {
         Instantiate(generatedObject, generatedPos, Quaternion.identity, parentTransform);

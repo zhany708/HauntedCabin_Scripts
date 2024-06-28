@@ -4,7 +4,7 @@ using ZhangYu.Utilities;
 
 
 
-public class Altar : MonoBehaviour      //放在仪式台上的脚本
+public class Altar : MonoBehaviour      //仪式台的脚本
 {
     public GameObject EnemyPrefab;      //敌人的预制件（用于在仪式期间生成）
     public Core Core { get; private set; }
@@ -25,7 +25,7 @@ public class Altar : MonoBehaviour      //放在仪式台上的脚本
     Timer m_DurationTimer;              //用于计时仪式时长的计时器
 
     [SerializeField] float m_RitualMaxHealth = 0f;       //仪式台的生命值上限
-    [SerializeField] float m_HitResistance = 99f;        //仪式台的受击抗性
+    [SerializeField] float m_HitResistance = 99f;        //仪式台的受击退抗性
 
     [SerializeField] float m_RitualDuration = 9f;        //仪式时间
     [SerializeField] float m_EnemySpawnInterval = 3f;    //敌人生成的冷却
@@ -153,7 +153,7 @@ public class Altar : MonoBehaviour      //放在仪式台上的脚本
         if (!EnvironmentManager.Instance.IsGameLost)      //只有在游戏没有失败的时候才会进行下面的逻辑
         {
             EnemyPool.Instance.KillAllEnemy_DefenseWar();                           //立刻消灭所有敌人
-            RitualRoom.Instance.DoorControllerInsideThisRoom.OpenDoors();           //仪式结束后打开房间的门
+            RitualRoom.Instance.DoorControllerInsideThisRoom.OpenDoors();           //仪式结束后打开仪式房的门
 
             HellsCall.Instance.PlayerStats.IncreaseHealth(m_RestoreHealthAmout);    //给玩家增加一定的血量
             HellsCall.Instance.IncrementRitualCount();                              //增加仪式完成的计数
