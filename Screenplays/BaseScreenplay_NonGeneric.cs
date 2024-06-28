@@ -15,7 +15,7 @@ public class BaseScreenplay : MonoBehaviour
     public virtual void ResetGame() { }                         //重置游戏
 
 
-    public virtual void Victory() { }                           //胜利相关的逻辑
+    public virtual Task Victory() { return null; }              //胜利相关的逻辑
 
     public virtual Task Lose() { return null; }                 //失败相关的逻辑
 }

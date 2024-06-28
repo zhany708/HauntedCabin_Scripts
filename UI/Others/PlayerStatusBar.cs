@@ -2,7 +2,9 @@ using Lean.Localization;
 using System.Collections;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+
 
 
 
@@ -83,7 +85,7 @@ public class PlayerStatusBar : BasePanel
         }
 
         CheckComponents();              //检查公有组件是否都存在
-        InitializePlayerStatus();       //初始化
+        //InitializePlayerStatus();       //初始化
     }   
 
     private void Start()
@@ -109,8 +111,16 @@ public class PlayerStatusBar : BasePanel
     }
 
 
+    private void OnEnable()
+    {
+        SceneManager.sceneLoaded += OnSceneLoaded;
+    }
+
     protected override void OnDisable() 
     {
+        SceneManager.sceneLoaded += OnSceneLoaded;
+
+
         //先检查界面名字是否为空（为空的话则代表当前界面是重复的，因为是在Start函数中赋值名字）
         if (panelName != null)
         {
@@ -120,7 +130,7 @@ public class PlayerStatusBar : BasePanel
                 //从字典中移除，表示界面没打开
                 UIManager.Instance.PanelDict.Remove(panelName);
             }
-        }       
+        }
     }
     #endregion
 
@@ -241,6 +251,14 @@ public class PlayerStatusBar : BasePanel
 
 
     
+    private void OnSceneLoaded(UnityEngine.SceneManagement.Scene scene, LoadSceneMode mode)
+    {
+        //每当进入一楼场景时都调用此函数
+        if (scene.name == "FirstFloor")
+        {
+            InitializePlayerStatus();
+        }
+    }
 
 
 

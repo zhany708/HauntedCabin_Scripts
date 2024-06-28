@@ -64,7 +64,7 @@ public class RootRoomController : MonoBehaviour
         //Debug.Log(transform.position);
 
         //房间激活时将房间精灵图变得透明
-        //ChangeRoomTransparency(HiddenTransparency);
+        ChangeRoomTransparency(HiddenTransparency);
     }
 
     protected virtual void OnDisable()
@@ -112,7 +112,7 @@ public class RootRoomController : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             //玩家离开房间后，将房间变得透明
-            //ChangeRoomTransparency(HiddenTransparency);
+            ChangeRoomTransparency(HiddenTransparency);
 
 
             //确保只在场景持续存在且未卸载时，才会使用DoTeen（否则在场景卸载后会报错）

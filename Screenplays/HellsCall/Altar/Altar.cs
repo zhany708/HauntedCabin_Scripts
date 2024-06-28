@@ -25,12 +25,12 @@ public class Altar : MonoBehaviour      //仪式台的脚本
 
     Timer m_DurationTimer;              //用于计时仪式时长的计时器
 
-    [SerializeField] float m_RitualMaxHealth = 0f;       //仪式台的生命值上限
+    [SerializeField] float m_RitualMaxHealth = 150f;       //仪式台的生命值上限
     [SerializeField] float m_HitResistance = 99f;        //仪式台的受击退抗性
 
-    [SerializeField] float m_RitualDuration = 9f;        //仪式时间
-    [SerializeField] float m_EnemySpawnInterval = 3f;    //敌人生成的冷却
-    [SerializeField] float m_RestoreHealthAmout = 0f;    //玩家完成仪式后恢复的生命值
+    [SerializeField] float m_RitualDuration = 30f;        //仪式时间
+    [SerializeField] float m_EnemySpawnInterval = 3.5f;    //敌人生成的冷却
+    [SerializeField] float m_RestoreHealthAmout = 15f;    //玩家完成仪式后恢复的生命值
 
     //bool m_IsHit = false;
 
@@ -153,6 +153,8 @@ public class Altar : MonoBehaviour      //仪式台的脚本
 
         if (!EnvironmentManager.Instance.IsGameLost)      //只有在游戏没有失败的时候才会进行下面的逻辑
         {
+            Stats.IncreaseHealth(m_RitualMaxHealth * 0.2f);                         //给祷告石回一点血
+
             EnemyPool.Instance.KillAllEnemy_DefenseWar();                           //立刻消灭所有敌人
             RitualRoom.Instance.DoorControllerInsideThisRoom.OpenDoors();           //仪式结束后打开仪式房的门
 

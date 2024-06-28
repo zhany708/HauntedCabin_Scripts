@@ -47,12 +47,12 @@ public class HellsCall : BaseScreenplay<HellsCall>
     bool m_CanStartRitual = false;      //判断是否可以开始仪式
 
 
-    [SerializeField] int m_NeededStoneNum = 2;           //需要生成的祷告石的数量（也是玩家需要达成的仪式数量）
+    [SerializeField] int m_NeededStoneNum = 3;           //需要生成的祷告石的数量（也是玩家需要达成的仪式数量）
     int m_GeneratedStoneNum = 0;        //表示当前生成了多少祷告石
     int m_MaxAllowedRoomNum = 0;        //一楼可以生成的最大房间数
     int m_FinishedRitualCount = 0;      //玩家完成的仪式数量
 
-
+    [SerializeField] float m_HealthDrainDamageAmount = 1f;  //在掉血函数中每次掉血的数量
     [SerializeField] float m_HealthDrainInterval = 12f;     //在掉血函数中每（60/此变量）秒掉一次血
 
 
@@ -116,12 +116,15 @@ public class HellsCall : BaseScreenplay<HellsCall>
         }
     }
 
-    public override void Victory()
+    public override async Task Victory()
     {
         DestroyCoroutine();     //停止玩家掉血和火焰滤镜的协程
 
         //打开入口大堂的大门
         MainDoorController.Instance.SetDoOpenMainDoor(true);       //设置布尔，以便玩家再次进入入口大堂后，大宅的大门会开启
+
+        //提前加载好剧本胜利界面
+        await UIManager.Instance.InitPanel(UIManager.Instance.UIKeys.HellsCall_GameWinningPanel);
     }
 
     public override async Task Lose()
@@ -150,8 +153,8 @@ public class HellsCall : BaseScreenplay<HellsCall>
     {
         if (PlayerStats != null)
         {
-            //持续10000000秒，每次掉1点血，每（60/第三个参数）秒掉一次
-            m_HealthDrainCoroutine = StartCoroutine(PlayerStats.HealthDrain(10000000f, 1f, 6f));
+            //持续10000000秒，每次掉（参数二）点血，每（60/参数三）秒掉一次
+            m_HealthDrainCoroutine = StartCoroutine(PlayerStats.HealthDrain(10000000f, m_HealthDrainDamageAmount, m_HealthDrainInterval));
             m_FireEffectCoroutine = StartCoroutine(PostProcessController.Instance.StartFireEffect() );      //一直显示火焰滤镜
         }
     }
@@ -395,7 +398,7 @@ public class HellsCall : BaseScreenplay<HellsCall>
 
 
     //仪式完成后调用此函数
-    public void IncrementRitualCount()
+    public async void IncrementRitualCount()
     {
         m_FinishedRitualCount++;
 
@@ -403,7 +406,7 @@ public class HellsCall : BaseScreenplay<HellsCall>
 
         if (m_FinishedRitualCount >= m_NeededStoneNum)      //当玩家完成所有仪式后
         {
-            Victory();
+            await Victory();
         }
     }
     #endregion
