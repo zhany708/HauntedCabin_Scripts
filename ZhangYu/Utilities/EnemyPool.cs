@@ -54,7 +54,6 @@ public class EnemyPool : MonoBehaviour       //用于生成敌人的对象池，
             if (!PushObject(newObject))
             {
                 Debug.LogError("The parametr you use for the PushObject function is null!");
-                return;
             }         
         }
 
@@ -119,7 +118,7 @@ public class EnemyPool : MonoBehaviour       //用于生成敌人的对象池，
 
             m_EnemyPool[name].Enqueue(obj);     //将创建好的物体加进队列
 
-            //Debug.Log("There are this number enemy in the queue " +);
+            //Debug.Log("There are " + m_EnemyPool[name].Count + " enemys in the queue: " + name);
 
             //创建完后取消激活
             obj.SetActive(false);
@@ -142,23 +141,14 @@ public class EnemyPool : MonoBehaviour       //用于生成敌人的对象池，
         {
             foreach (Transform child2 in child)     //检索每一个子物体的子物体
             {
-                if (child2.CompareTag("Enemy"))
+                //如果敌人处于激活状态（还没有死亡），则放回池中
+                if (child2.CompareTag("Enemy") && child2.gameObject.activeSelf)
                 {
                     //这里必须放回池中，不能单纯的取消激活。否则在敌人存活时重置游戏后，将不会重复使用之前生成过的敌人物体
-                    //PushObject(child2.gameObject);      //将敌人脚本的父物体放回池中，也将放回父物体的所有子物体
-
-                    Destroy(child2.gameObject);
+                    PushObject(child2.gameObject);      //将敌人脚本的父物体放回池中，也将放回父物体的所有子物体
                 }
             }
         }
-
-        
-        //清除所有敌人的queue，以重进游戏后重新生成敌人
-        foreach (var key in m_EnemyPool.Keys)
-        {
-            m_EnemyPool[key].Clear();
-        }
-        
     }
 
     public void KillAllEnemy()     //结束游戏（在玩家胜利时调用此函数）
