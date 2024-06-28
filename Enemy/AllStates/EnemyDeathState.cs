@@ -28,4 +28,7 @@ public class EnemyDeathState : EnemyState
     }
 
     public override void LogicUpdate() { }    //不需要执行此函数在父类中的逻辑
+
+    //不需要执行此函数在父类中的逻辑，防止出现敌人在某些情况下同时进入包含死亡的两个状态从而卡死在原地（在动画帧事件中会将Death布尔设置为false）
+    public override void Exit() { }           
 }

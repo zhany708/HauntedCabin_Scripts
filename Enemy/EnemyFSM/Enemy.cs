@@ -192,7 +192,7 @@ public class Enemy : MonoBehaviour
 
 
     #region Animation Event Functions
-    protected void DeathLogicForAnimation()      //用于动画事件，摧毁物体
+    protected virtual void DeathLogicForAnimation()      //用于动画事件，摧毁物体
     {
         if (transform.parent != null)
         {
@@ -203,6 +203,9 @@ public class Enemy : MonoBehaviour
             }
             
             EnemyPool.Instance.PushObject(transform.parent.gameObject);      //将敌人的父物体放回池中，也将放回父物体的所有子物体
+
+            //在这里将Death布尔设置为false，从而确保只要敌人一但触发了死亡动画，那就一定会死（防止卡死在原地等异常情况）
+            Core.Animator.SetBool("Death", false);         
         }
     }
     #endregion

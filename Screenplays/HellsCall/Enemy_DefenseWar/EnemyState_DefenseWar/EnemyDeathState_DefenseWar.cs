@@ -28,4 +28,5 @@ public class EnemyDeathState_DefenseWar : EnemyState_DefenseWar
     }
 
     public override void LogicUpdate() { }    //不需要执行此函数在父类中的逻辑
+    public override void Exit() { }           //不需要执行此函数在父类中的逻辑（在动画帧事件中会将Death布尔设置为false）
 }

@@ -53,6 +53,8 @@ public class HellsCall : BaseScreenplay<HellsCall>
     int m_FinishedRitualCount = 0;      //玩家完成的仪式数量
 
 
+    [SerializeField] float m_HealthDrainInterval = 12f;     //在掉血函数中每（60/此变量）秒掉一次血
+
 
 
 
@@ -148,8 +150,8 @@ public class HellsCall : BaseScreenplay<HellsCall>
     {
         if (PlayerStats != null)
         {
-            //持续10000000秒，每次掉1点血，每5秒掉一次
-            m_HealthDrainCoroutine = StartCoroutine(PlayerStats.HealthDrain(10000000f, 1f, 12f));
+            //持续10000000秒，每次掉1点血，每（60/第三个参数）秒掉一次
+            m_HealthDrainCoroutine = StartCoroutine(PlayerStats.HealthDrain(10000000f, 1f, 6f));
             m_FireEffectCoroutine = StartCoroutine(PostProcessController.Instance.StartFireEffect() );      //一直显示火焰滤镜
         }
     }

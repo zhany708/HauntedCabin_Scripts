@@ -95,6 +95,19 @@ public class Enemy_DefenseWar : Enemy
     #endregion
 
 
+    #region Animation Event Functions
+    protected override void DeathLogicForAnimation()      //用于动画事件，摧毁物体
+    {
+        if (transform.parent != null)
+        {
+            EnemyPool.Instance.PushObject(transform.parent.gameObject);      //将敌人的父物体放回池中，也将放回父物体的所有子物体
+
+            Core.Animator.SetBool("Death", false);         //将Death布尔设置为false
+        }
+    }
+    #endregion
+
+
     #region Trigger Detections
     //各种物理检测
     protected override void OnTriggerEnter2D(Collider2D other)

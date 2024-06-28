@@ -21,6 +21,7 @@ public class EnemyState_DefenseWar : EnemyState
         if (!core)
         {
             Debug.LogError("Core is missing in the EnemyState!");
+            return;
         }
     }
 
