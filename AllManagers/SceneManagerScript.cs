@@ -20,9 +20,14 @@ public class SceneManagerScript : ManagerTemplate<SceneManagerScript>
 
     //每当加载场景时调用的函数（在新场景所有物体的Awake和OnEnable函数后执行）
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
-    {
-        RoomManager.Instance.OnSceneLoaded(scene, mode);
+    {  
+        //先调用各大管理器的加载场景脚本
         EnvironmentManager.Instance.OnSceneLoaded(scene, mode);
+        EventManager.Instance.OnSceneLoaded(scene, mode);
+        RoomManager.Instance.OnSceneLoaded(scene, mode);
+        UIManager.Instance.OnSceneLoaded(scene, mode);
+
+        //先调用具体的某个UI的加载场景脚本
         PlayerStatusBar.Instance.OnSceneLoaded(scene, mode);
     }
 }

@@ -249,7 +249,8 @@ public class PlayerStatusBar : BasePanel
     #endregion
 
 
-    //每当进入新界面时调用的函数
+    #region 其余函数
+    //每当加载新场景时调用的函数
     public void OnSceneLoaded(UnityEngine.SceneManagement.Scene scene, LoadSceneMode mode)
     {
         //每当进入一楼场景时都调用以下逻辑
@@ -306,6 +307,7 @@ public class PlayerStatusBar : BasePanel
             playerStats.SetCurrentHealth(playerStats.MaxHealth);             //重置玩家的血量（以及血条占比）
         }
     }
+    #endregion
 }
 
 

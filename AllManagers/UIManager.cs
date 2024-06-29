@@ -165,6 +165,25 @@ public class UIManager : ManagerTemplate<UIManager>
     #endregion
 
 
+    #region 其余函数
+    //每当加载新场景时调用的函数
+    public void OnSceneLoaded(UnityEngine.SceneManagement.Scene scene, LoadSceneMode mode)
+    {
+        //每当进入一楼场景时都调用以下逻辑
+        if (scene.name == "FirstFloor")
+        {
+            
+        }
+
+        //进入其余场景时（目前只有主菜单）
+        else
+        {
+            //重置游戏
+            ResetGame()
+        }
+    }
+
+
     public void ResetGame()
     {
         foreach (Transform child in m_UIRoot)    //在场景中删除所有Canvas下的UI（通过调用ClosePanel进行彻底的删除）
@@ -183,4 +202,5 @@ public class UIManager : ManagerTemplate<UIManager>
             }           
         }
     }
+    #endregion
 }
