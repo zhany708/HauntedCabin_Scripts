@@ -167,6 +167,9 @@ public class RootRoomController : MonoBehaviour
     {
         m_HasGeneratedRoom = false;
         m_FirstTimeEnterRoom = true;
+
+        //隐藏房间
+        gameObject.SetActive(false);
     }
     #endregion
 

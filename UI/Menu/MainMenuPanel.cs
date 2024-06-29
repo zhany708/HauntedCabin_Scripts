@@ -64,6 +64,7 @@ public class MainMenuPanel : PanelWithButton
             await UIManager.Instance.OpenPanel(UIManager.Instance.UIKeys.GameBackgroundPanel);
         }
 
+        //当玩家进入过一楼场景后
         else
         {
             //载入一楼大厅场景

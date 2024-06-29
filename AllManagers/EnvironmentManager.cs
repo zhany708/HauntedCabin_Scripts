@@ -8,7 +8,7 @@ using UnityEngine;
 public class EnvironmentManager : ManagerTemplate<EnvironmentManager>     
 {
     public bool IsGameLost { get; private set; } = false;
-    public bool IsFirstTimeEnterGame { get; private set; } = false;
+    public bool IsFirstTimeEnterGame { get; private set; } = true;
 
 
 
@@ -170,13 +170,16 @@ public class EnvironmentManager : ManagerTemplate<EnvironmentManager>
         //每当进入一楼场景时都调用以下逻辑
         if (scene.name == "FirstFloor")
         {
-            IsFirstTimeEnterGame = true;
+            //将布尔设置为false，防止玩家重新游戏后重复打开游戏背景介绍
+            IsFirstTimeEnterGame = false;
         }
-    }
 
-    public void ResetGame()
-    {
-        IsGameLost = false;
+        //进入其余场景时（目前只有主菜单）
+        else
+        {
+            //重置布尔
+            IsGameLost = false;
+        }
     }
 
 

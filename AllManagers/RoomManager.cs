@@ -500,7 +500,7 @@ public class RoomManager : ManagerTemplate<RoomManager>
         //进入其余场景时（目前只有主菜单）
         else
         {
-            SetActiveAllRoom(false);     //隐藏所有房间
+            ResetGame()                  //删除所有普通房间，隐藏所有初始房间
         }
     }
 
@@ -524,12 +524,14 @@ public class RoomManager : ManagerTemplate<RoomManager>
                 return;
             }
 
-            //如果是不可删除的房间
+            //如果是不可删除的房间（初始房间）
             if (ImportantRoomPos.Contains((Vector2)roomScript.gameObject.transform.position))
             {
                 roomScript.ResetGame();     //调用重置游戏函数
-            }    
-            else        //只删除非初始房间
+            }   
+            
+            //只删除普通房间 
+            else        
             {
                 Destroy(roomScript.gameObject);
             }  
