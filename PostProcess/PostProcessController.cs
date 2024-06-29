@@ -150,8 +150,28 @@ public class PostProcessController : MonoBehaviour
     #endregion
 
 
+    #region 其余函数
+    //每当加载新场景时调用的函数
+    public void OnSceneLoaded(UnityEngine.SceneManagement.Scene scene, LoadSceneMode mode)
+    {
+        //每当进入一楼场景时都调用以下逻辑
+        if (scene.name == "FirstFloor")
+        {
+            
+        }
+
+        //进入其余场景时（目前只有主菜单）
+        else
+        {
+            //重置游戏
+            ResetGame()
+        }
+    }
+
+
     public void ResetGame()     //重置游戏
     {
         TurnOffVignette();
     }
+    #endregion
 }

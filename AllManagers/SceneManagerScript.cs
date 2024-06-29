@@ -28,6 +28,9 @@ public class SceneManagerScript : ManagerTemplate<SceneManagerScript>
         ScreenplayManager.Instance.OnSceneLoaded(scene, mode);
         UIManager.Instance.OnSceneLoaded(scene, mode);
 
+        //在调用其余管理器的加载场景脚本 
+        PostProcessController.Instance.OnSceneLoaded(scene, mode);
+
         //先调用具体的某个UI的加载场景脚本
         PlayerStatusBar.Instance.OnSceneLoaded(scene, mode);
     }
