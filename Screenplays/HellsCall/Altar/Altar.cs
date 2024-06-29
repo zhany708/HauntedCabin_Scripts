@@ -166,8 +166,8 @@ public class Altar : MonoBehaviour      //仪式台的脚本
 
     //跟Stats状态函数里的事件绑定在一起，或者放在仪式台死亡动画里（因为需要跟Event绑定，所以这里的返回类型不能为Task）
     private async void GameLost()       
-    {
-        await HellsCall.Instance.Lose();      //进行剧本的失败逻辑
+    {      
+        await HellsCall.Instance.Lose();                     //进行剧本的失败逻辑
     }
     #endregion
 

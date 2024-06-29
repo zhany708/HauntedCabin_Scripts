@@ -129,7 +129,8 @@ public class HellsCall : BaseScreenplay<HellsCall>
 
     public override async Task Lose()
     {
-        EnvironmentManager.Instance.SetIsGameLost(true);           //设置布尔，表示游戏失败，同时防止执行正常仪式结束的逻辑
+        EnvironmentManager.Instance.SetIsGameLost(true);      //设置布尔，表示游戏失败，同时防止执行正常仪式结束的逻辑
+        EnemyPool.Instance.KillAllEnemy_DefenseWar();         ////立刻消灭所有敌人（防止敌人攻击玩家）
 
 
         Altar altar = FindAnyObjectByType<Altar>();
@@ -139,7 +140,7 @@ public class HellsCall : BaseScreenplay<HellsCall>
             return;
         }
 
-        altar.Combat.gameObject.SetActive(false);     //禁用祷告石的战斗组件，防止鞭尸
+        altar.Combat.gameObject.SetActive(false);            //禁用祷告石的战斗组件，防止鞭尸
 
 
         //打开剧本失败界面

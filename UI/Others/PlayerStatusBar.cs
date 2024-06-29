@@ -85,7 +85,6 @@ public class PlayerStatusBar : BasePanel
         }
 
         CheckComponents();              //检查公有组件是否都存在
-        //InitializePlayerStatus();       //初始化
     }   
 
     private void Start()
@@ -250,13 +249,23 @@ public class PlayerStatusBar : BasePanel
     #endregion
 
 
-    
-    private void OnSceneLoaded(UnityEngine.SceneManagement.Scene scene, LoadSceneMode mode)
+    //每当进入新界面时调用的函数
+    public void OnSceneLoaded(UnityEngine.SceneManagement.Scene scene, LoadSceneMode mode)
     {
-        //每当进入一楼场景时都调用此函数
+        //每当进入一楼场景时都调用以下逻辑（因为该界面永久存在，所以不能一次性的初始化）
         if (scene.name == "FirstFloor")
         {
+            //初始化
             InitializePlayerStatus();
+            //设置界面的透明度（显示出来）
+            CanvasGroup.alpha = FadeInAlpha;
+        }
+
+        //进入其余场景时（目前只有主菜单）
+        else
+        {
+            //设置界面的透明度（隐藏界面）
+            CanvasGroup.alpha = FadeOutAlpha;
         }
     }
 
