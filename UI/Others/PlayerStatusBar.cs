@@ -23,6 +23,9 @@ public class PlayerStatusBar : BasePanel
     public TextMeshProUGUI SanityText;
     public TextMeshProUGUI KnowledgeText;
 
+    //玩家的血条的文本
+    public TextMeshProUGUI HealthText;
+
 
     public Player Player      //Lazy load（只在需要变量时才尝试获取组件，而不是一次性的放在某个Unity内部函数中）
     {
@@ -56,9 +59,16 @@ public class PlayerStatusBar : BasePanel
     public string SanityPhraseKey;
     public string KnowledgePhraseKey;
 
+    //玩家的血条对应的翻译文本的string
+    public string HealthPhraseKey;
+
 
 
     PlayerHealthBar m_PlayerHealthBar;
+
+
+    float m_CurrentHealth => m_PlayerHealthBar.GetCurrentHp();    //玩家的当前生命值
+    float m_MaxHealth => m_PlayerHealthBar.GetMaxHp();            //玩家的最大生命值
 
 
 
@@ -168,14 +178,15 @@ public class PlayerStatusBar : BasePanel
 
     private void CheckComponents()
     {
-        //检查四个属性组件是否有的为空
-        if (StrengthText == null || SpeedText == null || SanityText == null || KnowledgeText == null)
+        //检查四个属性和血条文本组件是否有的为空
+        if (StrengthText == null || SpeedText == null || SanityText == null || KnowledgeText == null || HealthText == null)
         {
             Debug.LogError("Some Text components are not assigned in the " + name);
             return;
         }
 
-        if (StrengthPhraseKey == "" || SpeedPhraseKey == "" || SanityPhraseKey == "" || KnowledgePhraseKey == "")
+        //检查各个翻译文本是否为空
+        if (StrengthPhraseKey == "" || SpeedPhraseKey == "" || SanityPhraseKey == "" || KnowledgePhraseKey == "" || HealthPhraseKey == "")
         {
             Debug.LogError("Some Lean Localization phrase keys are not written in the " + name);
             return;
@@ -246,6 +257,19 @@ public class PlayerStatusBar : BasePanel
         yield return new WaitForEndOfFrame();       //等待一帧的结束，以便所有其余的所需内容都已初始化完成
         UpdateStatusUI();
     }
+
+
+
+
+    //更新玩家的血条文本
+    public void UpdateHealthText()
+    {
+        //获取翻译的文本组件
+        string healthFormat = LeanLocalization.GetTranslationText(HealthPhraseKey);
+
+        //赋值血条的数值
+        HealthText.text = string.Format(healthFormat, m_CurrentHealth, m_MaxHealth);            
+    }
     #endregion
 
 
@@ -260,6 +284,9 @@ public class PlayerStatusBar : BasePanel
             InitializePlayerStatus();
             //设置界面的透明度（显示出来）
             CanvasGroup.alpha = FadeInAlpha;
+
+            //将更新血条文本的函数跟玩家血条脚本绑定起来
+            m_PlayerHealthBar.OnHealthChange += UpdateHealthText;
         }
 
         //进入其余场景时（目前只有主菜单）
@@ -267,6 +294,8 @@ public class PlayerStatusBar : BasePanel
         {
             //设置界面的透明度（隐藏界面）
             CanvasGroup.alpha = FadeOutAlpha;
+
+            m_PlayerHealthBar.OnHealthChange -= UpdateHealthText;
         }
     }
 

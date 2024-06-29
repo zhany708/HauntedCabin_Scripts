@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class PlayerHealthBar : HealthBar      //用于玩家的血条控制
 {
+    public event Action OnHealthChange;       //接收方为PlayerStatusBar
+
+
     Player m_Player;
 
 
@@ -60,5 +63,15 @@ public class PlayerHealthBar : HealthBar      //用于玩家的血条控制
 
         //游戏开始时初始化最大生命值
         SetMaxHp(m_Player.PlayerData.MaxHealth);
+    }
+
+
+
+
+    public override void SetCurrentHealth(float health)
+    {
+        base.SetCurrentHealth(health);
+
+        OnHealthChange?.Invoke();           //调用事件
     }
 }

@@ -53,7 +53,7 @@ public class HealthBar : MonoBehaviour
 
 
     #region 管理血条相关
-    public void SetCurrentHealth(float health)
+    public virtual void SetCurrentHealth(float health)
     {
         m_CurrentHp = Mathf.Clamp(health, 0f, m_MaxHp);     //将当前血量限制在0和血量上限之间
         UpdateHealthBar();
@@ -157,6 +157,19 @@ public class HealthBar : MonoBehaviour
     public void SetDecreaseHpEffectImage(Image thisImage)
     {
         decreaseHpEffectImage = thisImage;
+    }
+    #endregion
+
+
+    #region Getters
+    public float GetMaxHp()
+    {
+        retuen m_MaxHp;
+    }
+
+    public float GetCurrentHp()
+    {
+        retuen m_CurrentHp;
     }
     #endregion
 }
