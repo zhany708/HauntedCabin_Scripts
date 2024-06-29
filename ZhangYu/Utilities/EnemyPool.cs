@@ -43,7 +43,6 @@ public class EnemyPool : MonoBehaviour       //用于生成敌人的对象池，
 
 
     //获取物体，第二个参数为敌人的生成坐标
-    
     public GameObject GetObject(GameObject prefab, Vector2 spawnPos)
     {
         //检查池中有没有物体，没有的话则新建一个并加进去
@@ -133,6 +132,26 @@ public class EnemyPool : MonoBehaviour       //用于生成敌人的对象池，
     }
 
 
+
+
+
+    //每当加载新场景时调用的函数
+    public void OnSceneLoaded(UnityEngine.SceneManagement.Scene scene, LoadSceneMode mode)
+    {
+        //每当进入一楼场景时都调用以下逻辑
+        if (scene.name == "FirstFloor")
+        {
+            
+        }
+
+        //进入其余场景时（目前只有主菜单）
+        else
+        {
+            //重置游戏
+            ResetGame()
+        }
+    }
+    
 
     public void ResetGame()     //重置游戏（在加载其他场景前调用此函数）
     {

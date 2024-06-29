@@ -234,7 +234,7 @@ public class BasePanel : MonoBehaviour
         ScreenplayManager.Instance.ResetGame();
         UIManager.Instance.ResetGame();
 
-        //在重置其余管理器脚本    
+        //再重置其余管理器脚本    
         PostProcessController.Instance.ResetGame();
         EnemyPool.Instance.ResetGame();
 
