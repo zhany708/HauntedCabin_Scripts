@@ -24,6 +24,8 @@ public class ScreenplayManager : ManagerTemplate<ScreenplayManager>     //用于
 
 
 
+
+
     public async Task OpenScreenplay(string name)       //打开剧本
     {
         //异步加载，随后检查是否加载成功
@@ -46,6 +48,26 @@ public class ScreenplayManager : ManagerTemplate<ScreenplayManager>     //用于
     }
 
 
+
+
+
+
+    //每当加载新场景时调用的函数
+    public void OnSceneLoaded(UnityEngine.SceneManagement.Scene scene, LoadSceneMode mode)
+    {
+        //每当进入一楼场景时都调用以下逻辑
+        if (scene.name == "FirstFloor")
+        {
+            
+        }
+
+        //进入其余场景时（目前只有主菜单）
+        else
+        {
+            //重置游戏
+            ResetGame()
+        }
+    }
 
 
     public void ResetGame()     //重置游戏，删除所有剧本物体

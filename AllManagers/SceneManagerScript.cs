@@ -25,6 +25,7 @@ public class SceneManagerScript : ManagerTemplate<SceneManagerScript>
         EnvironmentManager.Instance.OnSceneLoaded(scene, mode);
         EventManager.Instance.OnSceneLoaded(scene, mode);
         RoomManager.Instance.OnSceneLoaded(scene, mode);
+        ScreenplayManager.Instance.OnSceneLoaded(scene, mode);
         UIManager.Instance.OnSceneLoaded(scene, mode);
 
         //先调用具体的某个UI的加载场景脚本
