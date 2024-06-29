@@ -151,9 +151,9 @@ public class EnemyPool : MonoBehaviour       //用于生成敌人的对象池，
             ResetGame()
         }
     }
-    
 
-    public void ResetGame()     //重置游戏（在加载其他场景前调用此函数）
+
+    public void ResetGame()     //重置游戏（在返回主菜单前调用此函数）
     {
         //在场景中取消激活所有敌人
         foreach (Transform child in transform)    

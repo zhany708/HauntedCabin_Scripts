@@ -79,6 +79,6 @@ public class GameLostPanel : PanelWithButton
         SceneManager.LoadScene("MainMenu");
 
         //重置游戏的各种系统
-        ResetGameSystems();
+        //ResetGameSystems();
     }
 }

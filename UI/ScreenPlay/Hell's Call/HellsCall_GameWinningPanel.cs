@@ -86,7 +86,7 @@ public class HellsCall_GameWinningPanel : PanelWithButton
         SceneManager.LoadScene("MainMenu");
 
         //重置游戏的各种系统
-        ResetGameSystems();
+        //ResetGameSystems();
     }
 
 
