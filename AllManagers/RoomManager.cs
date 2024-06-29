@@ -457,7 +457,7 @@ public class RoomManager : ManagerTemplate<RoomManager>
 
 
     #region 其余房间函数（规格，重置游戏等）
-    public void GetMaxAllowedRoomNum(ref int thisNum)
+    public void GetMaxAllowedRoomNum(ref int thisNum)       //获取可以生成的最大房间数
     {
         //一行可以生成的房间数量。FloorToInt函数用于将结果向下取整（无论小数部分有多大）
         int allowedRoomNumOnRow = Mathf.FloorToInt(MaximumXPos * 2 / RoomLength) + 1;
@@ -487,25 +487,50 @@ public class RoomManager : ManagerTemplate<RoomManager>
     }
 
 
+
+    //每当进入新界面时调用的函数
+    public void OnSceneLoaded(UnityEngine.SceneManagement.Scene scene, LoadSceneMode mode)
+    {
+        //每当进入一楼场景时都调用以下逻辑（因为该界面永久存在，所以不能一次性的初始化）
+        if (scene.name == "FirstFloor")
+        {
+            SetActiveAllRoom(true);      //激活所有房间
+        }
+
+        //进入其余场景时（目前只有主菜单）
+        else
+        {
+            SetActiveAllRoom(false);     //隐藏所有房间
+        }
+    }
+
+    private void SetActiveAllRoom(bool isActive)
+    {
+        foreach (Transform child in m_FirstFloorRooms)    //在场景中激活/取消激活所有AllRoom下的房间
+        {
+            child.gameObject.SetActive(isActive);
+        }
+    }
+
     public void ResetGame()
     {
         foreach (Transform child in m_FirstFloorRooms)    //在场景中删除所有AllRoom下的房间（除了初始房间）
         {
-            RootRoomController childScript = child.GetComponent<RootRoomController>();
-            if (childScript == null)
+            RootRoomController roomScript = child.GetComponent<RootRoomController>();
+            if (roomScript == null)
             {
                 Debug.LogError("Cannot get the RootRoomController script from the: " + child.name);
                 return;
             }
 
             //如果是不可删除的房间
-            if (ImportantRoomPos.Contains((Vector2)childScript.gameObject.transform.position))
+            if (ImportantRoomPos.Contains((Vector2)roomScript.gameObject.transform.position))
             {
-                childScript.ResetGame();     //调用重置游戏函数
+                roomScript.ResetGame();     //调用重置游戏函数
             }    
             else        //只删除非初始房间
             {
-                Destroy(childScript.gameObject);
+                Destroy(roomScript.gameObject);
             }  
         }
     }

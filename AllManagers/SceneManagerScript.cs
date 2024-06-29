@@ -21,6 +21,7 @@ public class SceneManagerScript : ManagerTemplate<SceneManagerScript>
     //每当加载场景时调用的函数
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
+        RoomManager.Instance.OnSceneLoaded(scene, mode);
         PlayerStatusBar.Instance.OnSceneLoaded(scene, mode);
     }
 }
