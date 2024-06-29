@@ -130,7 +130,7 @@ public class HellsCall : BaseScreenplay<HellsCall>
     public override async Task Lose()
     {
         EnvironmentManager.Instance.SetIsGameLost(true);      //设置布尔，表示游戏失败，同时防止执行正常仪式结束的逻辑
-        EnemyPool.Instance.KillAllEnemy_DefenseWar();         ////立刻消灭所有敌人（防止敌人攻击玩家）
+        EnemyPool.Instance.KillAllEnemy_DefenseWar();         //立刻消灭所有敌人（防止敌人攻击玩家）
 
 
         Altar altar = FindAnyObjectByType<Altar>();
