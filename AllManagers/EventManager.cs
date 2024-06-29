@@ -136,20 +136,6 @@ public class EventManager : ManagerTemplate<EventManager>
     }
     #endregion
 
-
-    //检查是否进入二阶段
-    private void CheckIfTranstionToSecondStage()
-    {
-        if (m_EventCount >= EnterSecondStageCount && !IsSecondStage)   //检查是否触发了足够次数的事件，并且目前不是二阶段
-        {
-            transform.position = m_RoomPosWhereEventOccur;          //将事件管理器的坐标移到当前房间
-            m_RoomPosWhereEnterSecondStage = transform.position;    //储存进入二阶段的房间的坐标
-            m_Animator.SetTrigger("TranstionSecondStage");          //随后播放过渡阶段的动画
-
-            IsSecondStage = true;
-        }
-    }
-
     
     #region AnimationEvents
     private async void DisplayTransitionStageText()       //用于阶段动画中决定何时生成剧本物体
@@ -168,13 +154,40 @@ public class EventManager : ManagerTemplate<EventManager>
     #endregion
 
 
-    #region Setters 
+    #region 其余函数
+    //增加触发过的事件计数
     public void IncrementEventCount()
     {
         m_EventCount++;
 
         CheckIfTranstionToSecondStage();    //每次事件计数增加后检查是否满足进入二阶段
     }
+
+    //检查是否进入二阶段
+    private void CheckIfTranstionToSecondStage()
+    {
+        if (m_EventCount >= EnterSecondStageCount && !IsSecondStage)   //检查是否触发了足够次数的事件，并且目前不是二阶段
+        {
+            transform.position = m_RoomPosWhereEventOccur;          //将事件管理器的坐标移到当前房间
+            m_RoomPosWhereEnterSecondStage = transform.position;    //储存进入二阶段的房间的坐标
+            m_Animator.SetTrigger("TranstionSecondStage");          //随后播放过渡阶段的动画
+
+            IsSecondStage = true;
+        }
+    }
+  
+
+    //每当进入新界面时调用的函数
+    public void OnSceneLoaded(UnityEngine.SceneManagement.Scene scene, LoadSceneMode mode)
+    {
+        //每当进入一楼场景时都调用以下逻辑
+        if (scene.name == "FirstFloor")
+        {
+            //重置游戏
+            ResetGame()
+        }
+    }
+    
 
     //重置游戏
     public void ResetGame()
