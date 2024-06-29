@@ -57,8 +57,22 @@ public class MainMenuPanel : PanelWithButton
 
     private async void PlayGame()
     {
-        //打开游戏背景介绍界面
-        await UIManager.Instance.OpenPanel(UIManager.Instance.UIKeys.GameBackgroundPanel);
+        //当玩家第一次进游戏时
+        if (EnvironmentManager.Instance.IsFirstTimeEnterGame)
+        {
+            //打开游戏背景介绍界面
+            await UIManager.Instance.OpenPanel(UIManager.Instance.UIKeys.GameBackgroundPanel);
+        }
+
+        else
+        {
+            //载入一楼大厅场景
+            SceneManager.LoadScene("FirstFloor");
+
+            //播放一楼BGM
+            await SoundManager.Instance.PlayBGMAsync(SoundManager.Instance.AudioClipKeys.StopForAMoment, true, SoundManager.Instance.MusicVolume);
+        }
+        
 
         //淡出当前界面
         Fade(CanvasGroup, FadeOutAlpha, FadeDuration, false);

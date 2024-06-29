@@ -8,7 +8,7 @@ using UnityEngine;
 public class EnvironmentManager : ManagerTemplate<EnvironmentManager>     
 {
     public bool IsGameLost { get; private set; } = false;
-
+    public bool IsFirstTimeEnterGame { get; private set; } = false;
 
 
 
@@ -163,6 +163,16 @@ public class EnvironmentManager : ManagerTemplate<EnvironmentManager>
     }
     #endregion
 
+
+    //每当进入新界面时调用的函数
+    public void OnSceneLoaded(UnityEngine.SceneManagement.Scene scene, LoadSceneMode mode)
+    {
+        //每当进入一楼场景时都调用以下逻辑
+        if (scene.name == "FirstFloor")
+        {
+            IsFirstTimeEnterGame = true;
+        }
+    }
 
     public void ResetGame()
     {

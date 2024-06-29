@@ -491,7 +491,7 @@ public class RoomManager : ManagerTemplate<RoomManager>
     //每当进入新界面时调用的函数
     public void OnSceneLoaded(UnityEngine.SceneManagement.Scene scene, LoadSceneMode mode)
     {
-        //每当进入一楼场景时都调用以下逻辑（因为该界面永久存在，所以不能一次性的初始化）
+        //每当进入一楼场景时都调用以下逻辑
         if (scene.name == "FirstFloor")
         {
             SetActiveAllRoom(true);      //激活所有房间
@@ -506,7 +506,8 @@ public class RoomManager : ManagerTemplate<RoomManager>
 
     private void SetActiveAllRoom(bool isActive)
     {
-        foreach (Transform child in m_FirstFloorRooms)    //在场景中激活/取消激活所有AllRoom下的房间
+        //在场景中激活/取消激活所有AllRoom下的房间
+        foreach (Transform child in m_FirstFloorRooms)    
         {
             child.gameObject.SetActive(isActive);
         }

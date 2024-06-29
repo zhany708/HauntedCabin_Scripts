@@ -252,10 +252,10 @@ public class PlayerStatusBar : BasePanel
     //每当进入新界面时调用的函数
     public void OnSceneLoaded(UnityEngine.SceneManagement.Scene scene, LoadSceneMode mode)
     {
-        //每当进入一楼场景时都调用以下逻辑（因为该界面永久存在，所以不能一次性的初始化）
+        //每当进入一楼场景时都调用以下逻辑
         if (scene.name == "FirstFloor")
         {
-            //初始化
+            //初始化（因为该界面永久存在，所以不能一次性的初始化）
             InitializePlayerStatus();
             //设置界面的透明度（显示出来）
             CanvasGroup.alpha = FadeInAlpha;
