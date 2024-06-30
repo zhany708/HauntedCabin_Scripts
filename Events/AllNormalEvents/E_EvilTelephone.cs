@@ -81,7 +81,7 @@ public class E_EvilTelephone : Event    //E开头的脚本表示跟事件相关
 
 
 
-    private async void TriggerPlayerInteraction()
+    private async Task TriggerPlayerInteraction()
     {
         m_Animator.SetBool("Ringing", false);       //角色触碰电话后取消震动
 

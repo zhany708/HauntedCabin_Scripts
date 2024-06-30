@@ -22,7 +22,7 @@ public class MainMenuPanel : PanelWithButton
         //检查按钮组件是否存在
         if (PlayButton == null || SettingButton == null || QuitButton == null)
         {
-            Debug.LogError("Some buttons are not assigned in the MainMenuPanel.");
+            Debug.LogError("Some buttons are not assigned in the " + name);
             return;
         }
 

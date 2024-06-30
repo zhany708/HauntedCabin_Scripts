@@ -158,7 +158,8 @@ public class EvilTelephonePanel : PanelWithButton
         }
     }
 
-    private void LogicPassToConfirmPanel(ButtonAction action)           //本函数用于向确认面板传递选项相关的逻辑（玩家按下确认后才会执行下面的逻辑）
+    //本函数用于向确认面板传递选项相关的逻辑（玩家按下确认后才会执行下面的逻辑）
+    private void LogicPassToConfirmPanel(ButtonAction action)           
     {
         switch (action)
         {
