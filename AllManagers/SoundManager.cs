@@ -10,8 +10,8 @@ public class SoundManager : ManagerTemplate<SoundManager>
 {
     public SO_AudioClipKeys AudioClipKeys;
 
-    public float MusicVolume { get; private set; }               //背景音乐的音量
-    public float SfxVolume { get; private set; }        //音效音量
+    public float MusicVolume { get; private set; } = 1f;      //背景音乐的音量
+    public float SfxVolume { get; private set; } = 1f;        //音效音量
 
 
 
@@ -19,13 +19,13 @@ public class SoundManager : ManagerTemplate<SoundManager>
     AudioSource m_SfxSource;    //用于音效的播放器
 
     //由于音频管理器加载的文件类型是音频，不是游戏物体，所以需要有自己的字典
-    Dictionary<string, AudioClip> m_AudioDict;
+    Dictionary<string, AudioClip> m_AudioDict = new Dictionary<string, AudioClip>();
 
 
 
 
 
-    #region Unity内部函数循环
+    #region Unity内部函数
     protected override void Awake()
     {
         base.Awake();
@@ -34,13 +34,6 @@ public class SoundManager : ManagerTemplate<SoundManager>
         //初始化（添加两个音频源）
         m_MusicSource = gameObject.AddComponent<AudioSource>();
         m_SfxSource = gameObject.AddComponent<AudioSource>();
-
-        m_AudioDict = new Dictionary<string, AudioClip>();
-
-
-        //初始化音量
-        MusicVolume = 1f;
-        SfxVolume = 1f;
     }
     #endregion
 
@@ -203,8 +196,10 @@ public class SoundManager : ManagerTemplate<SoundManager>
             thisAudioSource.PlayOneShot(thisClip, SfxVolume * thisVolume * RandomVolume() );
         }
     }
+    #endregion
 
 
+    #region 其余函数
     //随机音高（98%-103%），这样不会显得音效单调
     private float RandomVolume()
     {

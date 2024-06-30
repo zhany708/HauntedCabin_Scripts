@@ -26,7 +26,7 @@ public class Stats : CoreComponent      //用于管理生命，魔力等状态�
 
 
 
-
+    #region Unity内部函数
     protected override void Awake()
     {
         base.Awake();
@@ -41,10 +41,10 @@ public class Stats : CoreComponent      //用于管理生命，魔力等状态�
 
         CurrentHealth = MaxHealth;      //游戏开始时重置当前生命值
     }
+    #endregion
 
 
-
-
+    #region 生命值变化相关
     public virtual void IncreaseHealth(float amount)
     {
         CurrentHealth = Mathf.Clamp(CurrentHealth + amount, 0, MaxHealth);    //确保生命值不会超过最大上限
@@ -72,28 +72,28 @@ public class Stats : CoreComponent      //用于管理生命，魔力等状态�
                                           
             
             //以下这些条件的顺序很重要，如果顺序反过来的话就永远只会进入一个条件！
-            if (CurrentHealth <= 0)     //当血量归零时
+            if (CurrentHealth <= 0)         //当血量归零时
             {
                 CurrentHealth = 0;
 
-                OnHealthZero?.Invoke();     //先检查是否为空，再调用延时函数
+                OnHealthZero?.Invoke();     //先检查是否为空，再调用血量归零事件函数
 
                 //Debug.Log("Health is zero!!");
             }
 
             else if (CurrentHealth <= MaxHealth * 0.33)     //当血量只有三分之一时
             {
-                OnLowHealth?.Invoke();      //调用事件函数
+                OnLowHealth?.Invoke();      //调用低血量事件函数
             }
 
             else if (CurrentHealth <= MaxHealth * 0.5)      //当血量只有一半时
             {
-                OnHalfHealth?.Invoke();     //调用事件函数
+                OnHalfHealth?.Invoke();     //调用一半血量事件函数
             }
 
             else if (CurrentHealth <= MaxHealth * 0.66)     //当血量只有三分之二时
             {
-                OnHighHealth?.Invoke();     //调用事件函数
+                OnHighHealth?.Invoke();     //调用高血量事件函数
             }
 
 
@@ -119,17 +119,16 @@ public class Stats : CoreComponent      //用于管理生命，魔力等状态�
             DecreaseHealth(damageAmount, true);       //掉落血量（无视防御）
         }
     }
+    #endregion
 
 
-
-
+    #region 其余函数
     private float GetDefenseAddition()   //每当扣除血量时都需要调用此函数
     {
         return 1 - m_Defense * m_DefenseRate;       //计算伤害减免
     }
 
 
-    #region Getters
     public float GetCurrentHelathRate()     //获取当前血量百分比
     {
         return CurrentHealth / MaxHealth;

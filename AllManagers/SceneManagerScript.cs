@@ -6,6 +6,7 @@ using UnityEngine.SceneManagement;
 //用于处理加载场景相关的逻辑
 public class SceneManagerScript : ManagerTemplate<SceneManagerScript>
 {
+    #region Unity内部函数
     private void OnEnable()
     {
         //将函数与事件（Unity内部的加载场景事件）关联
@@ -16,6 +17,8 @@ public class SceneManagerScript : ManagerTemplate<SceneManagerScript>
     {
         SceneManager.sceneLoaded -= OnSceneLoaded;
     }
+    #endregion
+
 
 
     //每当加载场景时调用的函数（在新场景所有物体的Awake和OnEnable函数后执行）

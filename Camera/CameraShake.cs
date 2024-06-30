@@ -7,7 +7,7 @@ using UnityEngine;
 public class CameraShake : MonoBehaviour
 {
     CinemachineVirtualCamera m_PlayerCamera;
-    CinemachineBasicMultiChannelPerlin m_VirtualCameraNoise;
+    CinemachineBasicMultiChannelPerlin m_VirtualCameraNoise;        //用于控制相机的震动的组件
 
     float m_Intensity;
     bool m_IsShake =  false;
@@ -17,18 +17,22 @@ public class CameraShake : MonoBehaviour
 
 
 
-
-    void Start()
+    #region Unity内部函数
+    private void Awake()
     {
         m_PlayerCamera = GetComponent<CinemachineVirtualCamera>();
-
-        if (m_PlayerCamera != null)
+        if (m_PlayerCamera == null)
         {
-            m_VirtualCameraNoise = m_PlayerCamera.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>();     //调用震动组件
+            Debug.LogError("Cannot get the CinemachineVirtualCamera component in the: " + gameObject.name);
+            return;   
         }
+
+        m_VirtualCameraNoise = m_PlayerCamera.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>();     //调用震动组件      
     }
+    #endregion
 
 
+    #region 相机震动相关
     public void ShakeCamera(float intensity, float duration)    //震动函数
     {
         if (m_VirtualCameraNoise != null && !m_IsShake)     //只有不在震动时才会开始震动
@@ -57,4 +61,5 @@ public class CameraShake : MonoBehaviour
 
         m_IsShake = false;
     }
+    #endregion
 }

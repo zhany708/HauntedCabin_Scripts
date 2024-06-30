@@ -16,6 +16,11 @@ public abstract class ManagerTemplate<T> : MonoBehaviour where T : Component
 
 
 
+
+
+
+
+    #region Unity内部函数
     protected virtual void Awake()
     {
         //单例模式
@@ -35,16 +40,15 @@ public abstract class ManagerTemplate<T> : MonoBehaviour where T : Component
             }         
         }
     }
+    #endregion
 
 
-
-
-
+    #region 异步加载/释放
     //异步加载
     protected async Task<GameObject> LoadPrefabAsync(string name)
     {
         //检查字典里是否有预制件，如果有的话直接返回
-        if (!m_PrefabDict.TryGetValue(name, out GameObject panelPrefab))
+        if (!m_PrefabDict.TryGetValue(name, out GameObject objectPrefab))
         {
             //异步加载游戏物体
             var handle = Addressables.LoadAssetAsync<GameObject>(name);
@@ -53,10 +57,10 @@ public abstract class ManagerTemplate<T> : MonoBehaviour where T : Component
             //检查异步加载是否成功
             if (handle.Status == UnityEngine.ResourceManagement.AsyncOperations.AsyncOperationStatus.Succeeded)
             {
-                panelPrefab = handle.Result;
+                objectPrefab = handle.Result;
 
                 //将预制件存进字典
-                m_PrefabDict[name] = panelPrefab;
+                m_PrefabDict[name] = objectPrefab;
             }
 
             else
@@ -67,9 +71,9 @@ public abstract class ManagerTemplate<T> : MonoBehaviour where T : Component
         }
 
 
-        if (panelPrefab != null)
+        if (objectPrefab != null)
         {
-            return panelPrefab;
+            return objectPrefab;
         }
         
         else
@@ -106,11 +110,10 @@ public abstract class ManagerTemplate<T> : MonoBehaviour where T : Component
             Debug.LogError("This GameObject is not loaded yet, cannot release: " + key);
         }
     }
+    #endregion
 
 
-
-
-
+    #region 其余函数
     //设置脚本中跟物体的坐标
     protected void SetupRootGameObject(ref Transform rootGameObject, string rootGameObjectName)
     {
@@ -119,4 +122,5 @@ public abstract class ManagerTemplate<T> : MonoBehaviour where T : Component
 
         rootGameObject = rootObject.transform;
     }
+    #endregion
 }

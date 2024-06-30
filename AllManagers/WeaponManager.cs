@@ -8,7 +8,9 @@ public class WeaponManager : ManagerTemplate<WeaponManager>        //用于管�
     private Transform m_PrimaryWeapon;
     private Transform m_SecondaryWeapon;
 
-
+    //主副武器的父物体名（不是武器名）
+    const string m_PrimaryWeaponName = "PrimaryWeapon";
+    const string m_SecondaryWeaponName = "SecondaryWeapon";
 
 
     //Dictionary<string, Weapon> m_WeaponDict;      //存放正在使用的武器的字典
@@ -17,20 +19,19 @@ public class WeaponManager : ManagerTemplate<WeaponManager>        //用于管�
 
 
 
-
+    #region Unity内部函数
     protected override void Awake()
     {
         base.Awake();
 
         //赋值主武器和副武器给脚本
-        SetupWeaponHolder(ref m_PrimaryWeapon, "PrimaryWeapon");
-        SetupWeaponHolder(ref m_SecondaryWeapon, "SecondaryWeapon");
+        SetupWeaponHolder(ref m_PrimaryWeapon, m_PrimaryWeaponName);
+        SetupWeaponHolder(ref m_SecondaryWeapon, m_SecondaryWeaponName);
     }
+    #endregion
 
 
-
-
-
+    #region 武器加载相关
     //设置脚本中主副武器的坐标
     private void SetupWeaponHolder(ref Transform weaponHolder, string weaponHolderName)
     {
@@ -66,8 +67,8 @@ public class WeaponManager : ManagerTemplate<WeaponManager>        //用于管�
         if (m_PrimaryWeapon == null || m_SecondaryWeapon == null)
         {
             //赋值主武器和副武器给脚本
-            SetupWeaponHolder(ref m_PrimaryWeapon, "PrimaryWeapon");
-            SetupWeaponHolder(ref m_SecondaryWeapon, "SecondaryWeapon");
+            SetupWeaponHolder(ref m_PrimaryWeapon, m_PrimaryWeaponName);
+            SetupWeaponHolder(ref m_SecondaryWeapon, m_SecondaryWeaponName);
         }
 
         //生成物体，并根据第二个参数决定父物体为主武器还是副武器
@@ -83,11 +84,14 @@ public class WeaponManager : ManagerTemplate<WeaponManager>        //用于管�
     //将新武器预制件赋值给Player脚本中的主/副武器
     private void EquipWeaponToPlayer(GameObject weaponObject, bool isPrimary)
     {
-        Player player = GameObject.FindObjectOfType<Player>();
-
-        if (player)
+        Player player = GameObject.FindAnyObjectByType<Player>();
+        if (player == null)
         {
-            player.SetWeapon(weaponObject.GetComponent<Weapon>(), isPrimary);
+            Debug.LogError("Cannot get the Player component in the : " + gameObject.name);
+            return;
         }
+
+        player.SetWeapon(weaponObject.GetComponent<Weapon>(), isPrimary);       
     }
+    #endregion
 }

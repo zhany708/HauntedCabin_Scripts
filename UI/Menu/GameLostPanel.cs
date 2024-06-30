@@ -13,6 +13,9 @@ public class GameLostPanel : PanelWithButton
 
 
 
+
+
+    #region Unity内部函数
     protected override void Awake()
     {
         //检查按钮组件是否存在
@@ -47,13 +50,10 @@ public class GameLostPanel : PanelWithButton
 
         OnFadeOutFinished -= HandleFadeOutFinished;
     }
-    
+    #endregion
 
 
-
-
-
-
+    #region 按钮绑定的函数
     private void OnRestartButtonClick()
     {
         //关闭界面
@@ -70,9 +70,10 @@ public class GameLostPanel : PanelWithButton
         UnityEditor.EditorApplication.isPlaying = false;
         #endif
     }
+    #endregion
 
 
-
+    #region 其余函数
     private void HandleFadeOutFinished()
     {
         //返回主菜单
@@ -81,4 +82,5 @@ public class GameLostPanel : PanelWithButton
         //重置游戏的各种系统
         //ResetGameSystems();
     }
+    #endregion
 }

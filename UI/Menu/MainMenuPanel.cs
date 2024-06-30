@@ -14,7 +14,7 @@ public class MainMenuPanel : PanelWithButton
 
 
 
-
+    #region Unity内部函数
     protected override void Awake()
     {
         base.Awake();
@@ -56,12 +56,10 @@ public class MainMenuPanel : PanelWithButton
             await UIManager.Instance.InitPanel(UIManager.Instance.UIKeys.GameBackgroundPanel);
         }
     }
+    #endregion
 
 
-
-
-
-
+    #region 按钮绑定的函数
     private async void PlayGame()
     {
         //当玩家第一次进游戏时
@@ -102,4 +100,5 @@ public class MainMenuPanel : PanelWithButton
         UnityEditor.EditorApplication.isPlaying = false;
         #endif
     }
+    #endregion
 }

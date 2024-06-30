@@ -13,7 +13,7 @@ public class EnvironmentManager : ManagerTemplate<EnvironmentManager>
 
 
 
-
+    #region 生成物体相关
     //生成物体，同时将参数中的Transform设置为物体的父物体
     public void GenerateObjectWithParent(GameObject generatedObject, Transform parentTransform, Vector2 generatedPos)
     {
@@ -28,6 +28,7 @@ public class EnvironmentManager : ManagerTemplate<EnvironmentManager>
             parentObject.AddNewSpriteRenderers();
         }
     }
+    #endregion
 
 
     #region 生成敌人相关
@@ -164,6 +165,7 @@ public class EnvironmentManager : ManagerTemplate<EnvironmentManager>
     #endregion
 
 
+    #region 其余函数
     //每当加载新场景时调用的函数
     public void OnSceneLoaded(UnityEngine.SceneManagement.Scene scene, LoadSceneMode mode)
     {
@@ -181,6 +183,14 @@ public class EnvironmentManager : ManagerTemplate<EnvironmentManager>
             IsGameLost = false;
         }
     }
+
+    //重置游戏
+    public void ResetGame()
+    {
+        //重置布尔
+        IsGameLost = false;
+    }
+    #endregion
 
 
     #region Setters

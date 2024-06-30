@@ -148,7 +148,7 @@ public class UIManager : ManagerTemplate<UIManager>
     #endregion
 
 
-    #region 打开特定面板
+    #region 打开特定界面
     public async void OpenConfirmPanel(Action onYesAction)              //专门用于打开确认界面
     {
         ConfirmPanel.Instance.ClearAllSubscriptions();                  //先清空所有事件绑定的之前的函数

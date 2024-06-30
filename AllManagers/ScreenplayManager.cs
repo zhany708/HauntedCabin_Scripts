@@ -13,7 +13,7 @@ public class ScreenplayManager : ManagerTemplate<ScreenplayManager>     //用于
 
 
 
-
+    #region Unity内部函数
     protected override void Awake()
     {
         base.Awake();
@@ -21,11 +21,10 @@ public class ScreenplayManager : ManagerTemplate<ScreenplayManager>     //用于
         //寻找画布跟物体，没有的话就创建一个
         SetupRootGameObject(ref m_ScreenplayRoot, "ScreenplayRoot");
     }
+    #endregion
 
 
-
-
-
+    #region 剧本相关
     public async Task OpenScreenplay(string name)       //打开剧本
     {
         //异步加载，随后检查是否加载成功
@@ -46,12 +45,10 @@ public class ScreenplayManager : ManagerTemplate<ScreenplayManager>     //用于
             return;
         }
     }
+    #endregion
 
 
-
-
-
-
+    #region 其余函数
     //每当加载新场景时调用的函数
     public void OnSceneLoaded(UnityEngine.SceneManagement.Scene scene, LoadSceneMode mode)
     {
@@ -87,4 +84,5 @@ public class ScreenplayManager : ManagerTemplate<ScreenplayManager>     //用于
             Destroy(child.gameObject);
         }
     }
+    #endregion
 }

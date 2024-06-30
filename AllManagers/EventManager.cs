@@ -137,7 +137,7 @@ public class EventManager : ManagerTemplate<EventManager>
     #endregion
 
     
-    #region AnimationEvents
+    #region 动画帧事件
     private async void DisplayTransitionStageText()       //用于阶段动画中决定何时生成剧本物体
     {
         //打开剧本
