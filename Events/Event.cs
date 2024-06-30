@@ -13,7 +13,7 @@ public abstract class Event : MonoBehaviour
 
 
 
-
+    #region Unity内部函数
     protected virtual void Awake()
     {
         if (EventData == null)
@@ -22,9 +22,10 @@ public abstract class Event : MonoBehaviour
             return;
         }
     }
+    #endregion
 
 
-
+    #region 事件相关
     public abstract void StartEvent();
 
     protected void FinishEvent()
@@ -43,7 +44,7 @@ public abstract class Event : MonoBehaviour
 
         EventManager.Instance.DeactivateEventObject();        //将事件物体放回池中
     }
-
+    #endregion
 
 
     #region Setters

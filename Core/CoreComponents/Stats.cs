@@ -123,7 +123,7 @@ public class Stats : CoreComponent      //用于管理生命，魔力等状态�
 
 
     #region 其余函数
-    private float GetDefenseAddition()   //每当扣除血量时都需要调用此函数
+    private float GetDefenseAddition()      //获取实际受到的伤害占比（每当扣除血量时都需要调用此函数）
     {
         return 1 - m_Defense * m_DefenseRate;       //计算伤害减免
     }

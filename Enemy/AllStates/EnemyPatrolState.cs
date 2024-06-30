@@ -22,7 +22,7 @@ public class EnemyPatrolState : EnemyState
     }
 
 
-
+    #region 状态机内部函数
     public override void Enter()
     {
         base.Enter();
@@ -71,33 +71,32 @@ public class EnemyPatrolState : EnemyState
 
         m_PatrolTimer = 0f;     //退出时将计时器清零
     }
+    #endregion
 
 
-
-
-
-
-
+    #region 检查函数
     //确保坐标处没有碰撞到家具
     private void EnsurePositionIsValid()
     {
         //用于防止无限循环的变量，最多循环100次
         int attemptCount = 0;
 
-        while (!IsPositionEmpty(m_RandomPosition) && attemptCount < 100)
+        //运用物理函数持续进行检查，直到结果通过或者尝试次数达到上限
+        while (!EnvironmentManager.Instance.IsPositionEmpty(m_RandomPosition, new Vector2(m_PhysicsCheckingXPos, m_PhysicsCheckingYPos), m_FurnitureLayerMask) && attemptCount < 100)
         {
             m_RandomPosition = enemy.PatrolRandomPos.GenerateSingleRandomPos();
             attemptCount++;
         }
 
-        //超过最大循环数量后依然没有生成出合适的坐标时，则报错
+        //当超过尝试上限后依然没有生成出合适的坐标时，则报错
         if (attemptCount >= 100)
         {
             Debug.LogError("Failed to find a valid patrol position after 100 attempts.");
+            return;
         }
     }
 
-
+    /*
     //运用物理函数检查要生成的坐标是否有家具
     private bool IsPositionEmpty(Vector2 position)
     {
@@ -105,4 +104,6 @@ public class EnemyPatrolState : EnemyState
         Collider2D overlapCheck = Physics2D.OverlapBox(position, new Vector2(m_PhysicsCheckingXPos, m_PhysicsCheckingYPos), 0f, m_FurnitureLayerMask);
         return overlapCheck == null;
     }
+    */
+    #endregion
 }

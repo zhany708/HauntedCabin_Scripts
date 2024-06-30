@@ -4,7 +4,7 @@ using UnityEngine;
 public class FireBatAttackState : EnemyAttackState
 {
     FireBat m_FireBat;
-    Transform m_Target;
+    Transform m_PlayerTarget;
 
     public FireBatAttackState(FireBat fireBat, EnemyStateMachine stateMachine, SO_EnemyData enemyData, string animBoolName) : base(fireBat, stateMachine, enemyData, animBoolName)
     {
@@ -17,7 +17,7 @@ public class FireBatAttackState : EnemyAttackState
     {
         //Debug.Log("FireBatAttackState");
 
-        m_Target = enemy.Parameter.PlayerTarget;      //储存玩家坐标信息，防止发射火球时丢失坐标
+        m_PlayerTarget = enemy.Parameter.PlayerTarget;      //储存玩家坐标信息，防止发射火球时丢失坐标
         base.Enter();
     }
 
@@ -25,9 +25,9 @@ public class FireBatAttackState : EnemyAttackState
     {
         if (core.AnimatorInfo.IsName("Attack") && core.AnimatorInfo.normalizedTime >= 0.95f)     //播放完攻击动画则发射火球且切换成追击状态
         {
-            if (m_Target != null)
+            if (m_PlayerTarget != null)
             {
-                m_FireBat.FireBallLaunch(m_Target);
+                m_FireBat.FireBallLaunch(m_PlayerTarget);
             }
             
             stateMachine.ChangeState(enemy.ChaseState);

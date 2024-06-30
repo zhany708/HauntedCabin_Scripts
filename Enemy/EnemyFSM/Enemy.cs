@@ -4,7 +4,7 @@ using ZhangYu.Utilities;
 
 
 
-#region Parameters
+
 [Serializable]      //让编辑器序列化这个类，从而可以直接在编辑器里编辑
 public class EnemyParameter
 {
@@ -12,14 +12,10 @@ public class EnemyParameter
     public Transform[] PatrolPoints;    //巡逻范围
 
     //攻击相关
-    public Transform PlayerTarget;     //玩家的坐标
-    //public Transform[] ChasePoints;     //追击范围
-    public Transform AttackPoint;   //攻击范围的圆心位置
-
-    //剧本相关
-    //public Transform AltarTarget;     //祷告石的坐标
+    public Transform PlayerTarget;      //玩家的坐标
+    //public Transform[] ChasePoints;   //追击范围
+    public Transform AttackPoint;       //攻击范围的圆心位置
 }
-#endregion
 
 
 
@@ -27,7 +23,7 @@ public class EnemyParameter
 
 public class Enemy : MonoBehaviour
 {
-    #region FSM States
+    #region 所有的状态
     public EnemyStateMachine StateMachine { get; private set; }
     public EnemyIdleState IdleState { get; private set; }
     public EnemyPatrolState PatrolState { get; private set; }
@@ -38,7 +34,7 @@ public class Enemy : MonoBehaviour
     #endregion
 
 
-    #region Components
+    #region 组件
     public EnemyParameter Parameter;
     public Core Core { get; private set; }
 
@@ -76,7 +72,7 @@ public class Enemy : MonoBehaviour
     #endregion
 
 
-    #region Variables
+    #region 变量
     public bool CanAttack { get; protected set; } = true;        //用于攻击间隔
 
     //float m_LastHitTime;        //上次受击时间
@@ -84,7 +80,7 @@ public class Enemy : MonoBehaviour
     #endregion
 
 
-    #region Unity Callback Functions
+    #region Unity内部函数
     protected virtual void Awake()    //最早实施的函数（只实施一次）
     {  
         Core = GetComponentInChildren<Core>();      //从子物体那调用Core脚本
@@ -171,9 +167,9 @@ public class Enemy : MonoBehaviour
     #endregion
 
 
-    #region Main Functions
+    #region 主要函数
     /*
-    //检测玩家是否超出追击范围
+    //检测玩家是否超出追击范围（目前不需要追击范围，因此注释掉）
     public bool CheckOutside()
     {
         float minX = Mathf.Min(Parameter.ChasePoints[0].position.x, Parameter.ChasePoints[1].position.x);
@@ -191,7 +187,7 @@ public class Enemy : MonoBehaviour
     #endregion
 
 
-    #region Animation Event Functions
+    #region 动画帧事件
     protected virtual void DeathLogicForAnimation()      //用于动画事件，摧毁物体
     {
         if (transform.parent != null)

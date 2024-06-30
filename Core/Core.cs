@@ -14,33 +14,29 @@ public class Core : MonoBehaviour
     public float HitResistance { get; private set; }     //击退抗性
 
 
-    private readonly List<CoreComponent> m_CoreComponents = new List<CoreComponent>();      //将所有Core组件加进去。readonly用于保护List，防止运行时不小心重新赋值
+
+
+    //将所有Core组件加进去。readonly用于保护List，防止运行时不小心重新赋值
+    private readonly List<CoreComponent> m_CoreComponents = new List<CoreComponent>();      
 
 
 
 
 
-
+    #region Unity内部函数
     private void Awake()
-    {
-        
+    {       
         //Debug.Log("Core Awake");
         Animator = GetComponentInParent<Animator>();        //调用父物体的动画控制器组件
-
-        if (!Animator)
+        if (Animator == null)
         {
-            Debug.LogError("Animator is missing!");
+            Debug.LogError("Cannot get the Animator component in the: " + gameObject.parent.name);
+            return;
         }   
     }
 
-
-
-
-
-
-    public void LogicUpdate()
-    {
-        
+    public void LogicUpdate()       //由于该函数会在其余脚本里的Update函数中运行，因此放在“Unity内部函数”region内
+    {       
         foreach (CoreComponent component in m_CoreComponents)
         {
             component.LogicUpdate();    //运行每个组建的LogicUpdate函数
@@ -48,28 +44,20 @@ public class Core : MonoBehaviour
         
         AnimatorInfo = Animator.GetCurrentAnimatorStateInfo(0);
     }
+    #endregion
+ 
 
-    
-    public void Addcomponent(CoreComponent component)
+    #region 获取子物体里的组件相关
+    public T GetCoreComponent<T>() where T : CoreComponent          //T代表这是Generic函数
     {
-        if (!m_CoreComponents.Contains(component))
-        {
-            m_CoreComponents.Add(component);     //如果组件不在List，则加进去
-        }
-    }
-    
-
-
-    public T GetCoreComponent<T>() where T : CoreComponent      //T代表这是Generic函数
-    {
-        var comp = m_CoreComponents.OfType<T>().FirstOrDefault();  //返回第一个找到的值，否则返回基础值（大部分变量类型的基础值为null）
+        var comp = m_CoreComponents.OfType<T>().FirstOrDefault();   //返回第一个找到的值，否则返回基础值（大部分变量类型的基础值为null）
 
         if (comp) { return comp; }
-        comp = GetComponentInChildren<T>();     //如果找不到，则到子物体中寻找
+        comp = GetComponentInChildren<T>();                         //如果找不到，则到子物体中寻找
 
         if (comp) { return comp; }
         
-        Debug.LogWarning($"{typeof(T)} not found on {transform.parent.name}");      //检查组件是否存在
+        Debug.LogWarning($"{typeof(T)} not found on {transform.parent.name}");      //如果仍然找不到，则报错
         return null;
     }
 
@@ -78,6 +66,18 @@ public class Core : MonoBehaviour
         value = GetCoreComponent<T>();
         return value;       //返还组件的参考
     }
+    #endregion
+
+
+    #region 其余函数
+    public void Addcomponent(CoreComponent component)
+    {
+        if (!m_CoreComponents.Contains(component))
+        {
+            m_CoreComponents.Add(component);     //如果组件不在List，则加进去
+        }
+    }
+    #endregion
 
 
     #region Setters

@@ -10,7 +10,7 @@ public class E_EvilTelephone : Event    //E开头的脚本表示跟事件相关
 
 
 
-
+    #region Unity内部函数
     protected override void Awake()
     {
         base.Awake();
@@ -70,10 +70,10 @@ public class E_EvilTelephone : Event    //E开头的脚本表示跟事件相关
         //释放接电话的音频
         SoundManager.Instance.ReleaseAudioClip(EventData.AudioClipNames[1]);      
     }
+    #endregion
 
 
-
-
+    #region 事件相关
     public override void StartEvent()
     {
         m_Animator.SetBool("Ringing", true);
@@ -85,11 +85,11 @@ public class E_EvilTelephone : Event    //E开头的脚本表示跟事件相关
     {
         m_Animator.SetBool("Ringing", false);       //角色触碰电话后取消震动
 
-        PlayAnswerPhoneSound();     //播放接电话的音效
+        PlayAnswerPhoneSound();                     //播放接电话的音效
 
         await UIManager.Instance.OpenPanel(UIManager.Instance.UIKeys.EvilTelephonePanel);   //打开事件界面
 
-        m_Collider.enabled = false;     //界面打开后，取消激活碰撞框
+        m_Collider.enabled = false;                 //界面打开后，取消激活碰撞框
     }
 
 
@@ -104,8 +104,10 @@ public class E_EvilTelephone : Event    //E开头的脚本表示跟事件相关
             SoundManager.Instance.PlaySFXAsyncWithAudioSource(m_AudioSource, EventData.AudioClipNames[1], EventData.AudioVolume);
         }
     }
+    #endregion
 
-    #region AnimationEvents
+
+    #region 动画帧事件
     private void PlayRingSound()        //用于动画帧事件，播放响铃声
     {
         if (m_AudioSource != null && !m_AudioSource.isPlaying)      //防止重复播放

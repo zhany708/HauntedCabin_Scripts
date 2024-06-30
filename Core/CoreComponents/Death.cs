@@ -6,7 +6,7 @@ public class Death : CoreComponent      //如果需要不同的死亡效果，�
 {
 
 
-
+    #region Unity内部函数
     private void OnEnable()
     {
         if (!combat.gameObject.activeSelf)
@@ -22,21 +22,26 @@ public class Death : CoreComponent      //如果需要不同的死亡效果，�
     {
         stats.OnHealthZero -= Die;    //物体禁用后从事件中移除函数，防止因为找不到函数所在的脚本而报错
     }
+    #endregion
 
 
-
-
+    #region 其余函数
     private void Die()
     {
         //core.transform.parent.gameObject.SetActive(false);  //禁用游戏物体
 
-        if (movement != null)
+        if (movement == null)
         {
-            movement.Rigidbody2d.constraints = RigidbodyConstraints2D.FreezeAll;        //死亡后禁止物体的一切移动和旋转
+            Debug.LogError("Cannot get the Movement component in the parent of:" + gameObject.name);
+            return;
         }
-                       
-        combat.gameObject.SetActive(false);     //取消激活战斗组件，防止出现鞭尸现象
+
+
+        movement.Rigidbody2d.constraints = RigidbodyConstraints2D.FreezeAll;        //死亡后禁止物体的一切移动和旋转
+                             
+        combat.gameObject.SetActive(false);         //取消激活战斗组件，防止出现鞭尸现象
 
         core.Animator.SetBool("Death", true);
     }
+    #endregion
 }

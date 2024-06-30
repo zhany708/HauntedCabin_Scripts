@@ -42,11 +42,11 @@ public class CameraShake : MonoBehaviour
 
             m_VirtualCameraNoise.ReSeed();      //每次开始震动前修改随机种子，使每次震动方向都不一样
             m_VirtualCameraNoise.m_AmplitudeGain = m_Intensity;
-            StartCoroutine(StopShake(duration));
+            StartCoroutine(ShakeCameraCoroutine(duration));
         }
     }
     
-    IEnumerator StopShake(float duration)
+    IEnumerator ShakeCameraCoroutine(float duration)
     {
         float elapsed = 0f;
 

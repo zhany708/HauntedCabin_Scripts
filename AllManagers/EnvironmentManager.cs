@@ -135,6 +135,13 @@ public class EnvironmentManager : ManagerTemplate<EnvironmentManager>
         return overlapCheck == null;
     }
 
+    //该函数跟上面一样，只是第三个参数不同
+    public bool IsPositionEmpty(Vector2 positionToCheck, Vector2 checkSize, LayerMask checkedLayer)
+    {
+        Collider2D overlapCheck = Physics2D.OverlapBox(positionToCheck, checkSize, 0f, checkedLayer);
+        return overlapCheck == null;
+    }
+
 
     //生成完敌人后，进行初始化
     private void InitializeEnemy(GameObject enemyObject, DoorController doorController)

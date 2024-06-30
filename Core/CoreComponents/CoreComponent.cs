@@ -44,25 +44,24 @@ public class CoreComponent : MonoBehaviour
 
 
 
-
+    
     protected virtual void Awake()
-    {
-        
-        core = transform.parent.GetComponent<Core>();       //从父物体那里调用Core组件
-
-        if (!core)
+    {      
+        core = GetComponentInParent<Core>();       //从父物体那里调用Core组件
+        if (core == null)
         {
-            Debug.LogError("There is no Core component on the parent");
+            Debug.LogError("Cannot get the Core component in the parent of:" + gameObject.name);
+            return;
         }
 
-        if (!combat || !stats)
+        if (combat == null || stats == null)
         {
-            Debug.Log("Some component is not assigned correctly in the CoreComponent!");
+            Debug.Log("Some components are not assigned correctly in: " + gameObject.name);
+            return;
         }
 
         core.Addcomponent(this);    //将所有需要运用LogicUpdate函数的组件加进List     
     }
-
 
 
     public virtual void LogicUpdate() {  }  
