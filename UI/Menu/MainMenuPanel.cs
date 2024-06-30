@@ -48,6 +48,13 @@ public class MainMenuPanel : PanelWithButton
 
         //播放主界面BGN
         await SoundManager.Instance.PlayBGMAsync(SoundManager.Instance.AudioClipKeys.MyVeryOwnDeadShip, true);
+
+        //当玩家第一次进游戏时
+        if (EnvironmentManager.Instance.IsFirstTimeEnterGame)
+        {
+            //提前初始化游戏背景介绍界面
+            await UIManager.Instance.InitPanel(UIManager.Instance.UIKeys.GameBackgroundPanel);
+        }
     }
 
 

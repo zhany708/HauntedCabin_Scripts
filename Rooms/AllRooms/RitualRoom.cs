@@ -46,7 +46,7 @@ public class RitualRoom : RootRoomController        //仪式房脚本
     {
         base.OnTriggerEnter2D(other);
 
-        //玩家进入仪式房后显示祷告石的血条出来
+        //玩家进入仪式房后将祷告石的血条显示出来
         if (other.CompareTag("Player"))
         {
             //获取祷告石血条UI界面组件

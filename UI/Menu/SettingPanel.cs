@@ -6,12 +6,12 @@ using UnityEngine.UI;
 
 
 
-//虽然该界面只有下拉列表，但是为了防止玩家打开界面后自由自动和攻击，所以继承自PanelWithButton
+//虽然该界面只有下拉列表，但是为了防止玩家打开界面后自由移动和攻击，所以继承自PanelWithButton
 public class SettingPanel : PanelWithButton     
 {
-    public TMP_Dropdown Dropdown;       //下拉列表
-    public TMP_Text LabelText;          //下拉列表中显示当前选项的文本
-    public Button CloseButton;          //用于关闭界面的按钮
+    public TMP_Dropdown Dropdown;          //下拉列表
+    public TMP_Text LabelText;             //下拉列表中显示当前选项的文本
+    public Button CloseButton;             //用于关闭界面的按钮
 
     LeanLocalization m_Localization;       //翻译处理器的引用
 
