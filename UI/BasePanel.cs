@@ -18,9 +18,15 @@ public class BasePanel : MonoBehaviour
     public static bool IsPlayerAttackable { get; protected set; } = true;   //是否允许玩家攻击
 
 
-    public bool IsRemoved { get; protected set; } = false;       //表示UI是否被移除
+    public bool IsRemoved { get; protected set; } = false;           //表示UI是否被移除
 
-    private CanvasGroup m_CanvasGroup;
+
+    public float FadeDuration { get; protected set; } = 1f;          //默认淡入/出时间
+    public float FadeInAlpha { get; protected set; } = 1f;           //默认淡入值
+    public const float FadeOutAlpha = 0f;    //默认淡出值
+
+
+    
     public CanvasGroup CanvasGroup      //Lazy Load（只在需要使用组件时才加载组件（而不是在Awake函数里默认加载），节省内存）
     {
         get
@@ -32,8 +38,7 @@ public class BasePanel : MonoBehaviour
             return m_CanvasGroup;
         }
     }
-
-
+    private CanvasGroup m_CanvasGroup;
 
 
 
@@ -43,18 +48,12 @@ public class BasePanel : MonoBehaviour
 
 
 
-    protected float FadeDuration = 1f;          //默认淡入/出时间
-    protected float FadeInAlpha = 1f;           //默认淡入值
-    protected const float FadeOutAlpha = 0f;    //默认淡出值
-
 
     protected float typeSpeed = 0.05f;      //默认打字速度（每隔0.05秒打一个字）
  
-
-    protected bool isTyping = false;        //表示是否正在显示文本
+    protected bool isTyping = false;        //表示是否正在打字
     
-
-    protected string panelName = null;             //界面名字
+    protected string panelName = null;      //界面名字
 
 
 

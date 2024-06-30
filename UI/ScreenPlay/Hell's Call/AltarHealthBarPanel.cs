@@ -37,6 +37,9 @@ public class AltarHealthBarPanel : BasePanel
 
         //添加缓存进字典，表示界面正在打开
         UIManager.Instance.PanelDict[panelName] = this;
+
+        //初始化时设置界面的透明度（隐藏界面）
+        CanvasGroup.alpha = FadeOutAlpha;
     }
 
 

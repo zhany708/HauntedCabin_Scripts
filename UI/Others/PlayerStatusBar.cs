@@ -27,6 +27,18 @@ public class PlayerStatusBar : BasePanel
     public TextMeshProUGUI HealthText;
 
 
+
+    //四个属性对应的翻译文本的string
+    public string StrengthPhraseKey;
+    public string SpeedPhraseKey;
+    public string SanityPhraseKey;
+    public string KnowledgePhraseKey;
+
+    //玩家的血条对应的翻译文本的string
+    public string HealthPhraseKey;
+
+
+
     public Player Player      //Lazy load（只在需要变量时才尝试获取组件，而不是一次性的放在某个Unity内部函数中）
     {
         get
@@ -53,14 +65,7 @@ public class PlayerStatusBar : BasePanel
     public float SanityValue { get; private set; } = 0;
     public float KnowledgeValue { get; private set; } = 0;
 
-    //四个属性对应的翻译文本的string
-    public string StrengthPhraseKey;
-    public string SpeedPhraseKey;
-    public string SanityPhraseKey;
-    public string KnowledgePhraseKey;
-
-    //玩家的血条对应的翻译文本的string
-    public string HealthPhraseKey;
+    
 
 
 
@@ -150,12 +155,9 @@ public class PlayerStatusBar : BasePanel
     {
         if (Player != null)
         {
-            //从PlayerData获取属性值
-            StrengthValue = Player.PlayerData.Strength;
-            SpeedValue = Player.PlayerData.Speed;
-            SanityValue = Player.PlayerData.Sanity;
-            KnowledgeValue = Player.PlayerData.Knowledge;
+            ResetGame();
 
+            //将照片组件传递给玩家血条
             SetImagesToHealthBar();
         }            
     }

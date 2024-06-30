@@ -40,4 +40,25 @@ public class RitualRoom : RootRoomController        //仪式房脚本
 
         HellsCall.Instance.SetRitualRoomDoorController(DoorControllerInsideThisRoom);   //将仪式房的门控制器脚本传给剧本脚本
     }
+
+
+    protected override void OnTriggerEnter2D(Collider2D other)
+    {
+        base.OnTriggerEnter2D(other);
+
+        //玩家进入仪式房后显示祷告石的血条出来
+        if (other.CompareTag("Player"))
+        {
+            //获取祷告石血条UI界面组件
+            AltarHealthBarPanel altarHealthBarPanel = GetComponentInChildren<AltarHealthBarPanel>();
+            if (altarHealthBarPanel == null)
+            {
+                Debug.LogError("AltarHealthBarPanel component not found in the children of: " + name);
+                return;
+            }
+
+            //设置界面的透明度（显示出来）
+            altarHealthBarPanel.CanvasGroup.alpha = altarHealthBarPanel.FadeInAlpha;
+        }        
+    }
 }

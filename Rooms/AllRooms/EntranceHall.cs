@@ -51,7 +51,8 @@ public class EntranceHall : RootRoomController      //入口大堂脚本
     {
         base.OnTriggerEnter2D(other);
         
-        if (other.CompareTag("Player") && MainDoorController.Instance.DoOpenMainDoor)     //当大门允许打开时，在玩家进入入口大堂后再打开大门
+        //当大门允许打开时，在玩家进入入口大堂后再打开大门
+        if (other.CompareTag("Player") && MainDoorController.Instance.DoOpenMainDoor)     
         {
             MainDoorController.Instance.OpenMainDoor();
         }
