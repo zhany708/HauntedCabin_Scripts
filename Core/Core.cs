@@ -30,7 +30,7 @@ public class Core : MonoBehaviour
         Animator = GetComponentInParent<Animator>();        //调用父物体的动画控制器组件
         if (Animator == null)
         {
-            Debug.LogError("Cannot get the Animator component in the: " + gameObject.parent.name);
+            Debug.LogError("Cannot get the Animator component in the: " + transform.parent.name);
             return;
         }   
     }

@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Threading.Tasks;
 
 
 
@@ -7,6 +8,8 @@ public class E_EvilTelephone : Event    //E开头的脚本表示跟事件相关
     Animator m_Animator;
     AudioSource m_AudioSource;
     Collider2D m_Collider;
+
+
 
 
 
@@ -43,13 +46,13 @@ public class E_EvilTelephone : Event    //E开头的脚本表示跟事件相关
     }
 
 
-    private void OnTriggerEnter2D(Collider2D other)
+    private async void OnTriggerEnter2D(Collider2D other)
     {
         if (other.CompareTag("Player"))
         {
             //UIManager.Instance.OpenInteractPanel(() => TriggerPlayerInteraction());     //打开互动面板
 
-            TriggerPlayerInteraction();    //玩家出发后交互的逻辑
+            await TriggerPlayerInteraction();    //玩家出发后交互的逻辑
         }      
     }
 

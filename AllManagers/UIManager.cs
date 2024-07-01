@@ -179,7 +179,7 @@ public class UIManager : ManagerTemplate<UIManager>
         else
         {
             //重置游戏
-            ResetGame()
+            ResetGame();
         }
     }
 

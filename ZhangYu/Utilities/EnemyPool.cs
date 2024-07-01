@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 
 
@@ -148,7 +149,7 @@ public class EnemyPool : MonoBehaviour       //用于生成敌人的对象池，
         else
         {
             //重置游戏
-            ResetGame()
+            ResetGame();
         }
     }
 

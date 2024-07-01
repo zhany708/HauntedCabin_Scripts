@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 
 
@@ -184,7 +185,7 @@ public class EventManager : ManagerTemplate<EventManager>
         if (scene.name == "FirstFloor")
         {
             //重置游戏
-            ResetGame()
+            ResetGame();
         }
     }
     

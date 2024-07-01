@@ -2,6 +2,7 @@ using DG.Tweening;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.Rendering.PostProcessing;
+using UnityEngine.SceneManagement;
 
 
 
@@ -171,7 +172,7 @@ public class PostProcessController : MonoBehaviour
         else
         {
             //重置游戏
-            ResetGame()
+            ResetGame();
         }
     }
 

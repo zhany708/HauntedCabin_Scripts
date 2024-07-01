@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Threading.Tasks;
+using UnityEngine.SceneManagement;
 
 
 
@@ -62,7 +63,7 @@ public class ScreenplayManager : ManagerTemplate<ScreenplayManager>     //用于
         else
         {
             //重置游戏
-            ResetGame()
+            ResetGame();
         }
     }
 

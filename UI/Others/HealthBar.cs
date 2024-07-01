@@ -164,12 +164,12 @@ public class HealthBar : MonoBehaviour
     #region Getters
     public float GetMaxHp()
     {
-        retuen m_MaxHp;
+        return m_MaxHp;
     }
 
     public float GetCurrentHp()
     {
-        retuen m_CurrentHp;
+        return m_CurrentHp;
     }
     #endregion
 }

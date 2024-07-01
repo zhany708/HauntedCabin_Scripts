@@ -1,3 +1,8 @@
+using UnityEngine;
+
+
+
+
 public class RitualRoom : RootRoomController        //仪式房脚本
 {
     public static RitualRoom Instance { get; private set; }
