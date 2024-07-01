@@ -9,7 +9,7 @@ public class PlayerAttackState : PlayerAbilityState
 
 
 
-
+    #region 状态机内部函数
     public PlayerAttackState(Player player, PlayerStateMachine stateMachine, SO_PlayerData playerData, string animBoolName, Weapon weapon) : base(player, stateMachine, playerData, animBoolName)
     {
         m_Weapon = weapon;
@@ -36,17 +36,19 @@ public class PlayerAttackState : PlayerAbilityState
         base.Exit();
     }
     */
+    #endregion
 
 
-
-
+    #region 绑定回调事件的函数
     private void ExitHandler()
     {
         AnimationFinishTrigger();
 
         isAttack = false;
-        isAbilityDone = true;       //设置isAbilityDone为真以进入闲置状态
+        isAbilityDone = true;       //设置isAbilityDone为true以离开攻击状态
     }
+    #endregion
+
 
     /*
     public void ChangeWeapon(Weapon weapon)

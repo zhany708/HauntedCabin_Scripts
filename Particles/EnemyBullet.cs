@@ -15,14 +15,10 @@ public class EnemyBullet : PlayerBullet
 
 
 
-    public override void SetSpeed(Vector2 direction)
-    {
-        base.SetSpeed(direction);
-
-        m_AttackDirection = direction;
-    }
+    
 
 
+    #region Unity内部函数
     protected override void OnTriggerEnter2D(Collider2D other)
     {
         Idamageable damageable = other.GetComponent<Idamageable>();
@@ -41,4 +37,15 @@ public class EnemyBullet : PlayerBullet
 
         ParticlePool.Instance.PushObject(gameObject);
     }
+    #endregion
+
+
+    #region 子弹相关
+    public override void SetSpeed(Vector2 direction)
+    {
+        base.SetSpeed(direction);
+
+        m_AttackDirection = direction;
+    }
+    #endregion
 }

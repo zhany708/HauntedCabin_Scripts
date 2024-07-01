@@ -3,22 +3,26 @@ using UnityEngine;
 
 public class PlayerBullet : MonoBehaviour
 {
-    public float Speed;
+    public float Speed;             //子弹的速度
 
 
-    Rigidbody2D rigidBody2D;
+    Rigidbody2D m_RigidBody2D;
 
-    GunWeapon m_Gun;
+    GunWeapon m_Gun;                //玩家使用的枪械
 
+    //用于在子弹发射出去几秒后强制销毁子弹
     float m_ExistTimer;
     float m_CurrentTime;
 
 
 
 
+
+
+    #region Unity内部函数
     private void Awake()
     {
-        rigidBody2D = GetComponent<Rigidbody2D>();
+        m_RigidBody2D = GetComponent<Rigidbody2D>();
     }
 
     private void Update()
@@ -61,26 +65,27 @@ public class PlayerBullet : MonoBehaviour
 
         DestroyBullet();
     }
+    #endregion
 
 
-
-
-
+    #region 子弹相关
     public virtual void SetSpeed(Vector2 direction)
     {
-        rigidBody2D.velocity = direction.normalized * Speed;
+        m_RigidBody2D.velocity = direction.normalized * Speed;
     }
 
-    public void SetWeapon(GunWeapon thisWeapon)
-    {
-        m_Gun = thisWeapon;
-    }
-
-
-
-
+    
     private void DestroyBullet()
     {
         ParticlePool.Instance.PushObject(gameObject);
     }
+    #endregion
+
+
+    #region Setters
+    public void SetWeapon(GunWeapon thisWeapon)
+    {
+        m_Gun = thisWeapon;
+    }
+    #endregion
 }

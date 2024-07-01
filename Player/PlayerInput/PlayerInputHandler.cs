@@ -14,10 +14,13 @@ public class PlayerInputHandler : MonoBehaviour
     public Vector2 MouseScrollInput { get; private set; }       //鼠标滚轮的信息
 
 
-    public bool[] AttackInputs { get; private set; }          //用于检测鼠标按键，决定使用主武器或副武器
-    public bool IsSpacePressed {  get; private set; }         //用于表示是否按下空格
-    public bool IsEscPressed { get; private set; }            //用于表示是否按下Esc键
-    public bool IsInteractKeyPressed { get; private set; }    //用于表示是否按下互动按键（默认F）
+    public bool[] AttackInputs { get; private set; }            //用于检测鼠标按键，决定使用主武器或副武器
+    public bool IsSpacePressed {  get; private set; }           //用于表示是否按下空格
+    public bool IsEscPressed { get; private set; }              //用于表示是否按下Esc键
+    public bool IsInteractKeyPressed { get; private set; }      //用于表示是否按下互动按键（默认F）
+
+
+
 
     Vector2 m_MousePos;
 
@@ -26,7 +29,7 @@ public class PlayerInputHandler : MonoBehaviour
 
 
 
-    #region Unity Callback Functions
+    #region Unity内部函数
     private void Awake()
     {
         //单例模式
@@ -38,6 +41,12 @@ public class PlayerInputHandler : MonoBehaviour
         else
         {
             Instance = this;
+
+            //只有在没有父物体时才运行防删函数，否则会出现提醒
+            if (gameObject.transform.parent == null)
+            {
+                DontDestroyOnLoad(gameObject);
+            }
         }
     }
 
@@ -57,10 +66,11 @@ public class PlayerInputHandler : MonoBehaviour
     }
     #endregion
 
+
     #region CallbackContexts
     public void OnMoveInput(InputAction.CallbackContext context)
     {
-        Vector2 input = context.ReadValue<Vector2>();   //(0,1) (0,-1) (1,0) (-1,0)四种向量表示方向
+        Vector2 input = context.ReadValue<Vector2>();       //(0,1) (0,-1) (1,0) (-1,0)四种向量表示方向
         RawMovementInput = input.magnitude > 0 ? input.normalized : Vector2.zero;
     }
 
@@ -107,6 +117,7 @@ public class PlayerInputHandler : MonoBehaviour
         IsInteractKeyPressed = context.performed;     //按下互动按键（默认F）时为真，松开后为假
     }
     #endregion
+
 
     #region Setters
     /*

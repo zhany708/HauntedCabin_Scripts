@@ -7,9 +7,9 @@ using ZhangYu.Utilities;
 
 public class Weapon : MonoBehaviour
 {
+    #region 组件
     public event Action OnWeaponExit;      //接受事件方为PlayerAttackState脚本
 
-    #region Components
     public SO_WeaponData WeaponData;
 
 
@@ -25,11 +25,13 @@ public class Weapon : MonoBehaviour
     private Movement m_Movement;
     #endregion
 
-    #region Variables
+
+    #region 变量
     public Vector2 mousePosition { get; private set; }     //鼠标的方向
     #endregion
 
-    #region Unity Callback Functions
+
+    #region Unity内部函数
     protected virtual void Awake()
     {
         animator = GetComponent<Animator>();
@@ -58,7 +60,8 @@ public class Weapon : MonoBehaviour
     }
     #endregion
 
-    #region Other Functions
+
+    #region 主要函数
     public virtual void EnterWeapon()
     {
         //Debug.Log("Enter the weapon!");
@@ -95,13 +98,15 @@ public class Weapon : MonoBehaviour
     }
     #endregion
 
-    #region Animation Events
+
+    #region 动画帧事件
     protected virtual void AnimationActionTrigger() { }
     private void AnimationFinishTrigger()
     {
         ExitWeapon();
     }
     #endregion
+
 
     #region Setters
     /*

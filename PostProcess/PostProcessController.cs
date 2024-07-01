@@ -30,6 +30,8 @@ public class PostProcessController : MonoBehaviour
 
 
 
+
+    #region Unity内部函数
     private void Awake()
     {
         //单例模式
@@ -58,14 +60,17 @@ public class PostProcessController : MonoBehaviour
             if (!m_PostProcessVolume.profile.TryGetSettings(out m_ColorGrading) || !m_PostProcessVolume.profile.TryGetSettings(out m_Vignette))
             {
                 Debug.LogError("Some components are not assigned in the PostProcess volume.");
+                return;
             }
         }
 
         else
         {
-            Debug.LogError("The PostProcess volume component is missing.");
+            Debug.LogError("The PostProcess volume component is missing in the: " + gameObject.name);
+            return;
         }
     }
+    #endregion
 
 
     #region ColorGrading相关
@@ -84,7 +89,8 @@ public class PostProcessController : MonoBehaviour
 
         else
         {
-            Debug.LogError("The Color grading component is missing.");
+            Debug.LogError("The Color grading component is missing in the: " + gameObject.name);
+            return;
         }
     }
 
@@ -96,7 +102,7 @@ public class PostProcessController : MonoBehaviour
             //先检查要调整的值是否等于当前的值
             if (m_ColorGrading.postExposure.value != newBrightness)
             {
-                //改之前先保存当前的明暗值
+                //进行更改之前先保存当前的明暗值
                 float currentValue = m_ColorGrading.postExposure;
 
                 //将相机阴影值从当前的值变为一个另一个值，随后变回来
@@ -107,7 +113,8 @@ public class PostProcessController : MonoBehaviour
 
         else
         {
-            Debug.LogError("The Color grading component component is missing.");
+            Debug.LogError("The Color grading component is missing in the: " + gameObject.name);
+            return;
         }
     }
     #endregion

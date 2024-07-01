@@ -14,7 +14,7 @@ public class PlayerHealthBar : HealthBar      //用于玩家的血条控制
 
 
 
-
+    #region Unity内部函数
     private void Awake() 
     {
         //获取Player组件
@@ -33,9 +33,10 @@ public class PlayerHealthBar : HealthBar      //用于玩家的血条控制
 
         base.Start();
     }
-    
+    #endregion
 
 
+    #region 血条相关
     //因为需要异步加载UI。所以使用async（如果不使用的话，可能会出现还没加载完就接着跑下面的代码的情况）
     private void InitializePlayerHealthBarAsync()   
     {       
@@ -74,4 +75,5 @@ public class PlayerHealthBar : HealthBar      //用于玩家的血条控制
 
         OnHealthChange?.Invoke();           //调用事件
     }
+    #endregion
 }

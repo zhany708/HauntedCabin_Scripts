@@ -59,6 +59,12 @@ public class PlayerState
     string m_AnimationBoolName;     //告诉动画器应该播放哪个动画
 
 
+
+
+
+
+
+    #region 状态机内部函数
     public PlayerState(Player player, PlayerStateMachine stateMachine, SO_PlayerData playerData, string animBoolName)
     {
         this.player = player;
@@ -68,7 +74,7 @@ public class PlayerState
         core = player.Core;
     }
 
-
+ 
     public virtual void Enter()
     {
         //Debug.Log(m_AnimationBoolName);
@@ -120,11 +126,10 @@ public class PlayerState
 
 
     public virtual void AnimationFinishTrigger() => isAnimationFinished = true; 
+    #endregion
 
 
-
-
-
+    #region 其余函数
     protected void SetMoveAnimation()      //检查玩家是否按下WASD键，从而判断是否播放脚步移动动画
     {
         if (input.x == 0f && input.y == 0f)
@@ -136,4 +141,5 @@ public class PlayerState
             player.FootAnimator.SetBool("Move", true);
         }
     }
+    #endregion
 }

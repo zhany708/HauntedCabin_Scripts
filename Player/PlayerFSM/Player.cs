@@ -3,9 +3,10 @@ using UnityEngine;
 using ZhangYu.Utilities;
 
 
+
 public class Player : MonoBehaviour
 {
-    #region FSM States
+    #region 所有状态机
     public PlayerStateMachine StateMachine { get; private set; }
     public PlayerIdleState IdleState { get; private set; }
     public PlayerMoveState MoveState { get; private set; }
@@ -15,7 +16,8 @@ public class Player : MonoBehaviour
     public PlayerAttackState SecondaryAttackState { get; private set; }
     #endregion
 
-    #region Components
+
+    #region 组件
     public CinemachineVirtualCamera PlayerCamera;
     public Animator FootAnimator { get; private set; }
     
@@ -33,7 +35,8 @@ public class Player : MonoBehaviour
     Flip m_PlayerFlip;
     #endregion
 
-    #region Other Variable
+
+    #region 变量
     //以下三个变量用于改变相机高度
     public float ZoomSpeed = 0.5f;
     public float MinOrthoSize = 5.4f;
@@ -47,6 +50,7 @@ public class Player : MonoBehaviour
     //当前状态，用于Debug
     string m_CurrentState;
     #endregion
+
 
     #region Unity内部函数
     private void Awake()
@@ -106,7 +110,8 @@ public class Player : MonoBehaviour
     }
     #endregion
 
-    #region Other Functions
+
+    #region 主要函数
     //更换武器
     public async void ChangeWeapon(string weaponName, bool isPrimary)
     {
@@ -203,12 +208,14 @@ public class Player : MonoBehaviour
     }
     #endregion
 
-    #region Animation Event Functions
+
+    #region 动画帧事件
     private void DestroyPlayerAfterDeath()      //用于动画事件，摧毁物体
     {
         Destroy(gameObject);   
     }
     #endregion
+
 
     #region Setters
     public void SetWeapon(Weapon thisWeapon, bool isPrimary)
@@ -229,6 +236,7 @@ public class Player : MonoBehaviour
         }
     }
     #endregion
+
 
     #region Getters
     /*

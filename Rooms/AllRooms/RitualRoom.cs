@@ -22,6 +22,12 @@ public class RitualRoom : RootRoomController        //仪式房脚本
         else
         {
             Instance = this;
+
+            //只有在没有父物体时才运行防删函数，否则会出现提醒
+            if (gameObject.transform.parent == null)
+            {
+                DontDestroyOnLoad(gameObject);
+            }
         }
 
         base.Awake();

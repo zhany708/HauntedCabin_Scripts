@@ -24,6 +24,12 @@ public class EntranceHall : RootRoomController      //入口大堂脚本
         else
         {
             Instance = this;
+
+            //只有在没有父物体时才运行防删函数，否则会出现提醒
+            if (gameObject.transform.parent == null)
+            {
+                DontDestroyOnLoad(gameObject);
+            }
         }
 
         base.Awake();
@@ -39,7 +45,7 @@ public class EntranceHall : RootRoomController      //入口大堂脚本
 
     protected override void OnDisable()
     {
-        //每当房间不因为重复而取消激活时，从字典中移除当前房间的坐标
+        //只有含Instance的本房间取消激活时，才会从字典中移除当前房间的坐标
         if (RoomManager.Instance.GeneratedRoomDict.ContainsKey(transform.position) && Instance == this)
         {
             RoomManager.Instance.GeneratedRoomDict.Remove(transform.position);
@@ -69,6 +75,7 @@ public class EntranceHall : RootRoomController      //入口大堂脚本
     #endregion
 
 
+    #region 主要函数
     public override void ResetGame()
     {
         base.ResetGame();
@@ -76,4 +83,5 @@ public class EntranceHall : RootRoomController      //入口大堂脚本
         MainDoorController.Instance.CloseMainDoor();                //重置游戏时关闭大门
         MainDoorController.Instance.SetDoOpenMainDoor(false);       //关闭大门的同时重置布尔
     }
+    #endregion
 }
