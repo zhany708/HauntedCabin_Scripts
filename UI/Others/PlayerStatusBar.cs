@@ -24,7 +24,7 @@ public class PlayerStatusBar : BasePanel
     public TextMeshProUGUI KnowledgeText;
 
     //玩家的血条的文本
-    public TextMeshProUGUI HealthText;
+    //public TextMeshProUGUI HealthText;
 
 
 
@@ -35,7 +35,7 @@ public class PlayerStatusBar : BasePanel
     public string KnowledgePhraseKey;
 
     //玩家的血条对应的翻译文本的string
-    public string HealthPhraseKey;
+    //public string HealthPhraseKey;
 
 
 
@@ -100,6 +100,7 @@ public class PlayerStatusBar : BasePanel
         }
 
         CheckComponents();              //检查公有组件是否都存在
+        //InitializePlayerStatus();
     }   
 
     private void Start()
@@ -181,14 +182,14 @@ public class PlayerStatusBar : BasePanel
     private void CheckComponents()
     {
         //检查四个属性和血条文本组件是否有的为空
-        if (StrengthText == null || SpeedText == null || SanityText == null || KnowledgeText == null || HealthText == null)
+        if (StrengthText == null || SpeedText == null || SanityText == null || KnowledgeText == null)// || HealthText == null)
         {
             Debug.LogError("Some Text components are not assigned in the " + name);
             return;
         }
 
         //检查各个翻译文本是否为空
-        if (StrengthPhraseKey == "" || SpeedPhraseKey == "" || SanityPhraseKey == "" || KnowledgePhraseKey == "" || HealthPhraseKey == "")
+        if (StrengthPhraseKey == "" || SpeedPhraseKey == "" || SanityPhraseKey == "" || KnowledgePhraseKey == "")// || HealthPhraseKey == "")
         {
             Debug.LogError("Some Lean Localization phrase keys are not written in the " + name);
             return;
@@ -262,7 +263,7 @@ public class PlayerStatusBar : BasePanel
 
 
 
-
+    /*
     //更新玩家的血条文本
     public void UpdateHealthText()
     {
@@ -272,6 +273,7 @@ public class PlayerStatusBar : BasePanel
         //赋值血条的数值
         HealthText.text = string.Format(healthFormat, m_CurrentHealth, m_MaxHealth);            
     }
+    */
     #endregion
 
 
@@ -282,22 +284,51 @@ public class PlayerStatusBar : BasePanel
         //每当进入一楼场景时都调用以下逻辑
         if (scene.name == "FirstFloor")
         {
-            //初始化（因为该界面永久存在，所以不能一次性的初始化）
-            InitializePlayerStatus();
-            //设置界面的透明度（显示出来）
-            CanvasGroup.alpha = FadeInAlpha;
+            if (Instance == this)
+            {
+                InitializePlayerStatus();
 
+                //设置界面的透明度（显示出来）
+                CanvasGroup.alpha = FadeInAlpha;
+
+                /*
+                //检查UIKeys是否为空且要加载的名字是否存在，随后等待UI加载完毕
+                if (UIManager.Instance.UIKeys != null && !string.IsNullOrEmpty(UIManager.Instance.UIKeys.PlayerStatusBarKey))
+                {
+                    //检查界面是否已经打开,打开的话则进行以下逻辑
+                    if (UIManager.Instance.PanelDict.ContainsKey(UIManager.Instance.UIKeys.PlayerStatusBarKey))
+                    {
+                        //Debug.Log("PlayerStatusBarKey again set the images to the " + name);
+
+                        SetImagesToHealthBar();      //重新赋值图片
+
+                        //这里重新加载时需要用协程，否则会出现重新加载后无法正常显示数值的情况
+                        StartCoroutine(DelayedUpdateStatusUI());
+                    }
+                }
+                //如果查找不到界面对应的Key
+                else
+                {
+                    Debug.LogError("UIKeys not set or PlayerStatusBarKey is empty.");
+                    return;
+                }
+                */
+            }
+            
             //将更新血条文本的函数跟玩家血条脚本绑定起来
-            m_PlayerHealthBar.OnHealthChange += UpdateHealthText;
+            //m_PlayerHealthBar.OnHealthChange += UpdateHealthText;
         }
 
         //进入其余场景时（目前只有主菜单）
         else
         {
-            //设置界面的透明度（隐藏界面）
-            CanvasGroup.alpha = FadeOutAlpha;
-
-            m_PlayerHealthBar.OnHealthChange -= UpdateHealthText;
+            if (Instance == this)
+            {
+                //设置界面的透明度（隐藏界面）
+                CanvasGroup.alpha = FadeOutAlpha;
+            }
+                
+            //m_PlayerHealthBar.OnHealthChange -= UpdateHealthText;
         }
     }
 

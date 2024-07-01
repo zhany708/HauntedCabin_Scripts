@@ -156,7 +156,7 @@ public class HellsCall : BaseScreenplay<HellsCall>
         {
             //持续10000000秒，每次掉（参数二）点血，每（60/参数三）秒掉一次
             m_HealthDrainCoroutine = StartCoroutine(PlayerStats.HealthDrain(10000000f, m_HealthDrainDamageAmount, m_HealthDrainInterval));
-            m_FireEffectCoroutine = StartCoroutine(PostProcessController.Instance.StartFireEffect() );      //一直显示火焰滤镜
+            m_FireEffectCoroutine = StartCoroutine(PostProcessManager.Instance.StartFireEffect() );      //一直显示火焰滤镜
         }
     }
 
@@ -170,7 +170,7 @@ public class HellsCall : BaseScreenplay<HellsCall>
 
         if (m_FireEffectCoroutine != null)
         {
-            PostProcessController.Instance.TurnOffVignette();       //关闭滤镜
+            PostProcessManager.Instance.TurnOffVignette();       //关闭滤镜
             StopCoroutine(m_FireEffectCoroutine);
         }
     }

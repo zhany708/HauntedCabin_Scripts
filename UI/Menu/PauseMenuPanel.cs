@@ -66,7 +66,7 @@ public class PauseMenuPanel : PanelWithButton       //整个游戏过程中都�
     private void Start()
     {
         //将该界面加进列表，以在重置游戏时不被删除（不能放在Awake或OnEnable中，以防顺序错误）
-        UIManager.Instance.ImportantPanel.Add(this);
+        //UIManager.Instance.ImportantPanel.Add(this);
 
         //将按钮和函数绑定起来
         ResumeButton.onClick.AddListener(() => Resume());

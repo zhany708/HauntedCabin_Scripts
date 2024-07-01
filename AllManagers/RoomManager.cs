@@ -69,6 +69,9 @@ public class RoomManager : ManagerTemplate<RoomManager>
 
         //赋值房间跟物体给脚本中的变量
         SetupRootGameObject(ref m_FirstFloorRooms, "FirstFloorRooms");
+
+        //将一些不可删除房间加进重要列表
+        ImportantRoomPos.Add(EntranceHall.Instance.transform.position);
     }
 
     private void Start()
@@ -495,13 +498,15 @@ public class RoomManager : ManagerTemplate<RoomManager>
         //每当进入一楼场景时都调用以下逻辑
         if (scene.name == "FirstFloor")
         {
+            //Debug.Log("SetActiveAllRoom function in RoomManager is called.");
             SetActiveAllRoom(true);      //激活所有房间
         }
 
         //进入其余场景时（目前只有主菜单）
         else
         {
-            ResetGame();                  //删除所有普通房间，隐藏所有初始房间
+            //Debug.Log("ResetGame function in RoomManager is called.");
+            ResetGame();                 //删除所有普通房间，隐藏所有初始房间
         }
     }
 

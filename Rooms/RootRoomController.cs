@@ -119,7 +119,7 @@ public class RootRoomController : MonoBehaviour
             if (SceneManager.GetActiveScene().isLoaded)
             {
                 //将相机亮度一瞬间的变暗
-                PostProcessController.Instance.DarkenThenBrighten(m_DarkPostProcessColorValue, m_PostProcessDuration);
+                PostProcessManager.Instance.DarkenThenBrighten(m_DarkPostProcessColorValue, m_PostProcessDuration);
             }
             
 

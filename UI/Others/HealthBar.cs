@@ -44,7 +44,8 @@ public class HealthBar : MonoBehaviour
         }
         else
         {
-            Debug.Log("You haven't set the maxHp in the " + name);
+            Debug.LogError("You haven't set the maxHp in the " + name);
+            return;
         }
         
         //注意运行顺序，防止出现某个异步加载的组件还没初始化完毕就需要使用的情况

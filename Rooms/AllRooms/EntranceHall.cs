@@ -35,13 +35,6 @@ public class EntranceHall : RootRoomController      //入口大堂脚本
         base.Awake();
     }
 
-    protected override void Start()
-    {
-        base.Start();
-
-        RoomManager.Instance.ImportantRoomPos.Add(transform.position);      //将房间坐标加进不可删除列表，防止重置游戏时被删除
-    }
-
 
     protected override void OnDisable()
     {

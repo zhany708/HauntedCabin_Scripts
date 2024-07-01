@@ -6,9 +6,9 @@ using UnityEngine.SceneManagement;
 
 
 
-public class PostProcessController : MonoBehaviour
+public class PostProcessManager : MonoBehaviour
 {
-    public static PostProcessController Instance { get; private set; }  //目前只有一个后期处理，所以可以用单例模式
+    public static PostProcessManager Instance { get; private set; }  //目前只有一个后期处理，所以可以用单例模式
 
 
     //更改颜色滤镜相关   

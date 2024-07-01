@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
-
+using System.Threading.Tasks;
 
 
 
@@ -58,30 +58,27 @@ public class MainMenuPanel : PanelWithButton
             await UIManager.Instance.InitPanel(UIManager.Instance.UIKeys.GameBackgroundPanel);
         }
     }
+
+
+    protected override void OnEnable()
+    {
+        base.OnEnable();
+
+        OnFadeOutFinished += HandleFadeOutFinished;     //主菜单界面完全关闭后再打开其余界面
+    }
+
+    protected override void OnDisable()
+    {
+        base.OnDisable();
+
+        OnFadeOutFinished -= HandleFadeOutFinished;
+    }
     #endregion
 
 
     #region 按钮绑定的函数
-    private async void PlayGame()
+    private void PlayGame()
     {
-        //当玩家第一次进游戏时
-        if (EnvironmentManager.Instance.IsFirstTimeEnterGame)
-        {
-            //打开游戏背景介绍界面
-            await UIManager.Instance.OpenPanel(UIManager.Instance.UIKeys.GameBackgroundPanel);
-        }
-
-        //当玩家进入过一楼场景后
-        else
-        {
-            //载入一楼大厅场景
-            SceneManager.LoadScene("FirstFloor");
-
-            //播放一楼BGM
-            await SoundManager.Instance.PlayBGMAsync(SoundManager.Instance.AudioClipKeys.StopForAMoment, true, SoundManager.Instance.MusicVolume);
-        }
-        
-
         //淡出当前界面
         Fade(CanvasGroup, FadeOutAlpha, FadeDuration, false);
     }
@@ -101,6 +98,29 @@ public class MainMenuPanel : PanelWithButton
         #if UNITY_EDITOR
         UnityEditor.EditorApplication.isPlaying = false;
         #endif
+    }
+    #endregion
+
+
+    #region 其余函数
+    private async void HandleFadeOutFinished()
+    {
+        //当玩家第一次进游戏时
+        if (EnvironmentManager.Instance.IsFirstTimeEnterGame)
+        {
+            //打开游戏背景介绍界面
+            await UIManager.Instance.OpenPanel(UIManager.Instance.UIKeys.GameBackgroundPanel);
+        }
+
+        //当玩家进入过一楼场景后
+        else
+        {
+            //载入一楼大厅场景
+            SceneManager.LoadScene("FirstFloor");
+
+            //播放一楼BGM
+            await SoundManager.Instance.PlayBGMAsync(SoundManager.Instance.AudioClipKeys.StopForAMoment, true, SoundManager.Instance.MusicVolume);
+        }
     }
     #endregion
 }

@@ -35,6 +35,10 @@ public class UIManager : ManagerTemplate<UIManager>
 
         //寻找画布跟物体，没有的话就创建一个
         SetupRootGameObject(ref m_UIRoot, "Canvas");
+
+        //将一些不可删除界面加进重要列表
+        ImportantPanel.Add(PauseMenuPanel.Instance);
+        ImportantPanel.Add(PlayerStatusBar.Instance);
     }
 
 
