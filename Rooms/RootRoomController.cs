@@ -38,7 +38,7 @@ public class RootRoomController : MonoBehaviour
 
 
 
-    #region Unity内部函数循环
+    #region Unity内部函数
     protected virtual void Awake()
     {
         //获取该物体以及所有子物体的精灵图组件
@@ -132,7 +132,7 @@ public class RootRoomController : MonoBehaviour
     #endregion
 
 
-    #region 其余函数
+    #region 主要函数
     //更改房间整体的透明度
     private void ChangeRoomTransparency(float alphaVal)
     {

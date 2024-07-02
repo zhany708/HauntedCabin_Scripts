@@ -5,6 +5,7 @@ using System;
 using Lean.Localization;
 
 
+
 public class EvilTelephonePanel : PanelWithButton
 {
     public static Action OnResultFinished;      //接受事件方为E_EvilTelephone脚本
@@ -49,7 +50,7 @@ public class EvilTelephonePanel : PanelWithButton
 
 
 
-
+    #region Unity内部函数
     protected override void Awake()
     {
         CheckComponents();      //检查所有组件
@@ -84,26 +85,10 @@ public class EvilTelephonePanel : PanelWithButton
         OnFadeOutFinished -= ClosePanel;
         OnFadeInFinished -= StartTextAnimations;
     }
+    #endregion
 
 
-
-
-    public override void ClosePanel()
-    {
-        //延迟0.5秒后再关闭界面，并且执行事件回调
-        Coroutine ClosePanelCoroutine = StartCoroutine(Delay.Instance.DelaySomeTime(0.5f, () =>
-        {
-            base.ClosePanel();
-
-            OnResultFinished?.Invoke();
-        }));
-
-        generatedCoroutines.Add(ClosePanelCoroutine);     //将协程加进列表
-    }
-
-
-
-
+    #region 按钮相关
     private void OnButtonClicked(ButtonAction action)
     {
         //需要做的：等确认面板完善好后，只需要保存这一行即可，下面的都可以删除（因为判断玩家选项和相关的逻辑都已经在传递到确认面板中的事件里了）
@@ -239,10 +224,23 @@ public class EvilTelephonePanel : PanelWithButton
 
         generatedCoroutines.Add(resultTextCoroutine);      //将协程加进列表
     }
-
-
+    #endregion
 
     
+    #region 主要函数
+    public override void ClosePanel()
+    {
+        //延迟0.5秒后再关闭界面，并且执行事件回调
+        Coroutine ClosePanelCoroutine = StartCoroutine(Delay.Instance.DelaySomeTime(0.5f, () =>
+        {
+            base.ClosePanel();
+
+            OnResultFinished?.Invoke();
+        }));
+
+        generatedCoroutines.Add(ClosePanelCoroutine);     //将协程加进列表
+    }
+
 
     private void SetLocalizedText(string phraseKey)
     {
@@ -293,11 +291,10 @@ public class EvilTelephonePanel : PanelWithButton
             return;
         }
     }
+    #endregion
 
 
-
-
-
+    #region 检查函数
     private void CheckComponents()
     {
         //检查按钮组件和事件背景文本组件是否存在
@@ -334,4 +331,5 @@ public class EvilTelephonePanel : PanelWithButton
             return;
         }
     }
+    #endregion
 }

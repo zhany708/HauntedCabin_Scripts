@@ -17,6 +17,8 @@ public class ConfirmPanel : PanelWithButton     //用于询问玩家是否确认
 
 
 
+
+    #region Unity内部函数
     protected override void Awake()
     {
         //单例模式
@@ -62,8 +64,10 @@ public class ConfirmPanel : PanelWithButton     //用于询问玩家是否确认
 
         UIManager.Instance.ImportantPanel.Add(this);    //将该界面加进列表，以在重置游戏时不被删除
     }
+    #endregion
 
 
+    #region 按钮相关
     private void OnYesButtonClick()
     {
         OnYesButtonPressed?.Invoke();      //回调事件，将逻辑绑定到这个事件，从而进行不同的逻辑
@@ -84,4 +88,5 @@ public class ConfirmPanel : PanelWithButton     //用于询问玩家是否确认
     {
         OnYesButtonPressed = null;
     }
+    #endregion
 }

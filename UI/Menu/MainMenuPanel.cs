@@ -102,7 +102,7 @@ public class MainMenuPanel : PanelWithButton
     #endregion
 
 
-    #region 其余函数
+    #region 主要函数
     private async void HandleFadeOutFinished()
     {
         //当玩家第一次进游戏时

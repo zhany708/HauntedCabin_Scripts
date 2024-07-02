@@ -20,7 +20,7 @@ public class SettingPanel : PanelWithButton
 
 
 
-
+    #region Unity内部函数
     protected override void Awake()
     {
         if (Dropdown == null || LabelText == null || CloseButton == null)
@@ -60,13 +60,10 @@ public class SettingPanel : PanelWithButton
         base.OnDisable();
         OnFadeOutFinished -= ClosePanel;
     }
+    #endregion
 
 
-
-
-
-
-
+    #region 切换语言相关
     private void PopulateDropdown()     //根据拥有的语言填充下拉菜单
     {
         Dropdown.ClearOptions();    //先清空所有原本的选项
@@ -115,4 +112,5 @@ public class SettingPanel : PanelWithButton
 
         return selectedLanguage;
     }
+    #endregion
 }

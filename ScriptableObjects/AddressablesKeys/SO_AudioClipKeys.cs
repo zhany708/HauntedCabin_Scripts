@@ -1,6 +1,7 @@
 using UnityEngine;
 
 
+
 [CreateAssetMenu(fileName = "newAudioClipKeys", menuName = "Data/Audio Data/Clip Keys")]
 public class SO_AudioClipKeys : ScriptableObject
 {

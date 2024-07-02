@@ -28,7 +28,7 @@ public class PickupWeaponPanel : PanelWithButton
 
 
 
-
+    #region Unity内部函数
     protected override void Awake()
     {
         base.Awake();
@@ -75,11 +75,10 @@ public class PickupWeaponPanel : PanelWithButton
 
         OnFadeOutFinished -= ClosePanel;
     }
+    #endregion
 
 
-
-
-
+    #region 主要函数
     public override void ClosePanel()
     {
         base.ClosePanel();
@@ -90,24 +89,10 @@ public class PickupWeaponPanel : PanelWithButton
             m_WeaponPickup.SetIsPanelOpen(false);
         }
     }
+    #endregion
 
 
-
-
-    private void DestroyWeaponGameObject()
-    {
-        if (m_WeaponPickup != null)
-        {
-            //删除地上的武器
-            Destroy(m_WeaponPickup.gameObject);
-        }
-    }
-
-
-    
-
-
-
+    #region 按钮相关
     private void OnButtonClicked(ButtonAction action)
     {
         switch (action)
@@ -151,6 +136,17 @@ public class PickupWeaponPanel : PanelWithButton
             DestroyWeaponGameObject();
         }
     }
+
+    private void DestroyWeaponGameObject()
+    {
+        if (m_WeaponPickup != null)
+        {
+            //删除地上的武器
+            Destroy(m_WeaponPickup.gameObject);
+        }
+    }
+    #endregion
+
 
     #region Setters
     public void SetItemName(string itemName)

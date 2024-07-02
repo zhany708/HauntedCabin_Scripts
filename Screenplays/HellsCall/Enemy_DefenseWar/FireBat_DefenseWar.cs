@@ -6,16 +6,21 @@ public class FireBat_DefenseWar : Enemy_DefenseWar
     public GameObject FireBallPrefab;
 
 
+
+
+
+
+    #region Unity内部函数
     protected override void Start()
     {
         base.Start();
 
         AttackState = new FireBatAttackState_DefenseWar(this, StateMachine, enemyData, "Attack");    //将普通攻击状态改成火蝙蝠攻击状态
     }
+    #endregion
 
 
-
-
+    #region 主要函数
     public void FireBallLaunch(Transform target)
     {
         if (target != null)
@@ -43,4 +48,5 @@ public class FireBat_DefenseWar : Enemy_DefenseWar
             fireBall.SetSpeed(tempPos + Vector3.up * 0.5f - FireBallObject.transform.position);        //朝目标中心方向发射火球
         }       
     }
+    #endregion
 }

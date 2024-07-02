@@ -6,7 +6,8 @@ public class SO_GunData : SO_WeaponData
 {
     [SerializeField] private GunAttackDetails m_AttackDetail;
 
-    public GunAttackDetails AttackDetail { get => m_AttackDetail; private set => m_AttackDetail = value; }      //用于其他脚本调用此脚本中的私有变量
+    //用于其他脚本调用此脚本中的私有变量
+    public GunAttackDetails AttackDetail { get => m_AttackDetail; private set => m_AttackDetail = value; }      
 }
 
 

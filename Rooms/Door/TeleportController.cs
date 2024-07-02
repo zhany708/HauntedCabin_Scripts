@@ -17,7 +17,7 @@ public class TeleportController : MonoBehaviour
 
 
 
-
+    #region Unity内部函数
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (other.CompareTag("Player"))
@@ -34,8 +34,10 @@ public class TeleportController : MonoBehaviour
             player.transform.position = teleportPos;
         }
     }
+    #endregion
 
 
+    #region 主要函数
     //根据门的类型计算角色的瞬移距离
     private Vector2 CalculateTeleportPosition(Vector2 playerPosition)
     {
@@ -57,4 +59,5 @@ public class TeleportController : MonoBehaviour
                 return playerPosition;  //默认返回原始位置，防止报错
         }
     }
+    #endregion
 }

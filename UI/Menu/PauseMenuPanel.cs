@@ -22,7 +22,7 @@ public class PauseMenuPanel : PanelWithButton       //整个游戏过程中都�
 
 
 
-
+    #region Unity内部函数
     protected override void Awake()
     {
         base.Awake();
@@ -120,13 +120,10 @@ public class PauseMenuPanel : PanelWithButton       //整个游戏过程中都�
         OnFadeInFinished -= base.OnEnable;
         OnFadeOutFinished -= base.OnDisable;
     }
+    #endregion
 
 
-
-
-
-
-
+    #region 按钮相关
     //恢复游戏
     private void Resume()
     {
@@ -190,4 +187,5 @@ public class PauseMenuPanel : PanelWithButton       //整个游戏过程中都�
         UnityEditor.EditorApplication.isPlaying = false;
         #endif
     }
+    #endregion
 }

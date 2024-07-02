@@ -100,13 +100,10 @@ public class PlayerStatusBar : BasePanel
         }
 
         CheckComponents();              //检查公有组件是否都存在
-        //InitializePlayerStatus();
     }   
 
     private void Start()
     {
-        UpdateStatusUI();       //进入游戏前更新显示的数值
-
         //设置当前界面的名字
         if (panelName == null)
         {
@@ -177,6 +174,8 @@ public class PlayerStatusBar : BasePanel
         m_PlayerHealthBar.SetHpImage(HpImage);
         m_PlayerHealthBar.SetIncreaseHpEffectImage(IncreaseHpEffectImage);
         m_PlayerHealthBar.SetDecreaseHpEffectImage(DecreaseHpEffectImage);
+
+        Debug.Log("SetImagesToHealthBar is called in the: " + name);
     }
 
     private void CheckComponents()
@@ -286,33 +285,10 @@ public class PlayerStatusBar : BasePanel
         {
             if (Instance == this)
             {
-                InitializePlayerStatus();
+                ResetGame();
 
                 //设置界面的透明度（显示出来）
                 CanvasGroup.alpha = FadeInAlpha;
-
-                /*
-                //检查UIKeys是否为空且要加载的名字是否存在，随后等待UI加载完毕
-                if (UIManager.Instance.UIKeys != null && !string.IsNullOrEmpty(UIManager.Instance.UIKeys.PlayerStatusBarKey))
-                {
-                    //检查界面是否已经打开,打开的话则进行以下逻辑
-                    if (UIManager.Instance.PanelDict.ContainsKey(UIManager.Instance.UIKeys.PlayerStatusBarKey))
-                    {
-                        //Debug.Log("PlayerStatusBarKey again set the images to the " + name);
-
-                        SetImagesToHealthBar();      //重新赋值图片
-
-                        //这里重新加载时需要用协程，否则会出现重新加载后无法正常显示数值的情况
-                        StartCoroutine(DelayedUpdateStatusUI());
-                    }
-                }
-                //如果查找不到界面对应的Key
-                else
-                {
-                    Debug.LogError("UIKeys not set or PlayerStatusBarKey is empty.");
-                    return;
-                }
-                */
             }
             
             //将更新血条文本的函数跟玩家血条脚本绑定起来
@@ -356,6 +332,8 @@ public class PlayerStatusBar : BasePanel
             SpeedValue = Player.PlayerData.Speed;
             SanityValue = Player.PlayerData.Sanity;
             KnowledgeValue = Player.PlayerData.Knowledge;
+
+            UpdateStatusUI();       //赋值后将数值正确的显示出来
 
 
             //重置玩家的血量

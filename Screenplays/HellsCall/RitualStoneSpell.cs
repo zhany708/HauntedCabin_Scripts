@@ -3,13 +3,13 @@ using UnityEngine;
 
 
 
-public class RitualStoneSpell : MonoBehaviour       //祷告石护肤
+public class RitualStoneSpell : MonoBehaviour       //祷告石护符
 {
 
 
 
 
-
+    #region Unity内部函数
     private void Start()
     {
         //在这里加进字典，防止字典还没实例化就尝试获取引用导致报错
@@ -41,9 +41,10 @@ public class RitualStoneSpell : MonoBehaviour       //祷告石护肤
         }      
     }
     */
+    #endregion
 
 
-
+    #region 主要函数
     private void PickupLogic()      //玩家拾取护符时的逻辑
     {
         //调整剧本物体中的布尔参数，表示玩家可以进行仪式
@@ -58,4 +59,5 @@ public class RitualStoneSpell : MonoBehaviour       //祷告石护肤
 
         Destroy(gameObject);        //删除祷告石护符物体
     }
+    #endregion
 }

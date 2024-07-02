@@ -13,6 +13,8 @@ public class InteractPanel : BasePanel     //互动按键，给予玩家自己�
 
 
 
+
+    #region Unity内部函数
     protected override void Awake()
     {
         //单例模式
@@ -46,8 +48,10 @@ public class InteractPanel : BasePanel     //互动按键，给予玩家自己�
     {
         UIManager.Instance.ImportantPanel.Add(this);    //将该界面加进列表，以在重置游戏时不被删除
     }
+    #endregion
 
 
+    #region 主要函数
     //需要做的：玩家靠近一些物体后打开此界面，离开物体后淡出此界面。且此界面的坐标应更改为物体坐标（随触发的物体改变）
     public override void ClosePanel()
     {
@@ -60,4 +64,5 @@ public class InteractPanel : BasePanel     //互动按键，给予玩家自己�
     {
         OnInteractKeyPressed = null;
     }
+    #endregion
 }

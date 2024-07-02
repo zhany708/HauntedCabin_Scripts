@@ -37,7 +37,7 @@ public class DoorController : MonoBehaviour
 
 
 
-
+    #region Unity内部函数
     private void Awake()
     {
         RoomTrigger = GetComponent<Collider2D>();
@@ -116,9 +116,10 @@ public class DoorController : MonoBehaviour
             }                       
         }
     }
+    #endregion
 
 
-
+    #region 主要函数
     //关闭所有永久关闭的门，不影响其他的门
     public void CloseNecessaryDoors()
     {
@@ -179,4 +180,5 @@ public class DoorController : MonoBehaviour
         KilledEnemyCount++;
         CheckIfOpenDoors();     //增加计数后判断是否满足开门条件
     }
+    #endregion
 }

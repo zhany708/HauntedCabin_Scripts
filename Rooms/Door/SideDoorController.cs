@@ -23,6 +23,9 @@ public class SideDoorController : MonoBehaviour
 
 
 
+
+
+    #region Unity内部函数
     protected virtual void Awake()
     {
         sprite = GetComponent<SpriteRenderer>();     
@@ -65,10 +68,10 @@ public class SideDoorController : MonoBehaviour
             }
         }
     }
+    #endregion
 
 
-
-
+    #region 主要函数
     private void ChangeTransparency(float alphaVal)
     {
         if (sprite != null)
@@ -77,4 +80,5 @@ public class SideDoorController : MonoBehaviour
             sprite.color = new Color(1f, 1f, 1f, alphaVal);
         }
     }
+    #endregion
 }

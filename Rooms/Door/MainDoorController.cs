@@ -16,6 +16,9 @@ public class MainDoorController : MonoBehaviour        //用于大宅大门
 
 
 
+
+
+    #region Unity内部函数
     private void Awake()
     {
         //单例模式
@@ -52,10 +55,10 @@ public class MainDoorController : MonoBehaviour        //用于大宅大门
             await UIManager.Instance.OpenPanel(UIManager.Instance.UIKeys.HellsCall_GameWinningPanel);      //打开剧本胜利界面
         }
     }
+    #endregion
 
 
-
-
+    #region 开/关门相关的函数
     public void OpenMainDoor()       //打开大门
     {
         MainDoorAnimator.SetBool("isOpen", true);
@@ -67,6 +70,7 @@ public class MainDoorController : MonoBehaviour        //用于大宅大门
         MainDoorAnimator.SetBool("isOpen", false);
         MainDoorAnimator.SetBool("isClose", true);
     }
+    #endregion
 
 
     #region Setters

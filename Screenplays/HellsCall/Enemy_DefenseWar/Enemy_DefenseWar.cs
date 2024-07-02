@@ -4,14 +4,13 @@ using ZhangYu.Utilities;
 
 
 
-#region Parameters
+
 [Serializable]      //让编辑器序列化这个类
 public class EnemyParameter_DefenseWar : EnemyParameter     //新的敌人Parameter
 {
     //攻击相关
     public Transform AltarTarget;     //祷告石的坐标
 }
-#endregion
 
 
 
@@ -19,25 +18,25 @@ public class EnemyParameter_DefenseWar : EnemyParameter     //新的敌人Parame
 //用于保卫战的敌人脚本，主要少了几个状态，以及优先攻击祷告石的设定
 public class Enemy_DefenseWar : Enemy
 {
-    #region FSM States
+    #region 敌人的所有状态
     public new EnemyChaseState_DefenseWar ChaseState { get; private set; }
     public new EnemyAttackState_DefenseWar AttackState { get; protected set; }
     public new EnemyHitState_DefenseWar HitState { get; protected set; }
     public new EnemyDeathState_DefenseWar DeathState { get; protected set; }
-
-
-    //检查m_Stats是否为空，不是的话则返回它，是的话则调用GetCoreComponent函数以获取组件
-    public Stats Stats => m_Stats ? m_Stats : Core.GetCoreComponent(ref m_Stats);       
-    private Stats m_Stats;
     #endregion
 
 
-    #region Variables
+    #region 组件
+    //检查m_Stats是否为空，不是的话则返回它，是的话则调用GetCoreComponent函数以获取组件
+    public Stats Stats => m_Stats ? m_Stats : Core.GetCoreComponent(ref m_Stats);       
+    private Stats m_Stats;
+
+
     public EnemyParameter_DefenseWar Parameter_DefenseWar;
     #endregion
 
 
-    #region Unity Callback Functions
+    #region Unity内部函数
     protected override void Awake()    //最早实施的函数（只实施一次）
     {  
         base.Awake();
@@ -86,7 +85,7 @@ public class Enemy_DefenseWar : Enemy
     #endregion
 
 
-    #region Main Functions
+    #region 主要函数
     private void ChangeAttackInterval()     //改变攻击间隔
     {
         //根据当前血量百分比缩短攻击间隔（比如当前20%的血量就对应着原本攻击间隔的20%的时长）
@@ -95,7 +94,7 @@ public class Enemy_DefenseWar : Enemy
     #endregion
 
 
-    #region Animation Event Functions
+    #region 动画帧事件
     protected override void DeathLogicForAnimation()      //用于动画事件，摧毁物体
     {
         if (transform.parent != null)
@@ -130,15 +129,5 @@ public class Enemy_DefenseWar : Enemy
     {
         Gizmos.DrawWireSphere(Parameter_DefenseWar.AttackPoint.position, enemyData.AttackArea);    //设置攻击范围的圆心和半径
     }
-    #endregion
-
-
-    #region Getters
-
-    #endregion
-
-
-    #region Setters
-
     #endregion
 }
