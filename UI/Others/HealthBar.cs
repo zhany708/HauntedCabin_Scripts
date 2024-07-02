@@ -29,6 +29,8 @@ public class HealthBar : MonoBehaviour
 
     protected virtual void Start()     
     {
+        //Debug.Log("Start is called in the HealthBar");
+
         InitializeHealthBar();
     }
     
@@ -63,7 +65,7 @@ public class HealthBar : MonoBehaviour
 
     protected void UpdateHealthBar()
     {
-        Debug.Log("UpdateHealthBar is called in the: " + name);
+        //Debug.Log("UpdateHealthBar is called in the: " + name);
 
         //使用组件前检查是否为空
         if (hpImage == null || increaseHpEffectImage == null || decreaseHpEffectImage == null)

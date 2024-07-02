@@ -123,16 +123,8 @@ public class PlayerStatusBar : BasePanel
     }
 
 
-    private void OnEnable()
-    {
-        SceneManager.sceneLoaded += OnSceneLoaded;
-    }
-
     protected override void OnDisable() 
     {
-        SceneManager.sceneLoaded += OnSceneLoaded;
-
-
         //先检查界面名字是否为空（为空的话则代表当前界面是重复的，因为是在Start函数中赋值名字）
         if (panelName != null)
         {
@@ -148,18 +140,6 @@ public class PlayerStatusBar : BasePanel
 
 
     #region 初始化相关
-    //初始化血条相关的部分
-    public void InitializePlayerStatus()
-    {
-        if (Player != null)
-        {
-            ResetGame();
-
-            //将照片组件传递给玩家血条
-            SetImagesToHealthBar();
-        }            
-    }
-
     public void SetImagesToHealthBar()      //用于将照片组件传递给玩家血条
     {
         //获取玩家血条的脚本组件
@@ -175,7 +155,7 @@ public class PlayerStatusBar : BasePanel
         m_PlayerHealthBar.SetIncreaseHpEffectImage(IncreaseHpEffectImage);
         m_PlayerHealthBar.SetDecreaseHpEffectImage(DecreaseHpEffectImage);
 
-        Debug.Log("SetImagesToHealthBar is called in the: " + name);
+        //Debug.Log("SetImagesToHealthBar is called in the: " + name);
     }
 
     private void CheckComponents()
@@ -285,10 +265,17 @@ public class PlayerStatusBar : BasePanel
         {
             if (Instance == this)
             {
-                ResetGame();
+                //Debug.Log("OnSceneLoaded is called in the: " + name);
 
                 //设置界面的透明度（显示出来）
                 CanvasGroup.alpha = FadeInAlpha;
+
+                SetImagesToHealthBar();      //重新赋值图片
+
+                ResetGame();                 //先赋值图片后再调用重置函数以初始化
+
+                //这里重新加载时需要用协程，否则会出现重新加载后无法正常显示数值的情况
+                StartCoroutine(DelayedUpdateStatusUI());
             }
             
             //将更新血条文本的函数跟玩家血条脚本绑定起来
@@ -335,7 +322,7 @@ public class PlayerStatusBar : BasePanel
 
             UpdateStatusUI();       //赋值后将数值正确的显示出来
 
-
+            
             //重置玩家的血量
             Stats playerStats = Player.GetComponentInChildren<Stats>();      //获取玩家血条的脚本组件
             if (playerStats == null)
@@ -344,7 +331,7 @@ public class PlayerStatusBar : BasePanel
                 return;
             }
 
-            playerStats.SetCurrentHealth(playerStats.MaxHealth);             //重置玩家的血量（以及血条占比）
+            playerStats.SetCurrentHealth(playerStats.MaxHealth);             //重置玩家的血量（以及血条占比）           
         }
     }
     #endregion
