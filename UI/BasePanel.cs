@@ -34,6 +34,11 @@ public class BasePanel : MonoBehaviour
             if (m_CanvasGroup == null)
             {
                 m_CanvasGroup = GetComponent<CanvasGroup>();
+                //如果尝试获取组件后组件仍然为空的话，则报错
+                if (m_CanvasGroup == null)
+                {
+                    Debug.Log("Cannot get the reference of the CanvasGroup component in the " + name);
+                }
             }
             return m_CanvasGroup;
         }

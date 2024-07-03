@@ -3,12 +3,12 @@ using UnityEngine;
 
 public class PlayerBullet : MonoBehaviour
 {
-    public float Speed;             //子弹的速度
+    protected Rigidbody2D rigidBody2D;
 
 
-    Rigidbody2D m_RigidBody2D;
 
-    GunWeapon m_Gun;                //玩家使用的枪械
+
+    GunWeapon m_Gun;                        //玩家使用的枪械
 
     //用于在子弹发射出去几秒后强制销毁子弹
     float m_ExistTimer;
@@ -22,16 +22,16 @@ public class PlayerBullet : MonoBehaviour
     #region Unity内部函数
     private void Awake()
     {
-        m_RigidBody2D = GetComponent<Rigidbody2D>();
+        rigidBody2D = GetComponent<Rigidbody2D>();
     }
 
     private void Update()
     {
         m_CurrentTime += Time.deltaTime;
 
-        if (m_CurrentTime - m_ExistTimer >= 4)      //子弹生成4秒后强制销毁子弹
+        if (m_CurrentTime - m_ExistTimer >= 4f)      //子弹生成4秒后强制销毁子弹
         {
-            DestroyBullet();
+            PushBulletBackToPool();
         }
     }
 
@@ -47,7 +47,7 @@ public class PlayerBullet : MonoBehaviour
     {
         //Debug.Log("The Player bullet collided with : " + other.gameObject.name);
 
-        DestroyBullet();       //使子弹碰到其他碰撞体（墙壁，家具等）时自毁
+        PushBulletBackToPool();       //使子弹碰到其他碰撞体（墙壁，家具等）时自毁
     }
 
     protected virtual void OnTriggerEnter2D(Collider2D other)
@@ -63,7 +63,7 @@ public class PlayerBullet : MonoBehaviour
             //damageable.GetHit(m_AttackDirection);
         }
 
-        DestroyBullet();
+        PushBulletBackToPool();
     }
     #endregion
 
@@ -71,11 +71,12 @@ public class PlayerBullet : MonoBehaviour
     #region 子弹相关
     public virtual void SetSpeed(Vector2 direction)
     {
-        m_RigidBody2D.velocity = direction.normalized * Speed;
+        //根据子弹Data里的速度让子弹移动
+        rigidBody2D.velocity = direction.normalized * m_Gun.GunData.AttackDetail.BulletSpeed;
     }
 
-    
-    private void DestroyBullet()
+
+    protected void PushBulletBackToPool()
     {
         ParticlePool.Instance.PushObject(gameObject);
     }

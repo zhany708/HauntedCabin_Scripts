@@ -36,6 +36,8 @@ public class PlayerHealthBar : HealthBar      //用于玩家的血条控制
     #region 血条相关
     public override void SetCurrentHealth(float health)
     {
+        //Debug.Log("SetCurrentHealth is called in the PlayerHealthBar");
+
         base.SetCurrentHealth(health);
 
         OnHealthChange?.Invoke();           //调用事件

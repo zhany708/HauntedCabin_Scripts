@@ -505,8 +505,10 @@ public class RoomManager : ManagerTemplate<RoomManager>
         //进入其余场景时（目前只有主菜单）
         else
         {
-            //Debug.Log("ResetGame function in RoomManager is called.");
-            ResetGame();                 //删除所有普通房间，隐藏所有初始房间
+            //删除所有普通房间，随后隐藏所有初始房间
+            ResetGame();                 
+
+            SetActiveAllRoom(false);
         }
     }
 

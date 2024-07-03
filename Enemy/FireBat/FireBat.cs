@@ -11,7 +11,7 @@ public class FireBat : Enemy
     {
         base.Start();
 
-        AttackState = new FireBatAttackState(this, StateMachine, enemyData, "Attack");    //将普通攻击状态改成火蝙蝠攻击状态
+        AttackState = new FireBatAttackState(this, StateMachine, EnemyData, "Attack");    //将普通攻击状态改成火蝙蝠攻击状态
     }
     #endregion
 
@@ -44,6 +44,8 @@ public class FireBat : Enemy
 
 
             EnemyBullet fireBall = FireBallObject.GetComponent<EnemyBullet>();                      //调用火球脚本
+
+            fireBall.SetEnemy(this);                                                                //将本脚本的引用传给火球脚本
             fireBall.SetSpeed(tempPos + Vector3.up * 0.5f - FireBallObject.transform.position);     //朝目标中心方向发射火球
         }       
     }

@@ -41,10 +41,10 @@ public class Enemy_DefenseWar : Enemy
     {  
         base.Awake();
 
-        ChaseState = new EnemyChaseState_DefenseWar(this, StateMachine, enemyData, "Idle");
-        AttackState = new EnemyAttackState_DefenseWar(this, StateMachine, enemyData, "Attack");
-        HitState = new EnemyHitState_DefenseWar(this, StateMachine, enemyData, "Hit");
-        DeathState = new EnemyDeathState_DefenseWar(this, StateMachine, enemyData, "Death");
+        ChaseState = new EnemyChaseState_DefenseWar(this, StateMachine, EnemyData, "Idle");
+        AttackState = new EnemyAttackState_DefenseWar(this, StateMachine, EnemyData, "Attack");
+        HitState = new EnemyHitState_DefenseWar(this, StateMachine, EnemyData, "Hit");
+        DeathState = new EnemyDeathState_DefenseWar(this, StateMachine, EnemyData, "Death");
     }
 
     protected override void Start()      //只在第一帧运行前运行一次这个函数
@@ -54,7 +54,7 @@ public class Enemy_DefenseWar : Enemy
 
     protected override void OnEnable()       //每次重新激活时都会运行这个函数
     {
-        AttackTimer = new Timer(enemyData.AttackInterval);      //用攻击间隔初始化计时器
+        AttackTimer = new Timer(EnemyData.AttackInterval);      //用攻击间隔初始化计时器
         EnemyFlip = new Flip(transform);
 
 
@@ -89,7 +89,7 @@ public class Enemy_DefenseWar : Enemy
     private void ChangeAttackInterval()     //改变攻击间隔
     {
         //根据当前血量百分比缩短攻击间隔（比如当前20%的血量就对应着原本攻击间隔的20%的时长）
-        AttackTimer.SetDuration(enemyData.AttackInterval * Stats.GetCurrentHelathRate() );
+        AttackTimer.SetDuration(EnemyData.AttackInterval * Stats.GetCurrentHelathRate() );
     }
     #endregion
 
@@ -127,7 +127,7 @@ public class Enemy_DefenseWar : Enemy
 
     protected override void OnDrawGizmos()
     {
-        Gizmos.DrawWireSphere(Parameter_DefenseWar.AttackPoint.position, enemyData.AttackArea);    //设置攻击范围的圆心和半径
+        Gizmos.DrawWireSphere(Parameter_DefenseWar.AttackPoint.position, EnemyData.AttackArea);    //设置攻击范围的圆心和半径
     }
     #endregion
 }

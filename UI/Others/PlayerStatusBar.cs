@@ -24,7 +24,7 @@ public class PlayerStatusBar : BasePanel
     public TextMeshProUGUI KnowledgeText;
 
     //玩家的血条的文本
-    //public TextMeshProUGUI HealthText;
+    public TextMeshProUGUI HealthText;
 
 
 
@@ -34,8 +34,6 @@ public class PlayerStatusBar : BasePanel
     public string SanityPhraseKey;
     public string KnowledgePhraseKey;
 
-    //玩家的血条对应的翻译文本的string
-    //public string HealthPhraseKey;
 
 
 
@@ -123,7 +121,7 @@ public class PlayerStatusBar : BasePanel
             }
 
 
-            if (!UIManager.Instance.ImportantPanel.ContainsKey(this) )
+            if (!UIManager.Instance.ImportantPanel.Contains(this) )
             {
                 //将该界面加进重要界面列表，以在重置游戏时不被删除
                 UIManager.Instance.ImportantPanel.Add(this);    
@@ -147,11 +145,13 @@ public class PlayerStatusBar : BasePanel
                 }
 
 
-                if (UIManager.Instance.ImportantPanel.ContainsKey(this) )
+                if (UIManager.Instance.ImportantPanel.Contains(this) )
                 {
                     //从重要界面列表中移除当前界面
                     UIManager.Instance.ImportantPanel.Remove(this);    
                 }
+
+                m_PlayerHealthBar.OnHealthChange -= UpdateHealthText;
             }      
         }
     }
@@ -180,14 +180,14 @@ public class PlayerStatusBar : BasePanel
     private void CheckComponents()
     {
         //检查四个属性和血条文本组件是否有的为空
-        if (StrengthText == null || SpeedText == null || SanityText == null || KnowledgeText == null)// || HealthText == null)
+        if (StrengthText == null || SpeedText == null || SanityText == null || KnowledgeText == null || HealthText == null)
         {
             Debug.LogError("Some Text components are not assigned in the " + name);
             return;
         }
 
         //检查各个翻译文本是否为空
-        if (StrengthPhraseKey == "" || SpeedPhraseKey == "" || SanityPhraseKey == "" || KnowledgePhraseKey == "")// || HealthPhraseKey == "")
+        if (StrengthPhraseKey == "" || SpeedPhraseKey == "" || SanityPhraseKey == "" || KnowledgePhraseKey == "")
         {
             Debug.LogError("Some Lean Localization phrase keys are not written in the " + name);
             return;
@@ -261,17 +261,16 @@ public class PlayerStatusBar : BasePanel
 
 
 
-    /*
+    
     //更新玩家的血条文本
-    public void UpdateHealthText()
+    private void UpdateHealthText()
     {
-        //获取翻译的文本组件
-        string healthFormat = LeanLocalization.GetTranslationText(HealthPhraseKey);
+        //Debug.Log("UpdateHealthText is called in the PlayerStatusBar");
 
         //赋值血条的数值
-        HealthText.text = string.Format(healthFormat, m_CurrentHealth, m_MaxHealth);            
+        HealthText.text = string.Format(HealthText.text, m_CurrentHealth, m_MaxHealth);            
     }
-    */
+    
     #endregion
 
 
@@ -288,17 +287,17 @@ public class PlayerStatusBar : BasePanel
 
                 SetImagesToHealthBar();      //先重新赋值图片给玩家血条脚本
 
+                
+
                 ResetGame();                 //随后再调用重置函数以初始化属性和血量
 
-                //这里重新加载时需要用协程，否则会出现重新加载后无法正常显示数值的情况
-                StartCoroutine(DelayedUpdateStatusUI());
 
                 //最后设置界面的透明度（显示出来）
                 CanvasGroup.alpha = FadeInAlpha;
-            }
-            
-            //将更新血条文本的函数跟玩家血条脚本绑定起来
-            //m_PlayerHealthBar.OnHealthChange += UpdateHealthText;
+
+                //将更新血条文本的函数跟玩家血条脚本绑定起来
+                m_PlayerHealthBar.OnHealthChange += UpdateHealthText;
+            }           
         }
 
         //进入其余场景时（目前只有主菜单）
@@ -308,9 +307,9 @@ public class PlayerStatusBar : BasePanel
             {
                 //设置界面的透明度（隐藏界面）
                 CanvasGroup.alpha = FadeOutAlpha;
+
+                //m_PlayerHealthBar.OnHealthChange -= UpdateHealthText;
             }
-                
-            //m_PlayerHealthBar.OnHealthChange -= UpdateHealthText;
         }
     }
 
@@ -339,9 +338,10 @@ public class PlayerStatusBar : BasePanel
             SanityValue = Player.PlayerData.Sanity;
             KnowledgeValue = Player.PlayerData.Knowledge;
 
-            UpdateStatusUI();       //赋值后将数值正确的显示出来
+            //这里重新加载时需要用协程，否则会出现重新加载后无法正常显示数值的情况
+            StartCoroutine(DelayedUpdateStatusUI());
 
-            
+
             //重置玩家的血量
             Stats playerStats = Player.GetComponentInChildren<Stats>();      //获取玩家血条的脚本组件
             if (playerStats == null)

@@ -15,7 +15,7 @@ public class FireBat_DefenseWar : Enemy_DefenseWar
     {
         base.Start();
 
-        AttackState = new FireBatAttackState_DefenseWar(this, StateMachine, enemyData, "Attack");    //将普通攻击状态改成火蝙蝠攻击状态
+        AttackState = new FireBatAttackState_DefenseWar(this, StateMachine, EnemyData, "Attack");    //将普通攻击状态改成火蝙蝠攻击状态
     }
     #endregion
 

@@ -36,6 +36,8 @@ public class Enemy : MonoBehaviour
 
     #region 组件
     public EnemyParameter Parameter;
+    public SO_EnemyData EnemyData;
+
     public Core Core { get; private set; }
 
     //检查m_Movement是否为空，不是的话则返回它，是的话则调用GetCoreComponent函数以获取组件
@@ -64,11 +66,6 @@ public class Enemy : MonoBehaviour
     public Timer AttackTimer { get; protected set; }
     public RandomPosition PatrolRandomPos { get; private set; }
     public Flip EnemyFlip { get; protected set; }
-
-
-
-    [SerializeField]
-    protected SO_EnemyData enemyData;
     #endregion
 
 
@@ -84,17 +81,17 @@ public class Enemy : MonoBehaviour
     protected virtual void Awake()    //最早实施的函数（只实施一次）
     {  
         Core = GetComponentInChildren<Core>();      //从子物体那调用Core脚本
-        Core.SetParameters(enemyData.MaxHealth, enemyData.Defense, enemyData.HitResistance);    //设置参数
+        Core.SetParameters(EnemyData.MaxHealth, EnemyData.Defense, EnemyData.HitResistance);    //设置参数
 
         StateMachine = new EnemyStateMachine();
 
         //初始化各状态
-        IdleState = new EnemyIdleState(this, StateMachine, enemyData, "Idle");
-        PatrolState = new EnemyPatrolState(this, StateMachine, enemyData, "Idle");
-        ChaseState = new EnemyChaseState(this, StateMachine, enemyData, "Idle");
-        AttackState = new EnemyAttackState(this, StateMachine, enemyData, "Attack");
-        HitState = new EnemyHitState(this, StateMachine, enemyData, "Hit");
-        DeathState = new EnemyDeathState(this, StateMachine, enemyData, "Death");       
+        IdleState = new EnemyIdleState(this, StateMachine, EnemyData, "Idle");
+        PatrolState = new EnemyPatrolState(this, StateMachine, EnemyData, "Idle");
+        ChaseState = new EnemyChaseState(this, StateMachine, EnemyData, "Idle");
+        AttackState = new EnemyAttackState(this, StateMachine, EnemyData, "Attack");
+        HitState = new EnemyHitState(this, StateMachine, EnemyData, "Hit");
+        DeathState = new EnemyDeathState(this, StateMachine, EnemyData, "Death");       
     }
 
     protected virtual void Start()      //只在第一帧运行前运行一次这个函数
@@ -118,7 +115,7 @@ public class Enemy : MonoBehaviour
 
     protected virtual void OnEnable()       //每次重新激活时都会运行这个函数
     {
-        AttackTimer = new Timer(enemyData.AttackInterval);      //用攻击间隔初始化计时器
+        AttackTimer = new Timer(EnemyData.AttackInterval);      //用攻击间隔初始化计时器
 
         //根据父物体的坐标初始化随机生成坐标脚本（transform.localPosition返回的永远是相对于父物体的坐标），使用跟物体的世界坐标进行计算（因为只有跟物体的坐标在这之前赋过值了）
         Vector2 leftDownPos = Parameter.PatrolPoints[0].transform.localPosition + transform.parent.position;
@@ -228,7 +225,7 @@ public class Enemy : MonoBehaviour
 
     protected virtual void OnDrawGizmos()
     {
-        Gizmos.DrawWireSphere(Parameter.AttackPoint.position, enemyData.AttackArea);    //设置攻击范围的圆心和半径
+        Gizmos.DrawWireSphere(Parameter.AttackPoint.position, EnemyData.AttackArea);    //设置攻击范围的圆心和半径
     }
     #endregion
 
