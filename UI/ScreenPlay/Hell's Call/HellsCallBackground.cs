@@ -18,7 +18,7 @@ public class HellsCallBackground : BasePanel
 
 
 
-
+    #region Unity内部函数
     protected override void Awake()
     {
         if (TitleText == null || FirstPartText == null || SecondPartText == null || TipText == null)
@@ -50,9 +50,10 @@ public class HellsCallBackground : BasePanel
         OnFadeOutFinished -= StartHealthDrain;
         OnFadeInFinished -= StartTextAnimations;
     }
-
+    #endregion
 
     
+    #region 主要函数
     public async override void ClosePanel()
     {
         base.ClosePanel();
@@ -108,4 +109,5 @@ public class HellsCallBackground : BasePanel
         //HellsCall.Instance.SetDoFireEffect(true);       //设置布尔，从而开始火焰滤镜
         HellsCall.Instance.StartHealthDrain();       
     }
+    #endregion
 }

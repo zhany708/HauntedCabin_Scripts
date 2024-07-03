@@ -14,6 +14,10 @@ public class GameBackgroundPanel : BasePanel
 
 
 
+
+
+
+    #region Unity内部函数
     protected override void Awake()
     {
         if (FirstPartText == null || SecondPartText == null || LastPartText == null || TipText == null)
@@ -41,10 +45,10 @@ public class GameBackgroundPanel : BasePanel
 
         OnFadeInFinished -= StartTextAnimations;
     }
+    #endregion
 
 
-
-
+    #region 主要函数
     private async void PlayGame()   //开始游戏
     {
         //载入一楼大厅场景
@@ -113,4 +117,5 @@ public class GameBackgroundPanel : BasePanel
 
         generatedCoroutines.Add(firstPartTextCoroutine);      //将协程加进列表
     }
+    #endregion
 }

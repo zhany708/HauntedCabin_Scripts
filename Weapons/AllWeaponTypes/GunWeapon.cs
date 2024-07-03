@@ -20,17 +20,20 @@ public class GunWeapon : Weapon
 
 
 
+
+
+
+    #region Unity内部函数
     protected override void Awake()
     {
         base.Awake();
 
         InitializeComponents();     //初始化组件
     }
+    #endregion
 
 
-
-
-
+    #region 初始化
     private void InitializeComponents()
     {
         m_GunFlip = new Flip(transform);
@@ -54,10 +57,10 @@ public class GunWeapon : Weapon
             return;
         }
     }
+    #endregion
 
 
-
-
+    #region 主要函数
     public override void EnterWeapon()
     {
         base.EnterWeapon();
@@ -66,7 +69,7 @@ public class GunWeapon : Weapon
     }
 
 
-
+    
     protected override void PointToMouse()
     {
         base.PointToMouse();
@@ -111,4 +114,5 @@ public class GunWeapon : Weapon
 
         PlayAudioSound();   //播放开枪音效
     }
+    #endregion
 }

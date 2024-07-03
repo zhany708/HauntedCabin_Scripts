@@ -24,6 +24,9 @@ public class WeaponPickUp : MonoBehaviour
 
 
 
+
+
+    #region Unity内部函数
     private void Awake()
     {
         if (WeaponPreFab == null)
@@ -74,8 +77,10 @@ public class WeaponPickUp : MonoBehaviour
         }      
     }
     */
+    #endregion
 
 
+    #region 主要函数
     //玩家碰撞地上的武器后，显示武器拾取UI
     private async void ProcessWeaponPickup(Collider2D other)
     {
@@ -110,6 +115,8 @@ public class WeaponPickUp : MonoBehaviour
             weaponPickupPanel.SetItemName(LeanLocalization.GetTranslationText(phraseKey) );     
         }
     }
+    #endregion
+
 
     #region Setters
     public void SetIsPanelOpen(bool isOpen)

@@ -10,6 +10,12 @@ public class MultiAttackMeleeWeapon : MeleeWeapon
 
 
 
+
+
+
+
+
+    #region Unity内部函数
     protected override void Awake()
     {
         base.Awake();
@@ -33,11 +39,10 @@ public class MultiAttackMeleeWeapon : MeleeWeapon
     {
         m_AttackCounterResetTimer.OnTimerDone -= ResetAttackCounter;    //触发事件（计时器到达目标时间）时重置连击
     }
+    #endregion
 
 
-
-
-
+    #region 主要函数
     public override void EnterWeapon()
     {
         m_AttackCounterResetTimer.StopTimer();      //攻击状态中暂停计时器，防止攻击动画还没结束就重置连击
@@ -59,4 +64,5 @@ public class MultiAttackMeleeWeapon : MeleeWeapon
 
 
     protected void ResetAttackCounter() => CurrentAttackCounter = 0;     //重置连击数
+    #endregion
 }

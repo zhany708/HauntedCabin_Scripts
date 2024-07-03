@@ -12,7 +12,7 @@ public class TransitionStagePanel : BasePanel
 
 
 
-
+    #region Unity内部函数
     protected override void Awake()
     {
         base.Awake();
@@ -42,18 +42,16 @@ public class TransitionStagePanel : BasePanel
 
         OnFadeInFinished -= StartTextAnimations;
     }
+    #endregion
 
 
-
-
-
+    #region 主要函数
     public override void OpenPanel(string name)
     {
         panelName = name;
 
         Fade(CanvasGroup, FadeInAlpha, FadeDuration, false);     //淡入（没有射线阻挡）       
     }
-
 
 
 
@@ -81,4 +79,5 @@ public class TransitionStagePanel : BasePanel
     {
         await UIManager.Instance.OpenPanel(UIManager.Instance.UIKeys.HellsCallBackground);   //打开剧本背景界面
     }
+    #endregion
 }

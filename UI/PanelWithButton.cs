@@ -24,6 +24,12 @@ public class PanelWithButton : BasePanel        //专门用于有按钮的界面
 
 
 
+
+
+
+
+
+    #region Unity内部函数
     /*
     protected override void Awake()
     {
@@ -88,11 +94,10 @@ public class PanelWithButton : BasePanel        //专门用于有按钮的界面
 
         SetTopPriorityButton();
     }
+    #endregion
 
 
-
-
-
+    #region 打开/关闭界面相关
     public override void Fade(CanvasGroup targetGroup, float targetAlpha, float duration, bool blocksRaycasts)
     {
         //有按钮的界面在淡入/淡出前，需要提前设置按钮是否可交互，否则会出现在淡出的过程中二次点击的情况
@@ -100,9 +105,10 @@ public class PanelWithButton : BasePanel        //专门用于有按钮的界面
 
         base.Fade(targetGroup, targetAlpha, duration, blocksRaycasts);
     }
+    #endregion
 
 
-
+    #region 主要函数
     protected virtual void SetTopPriorityButton()
     {
         //Debug.Log("The size of the OpenedPanelsWithButton List is : " + m_OpenedPanelsWithButton.Count);
@@ -124,6 +130,7 @@ public class PanelWithButton : BasePanel        //专门用于有按钮的界面
         //根据是否有带按钮的界面打开来决定是否允许玩家移动和攻击
         SetBothMoveableAndAttackable(!m_IsPanelWithButtonOpened);
     }
+    
 
     /*
     //用于调试
@@ -138,4 +145,5 @@ public class PanelWithButton : BasePanel        //专门用于有按钮的界面
         }
     }
     */
+    #endregion
 }

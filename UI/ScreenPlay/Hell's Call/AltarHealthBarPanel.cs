@@ -20,6 +20,9 @@ public class AltarHealthBarPanel : BasePanel
 
 
 
+
+
+    #region Unity内部函数
     protected override void Awake()
     {
         m_AltarTransform = GetComponentInParent<Altar>().transform;
@@ -41,10 +44,10 @@ public class AltarHealthBarPanel : BasePanel
         //初始化时设置界面的透明度（隐藏界面）
         CanvasGroup.alpha = FadeOutAlpha;
     }
+    #endregion
 
 
-
-
+    #region 主要函数
     public void SetImagesToHealthBar()      //用于将照片组件传递给玩家血条
     {
         //获取玩家血条的脚本组件
@@ -60,4 +63,5 @@ public class AltarHealthBarPanel : BasePanel
         m_AltarHealthBar.SetIncreaseHpEffectImage(IncreaseHpEffectImage);
         m_AltarHealthBar.SetDecreaseHpEffectImage(DecreaseHpEffectImage);
     }
+    #endregion
 }

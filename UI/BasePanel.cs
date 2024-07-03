@@ -65,6 +65,9 @@ public class BasePanel : MonoBehaviour
 
 
 
+
+
+    #region Unity内部函数
     protected virtual void Awake() { }
 
 
@@ -76,11 +79,10 @@ public class BasePanel : MonoBehaviour
             UIManager.Instance.PanelDict.Remove(panelName);
         }     
     }
+    #endregion
 
 
-
-
-
+    #region 打开/关闭界面相关
     public virtual void OpenPanel(string name)
     {
         panelName = name;
@@ -146,9 +148,10 @@ public class BasePanel : MonoBehaviour
 
         generatedDOTweens.Add(fadeTween);      //将DOTween加进列表
     }
-  
+    #endregion
 
 
+    #region 主要函数
     //用于打字机效果
     protected IEnumerator TypeText(TextMeshProUGUI textComponent, string fullText, Action onTypingCompleted = null)
     {
@@ -226,9 +229,10 @@ public class BasePanel : MonoBehaviour
         IsPlayerMoveable = isTrue;
         IsPlayerAttackable = isTrue;
     }
+    #endregion
 
 
-
+    #region 其余函数
     protected void ResetGameSystems()       //重置游戏的各种系统
     {
         //先重置各大管理器脚本
@@ -245,4 +249,5 @@ public class BasePanel : MonoBehaviour
         //再重置具体的某个UI脚本
         PlayerStatusBar.Instance.ResetGame();       //在返回主界面之前重置玩家状态栏可以防止再次游戏时状态栏无法正常显示数值
     }
+    #endregion
 }

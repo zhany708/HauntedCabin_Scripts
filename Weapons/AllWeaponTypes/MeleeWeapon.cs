@@ -25,7 +25,7 @@ public class MeleeWeapon : Weapon
 
 
 
-
+    #region Unity内部函数
     protected override void Awake()
     {
         base.Awake();
@@ -43,12 +43,10 @@ public class MeleeWeapon : Weapon
     {
         RemoveFromDetected(collision);
     }
+    #endregion
 
 
-
-
-
-
+    #region 初始化
     private void InitializeComponents()
     {
         //如果WeaponData与当前AggressiveWeaponData相同，则将当前攻击性武器数据的Reference传给Weapon脚本
@@ -70,10 +68,10 @@ public class MeleeWeapon : Weapon
             return;
         }
     }
+    #endregion
 
 
-
-
+    #region 主要函数
     public void CheckMeleeAttack()     //攻击到敌人时调用此函数
     {
         //Debug.Log("Checking!");
@@ -130,8 +128,10 @@ public class MeleeWeapon : Weapon
             detectedKnockbackables.Remove(knockbackable);
         }
     }
+    #endregion
 
-    #region Animation Events
+
+    #region 动画帧事件
     protected override void AnimationActionTrigger()
     {
         base.AnimationActionTrigger();

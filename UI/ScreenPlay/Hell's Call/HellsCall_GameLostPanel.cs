@@ -15,7 +15,7 @@ public class HellsCall_GameLostPanel : BasePanel
 
 
 
-
+    #region Unity内部函数
     protected override void Awake()
     {
         //检查文本组件是否存在
@@ -41,10 +41,10 @@ public class HellsCall_GameLostPanel : BasePanel
         OnFadeOutFinished -= Restart;
         OnFadeInFinished -= StartTextAnimations;    //界面完全淡入后调用此函数
     }
-    
+    #endregion
 
 
-
+    #region 主要函数
     private void Restart()
     {
         //重置游戏的各个系统（房间，事件等）
@@ -114,4 +114,5 @@ public class HellsCall_GameLostPanel : BasePanel
 
         generatedCoroutines.Add(firstPartTextCoroutine);      //将协程加进列表
     }
+    #endregion
 }

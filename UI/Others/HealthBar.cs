@@ -26,16 +26,17 @@ public class HealthBar : MonoBehaviour
 
 
 
-
+    #region Unity内部函数
     protected virtual void Start()     
     {
         //Debug.Log("Start is called in the HealthBar");
 
         InitializeHealthBar();
     }
-    
+    #endregion
 
 
+    #region 初始化
     //因为需要异步加载UI。所以使用async（如果不使用的话，可能会出现还没加载完就接着跑下面的代码的情况）
     private void InitializeHealthBar()   
     {       
@@ -53,6 +54,7 @@ public class HealthBar : MonoBehaviour
         //注意运行顺序，防止出现某个异步加载的组件还没初始化完毕就需要使用的情况
         UpdateHealthBar();
     }
+    #endregion
 
 
     #region 管理血条相关
@@ -62,7 +64,7 @@ public class HealthBar : MonoBehaviour
         UpdateHealthBar();
     }
 
-
+    //更新血条的占比
     protected void UpdateHealthBar()
     {
         //Debug.Log("UpdateHealthBar is called in the: " + name);

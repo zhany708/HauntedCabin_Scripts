@@ -16,6 +16,10 @@ public class HellsCall_GameWinningPanel : PanelWithButton
 
 
 
+
+
+
+    #region Unity内部函数
     protected override void Awake()
     {
         //检查所有组件是否存在
@@ -54,13 +58,10 @@ public class HellsCall_GameWinningPanel : PanelWithButton
         OnFadeOutFinished -= HandleFadeOutFinished;
         OnFadeInFinished -= StartTextAnimations;
     }
-    
+    #endregion
 
 
-
-
-
-
+    #region 按钮相关
     private void OnRestartButtonClick()
     {
         //关闭界面
@@ -77,16 +78,14 @@ public class HellsCall_GameWinningPanel : PanelWithButton
         UnityEditor.EditorApplication.isPlaying = false;
         #endif
     }
+    #endregion
 
 
-
+    #region 主要函数
     private void HandleFadeOutFinished()
     {
         //返回主菜单
         SceneManager.LoadScene("MainMenu");
-
-        //重置游戏的各种系统
-        //ResetGameSystems();
     }
 
 
@@ -118,4 +117,5 @@ public class HellsCall_GameWinningPanel : PanelWithButton
             return;
         }
     }
+    #endregion
 }

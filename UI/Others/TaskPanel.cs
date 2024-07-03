@@ -21,6 +21,9 @@ public class TaskPanel : BasePanel
 
 
 
+
+
+    #region Unity内部函数
     protected override void Awake()
     {
         base.Awake();
@@ -56,11 +59,10 @@ public class TaskPanel : BasePanel
         base.OnDisable();
         HellsCall.Instance.OnRitualFinished -= UpdateTaskText;
     }
+    #endregion
 
 
-
-
-
+    #region 主要函数
     //更新玩家的属性UI
     public void UpdateTaskText()
     {
@@ -70,4 +72,5 @@ public class TaskPanel : BasePanel
         //赋值任务文本的数值
         m_TaskText.text = string.Format(taskFormat, m_FinishedTaskCount, m_RequiredTaskCount);            
     }
+    #endregion
 }

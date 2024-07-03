@@ -101,6 +101,7 @@ public class Weapon : MonoBehaviour
 
     #region 动画帧事件
     protected virtual void AnimationActionTrigger() { }
+    
     private void AnimationFinishTrigger()
     {
         ExitWeapon();
