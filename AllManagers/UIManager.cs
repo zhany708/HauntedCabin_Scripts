@@ -16,7 +16,7 @@ public class UIManager : ManagerTemplate<UIManager>
     public Dictionary<string, BasePanel> PanelDict { get; private set; } = new Dictionary<string, BasePanel>();
 
     //用于储存所有不可删除的UI（比如玩家状态等）
-    public List<BasePanel> ImportantPanel { get; private set; } = new List<BasePanel>();
+    public List<BasePanel> ImportantPanelList { get; private set; } = new List<BasePanel>();
 
 
     Transform m_UIRoot;     //用于储存所有的UI（为了美观）
@@ -37,8 +37,8 @@ public class UIManager : ManagerTemplate<UIManager>
         SetupRootGameObject(ref m_UIRoot, "Canvas");
 
         //将一些不可删除界面加进重要列表
-        ImportantPanel.Add(PauseMenuPanel.Instance);
-        ImportantPanel.Add(PlayerStatusBar.Instance);
+        ImportantPanelList.Add(PauseMenuPanel.Instance);
+        ImportantPanelList.Add(PlayerStatusBar.Instance);
     }
 
 
@@ -199,7 +199,7 @@ public class UIManager : ManagerTemplate<UIManager>
                 return;
             }
 
-            if (!ImportantPanel.Contains(childScript))      //只关闭不重要的界面
+            if (!ImportantPanelList.Contains(childScript))      //只关闭不重要的界面
             {
                 //Debug.Log("This panel will be deleted: " + childScript.name);
                 childScript.ClosePanel();

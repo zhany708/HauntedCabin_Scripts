@@ -17,7 +17,7 @@ public class PlayerStatusBar : BasePanel
     public Image IncreaseHpEffectImage;
     public Image DecreaseHpEffectImage;    
 
-    //四个属性相关的UI
+    //四个属性相关的文本
     public TextMeshProUGUI StrengthText;
     public TextMeshProUGUI SpeedText;
     public TextMeshProUGUI SanityText;
@@ -121,10 +121,10 @@ public class PlayerStatusBar : BasePanel
             }
 
 
-            if (!UIManager.Instance.ImportantPanel.Contains(this) )
+            if (!UIManager.Instance.ImportantPanelList.Contains(this) )
             {
                 //将该界面加进重要界面列表，以在重置游戏时不被删除
-                UIManager.Instance.ImportantPanel.Add(this);    
+                UIManager.Instance.ImportantPanelList.Add(this);    
             }
         }      
     }
@@ -145,13 +145,17 @@ public class PlayerStatusBar : BasePanel
                 }
 
 
-                if (UIManager.Instance.ImportantPanel.Contains(this) )
+                if (UIManager.Instance.ImportantPanelList.Contains(this) )
                 {
                     //从重要界面列表中移除当前界面
-                    UIManager.Instance.ImportantPanel.Remove(this);    
+                    UIManager.Instance.ImportantPanelList.Remove(this);    
                 }
 
-                m_PlayerHealthBar.OnHealthChange -= UpdateHealthText;
+
+                if (m_PlayerHealthBar != null)
+                {
+                    m_PlayerHealthBar.OnHealthChange -= UpdateHealthText;
+                }
             }      
         }
     }
@@ -253,10 +257,11 @@ public class PlayerStatusBar : BasePanel
     }
 
     //用于防止因为换场景等原因导致重新加载后无法正常显示数值的情况
-    public IEnumerator DelayedUpdateStatusUI()
+    public IEnumerator DelayedUpdateStatusAndHealth()
     {
         yield return new WaitForEndOfFrame();       //等待一帧的结束，以便所有其余的所需内容都已初始化完成
         UpdateStatusUI();
+        UpdateHealthText();
     }
 
 
@@ -265,12 +270,21 @@ public class PlayerStatusBar : BasePanel
     //更新玩家的血条文本
     private void UpdateHealthText()
     {
-        //Debug.Log("UpdateHealthText is called in the PlayerStatusBar");
+        //Debug.Log("UpdateHealthText is called in the PlayerStatusBar with currentHP: " + m_CurrentHealth + " and maxHP: " + m_MaxHealth);
 
-        //赋值血条的数值
-        HealthText.text = string.Format(HealthText.text, m_CurrentHealth, m_MaxHealth);            
-    }
-    
+        //这里第一个参数不能用HealthText.text，否则代码识别不到{0}/{1}，导致数值只会在第一次正确显示
+        //可以考虑将{0}改成{0:0.00}，从而限制第一个显示的数字保持在两位数
+        if (m_CurrentHealth >= 1 || m_CurrentHealth <= 0)
+        {
+            HealthText.text = string.Format("{0}/{1}", Mathf.FloorToInt(m_CurrentHealth), m_MaxHealth);       //将数值放入文本
+        }
+
+        //当玩家血量在0和1之间时（有小数点），此时为了防止玩家误以为生命值到0了，默认显示当前生命值还有1
+        else
+        {
+            HealthText.text = string.Format("{0}/{1}", 1, m_MaxHealth);       //将数值放入文本
+        }
+    } 
     #endregion
 
 
@@ -283,20 +297,18 @@ public class PlayerStatusBar : BasePanel
         {
             if (Instance == this)
             {
-                //Debug.Log("OnSceneLoaded is called in the: " + name);
-
-                SetImagesToHealthBar();      //先重新赋值图片给玩家血条脚本
-
-                
-
-                ResetGame();                 //随后再调用重置函数以初始化属性和血量
+                SetImagesToHealthBar();                 //先重新赋值图片给玩家血条脚本
+              
+                ResetGame();                            //随后再调用重置函数以初始化属性和血量
+               
+                CanvasGroup.alpha = FadeInAlpha;        //最后设置界面的透明度（显示出来）
 
 
-                //最后设置界面的透明度（显示出来）
-                CanvasGroup.alpha = FadeInAlpha;
-
-                //将更新血条文本的函数跟玩家血条脚本绑定起来
-                m_PlayerHealthBar.OnHealthChange += UpdateHealthText;
+                if (m_PlayerHealthBar != null)
+                {
+                    //将更新血条文本的函数跟玩家血条脚本绑定起来
+                    m_PlayerHealthBar.OnHealthChange += UpdateHealthText;
+                }             
             }           
         }
 
@@ -308,7 +320,11 @@ public class PlayerStatusBar : BasePanel
                 //设置界面的透明度（隐藏界面）
                 CanvasGroup.alpha = FadeOutAlpha;
 
-                //m_PlayerHealthBar.OnHealthChange -= UpdateHealthText;
+
+                if (m_PlayerHealthBar != null)
+                {
+                    m_PlayerHealthBar.OnHealthChange -= UpdateHealthText;
+                }
             }
         }
     }
@@ -320,7 +336,7 @@ public class PlayerStatusBar : BasePanel
         return 1 + StrengthValue * 0.05f;       //每一点力量对应5%的伤害加成
     }
 
-    public float GetSpeedAddition()   //每当玩家移动时都需要调用此函数
+    public float GetSpeedAddition()      //每当玩家移动时都需要调用此函数
     {
         return 1 + SpeedValue * 0.05f;          //每一点速度对应5%的移速加成
     }
@@ -338,9 +354,6 @@ public class PlayerStatusBar : BasePanel
             SanityValue = Player.PlayerData.Sanity;
             KnowledgeValue = Player.PlayerData.Knowledge;
 
-            //这里重新加载时需要用协程，否则会出现重新加载后无法正常显示数值的情况
-            StartCoroutine(DelayedUpdateStatusUI());
-
 
             //重置玩家的血量
             Stats playerStats = Player.GetComponentInChildren<Stats>();      //获取玩家血条的脚本组件
@@ -350,7 +363,10 @@ public class PlayerStatusBar : BasePanel
                 return;
             }
 
-            playerStats.SetCurrentHealth(playerStats.MaxHealth);             //重置玩家的血量（以及血条占比）           
+            playerStats.SetCurrentHealth(playerStats.MaxHealth);             //重置玩家的血量（以及血条占比）
+
+            //这里重新加载时需要用协程，否则会出现重新加载后无法正常显示数值的情况
+            StartCoroutine(DelayedUpdateStatusAndHealth());
         }
     }
     #endregion

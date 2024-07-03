@@ -46,7 +46,7 @@ public class InteractPanel : BasePanel     //互动按键，给予玩家自己�
 
     private void OnEnable() 
     {
-        UIManager.Instance.ImportantPanel.Add(this);    //将该界面加进列表，以在重置游戏时不被删除
+        UIManager.Instance.ImportantPanelList.Add(this);    //将该界面加进列表，以在重置游戏时不被删除
     }
     #endregion
 
