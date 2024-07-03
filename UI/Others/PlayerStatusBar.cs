@@ -111,15 +111,24 @@ public class PlayerStatusBar : BasePanel
         }
 
 
-        if (!UIManager.Instance.PanelDict.ContainsKey(panelName) && Instance == this)
+        //检查该界面是否是唯一保留的那个
+        if (Instance == this)
         {
-            //Debug.Log(panelName + " added into the PanelDict!");
+            if (!UIManager.Instance.PanelDict.ContainsKey(panelName) )
+            {
+                //Debug.Log(panelName + " added into the PanelDict!");
 
-            //将界面加进字典，表示界面已经打开
-            UIManager.Instance.PanelDict.Add(panelName, this);
-        }
+                //将界面加进字典，表示界面已经打开
+                UIManager.Instance.PanelDict.Add(panelName, this);
+            }
 
-        UIManager.Instance.ImportantPanel.Add(this);    //将该界面加进列表，以在重置游戏时不被删除
+
+            if (!UIManager.Instance.ImportantPanel.ContainsKey(this) )
+            {
+                //将该界面加进重要界面列表，以在重置游戏时不被删除
+                UIManager.Instance.ImportantPanel.Add(this);    
+            }
+        }      
     }
 
 
@@ -128,12 +137,22 @@ public class PlayerStatusBar : BasePanel
         //先检查界面名字是否为空（为空的话则代表当前界面是重复的，因为是在Start函数中赋值名字）
         if (panelName != null)
         {
-            //只有当前界面是唯一时且被删除后，才运行以下逻辑
-            if (UIManager.Instance.PanelDict.ContainsKey(panelName) && Instance == this)
+            //检查该界面是否是唯一保留的那个
+            if (Instance == this)
             {
-                //从字典中移除，表示界面没打开
-                UIManager.Instance.PanelDict.Remove(panelName);
-            }
+                if (UIManager.Instance.PanelDict.ContainsKey(panelName) )
+                {
+                    //从字典中移除，表示界面没打开
+                    UIManager.Instance.PanelDict.Remove(panelName);
+                }
+
+
+                if (UIManager.Instance.ImportantPanel.ContainsKey(this) )
+                {
+                    //从重要界面列表中移除当前界面
+                    UIManager.Instance.ImportantPanel.Remove(this);    
+                }
+            }      
         }
     }
     #endregion
@@ -142,11 +161,11 @@ public class PlayerStatusBar : BasePanel
     #region 初始化相关
     public void SetImagesToHealthBar()      //用于将照片组件传递给玩家血条
     {
-        //获取玩家血条的脚本组件
+        //从玩家物体的子物体中获取玩家血条的脚本组件
         m_PlayerHealthBar = Player.GetComponentInChildren<PlayerHealthBar>();
         if (m_PlayerHealthBar == null)
         {
-            Debug.LogError("HealthBar component not found under Player object.");
+            Debug.LogError("PlayerHealthBar component not found under Player object.");
             return;
         }
 
@@ -267,15 +286,15 @@ public class PlayerStatusBar : BasePanel
             {
                 //Debug.Log("OnSceneLoaded is called in the: " + name);
 
-                //设置界面的透明度（显示出来）
-                CanvasGroup.alpha = FadeInAlpha;
+                SetImagesToHealthBar();      //先重新赋值图片给玩家血条脚本
 
-                SetImagesToHealthBar();      //重新赋值图片
-
-                ResetGame();                 //先赋值图片后再调用重置函数以初始化
+                ResetGame();                 //随后再调用重置函数以初始化属性和血量
 
                 //这里重新加载时需要用协程，否则会出现重新加载后无法正常显示数值的情况
                 StartCoroutine(DelayedUpdateStatusUI());
+
+                //最后设置界面的透明度（显示出来）
+                CanvasGroup.alpha = FadeInAlpha;
             }
             
             //将更新血条文本的函数跟玩家血条脚本绑定起来
@@ -304,14 +323,14 @@ public class PlayerStatusBar : BasePanel
 
     public float GetSpeedAddition()   //每当玩家移动时都需要调用此函数
     {
-        return 1 + SpeedValue * 0.05f;       //每一点速度对应5%的移速加成
+        return 1 + SpeedValue * 0.05f;          //每一点速度对应5%的移速加成
     }
 
 
 
     public void ResetGame()      //重置游戏
     {
-        //重新赋予玩家的所有属性（如果在换场景前调用此函数，则Player引用仍然存在）
+        //重新赋予玩家的所有属性（需要确保Player引用仍然存在）
         if (Player != null)
         {
             //从PlayerData获取属性值
@@ -342,8 +361,8 @@ public class PlayerStatusBar : BasePanel
 //用于玩家属性的枚举
 public enum PlayerProperty
 {
-    Strength,
-    Speed,
-    Sanity,
-    Knowledge
+    Strength,       //力量
+    Speed,          //速度
+    Sanity,         //神志
+    Knowledge       //知识
 }

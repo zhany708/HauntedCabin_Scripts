@@ -70,12 +70,12 @@ public class HealthBar : MonoBehaviour
         //使用组件前检查是否为空
         if (hpImage == null || increaseHpEffectImage == null || decreaseHpEffectImage == null)
         {
-            Debug.LogError("Some health bar images are not set.");
+            Debug.LogError("Some images are not set in the: " + name);
             return;
         }
 
 
-
+        //开始新的血条协程前先停止正在进行的血条协程（不能同时进入两个一模一样的协程）
         if (m_UpdateHealthCoroutine != null)
         {
             StopCoroutine(m_UpdateHealthCoroutine);
