@@ -13,6 +13,8 @@ public class Delay : MonoBehaviour      //用于处理延迟相关的脚本
 
 
 
+
+    #region Unity内部函数
     private void Awake()
     {
         //单例模式
@@ -24,11 +26,18 @@ public class Delay : MonoBehaviour      //用于处理延迟相关的脚本
         else
         {
             Instance = this;
+
+            //只有在没有父物体时才运行防删函数，否则会出现提醒
+            if (gameObject.transform.parent == null)
+            {
+                DontDestroyOnLoad(gameObject);
+            }
         }
     }
+    #endregion
 
 
-
+    #region 主要函数
     public IEnumerator DelaySomeTime(float delay, Action onTimerDone = null)      //用于延迟一段时间后执行一些逻辑
     {
         yield return new WaitForSeconds(delay);
@@ -61,4 +70,5 @@ public class Delay : MonoBehaviour      //用于处理延迟相关的脚本
             yield return null;  //等待到下一帧为止，从而再次检查
         }
     }
+    #endregion
 }

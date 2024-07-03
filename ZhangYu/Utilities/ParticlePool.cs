@@ -18,6 +18,8 @@ public class ParticlePool : MonoBehaviour       //用于子弹，特效等的对
 
 
 
+
+    #region Unity内部函数
     private void Awake()
     {
         //单例模式
@@ -31,8 +33,10 @@ public class ParticlePool : MonoBehaviour       //用于子弹，特效等的对
             Instance = this;
         }
     }
+    #endregion
 
 
+    #region 主要函数
     //获取物体
     public GameObject GetObject(GameObject prefab)
     {
@@ -118,4 +122,5 @@ public class ParticlePool : MonoBehaviour       //用于子弹，特效等的对
      
         return false;
     }
+    #endregion
 }

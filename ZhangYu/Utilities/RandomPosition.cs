@@ -9,19 +9,26 @@ namespace ZhangYu.Utilities     //张煜文件夹用于以后所有游戏都可�
     {
         Vector2 m_LeftDownPosition;     //用于随机生成巡逻坐标
         Vector2 m_RightTopPosition;
+        
         float m_OverlapTolerance = 1f;     //检查重复坐标时决定坐标间是否重复的距离值，默认1
 
+
+
+
+
+
+
+        #region 构造函数
         public RandomPosition(Vector2 leftDownPos, Vector2 rightTopPos, float overlapTolerance)
         {
             m_LeftDownPosition = leftDownPos;
             m_RightTopPosition = rightTopPos;
             m_OverlapTolerance = overlapTolerance;
         }
+        #endregion
 
 
-
-
-
+        #region 生成坐标函数
         public Vector2 GenerateSingleRandomPos()
         {
             //根据左下角的坐标和右上角的坐标，在一个长方形内随机生成坐标
@@ -71,10 +78,10 @@ namespace ZhangYu.Utilities     //张煜文件夹用于以后所有游戏都可�
 
             return newPos;         
         }
-
+        #endregion
  
 
-
+        #region 检查函数
         //检查参数中的坐标是否跟参数中的列表里的任意一个坐标重合
         private bool CheckOverlapForSinglePosition(List<Vector2> positions, Vector2 candidatePosition)
         {
@@ -96,7 +103,7 @@ namespace ZhangYu.Utilities     //张煜文件夹用于以后所有游戏都可�
             //如果两个坐标的x和y的差值都小于脚本中的检测变量，则视为重合
             return (Mathf.Abs(secondPos.x - firstPos.x) <= m_OverlapTolerance) && (Mathf.Abs(secondPos.y - firstPos.y) <= m_OverlapTolerance);
         }
-
+        #endregion
 
 
         #region Setters
@@ -105,6 +112,7 @@ namespace ZhangYu.Utilities     //张煜文件夹用于以后所有游戏都可�
             m_OverlapTolerance = newTolerance;
         }
         #endregion
+
 
         #region Getters
         public float GetOverlapTolerance()

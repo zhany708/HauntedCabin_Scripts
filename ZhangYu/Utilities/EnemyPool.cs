@@ -20,7 +20,7 @@ public class EnemyPool : MonoBehaviour       //用于生成敌人的对象池，
 
 
 
-
+    #region Unity内部函数
     private void Awake()
     {
         //单例模式
@@ -40,9 +40,10 @@ public class EnemyPool : MonoBehaviour       //用于生成敌人的对象池，
             }       
         }
     }
+    #endregion
 
 
-
+    #region 主要函数
     //获取物体，第二个参数为敌人的生成坐标
     public GameObject GetObject(GameObject prefab, Vector2 spawnPos)
     {
@@ -131,11 +132,10 @@ public class EnemyPool : MonoBehaviour       //用于生成敌人的对象池，
 
         return false;
     }
+    #endregion
 
 
-
-
-
+    #region 其余函数（重置游戏，杀死所有敌人等）
     //每当加载新场景时调用的函数
     public void OnSceneLoaded(UnityEngine.SceneManagement.Scene scene, LoadSceneMode mode)
     {
@@ -153,7 +153,6 @@ public class EnemyPool : MonoBehaviour       //用于生成敌人的对象池，
         }
     }
 
-
     public void ResetGame()     //重置游戏（在返回主菜单前调用此函数）
     {
         //在场景中取消激活所有敌人
@@ -170,6 +169,8 @@ public class EnemyPool : MonoBehaviour       //用于生成敌人的对象池，
             }
         }
     }
+
+
 
     public void KillAllEnemy()     //结束游戏（在玩家胜利时调用此函数）
     {
@@ -235,4 +236,5 @@ public class EnemyPool : MonoBehaviour       //用于生成敌人的对象池，
         }
         */
     }
+    #endregion
 }

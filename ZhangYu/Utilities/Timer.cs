@@ -23,13 +23,18 @@ namespace ZhangYu.Utilities     //张煜文件夹用于以后所有游戏都可�
 
 
 
+
+
+
+        #region 构造函数
         public Timer(float duration)
         {
             m_Duration = duration;
         }
+        #endregion
 
 
-
+        #region 主要函数
         public void StartTimer()    //开始计时器
         {
             m_StartTime = Time.time;
@@ -71,6 +76,7 @@ namespace ZhangYu.Utilities     //张煜文件夹用于以后所有游戏都可�
             OnTimerDone?.Invoke();          //触发计时结束事件
             m_IsTimerDone = true;           //将布尔设置为false表示计时结束
         }
+        #endregion
 
 
         #region Setters
