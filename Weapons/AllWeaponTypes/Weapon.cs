@@ -120,14 +120,4 @@ public class Weapon : MonoBehaviour
         ExitWeapon();
     }
     #endregion
-
-
-    #region Setters
-    /*
-    public void SetMousePosition(Vector2 thisPos)
-    {
-        mousePosition = thisPos;
-    }
-    */
-    #endregion
 }
