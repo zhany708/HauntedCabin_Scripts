@@ -40,7 +40,7 @@ public class SoundManager : ManagerTemplate<SoundManager>
 
     #region 资源加载相关
     //使用Addressables加载音频
-    private async Task<AudioClip> LoadClipAsync(string name)
+    public async Task<AudioClip> LoadClipAsync(string name)
     {
         //如果字典里已经有了，则直接返回
         if (m_AudioDict.TryGetValue(name, out AudioClip clip))
@@ -88,6 +88,7 @@ public class SoundManager : ManagerTemplate<SoundManager>
         else
         {
             Debug.LogError("This AudioClip is not loaded yet, cannot release: " + key);
+            return;
         }
     }
     #endregion
@@ -131,7 +132,7 @@ public class SoundManager : ManagerTemplate<SoundManager>
 
     #region 音效相关
     //公共函数，用于外部调用播放音效
-    public async void PlaySFXAsync(string clipName, float thisVolume = 1f)     //播放武器攻击音效
+    public async void PlaySFXAsync(string clipName, float thisVolume = 1f)
     {
         try
         {
@@ -144,16 +145,19 @@ public class SoundManager : ManagerTemplate<SoundManager>
             else
             {
                 Debug.LogError("Failed to load audio clip: " + clipName);
+                return;
             }
         }
 
         catch (Exception ex)
         {
             Debug.LogError("Error playing music: " + ex.Message);
+            return;
         }
     }
 
-    public async void PlaySFXAsyncWithAudioSource(AudioSource thisAudioSource, string clipName, float thisVolume = 1f)     //播放武器攻击音效
+    //该函数的参数中传递音频源，用于类似3D的播放，形成近大远小的效果
+    public async void PlaySFXAsyncWithAudioSource(AudioSource thisAudioSource, string clipName, float thisVolume = 1f)
     {
         try
         {
@@ -166,12 +170,14 @@ public class SoundManager : ManagerTemplate<SoundManager>
             else
             {
                 Debug.LogError("Failed to load audio clip: " + clipName);
+                return;
             }
         }
 
         catch (Exception ex)
         {
             Debug.LogError("Error playing music: " + ex.Message);
+            return;
         }
     }
 

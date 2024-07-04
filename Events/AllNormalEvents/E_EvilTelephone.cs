@@ -38,6 +38,7 @@ public class E_EvilTelephone : Event    //E开头的脚本表示跟事件相关
         EvilTelephonePanel.OnResultFinished += FinishEvent;     //UI界面关闭后再执行事件结束逻辑
 
         await UIManager.Instance.InitPanel(UIManager.Instance.UIKeys.EvilTelephonePanel);   //提前加载事件界面
+        await SoundManager.Instance.LoadClipAsync(EventData.AudioClipNames[1]);             //提前加载接电话的音效
     }
 
     private void OnDisable()

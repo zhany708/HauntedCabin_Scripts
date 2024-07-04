@@ -58,6 +58,19 @@ public class Weapon : MonoBehaviour
             PointToMouse();
         }
     }
+
+
+    private void OnEnable()
+    {
+        //提前加载武器的攻击音效
+        SoundManager.Instance.LoadClipAsync(WeaponData.AudioClipName);
+    }
+
+    private void OnDestroy() 
+    {
+        //武器摧毁时释放武器的攻击音效
+        SoundManager.Instance.ReleaseAudioClip(WeaponData.AudioClipName);
+    }
     #endregion
 
 
