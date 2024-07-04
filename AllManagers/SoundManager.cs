@@ -205,6 +205,21 @@ public class SoundManager : ManagerTemplate<SoundManager>
     #endregion
 
 
+    #region 关闭音效
+    public void StopAudioPlay(bool isBGM)
+    {
+        if (isBGM)
+        {
+            m_MusicSource.Stop();
+        }
+        else
+        {
+            m_SfxSource.Stop();
+        }
+    }
+    #endregion
+
+
     #region 其余函数
     //随机音高（98%-103%），这样不会显得音效单调
     private float RandomVolume()

@@ -25,4 +25,5 @@ public class SO_AudioClipKeys : ScriptableObject
     [Header("Event Audio")]
     public string PhoneRingKey;
     public string AnswerPhoneKey;
+    public string FemaleWhisperKey;
 }

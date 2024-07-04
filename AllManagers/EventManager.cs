@@ -61,7 +61,8 @@ public class EventManager : ManagerTemplate<EventManager>
     {
         m_RoomPosWhereEventOccur = position;
 
-        m_RandomGeneratedNum = UnityEngine.Random.Range(0, EventKeys.EvilEventKeys.Count);       //根据列表的数量随机生成预兆事件    Todo:等事件足够多后需要决定触发预兆事件的频率
+        //根据列表的数量随机生成预兆事件    Todo:等事件足够多后需要决定触发预兆事件的频率
+        m_RandomGeneratedNum = UnityEngine.Random.Range(0, EventKeys.EvilEventKeys.Count);       
         
         //确认随机索引后尝试异步加载事件
         try
@@ -71,7 +72,8 @@ public class EventManager : ManagerTemplate<EventManager>
             {
                 Event loadedEvent = loadedEventPrefab.GetComponent<Event>();
 
-                m_EventPrefab = ParticlePool.Instance.GetObject(loadedEvent.EventData.EventPrefab);        //使用对象池生成事件预制件
+                //使用对象池生成事件预制件（因为使用对象池，所以第一次生成时会二次激活，导致调用两次OnEnable函数）
+                m_EventPrefab = ParticlePool.Instance.GetObject(loadedEvent.EventData.EventPrefab);        
             }
 
             else

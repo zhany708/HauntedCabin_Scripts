@@ -39,8 +39,15 @@ public class E_EvilTelephone : Event    //E开头的脚本表示跟事件相关
 
         await UIManager.Instance.InitPanel(UIManager.Instance.UIKeys.EvilTelephonePanel);   //提前加载事件界面
 
-        await SoundManager.Instance.LoadClipAsync(EventData.AudioClipNames[0]);             //提前加载响铃声的音效
-        await SoundManager.Instance.LoadClipAsync(EventData.AudioClipNames[1]);             //提前加载接电话的音效
+
+        
+        //提前加载事件所需的所有音效
+        for (int i = 0; i < EventData.AudioClipNames.Count; i++)
+        {
+            //Debug.Log("This audio is loaded: " + EventData.AudioClipNames[i]);
+
+            await SoundManager.Instance.LoadClipAsync(EventData.AudioClipNames[i]);
+        }
     }
 
     private void OnDisable()
@@ -70,11 +77,12 @@ public class E_EvilTelephone : Event    //E开头的脚本表示跟事件相关
     */
 
     private void OnDestroy()
-    {       
-        //释放响铃声的音频
-        SoundManager.Instance.ReleaseAudioClip(EventData.AudioClipNames[0]);
-        //释放接电话的音频
-        SoundManager.Instance.ReleaseAudioClip(EventData.AudioClipNames[1]);      
+    {
+        //释放事件的所有音效
+        for (int i = 0; i < EventData.AudioClipNames.Count; i++)
+        {
+            SoundManager.Instance.ReleaseAudioClip(EventData.AudioClipNames[i]);
+        }
     }
     #endregion
 

@@ -35,6 +35,7 @@ public class EvilTelephonePanel : PanelWithButton
     TextMeshProUGUI m_OptionDText;
 
 
+    E_EvilTelephone eventScript;        //事件脚本的引用
 
 
 
@@ -55,6 +56,13 @@ public class EvilTelephonePanel : PanelWithButton
     {
         CheckComponents();      //检查所有组件
 
+        eventScript = FindAnyObjectByType<E_EvilTelephone>();
+        if (eventScript == null)
+        {
+            Debug.LogError("Cannot get the reference of E_EvilTelephone in the: " + name);
+            return;
+        }
+
         //默认按钮为“第四个选项”按钮
         firstSelectedButton = OptionD.gameObject;
     }
@@ -67,6 +75,9 @@ public class EvilTelephonePanel : PanelWithButton
         OptionB.onClick.AddListener(() => OnButtonClicked(ButtonAction.OptionB));
         OptionC.onClick.AddListener(() => OnButtonClicked(ButtonAction.OptionC));
         OptionD.onClick.AddListener(() => OnButtonClicked(ButtonAction.OptionD));
+
+        //播放老妇人的低语
+        SoundManager.Instance.PlaySFXAsync(eventScript.EventData.AudioClipNames[2], 2f);
     }
 
 
@@ -239,6 +250,8 @@ public class EvilTelephonePanel : PanelWithButton
         }));
 
         generatedCoroutines.Add(ClosePanelCoroutine);     //将协程加进列表
+
+        SoundManager.Instance.StopAudioPlay(false);       //停止播放老妇人音效
     }
 
 

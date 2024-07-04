@@ -60,16 +60,24 @@ public class Weapon : MonoBehaviour
     }
 
 
-    private void OnEnable()
+    protected async virtual void OnEnable()
     {
-        //提前加载武器的攻击音效
-        SoundManager.Instance.LoadClipAsync(WeaponData.AudioClipName);
+        //确保已经赋值过音频名
+        if (WeaponData.AudioClipName.Length > 0)
+        {
+            //提前加载武器的攻击音效
+            await SoundManager.Instance.LoadClipAsync(WeaponData.AudioClipName);
+        }
     }
 
     private void OnDestroy() 
     {
-        //武器摧毁时释放武器的攻击音效
-        SoundManager.Instance.ReleaseAudioClip(WeaponData.AudioClipName);
+        //确保已经赋值过音频名
+        if (WeaponData.AudioClipName.Length > 0)
+        {
+            //武器摧毁时释放武器的攻击音效
+            SoundManager.Instance.ReleaseAudioClip(WeaponData.AudioClipName);
+        }           
     }
     #endregion
 
