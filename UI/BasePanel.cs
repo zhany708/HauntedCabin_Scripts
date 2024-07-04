@@ -153,7 +153,7 @@ public class BasePanel : MonoBehaviour
 
     #region 主要函数
     //用于打字机效果
-    protected IEnumerator TypeText(TextMeshProUGUI textComponent, string fullText, Action onTypingCompleted = null)
+    protected virtual IEnumerator TypeText(TextMeshProUGUI textComponent, string fullText, Action onTypingCompleted = null)
     {
         isTyping = true;        //表示正在打字（防止正在打字时按空格会关闭UI）
 
@@ -164,8 +164,10 @@ public class BasePanel : MonoBehaviour
 
         textComponent.maxVisibleCharacters = 0;  //一开始什么都不显示
 
+        //开始打字
         while (visibleCount < totalLength)
         {
+            //检测玩家是否按空格
             if (PlayerInputHandler.Instance.IsSpacePressed)
             {
                 textComponent.maxVisibleCharacters = totalLength;  //玩家按下空格后，瞬间显示所有文本
