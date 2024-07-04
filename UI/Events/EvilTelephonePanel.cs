@@ -10,10 +10,10 @@ public class EvilTelephonePanel : PanelWithButton
 {
     public static Action OnResultFinished;      //接受事件方为E_EvilTelephone脚本
 
+
     public TextMeshProUGUI EventInfo;     //事件背景文本
     public TextMeshProUGUI ResultText;    //选项结果文本
     public TextMeshProUGUI TipText;       //提示文本（提示玩家按空格或点击）
-
 
     //四个按钮
     public Button OptionA;
@@ -28,6 +28,7 @@ public class EvilTelephonePanel : PanelWithButton
     public string ResultD_PhraseKey;
 
 
+
     //按钮的文本组件
     TextMeshProUGUI m_OptionAText;      
     TextMeshProUGUI m_OptionBText;     
@@ -35,7 +36,12 @@ public class EvilTelephonePanel : PanelWithButton
     TextMeshProUGUI m_OptionDText;
 
 
-    E_EvilTelephone eventScript;        //事件脚本的引用
+    E_EvilTelephone eventScript;            //事件脚本的引用
+
+
+    float m_FemaleWhisperVolume = 2f;       //老妇人的低语的音量大小
+
+
 
 
 
@@ -77,7 +83,7 @@ public class EvilTelephonePanel : PanelWithButton
         OptionD.onClick.AddListener(() => OnButtonClicked(ButtonAction.OptionD));
 
         //播放老妇人的低语
-        SoundManager.Instance.PlaySFXAsync(eventScript.EventData.AudioClipNames[2], 2f);
+        SoundManager.Instance.PlaySFXAsync(eventScript.EventData.AudioClipNames[2], m_FemaleWhisperVolume);
     }
 
 

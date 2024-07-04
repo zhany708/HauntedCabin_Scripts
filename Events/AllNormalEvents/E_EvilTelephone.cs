@@ -10,6 +10,9 @@ public class E_EvilTelephone : Event    //E开头的脚本表示跟事件相关
     Collider2D m_Collider;
 
 
+    float m_RingingVolume = 0.6f;       //电话响铃的声音大小
+
+
 
 
 
@@ -126,7 +129,7 @@ public class E_EvilTelephone : Event    //E开头的脚本表示跟事件相关
     {
         if (m_AudioSource != null && !m_AudioSource.isPlaying)      //防止重复播放
         {
-            SoundManager.Instance.PlaySFXAsyncWithAudioSource(m_AudioSource, EventData.AudioClipNames[0], 0.6f);
+            SoundManager.Instance.PlaySFXAsyncWithAudioSource(m_AudioSource, EventData.AudioClipNames[0], m_RingingVolume);
         }
     }
     #endregion    
