@@ -18,13 +18,13 @@ public class GameBackgroundPanel : BasePanel
     public TextMeshProUGUI TipText;             //提示文本
 
 
-    //public string DoorKeyWord;                  //大门关闭的字眼
+    public string DoorKeyword;                  //大门关闭的字眼（LeanLocalization下的一个子物体的名字）
 
 
 
 
     //储存需要播放音效的字眼（比如“关门”，“下雨”等）
-    Dictionary<string, AudioClip> m_KeyWordAudioDict = new Dictionary<string, AudioClip>();
+    Dictionary<string, AudioClip> m_KeywordAudioDict = new Dictionary<string, AudioClip>();
 
     //用于检测音效是否已经播放过的字典（防止重复播放）
     Dictionary<AudioClip, bool> m_AudioCheckDict = new Dictionary<AudioClip, bool>();
@@ -39,7 +39,13 @@ public class GameBackgroundPanel : BasePanel
     {
         if (FirstPartText == null || SecondPartText == null || LastPartText == null || TipText == null)
         {
-            Debug.LogError("Some TMP components are not assigned in the GameBackgroundPanel.");
+            Debug.LogError("Some TMP components are not assigned in the " + name);
+            return;
+        }
+
+        if (DoorKeyword == "")
+        {
+            Debug.LogError("Some Lean Localization phrase keys are not written in the " + name);
             return;
         }
 
@@ -88,23 +94,12 @@ public class GameBackgroundPanel : BasePanel
         //先获取对应的音效资源
         AudioClip doorCloseClip = await SoundManager.Instance.LoadClipAsync(SoundManager.Instance.AudioClipKeys.MainDoorCloseKey);
 
-
         m_AudioCheckDict[doorCloseClip] = false;     //先将音频加进检查字典
 
 
         //根据当前玩家选择的语音改变储存的字眼（音效不变）
-        //英语
-        if (LeanLocalization.GetFirstCurrentLanguage() == "English")
-        {
-            m_KeyWordAudioDict["door"] = doorCloseClip;        //关门声
-            //可以加更多的字眼
-        }
-
-        //中文
-        else if (LeanLocalization.GetFirstCurrentLanguage() == "Chinese")
-        {
-            m_KeyWordAudioDict["大门"] = doorCloseClip;
-        }
+        string doorKeyword = LeanLocalization.GetTranslationText(DoorKeyword);
+        m_KeywordAudioDict[doorKeyword] = doorCloseClip;
     }
     #endregion
 
@@ -207,18 +202,18 @@ public class GameBackgroundPanel : BasePanel
 
 
             //检查是否到了需要播放音效的字眼
-            foreach (var keyword in m_KeyWordAudioDict.Keys)
+            foreach (var keyword in m_KeywordAudioDict.Keys)
             {
-                //检查整段文字的这一小段（从参数1到参数2）是否包含字眼
+                //检查整段文字的这一小段（从参数1到参数2，也就是目前玩家可以看到的部分）是否包含字眼
                 if (fullText.Substring(0, visibleCount).Contains(keyword))
                 {
                     //检查该音效是否已经播放过了，防止重复播放
-                    if (!m_AudioCheckDict[m_KeyWordAudioDict[keyword]] )
+                    if (!m_AudioCheckDict[m_KeywordAudioDict[keyword]] )
                     {
-                        m_AudioCheckDict[m_KeyWordAudioDict[keyword]] = true;
+                        m_AudioCheckDict[m_KeywordAudioDict[keyword]] = true;
 
                         //播放该字眼对应的音效
-                        SoundManager.Instance.PlaySFXAsync(m_KeyWordAudioDict[keyword], 1.5f);
+                        SoundManager.Instance.PlaySFX(m_KeywordAudioDict[keyword], 1.5f);
                     }                   
                 }
             }
