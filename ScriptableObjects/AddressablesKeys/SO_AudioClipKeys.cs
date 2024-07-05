@@ -26,4 +26,10 @@ public class SO_AudioClipKeys : ScriptableObject
     public string PhoneRingKey;
     public string AnswerPhoneKey;
     public string FemaleWhisperKey;
+
+
+
+    //门相关的音效
+    [Header("Door related")]
+    public string MainDoorCloseKey;
 }

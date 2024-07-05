@@ -35,10 +35,6 @@ public class UIManager : ManagerTemplate<UIManager>
 
         //寻找画布跟物体，没有的话就创建一个
         SetupRootGameObject(ref m_UIRoot, "Canvas");
-
-        //将一些不可删除界面加进重要列表
-        ImportantPanelList.Add(PauseMenuPanel.Instance);
-        ImportantPanelList.Add(PlayerStatusBar.Instance);
     }
 
 
@@ -182,8 +178,12 @@ public class UIManager : ManagerTemplate<UIManager>
         //进入其余场景时（目前只有主菜单）
         else
         {
-            //重置游戏
-            ResetGame();
+            //只有非第一次进入主菜单才会重置游戏
+            if (!EnvironmentManager.Instance.IsFirstTimeEnterGame)
+            {
+                //重置游戏
+                ResetGame();
+            }
         }
     }
 

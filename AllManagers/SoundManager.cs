@@ -157,7 +157,7 @@ public class SoundManager : ManagerTemplate<SoundManager>
     }
 
     //传递音效片段，直接播放无需异步加载
-    public async void PlaySFXAsync(AudioClip clip, float thisVolume = 1f)
+    public void PlaySFXAsync(AudioClip clip, float thisVolume = 1f)
     {    
         ConfigureAndPlaySFX(clip, thisVolume);           
     }

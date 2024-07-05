@@ -1,6 +1,12 @@
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using Lean.Localization;
+
 
 
 
@@ -12,9 +18,16 @@ public class GameBackgroundPanel : BasePanel
     public TextMeshProUGUI TipText;             //提示文本
 
 
+    //public string DoorKeyWord;                  //大门关闭的字眼
+
+
+
+
     //储存需要播放音效的字眼（比如“关门”，“下雨”等）
     Dictionary<string, AudioClip> m_KeyWordAudioDict = new Dictionary<string, AudioClip>();
 
+    //用于检测音效是否已经播放过的字典（防止重复播放）
+    Dictionary<AudioClip, bool> m_AudioCheckDict = new Dictionary<AudioClip, bool>();
 
 
 
@@ -22,7 +35,7 @@ public class GameBackgroundPanel : BasePanel
 
 
     #region Unity内部函数
-    protected override void Awake()
+    protected async override void Awake()
     {
         if (FirstPartText == null || SecondPartText == null || LastPartText == null || TipText == null)
         {
@@ -30,13 +43,16 @@ public class GameBackgroundPanel : BasePanel
             return;
         }
 
-        InitializeKeywordAudioDict();       //初始化字典
+        await InitializeKeywordAudioDict();       //初始化字典
     }
 
     private async void Start() 
     {
         //提前加载一楼BGM
         await SoundManager.Instance.LoadClipAsync(SoundManager.Instance.AudioClipKeys.StopForAMoment);
+
+        //提前加载大门关闭的音效
+        await SoundManager.Instance.LoadClipAsync(SoundManager.Instance.AudioClipKeys.MainDoorCloseKey);
     }
 
 
@@ -57,26 +73,35 @@ public class GameBackgroundPanel : BasePanel
 
         OnFadeInFinished -= StartTextAnimations;
     }
+
+    private void OnDestroy()
+    {
+        //释放大门关闭的音效
+        SoundManager.Instance.ReleaseAudioClip(SoundManager.Instance.AudioClipKeys.MainDoorCloseKey);
+    }
     #endregion
 
 
     #region 初始化
-    private void InitializeKeywordAudioDict()
+    private async Task InitializeKeywordAudioDict()
     {
         //先获取对应的音效资源
-        //AudioClip doorCloseClip = SoundManager.Instance.LoadClipAsync(SoundManager.Instance.AudioClipKeys.);
+        AudioClip doorCloseClip = await SoundManager.Instance.LoadClipAsync(SoundManager.Instance.AudioClipKeys.MainDoorCloseKey);
+
+
+        m_AudioCheckDict[doorCloseClip] = false;     //先将音频加进检查字典
 
 
         //根据当前玩家选择的语音改变储存的字眼（音效不变）
         //英语
-        if (LeanLocalization.CurrentLanguage == "English")
+        if (LeanLocalization.GetFirstCurrentLanguage() == "English")
         {
             m_KeyWordAudioDict["door"] = doorCloseClip;        //关门声
             //可以加更多的字眼
         }
 
         //中文
-        else if (LeanLocalization.CurrentLanguage == "Chinese")
+        else if (LeanLocalization.GetFirstCurrentLanguage() == "Chinese")
         {
             m_KeyWordAudioDict["大门"] = doorCloseClip;
         }
@@ -156,7 +181,7 @@ public class GameBackgroundPanel : BasePanel
 
 
 
-    protected override async IEnumerator TypeText(TextMeshProUGUI textComponent, string fullText, Action onTypingCompleted = null)
+    protected override IEnumerator TypeText(TextMeshProUGUI textComponent, string fullText, Action onTypingCompleted = null)
     {
         isTyping = true;        //表示正在打字（防止正在打字时按空格会关闭UI）
 
@@ -187,8 +212,14 @@ public class GameBackgroundPanel : BasePanel
                 //检查整段文字的这一小段（从参数1到参数2）是否包含字眼
                 if (fullText.Substring(0, visibleCount).Contains(keyword))
                 {
-                    //播放该字眼对应的音效
-                    //await SoundManager.Instance.PlaySFXAsync(m_KeyWordAudioDict[keyword] );
+                    //检查该音效是否已经播放过了，防止重复播放
+                    if (!m_AudioCheckDict[m_KeyWordAudioDict[keyword]] )
+                    {
+                        m_AudioCheckDict[m_KeyWordAudioDict[keyword]] = true;
+
+                        //播放该字眼对应的音效
+                        SoundManager.Instance.PlaySFXAsync(m_KeyWordAudioDict[keyword], 1.5f);
+                    }                   
                 }
             }
 
