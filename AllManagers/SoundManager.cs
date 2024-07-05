@@ -131,7 +131,7 @@ public class SoundManager : ManagerTemplate<SoundManager>
 
 
     #region 音效相关
-    //公共函数，用于外部调用播放音效
+    //公共函数，用于外部调用播放音效（传递string，随后异步加载）
     public async void PlaySFXAsync(string clipName, float thisVolume = 1f)
     {
         try
@@ -155,6 +155,13 @@ public class SoundManager : ManagerTemplate<SoundManager>
             return;
         }
     }
+
+    //传递音效片段，直接播放无需异步加载
+    public async void PlaySFXAsync(AudioClip clip, float thisVolume = 1f)
+    {    
+        ConfigureAndPlaySFX(clip, thisVolume);           
+    }
+
 
     //该函数的参数中传递音频源，用于类似3D的播放，形成近大远小的效果
     public async void PlaySFXAsyncWithAudioSource(AudioSource thisAudioSource, string clipName, float thisVolume = 1f)

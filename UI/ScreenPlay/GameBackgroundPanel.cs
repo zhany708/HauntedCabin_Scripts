@@ -30,13 +30,13 @@ public class GameBackgroundPanel : BasePanel
             return;
         }
 
-        InitializeKeywordAudioDict();
+        InitializeKeywordAudioDict();       //初始化字典
     }
 
-    private void Start() 
+    private async void Start() 
     {
         //提前加载一楼BGM
-        SoundManager.Instance.LoadClipAsync(SoundManager.Instance.AudioClipKeys.StopForAMoment);
+        await SoundManager.Instance.LoadClipAsync(SoundManager.Instance.AudioClipKeys.StopForAMoment);
     }
 
 
@@ -184,10 +184,11 @@ public class GameBackgroundPanel : BasePanel
             //检查是否到了需要播放音效的字眼
             foreach (var keyword in m_KeyWordAudioDict.Keys)
             {
+                //检查整段文字的这一小段（从参数1到参数2）是否包含字眼
                 if (fullText.Substring(0, visibleCount).Contains(keyword))
                 {
-                    //播放音效
-                    //await SoundManager.Instance.PlaySFXAsync();
+                    //播放该字眼对应的音效
+                    //await SoundManager.Instance.PlaySFXAsync(m_KeyWordAudioDict[keyword] );
                 }
             }
 
