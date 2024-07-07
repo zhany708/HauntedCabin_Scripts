@@ -132,14 +132,14 @@ public class SoundManager : ManagerTemplate<SoundManager>
 
     #region 音效相关
     //公共函数，用于外部调用播放音效（传递string，随后异步加载）
-    public async void PlaySFXAsync(string clipName, float thisVolume = 1f)
+    public async void PlaySFXAsync(string clipName, float thisVolume, bool isLoop = false)
     {
         try
         {
             AudioClip clip = await LoadClipAsync(clipName);
             if (clip != null)
             {
-                ConfigureAndPlaySFX(clip, thisVolume);
+                ConfigureAndPlaySFX(clip, thisVolume, isLoop);
             }
 
             else
@@ -157,21 +157,22 @@ public class SoundManager : ManagerTemplate<SoundManager>
     }
 
     //传递音效片段，直接播放无需异步加载
-    public void PlaySFX(AudioClip clip, float thisVolume = 1f)
+    public void PlaySFX(AudioClip clip, float thisVolume, bool isLoop = false)
     {    
-        ConfigureAndPlaySFX(clip, thisVolume);           
+        ConfigureAndPlaySFX(clip, thisVolume, isLoop);           
     }
 
 
     //该函数的参数中传递音频源，用于类似3D的播放，形成近大远小的效果
-    public async void PlaySFXAsyncWithAudioSource(AudioSource thisAudioSource, string clipName, float thisVolume = 1f)
+    public async void PlaySFXAsyncWithAudioSource(AudioSource thisAudioSource, string clipName, float thisVolume, bool isLoop = false)
     {
         try
         {
             AudioClip clip = await LoadClipAsync(clipName);
             if (clip != null)
             {
-                ConfigureAndPlaySFXWithAudioSource(thisAudioSource, clip, thisVolume);
+                //调用内部函数以播放音效
+                ConfigureAndPlaySFXWithAudioSource(thisAudioSource, clip, thisVolume, isLoop);
             }
 
             else
@@ -191,22 +192,48 @@ public class SoundManager : ManagerTemplate<SoundManager>
 
 
     //内部函数
-    private void ConfigureAndPlaySFX(AudioClip thisClip, float thisVolume)
+    private void ConfigureAndPlaySFX(AudioClip thisClip, float thisVolume, bool isLoop = false)
     {
         if (thisClip != null)
         {
-            //仅播放一次音效，使用参数中的音量
-            m_SfxSource.PlayOneShot(thisClip, SfxVolume * thisVolume * RandomVolume() );
+            //检查要播放的音效是否循环
+            if (isLoop)
+            {
+                m_SfxSource.Stop();                             //停止播放器现在正在播放的所有音效（无论是用哪种方式播放）
+                m_SfxSource.clip = thisClip;
+                m_SfxSource.loop = isLoop;
+                m_SfxSource.volume = SfxVolume * thisVolume;
+                m_SfxSource.Play();
+            }
+
+            else
+            {
+                //仅播放一次音效，使用参数中的音量
+                m_SfxSource.PlayOneShot(thisClip, SfxVolume * thisVolume * RandomVolume() );
+            }           
         }
     }
 
     //该函数的参数中传递音频源，用于类似3D的播放，形成近大远小的效果
-    private void ConfigureAndPlaySFXWithAudioSource(AudioSource thisAudioSource, AudioClip thisClip, float thisVolume)
+    private void ConfigureAndPlaySFXWithAudioSource(AudioSource thisAudioSource, AudioClip thisClip, float thisVolume, bool isLoop = false)
     {
         if (thisClip != null)
         {
-            //仅播放一次音效，使用参数中的音量
-            thisAudioSource.PlayOneShot(thisClip, SfxVolume * thisVolume * RandomVolume() );
+            //检查要播放的音效是否循环
+            if (isLoop)
+            {
+                thisAudioSource.Stop();
+                thisAudioSource.clip = thisClip;
+                thisAudioSource.loop = isLoop;
+                thisAudioSource.volume = SfxVolume * thisVolume;
+                thisAudioSource.Play();
+            }
+
+            else
+            {
+                //仅播放一次音效，使用参数中的音量
+                thisAudioSource.PlayOneShot(thisClip, SfxVolume * thisVolume * RandomVolume() );
+            }                      
         }
     }
     #endregion

@@ -28,9 +28,12 @@ public class FireBat_DefenseWar : Enemy_DefenseWar
             //储存参数的临时坐标，防止函数运行期间参数消失
             Vector3 tempPos = target.position;
 
+            //根据敌人的Transfom里的LocalScale判断敌人朝向
+            Vector2 attackX = transform.localScale.x >= 0 ? Vector2.right : Vector2.left;      
 
-            Vector2 attackX = transform.localScale.x >= 0 ? Vector2.right : Vector2.left;      //根据动画参数MoveX判断敌人朝向
-            float deviation = 0.2f;     //偏离参数（偏离嘴部多少）
+            //偏离参数（偏离嘴部多少）
+            float deviation = 0.2f;  
+
             //火球生成位置在y轴上应位于头部，x轴上应偏离敌人的位置（嘴部发射）
             Vector2 attackPosition = Movement.Rigidbody2d.position + Vector2.up * 0.8f + attackX * deviation;
 
@@ -45,6 +48,8 @@ public class FireBat_DefenseWar : Enemy_DefenseWar
 
 
             EnemyBullet fireBall = FireBallObject.GetComponent<EnemyBullet>();        //调用火球脚本
+
+            fireBall.SetEnemy(this);                                                                //将本脚本的引用传给火球脚本
             fireBall.SetSpeed(tempPos + Vector3.up * 0.5f - FireBallObject.transform.position);        //朝目标中心方向发射火球
         }       
     }

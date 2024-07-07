@@ -19,7 +19,11 @@ public class GameBackgroundPanel : BasePanel
 
 
     public string DoorKeyword;                  //大门关闭的字眼（LeanLocalization下的一个子物体的名字）
+    public string MonsterKeyword;               //怪物的字眼（LeanLocalization下的一个子物体的名字）
+    public string CurseKeyword;                 //诅咒的字眼（LeanLocalization下的一个子物体的名字）
 
+
+    public string KeyWordAudioVolume = 1.5f;    //所有字眼处音效的音量大小
 
 
 
@@ -43,7 +47,7 @@ public class GameBackgroundPanel : BasePanel
             return;
         }
 
-        if (DoorKeyword == "")
+        if (DoorKeyword == "" || MonsterKeyword == "" || CurseKeyword == "")
         {
             Debug.LogError("Some Lean Localization phrase keys are not written in the " + name);
             return;
@@ -56,9 +60,6 @@ public class GameBackgroundPanel : BasePanel
     {
         //提前加载一楼BGM
         await SoundManager.Instance.LoadClipAsync(SoundManager.Instance.AudioClipKeys.StopForAMoment);
-
-        //提前加载大门关闭的音效
-        await SoundManager.Instance.LoadClipAsync(SoundManager.Instance.AudioClipKeys.MainDoorCloseKey);
     }
 
 
@@ -93,13 +94,24 @@ public class GameBackgroundPanel : BasePanel
     {
         //先获取对应的音效资源
         AudioClip doorCloseClip = await SoundManager.Instance.LoadClipAsync(SoundManager.Instance.AudioClipKeys.MainDoorCloseKey);
+        AudioClip monsterClip = await SoundManager.Instance.LoadClipAsync(SoundManager.Instance.AudioClipKeys.);
+        AudioClip curseClip = await SoundManager.Instance.LoadClipAsync(SoundManager.Instance.AudioClipKeys.);
 
-        m_AudioCheckDict[doorCloseClip] = false;     //先将音频加进检查字典
+        //随后将加载出来的音频加进检查字典
+        m_AudioCheckDict[doorCloseClip] = false;     
+        m_AudioCheckDict[monsterClip] = false;
+        m_AudioCheckDict[curseClip] = false;
 
 
         //根据当前玩家选择的语音改变储存的字眼（音效不变）
         string doorKeyword = LeanLocalization.GetTranslationText(DoorKeyword);
+        string monsterKeyword = LeanLocalization.GetTranslationText(MonsterKeyword);
+        string curseKeyword = LeanLocalization.GetTranslationText(CurseKeyword);
+        
+        //获取翻译后的字眼后将音效和字眼一起存进字典
         m_KeywordAudioDict[doorKeyword] = doorCloseClip;
+        m_KeywordAudioDict[monsterKeyword] = monsterClip;
+        m_KeywordAudioDict[curseKeyword] = curseClip;
     }
     #endregion
 
@@ -213,7 +225,7 @@ public class GameBackgroundPanel : BasePanel
                         m_AudioCheckDict[m_KeywordAudioDict[keyword]] = true;
 
                         //播放该字眼对应的音效
-                        SoundManager.Instance.PlaySFX(m_KeywordAudioDict[keyword], 1.5f);
+                        SoundManager.Instance.PlaySFX(m_KeywordAudioDict[keyword], KeyWordAudioVolume);
                     }                   
                 }
             }
