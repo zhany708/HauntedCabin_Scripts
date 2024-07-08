@@ -29,7 +29,10 @@ public class SO_AudioClipKeys : ScriptableObject
 
 
 
-    //门相关的音效
-    [Header("Door related")]
+    //游戏背景界面相关的音效
+    [Header("GameBackgroundPanel related")]
+    public string RainingKey;
     public string MainDoorCloseKey;
+    public string MonsterRoarKey;
+    public string ChildScreamKey;
 }

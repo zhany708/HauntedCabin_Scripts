@@ -60,6 +60,9 @@ public class GameBackgroundPanel : BasePanel
     {
         //提前加载一楼BGM
         await SoundManager.Instance.LoadClipAsync(SoundManager.Instance.AudioClipKeys.StopForAMoment);
+
+        //循环播放下雨音效
+        await SoundManager.Instance.PlaySFXAsync(SoundManager.Instance.AudioClipKeys.RainingKey, KeyWordAudioVolume, true);
     }
 
 
@@ -83,8 +86,11 @@ public class GameBackgroundPanel : BasePanel
 
     private void OnDestroy()
     {
-        //释放大门关闭的音效
+        //释放本界面所有使用过的的音效     
+        SoundManager.Instance.ReleaseAudioClip(SoundManager.Instance.AudioClipKeys.RainingKey);
         SoundManager.Instance.ReleaseAudioClip(SoundManager.Instance.AudioClipKeys.MainDoorCloseKey);
+        SoundManager.Instance.ReleaseAudioClip(SoundManager.Instance.AudioClipKeys.MonsterRoarKey);
+        SoundManager.Instance.ReleaseAudioClip(SoundManager.Instance.AudioClipKeys.ChildScreamKey);
     }
     #endregion
 
@@ -94,8 +100,8 @@ public class GameBackgroundPanel : BasePanel
     {
         //先获取对应的音效资源
         AudioClip doorCloseClip = await SoundManager.Instance.LoadClipAsync(SoundManager.Instance.AudioClipKeys.MainDoorCloseKey);
-        AudioClip monsterClip = await SoundManager.Instance.LoadClipAsync(SoundManager.Instance.AudioClipKeys.);
-        AudioClip curseClip = await SoundManager.Instance.LoadClipAsync(SoundManager.Instance.AudioClipKeys.);
+        AudioClip monsterClip = await SoundManager.Instance.LoadClipAsync(SoundManager.Instance.AudioClipKeys.MonsterRoarKey);
+        AudioClip curseClip = await SoundManager.Instance.LoadClipAsync(SoundManager.Instance.AudioClipKeys.ChildScreamKey);
 
         //随后将加载出来的音频加进检查字典
         m_AudioCheckDict[doorCloseClip] = false;     
@@ -124,6 +130,14 @@ public class GameBackgroundPanel : BasePanel
 
         //播放一楼BGM
         await SoundManager.Instance.PlayBGMAsync(SoundManager.Instance.AudioClipKeys.StopForAMoment, true, SoundManager.Instance.MusicVolume);
+    }
+
+    public override void ClosePanel()
+    {
+        base.ClosePanel();
+
+        //停止播放下雨音效
+        SoundManager.Instance.StopAudioPlay(false);
     }
 
 
