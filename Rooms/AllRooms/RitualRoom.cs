@@ -9,7 +9,7 @@ public class RitualRoom : RootRoomController        //仪式房脚本
 
 
 
-
+    AltarHealthBarPanel m_AltarHealthBar;       //祷告石血条的引用
 
 
 
@@ -36,6 +36,16 @@ public class RitualRoom : RootRoomController        //仪式房脚本
         }
 
         base.Awake();
+
+
+
+        //获取祷告石血条UI界面组件
+        m_AltarHealthBar = GetComponentInChildren<AltarHealthBarPanel>();
+        if (m_AltarHealthBar == null)
+        {
+            Debug.LogError("AltarHealthBarPanel component not found in the children of: " + name);
+            return;
+        }
     }
 
 
@@ -60,16 +70,20 @@ public class RitualRoom : RootRoomController        //仪式房脚本
         //玩家进入仪式房后将祷告石的血条显示出来
         if (other.CompareTag("Player"))
         {
-            //获取祷告石血条UI界面组件
-            AltarHealthBarPanel altarHealthBarPanel = GetComponentInChildren<AltarHealthBarPanel>();
-            if (altarHealthBarPanel == null)
-            {
-                Debug.LogError("AltarHealthBarPanel component not found in the children of: " + name);
-                return;
-            }
-
             //设置界面的透明度（显示出来）
-            altarHealthBarPanel.CanvasGroup.alpha = altarHealthBarPanel.FadeInAlpha;
+            m_AltarHealthBar.CanvasGroup.alpha = m_AltarHealthBar.FadeInAlpha;
         }        
+    }
+
+    protected virtual void OnTriggerExit2D(Collider2D other)
+    {
+        base.OnTriggerExit2D(other);
+
+        //玩家离开仪式房后将祷告石的血条隐藏
+        if (other.CompareTag("Player"))
+        {
+            //设置界面的透明度（隐藏）
+            m_AltarHealthBar.CanvasGroup.alpha = m_AltarHealthBar.FadeOutAlpha;
+        }       
     }
 }
