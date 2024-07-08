@@ -12,7 +12,7 @@ public class HellsCallBackground : BasePanel
     public TextMeshProUGUI TipText;             //提示文本
 
 
-
+    public float AudioVolume = 1.5f;     //界面火焰灼烧音效的音量大小
 
 
 
@@ -23,9 +23,20 @@ public class HellsCallBackground : BasePanel
     {
         if (TitleText == null || FirstPartText == null || SecondPartText == null || TipText == null)
         {
-            Debug.LogError("Some TMP components are not assigned in the GameBackgroundPanel.");
+            Debug.LogError("Some TMP components are not assigned in the " + name);
             return;
         }
+    }
+
+    private async void Start()
+    {
+        SoundManager.Instance.StopAudioPlay(true);      //停止当前BGM的播放
+
+        //循环播放火焰灼烧音效
+        SoundManager.Instance.PlaySFXAsync(SoundManager.Instance.AudioClipKeys.FireBurningKey, AudioVolume, true);
+
+        //提前加载剧本BGM
+        await SoundManager.Instance.LoadClipAsync(SoundManager.Instance.AudioClipKeys.FireEscape);
     }
 
     private void Update()
@@ -50,9 +61,15 @@ public class HellsCallBackground : BasePanel
         OnFadeOutFinished -= StartHealthDrain;
         OnFadeInFinished -= StartTextAnimations;
     }
+
+    private void OnDestroy()
+    {
+        //释放本界面所有使用过的音效     
+        SoundManager.Instance.ReleaseAudioClip(SoundManager.Instance.AudioClipKeys.FireBurningKey);
+    }
     #endregion
 
-    
+
     #region 主要函数
     public async override void ClosePanel()
     {
@@ -61,6 +78,9 @@ public class HellsCallBackground : BasePanel
         await UIManager.Instance.OpenPanel(UIManager.Instance.UIKeys.TaskPanel);        //打开任务界面
 
         SetBothMoveableAndAttackable(true);    //使玩家可以移动和攻击
+
+        SoundManager.Instance.StopAudioPlay(false);     //停止播放火焰灼烧音效
+        await SoundManager.Instance.PlayBGMAsync(SoundManager.Instance.AudioClipKeys.FireEscape, true);       //播放剧本BGM
     }
     
 

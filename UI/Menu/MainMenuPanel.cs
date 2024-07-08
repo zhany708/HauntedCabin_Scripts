@@ -7,9 +7,13 @@ using System.Threading.Tasks;
 
 public class MainMenuPanel : PanelWithButton
 {
-    public Button PlayButton;       //开始游戏按钮
-    public Button SettingButton;    //设置界面按钮
-    public Button QuitButton;       //关闭游戏按钮
+    public Button PlayButton;                   //开始游戏按钮
+    public Button SettingButton;                //设置界面按钮
+    public Button QuitButton;                   //关闭游戏按钮
+
+
+
+    public float MainPanelBgmVolume = 1.5f;     //主界面BGM的音量大小
 
 
 
@@ -49,7 +53,7 @@ public class MainMenuPanel : PanelWithButton
         
 
         //播放主界面BGN
-        await SoundManager.Instance.PlayBGMAsync(SoundManager.Instance.AudioClipKeys.MyVeryOwnDeadShip, true);
+        await SoundManager.Instance.PlayBGMAsync(SoundManager.Instance.AudioClipKeys.MyVeryOwnDeadShip, true, MainPanelBgmVolume);
 
         //当玩家第一次进游戏时
         if (EnvironmentManager.Instance.IsFirstTimeEnterGame)

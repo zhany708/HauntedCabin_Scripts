@@ -82,8 +82,8 @@ public class EvilTelephonePanel : PanelWithButton
         OptionC.onClick.AddListener(() => OnButtonClicked(ButtonAction.OptionC));
         OptionD.onClick.AddListener(() => OnButtonClicked(ButtonAction.OptionD));
 
-        //播放老妇人的低语
-        SoundManager.Instance.PlaySFXAsync(eventScript.EventData.AudioClipNames[2], m_FemaleWhisperVolume);
+        //循环播放老妇人的低语
+        SoundManager.Instance.PlaySFXAsync(eventScript.EventData.AudioClipNames[2], m_FemaleWhisperVolume, true);
     }
 
 

@@ -26,6 +26,14 @@ public class HellsCall_GameLostPanel : BasePanel
         }
     }
 
+    private async void Start()
+    {
+        //提前加载一楼BGM
+        await SoundManager.Instance.LoadClipAsync(SoundManager.Instance.AudioClipKeys.StopForAMoment);
+
+        //停止播放剧本BGM
+        SoundManager.Instance.StopAudioPlay(true);
+    }
 
     private void OnEnable()
     {
@@ -45,7 +53,7 @@ public class HellsCall_GameLostPanel : BasePanel
 
 
     #region 主要函数
-    private void Restart()
+    private async void Restart()
     {
         //重置游戏的各个系统（房间，事件等）
         ResetGameSystems();
@@ -75,6 +83,9 @@ public class HellsCall_GameLostPanel : BasePanel
         player.gameObject.transform.position = new Vector2(0, -3.5f); 
 
         SetBothMoveableAndAttackable(true);    //使玩家可以移动和攻击
+
+        //重新播放一楼BGM
+        await SoundManager.Instance.PlayBGMAsync(SoundManager.Instance.AudioClipKeys.StopForAMoment, true);
     }
 
 

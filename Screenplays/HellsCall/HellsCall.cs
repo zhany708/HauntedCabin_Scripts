@@ -127,6 +127,9 @@ public class HellsCall : BaseScreenplay<HellsCall>
 
         //提前加载好剧本胜利界面
         await UIManager.Instance.InitPanel(UIManager.Instance.UIKeys.HellsCall_GameWinningPanel);
+
+        //停止播放剧本BGM
+        SoundManager.Instance.StopAudioPlay(true);
     }
 
     public override async Task Lose()

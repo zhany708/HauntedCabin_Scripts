@@ -10,7 +10,7 @@ public class SoundManager : ManagerTemplate<SoundManager>
 {
     public SO_AudioClipKeys AudioClipKeys;
 
-    public float MusicVolume { get; private set; } = 1f;      //背景音乐的音量
+    public float MusicVolume { get; private set; } = 0.8f;      //背景音乐的音量
     public float SfxVolume { get; private set; } = 1f;        //音效音量
 
 
@@ -249,6 +249,34 @@ public class SoundManager : ManagerTemplate<SoundManager>
         else
         {
             m_SfxSource.Stop();
+        }
+    }
+
+    public void PauseOrResume(bool isBGM)
+    {
+        if (isBGM)
+        {
+            //如果该播放器正在播放，则暂停
+            if (m_MusicSource.isPlaying)
+            {
+                m_MusicSource.Pause();
+            }
+            else
+            {
+                m_MusicSource.UnPause();
+            }
+        }
+
+        else
+        {
+            if (m_SfxSource.isPlaying)
+            {
+                m_SfxSource.Pause();
+            }
+            else
+            {
+                m_SfxSource.UnPause();
+            }
         }
     }
     #endregion
