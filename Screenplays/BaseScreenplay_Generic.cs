@@ -31,7 +31,7 @@ public class BaseScreenplay<T> : BaseScreenplay where T : Component         //�
         }
     }
 
-    private void Start()
+    protected virtual void Start()
     {
         StartScreenplay();      //开始剧本Setup
     }

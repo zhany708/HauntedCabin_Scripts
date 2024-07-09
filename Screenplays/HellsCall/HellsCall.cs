@@ -61,6 +61,15 @@ public class HellsCall : BaseScreenplay<HellsCall>
 
 
     #region Unity内部函数
+    protected override async void Start()
+    {
+        //提前加载好剧本失败界面
+        await UIManager.Instance.InitPanel(UIManager.Instance.UIKeys.HellsCall_GameLostPanel);
+
+        base.Start();
+    }
+
+
     private void OnEnable()
     {
         PlayerStats.OnHealthZero += DestroyCoroutine;                           //玩家死亡时停止持续掉血的协程

@@ -75,7 +75,7 @@ public class RitualRoom : RootRoomController        //仪式房脚本
         }        
     }
 
-    protected virtual void OnTriggerExit2D(Collider2D other)
+    protected override void OnTriggerExit2D(Collider2D other)
     {
         base.OnTriggerExit2D(other);
 
@@ -83,7 +83,7 @@ public class RitualRoom : RootRoomController        //仪式房脚本
         if (other.CompareTag("Player"))
         {
             //设置界面的透明度（隐藏）
-            m_AltarHealthBar.CanvasGroup.alpha = m_AltarHealthBar.FadeOutAlpha;
+            m_AltarHealthBar.CanvasGroup.alpha = BasePanel.FadeOutAlpha;
         }       
     }
 }
