@@ -327,7 +327,7 @@ public class RoomManager : ManagerTemplate<RoomManager>
 
 
 
-                //检查重复坐标的房间是否有连接此房间的门，如果没有则生成障碍物防止玩家穿过门
+                //检查重复坐标的房间是否有连接此房间的门，如果没有则强行关闭该门
                 if (!HasRequiredDoor(targetRoomType, neededDoorName))
                 {                  
                     //获取当前房间的控制器脚本
@@ -338,7 +338,8 @@ public class RoomManager : ManagerTemplate<RoomManager>
                         return;
                     }
 
-                    currentRoomController.DoorControllerInsideThisRoom.AlwaysClosedDoorNames.Add(closedDoorName);     //将需要关闭的门加进列表
+                    //将需要关闭的门加进列表
+                    currentRoomController.DoorControllerInsideThisRoom.AlwaysClosedDoorNames.Add(closedDoorName);     
                     
                     //加进列表后立刻调用指定的函数，从而确保玩家进入该房间时永久关闭的门处于关闭状态
                     currentRoomController.DoorControllerInsideThisRoom.CloseNecessaryDoors();
