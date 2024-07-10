@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -22,12 +21,6 @@ public class EnvironmentManager : ManagerTemplate<EnvironmentManager>
 
         //尝试从父物体那里获取房间脚本组件
         RootRoomController parentObject = parentTransform.GetComponent<RootRoomController>();
-
-        if (parentObject != null)
-        {
-            //添加新的精灵图到房间脚本的列表中，以便跟房间整体一起调整明暗
-            parentObject.AddNewSpriteRenderers();
-        }
     }
     #endregion
 

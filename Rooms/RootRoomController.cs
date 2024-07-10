@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -12,8 +11,6 @@ public class RootRoomController : MonoBehaviour
     public static event RoomGeneratedHandler OnPlayerFirstTimeEnterRoom;      
 
 
-    //玩家离开房间后房间变成的透明度
-    public float HiddenTransparency = 0.01f;
 
     //后期处理相关的变量
     public float m_DarkPostProcessColorValue = -250f;
@@ -24,13 +21,12 @@ public class RootRoomController : MonoBehaviour
     public MiniMapController MiniMapControllerInsideThisRoom { get; private set; }
 
 
-    List<SpriteRenderer> m_AllSprites;
-  
+    const string m_ShadowObjectName = "Shadow";
+    Transform m_Shadow;                             //房间的阴影图物体
+    
     RoomType m_RoomType;
 
-
-    //默认透明度为1
-    const float m_DefaultTransparency = 1f; 
+ 
 
     bool m_HasGeneratedRoom = false;
     bool m_FirstTimeEnterRoom = true;      //表示玩家是否第一次进入该房间
@@ -39,15 +35,23 @@ public class RootRoomController : MonoBehaviour
 
 
 
+
+
+
     #region Unity内部函数
     protected virtual void Awake()
     {
-        //获取该物体以及所有子物体的精灵图组件
-        m_AllSprites = new List<SpriteRenderer>(GetComponentsInChildren<SpriteRenderer>() );
-
         DoorControllerInsideThisRoom = GetComponentInChildren<DoorController>();
         MiniMapControllerInsideThisRoom = GetComponentInChildren<MiniMapController>();
         m_RoomType = GetComponent<RoomType>();
+
+        //寻找房间阴影物体
+        m_Shadow = transform.Find(m_ShadowObjectName);
+        if (m_Shadow == null)
+        {
+            Debug.LogError("Shadow GameObject is not assigned correctly in the " + name);
+            return;
+        }
     }
 
     protected virtual void Start()
@@ -63,10 +67,8 @@ public class RootRoomController : MonoBehaviour
 
     protected virtual void OnEnable()
     {
-        //Debug.Log(transform.position);
-
-        //房间激活时将房间精灵图变得透明
-        ChangeRoomTransparency(HiddenTransparency);
+        //房间激活时隐藏房间
+        SetActiveShadowObject(true);
     }
 
     protected virtual void OnDisable()
@@ -86,8 +88,8 @@ public class RootRoomController : MonoBehaviour
         {
             //Debug.Log("Player entered room: " + gameObject.name);
 
-            //玩家进入房间后，将房间透明度调回1
-            ChangeRoomTransparency(m_DefaultTransparency);
+            //玩家进入房间后，将房间显示出来
+            SetActiveShadowObject(false);
 
 
             //检查该房间是否在周围生成过房间，当房间周围生成过一次房间后就不会再生成了
@@ -116,8 +118,8 @@ public class RootRoomController : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            //玩家离开房间后，将房间变得透明
-            ChangeRoomTransparency(HiddenTransparency);
+            //玩家离开房间后，隐藏房间
+            SetActiveShadowObject(true);
 
 
             //确保只在场景持续存在且未卸载时，才会使用DoTeen（否则在场景卸载后会报错）
@@ -138,33 +140,10 @@ public class RootRoomController : MonoBehaviour
 
 
     #region 主要函数
-    //更改房间整体的透明度
-    private void ChangeRoomTransparency(float alphaVal)
+    //用于激活/隐藏房间阴影
+    private void SetActiveShadowObject(bool isActive)
     {
-        foreach(var sprite in m_AllSprites)
-        {
-            //检查精灵图是否为空，防止报错
-            if (sprite != null)
-            {
-                var tempColor = sprite.color;
-                tempColor.a = alphaVal;
-                sprite.color = tempColor;
-            }          
-        }
-    }
-
-
-    //添加新的精灵图到列表
-    public void AddNewSpriteRenderers()
-    {
-        SpriteRenderer[] newSprites = GetComponentsInChildren<SpriteRenderer>();
-        foreach(var sprite in newSprites)
-        {
-            if(!m_AllSprites.Contains(sprite) )
-            {
-                m_AllSprites.Add(sprite);
-            }
-        }
+        m_Shadow.gameObject.SetActive(isActive);
     }
     #endregion
 

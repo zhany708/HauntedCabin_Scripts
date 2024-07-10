@@ -1,3 +1,4 @@
+using System.Linq;
 using UnityEngine;
 
 
@@ -35,6 +36,21 @@ public class EntranceHall : RootRoomController      //入口大堂脚本
         base.Awake();
     }
 
+    protected override void Start()
+    {
+        base.Start();
+
+
+        //检查该房间是否是唯一保留的那个
+        if (Instance == this)
+        {
+            if (!RoomManager.Instance.ImportantRoomPos.Contains(transform.position))
+            {
+                //将该房间的坐标加进重要房间坐标列表，以在重置游戏时不被删除
+                RoomManager.Instance.ImportantRoomPos.Add(transform.position);
+            }
+        }
+    }
 
     protected override void OnDisable()
     {

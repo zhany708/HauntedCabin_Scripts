@@ -69,9 +69,6 @@ public class RoomManager : ManagerTemplate<RoomManager>
 
         //赋值房间跟物体给脚本中的变量
         SetupRootGameObject(ref m_FirstFloorRooms, "FirstFloorRooms");
-
-        //将一些不可删除房间加进重要列表
-        ImportantRoomPos.Add(EntranceHall.Instance.transform.position);
     }
 
     private void Start()
@@ -329,22 +326,8 @@ public class RoomManager : ManagerTemplate<RoomManager>
 
                 //检查重复坐标的房间是否有连接此房间的门，如果没有则强行关闭该门
                 if (!HasRequiredDoor(targetRoomType, neededDoorName))
-                {                  
-                    //获取当前房间的控制器脚本
-                    RootRoomController currentRoomController = currentRoomTransform.GetComponent<RootRoomController>();
-                    if (currentRoomController == null)
-                    {
-                        Debug.LogError("Cannot get the RootRoomController component in the " + currentRoomTransform.gameObject.name);
-                        return;
-                    }
-
-                    //将需要关闭的门加进列表
-                    currentRoomController.DoorControllerInsideThisRoom.AlwaysClosedDoorNames.Add(closedDoorName);   
-                    //激活关闭的门对应的小地图门框  
-                    currentRoomController.MiniMapControllerInsideThisRoom.SetActiveBackupFrame(closedDoorName);
-
-                    //加进列表后立刻调用指定的函数，从而确保玩家进入该房间时永久关闭的门处于关闭状态
-                    currentRoomController.DoorControllerInsideThisRoom.CloseNecessaryDoors();
+                {
+                    HandleUnconnectedDoorsCondition(currentRoomTransform, closedDoorName);
                 }
             }
 
@@ -403,15 +386,6 @@ public class RoomManager : ManagerTemplate<RoomManager>
         if (Mathf.Abs(newRoomPos.x) >= MaximumXPos || Mathf.Abs(newRoomPos.y) >= MaximumYPos)
         {
             string closedDoorName = null;       //永久关闭的门的名字
-            
-            //获取当前房间的控制器脚本
-            RootRoomController currentRoomController = currentRoomTransform.GetComponent<RootRoomController>();
-            if (currentRoomController == null)
-            {
-                Debug.LogError("Cannot get the RootRoomController component in the " + currentRoomTransform.name);
-            }
-
-
 
 
             if (Mathf.Abs(newRoomPos.x) >= MaximumXPos)
@@ -425,10 +399,8 @@ public class RoomManager : ManagerTemplate<RoomManager>
                 closedDoorName = newRoomPos.y <= 0 ? DownDoorName : UpDoorName;               
             }
 
-            currentRoomController.DoorControllerInsideThisRoom.AlwaysClosedDoorNames.Add(closedDoorName);
 
-            //加进列表后立刻调用指定的函数，从而确保玩家进入该房间时永久关闭的门处于关闭状态
-            currentRoomController.DoorControllerInsideThisRoom.CloseNecessaryDoors();
+            HandleUnconnectedDoorsCondition(currentRoomTransform, closedDoorName);
             return true;
         } 
 
@@ -464,6 +436,30 @@ public class RoomManager : ManagerTemplate<RoomManager>
 
 
     #region 其余房间函数（规格，重置游戏等）
+    //当遇到房间门不相连时调用的函数
+    private void HandleUnconnectedDoorsCondition(Transform currentRoomTransform, string closedDoorName)
+    {
+        //获取当前房间的控制器脚本
+        RootRoomController currentRoomController = currentRoomTransform.GetComponent<RootRoomController>();
+        if (currentRoomController == null)
+        {
+            Debug.LogError("Cannot get the RootRoomController component in the " + currentRoomTransform.gameObject.name);
+            return;
+        }
+
+
+        //将需要关闭的门加进列表
+        currentRoomController.DoorControllerInsideThisRoom.AlwaysClosedDoorNames.Add(closedDoorName);
+        //激活关闭的门对应的小地图门框  
+        currentRoomController.MiniMapControllerInsideThisRoom.SetActiveBackupFrame(closedDoorName);
+
+        //加进列表后立刻调用指定的函数，从而确保玩家进入该房间时永久关闭的门处于关闭状态
+        currentRoomController.DoorControllerInsideThisRoom.CloseNecessaryDoors();
+    }
+
+
+
+
     public void GetMaxAllowedRoomNum(ref int thisNum)       //获取可以生成的最大房间数
     {
         //一行可以生成的房间数量。FloorToInt函数用于将结果向下取整（无论小数部分有多大）

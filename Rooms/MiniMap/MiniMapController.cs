@@ -32,9 +32,8 @@ public class MiniMapController : MonoBehaviour
 
 
 
-    /// <summary>
-    /// 需要做的：将房间下的MiniMap物体设置为Prefab，以便以后统一更改子物体的名字
-    /// </summary>
+
+
 
 
     #region Unity内部函数
@@ -101,15 +100,16 @@ public class MiniMapController : MonoBehaviour
     //在子物体中寻找参数中的名字的物体
     private GameObject FindBackupFrameObject(string targetName)
     {
-        //在子物体中寻找参数中名字的物体
-        Transform targetBackupFrameObject = transform.Find(targetName);
-
-        if (targetBackupFrameObject == null)
+        foreach (GameObject frame in BackupFrames)
         {
-            Debug.LogError("Cannot find the corresponding GameObject in the children: " + targetName);
+            if (frame.name == targetName)
+            {
+                return frame;
+            }
         }
 
-        return targetBackupFrameObject.gameObject;
+        Debug.LogError("Cannot find the corresponding BackupFrame: " + targetName);
+        return null;
     }
     #endregion
 

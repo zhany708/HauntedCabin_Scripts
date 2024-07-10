@@ -13,6 +13,7 @@ public class SO_UIKeys : ScriptableObject
     public string GameWinningPanel;     //游戏胜利界面
 
     public string TaskPanel;            //游戏任务界面
+    public string MiniMapPanel;         //小地图
 
 
     //剧本相关
