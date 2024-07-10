@@ -339,8 +339,10 @@ public class RoomManager : ManagerTemplate<RoomManager>
                     }
 
                     //将需要关闭的门加进列表
-                    currentRoomController.DoorControllerInsideThisRoom.AlwaysClosedDoorNames.Add(closedDoorName);     
-                    
+                    currentRoomController.DoorControllerInsideThisRoom.AlwaysClosedDoorNames.Add(closedDoorName);   
+                    //激活关闭的门对应的小地图门框  
+                    currentRoomController.MiniMapControllerInsideThisRoom.SetActiveBackupFrame(closedDoorName);
+
                     //加进列表后立刻调用指定的函数，从而确保玩家进入该房间时永久关闭的门处于关闭状态
                     currentRoomController.DoorControllerInsideThisRoom.CloseNecessaryDoors();
                 }

@@ -21,6 +21,7 @@ public class RootRoomController : MonoBehaviour
 
 
     public DoorController DoorControllerInsideThisRoom { get; private set; }
+    public MiniMapController MiniMapControllerInsideThisRoom { get; private set; }
 
 
     List<SpriteRenderer> m_AllSprites;
@@ -45,6 +46,7 @@ public class RootRoomController : MonoBehaviour
         m_AllSprites = new List<SpriteRenderer>(GetComponentsInChildren<SpriteRenderer>() );
 
         DoorControllerInsideThisRoom = GetComponentInChildren<DoorController>();
+        MiniMapControllerInsideThisRoom = GetComponentInChildren<MiniMapController>();
         m_RoomType = GetComponent<RoomType>();
     }
 
@@ -100,7 +102,10 @@ public class RootRoomController : MonoBehaviour
                 //顺序很重要，必须先设置布尔再调用事件
                 m_FirstTimeEnterRoom = false;
 
-                OnPlayerFirstTimeEnterRoom?.Invoke(transform.position);              //将当前房间的坐标连接到事件               
+                OnPlayerFirstTimeEnterRoom?.Invoke(transform.position);              //将当前房间的坐标连接到事件        
+
+                //更改精灵图的透明度，用以在小地图中表示已经进入过该房间了      需要做的：先检查当前房间是否为初始房间，随后再使用合适的方法
+                MiniMapControllerInsideThisRoom.ChangeSpriteTransparency(true);       
             }
 
             RoomManager.Instance.CheckIfConnectSurroundingRooms(transform);        //每当玩家进入房间时，检查当前房间是否连接周围的房间          
@@ -161,12 +166,17 @@ public class RootRoomController : MonoBehaviour
             }
         }
     }
+    #endregion
 
+
+    #region 其余函数
     //重置游戏
     public virtual void ResetGame()
     {
         m_HasGeneratedRoom = false;
         m_FirstTimeEnterRoom = true;
+
+        MiniMapControllerInsideThisRoom.ResetGame();
     }
     #endregion
 
