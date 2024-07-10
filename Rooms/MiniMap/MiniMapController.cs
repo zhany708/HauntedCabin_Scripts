@@ -13,6 +13,8 @@ public class MiniMapController : MonoBehaviour
     public List<GameObject> BackupFrames;                       //储存所有的备用门框
 
 
+    public static Vector2 CurrentRoomPosPlayerAt;               //玩家当前所在房间的坐标（静态的，表示所有此类共用这一个坐标）
+
     //用于表示是否进入过初始房间（入口大堂等）
     public Color LightGreen = new Color(250, 250, 250);         //初始房间还未进入时在小地图上显示的颜色
     public Color DarkGreen = new Color(250, 250, 250);          //初始房间进入后在小地图上显示的颜色
@@ -43,6 +45,15 @@ public class MiniMapController : MonoBehaviour
         {
             Debug.LogError("Some components are not assigned correctly in the " + name);
             return;
+        }
+    }
+
+    private void Start()
+    {
+        //将当前房间的坐标和相应的小地图物体加进小地图界面的字典
+        if (!MiniMapPanel.Instance.MiniMapDict.ContainsKey(transform.position) )
+        {
+            MiniMapPanel.Instance.MiniMapDict.Add(transform.position, gameObject);
         }
     }
     #endregion

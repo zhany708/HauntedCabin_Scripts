@@ -110,7 +110,10 @@ public class RootRoomController : MonoBehaviour
                 MiniMapControllerInsideThisRoom.ChangeSpriteTransparency(true);       
             }
 
-            RoomManager.Instance.CheckIfConnectSurroundingRooms(transform);        //每当玩家进入房间时，检查当前房间是否连接周围的房间          
+            RoomManager.Instance.CheckIfConnectSurroundingRooms(transform);        //每当玩家进入房间时，检查当前房间是否连接周围的房间  
+
+            //赋值玩家当前所在的房间的坐标
+            MiniMapController.CurrentRoomPosPlayerAt = transform.position;        
         }
     }
 
@@ -144,6 +147,12 @@ public class RootRoomController : MonoBehaviour
     private void SetActiveShadowObject(bool isActive)
     {
         m_Shadow.gameObject.SetActive(isActive);
+    }
+
+    //检查当前房间是否需要在小地图中显示（需要做的：只在小地图中显示玩家方圆内最近的9个房间）
+    private void CheckIfDisplayMiniMap()
+    {
+
     }
     #endregion
 

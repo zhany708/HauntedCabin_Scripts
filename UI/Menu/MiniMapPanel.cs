@@ -12,7 +12,8 @@ public class MiniMapPanel : BasePanel
     public static MiniMapPanel Instance { get; private set; }
 
 
-
+    //储存房间的坐标和小地图物体，用于动态的显示/隐藏部分房间的小地图
+    public Dictionary<Vector2, GameObject> MiniMapDict { get; private set; } = new Dictionary<Vector2, GameObject>();
 
 
 
