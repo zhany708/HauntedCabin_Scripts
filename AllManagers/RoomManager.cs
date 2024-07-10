@@ -80,6 +80,9 @@ public class RoomManager : ManagerTemplate<RoomManager>
         {
             RoomKeys.FirstFloorRoomKeys.Remove("RitualRoom");
         }
+
+        //将入口大堂的坐标加进重要房间坐标列表，以在重置游戏时不被删除
+        ImportantRoomPos.Add(EntranceHall.Instance.transform.position);
     }
     #endregion
 
