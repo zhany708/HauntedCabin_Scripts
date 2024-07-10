@@ -69,6 +69,9 @@ public class RoomManager : ManagerTemplate<RoomManager>
 
         //赋值房间跟物体给脚本中的变量
         SetupRootGameObject(ref m_FirstFloorRooms, "FirstFloorRooms");
+
+        //将入口大堂的坐标加进重要房间坐标列表，以在重置游戏时不被删除
+        //ImportantRoomPos.Add(EntranceHall.Instance.transform.position);
     }
 
     private void Start()
