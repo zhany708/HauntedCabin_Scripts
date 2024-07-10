@@ -60,7 +60,7 @@ public class MiniMapController : MonoBehaviour
     //激活某个备用门框物体（当房间的某个门因为一些原因永久关闭后，调用该函数以在小地图上表示该门不可进）
     public void SetActiveBackupFrame(string doorName)
     {
-        //根据需要的房间名设置当前房间的RoomType脚本里检查旗帜里对应的布尔值，以及木桶的坐标
+        //根据参数中的房间名，激活对应的备用门框
         switch (doorName)
         {
             case RoomManager.LeftDoorName:
