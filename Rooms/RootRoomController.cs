@@ -152,7 +152,20 @@ public class RootRoomController : MonoBehaviour
     //检查当前房间是否需要在小地图中显示（需要做的：只在小地图中显示玩家方圆内最近的9个房间）
     private void CheckIfDisplayMiniMap()
     {
+        foreach (var roomPos in MiniMapPanel.Instance.MiniMapDict.Keys)
+        {
+            //检查房间是否在玩家当前房间横向上的一格之外
+            if (Mathf.Abs(roomPos.x - MiniMapController.CurrentRoomPosPlayerAt.x) > RoomManager.RoomLength )
+            {
+                MiniMapPanel.Instance.MiniMapDict[roomPos].SetActive(false);        //取消激活该房间下的小地图物体
+            }
 
+            //再检查房间是否在玩家当前房间纵向上的一格之外
+            else if (Mathf.Abs(roomPos.y - MiniMapController.CurrentRoomPosPlayerAt.y) > RoomManager.RoomWidth )
+            {
+                MiniMapPanel.Instance.MiniMapDict[roomPos].SetActive(false);        //取消激活该房间下的小地图物体
+            }
+        }
     }
     #endregion
 
