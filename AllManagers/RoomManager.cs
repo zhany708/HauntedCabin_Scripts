@@ -541,13 +541,14 @@ public class RoomManager : ManagerTemplate<RoomManager>
             //如果是不可删除的房间（初始房间）
             if (ImportantRoomPos.Contains((Vector2)roomScript.gameObject.transform.position))
             {
-                roomScript.ResetGame();     //调用重置游戏函数
+                roomScript.ResetGame();             //调用重置游戏函数
             }   
             
             //只删除普通房间 
             else        
             {
-                Destroy(roomScript.gameObject);
+                roomScript.ResetGame();             //先调用重置游戏函数
+                Destroy(roomScript.gameObject);     //再删除物体
             }  
         }
     }

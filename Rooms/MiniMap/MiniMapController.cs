@@ -130,6 +130,14 @@ public class MiniMapController : MonoBehaviour
     {
         //更改所有房间该模块的精灵图透明度，以表示玩家还没进入该房间
         ChangeSpriteTransparency(false);
+
+
+        //将当前房间的坐标和相应的小地图物体从小地图界面的字典中移除（初始房间除外）
+        if (MiniMapPanel.Instance.MiniMapDict.ContainsKey(transform.position) && 
+            !RoomManager.Instance.ImportantRoomPos.Contains(transform.position) )
+        {
+            MiniMapPanel.Instance.MiniMapDict.Remove(transform.position);
+        }
     }
     #endregion
 }

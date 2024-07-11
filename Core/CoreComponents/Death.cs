@@ -11,8 +11,8 @@ public class Death : CoreComponent      //如果需要不同的死亡效果，�
     {
         if (!combat.gameObject.activeSelf)
         {
-            //重新激活战斗组件，防止再次加载后无法攻击敌人
-            combat.gameObject.SetActive(true);
+            //重新激活战斗脚本组件（不是整个物体），防止再次加载后无法攻击敌人
+            combat.enabled = true;
         }
 
         stats.OnHealthZero += Die;    //将函数加进事件
@@ -38,8 +38,8 @@ public class Death : CoreComponent      //如果需要不同的死亡效果，�
 
 
         movement.Rigidbody2d.constraints = RigidbodyConstraints2D.FreezeAll;        //死亡后禁止物体的一切移动和旋转
-                             
-        combat.gameObject.SetActive(false);         //取消激活战斗组件，防止出现鞭尸现象
+                                    
+        combat.enabled = false;                     //取消激活战斗组件，防止出现鞭尸现象
 
         core.Animator.SetBool("Death", true);
     }

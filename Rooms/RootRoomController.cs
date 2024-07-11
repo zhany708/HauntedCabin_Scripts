@@ -157,14 +157,9 @@ public class RootRoomController : MonoBehaviour
     {
         foreach (var roomPos in MiniMapPanel.Instance.MiniMapDict.Keys)
         {
-            //检查房间是否在玩家当前房间横向上的一格之外
-            if (Mathf.Abs(roomPos.x - MiniMapController.CurrentRoomPosPlayerAt.x) > RoomManager.RoomLength )
-            {
-                MiniMapPanel.Instance.MiniMapDict[roomPos].SetActive(false);        //取消激活该房间下的小地图物体
-            }
-
-            //再检查房间是否在玩家当前房间纵向上的一格之外
-            else if (Mathf.Abs(roomPos.y - MiniMapController.CurrentRoomPosPlayerAt.y) > RoomManager.RoomWidth )
+            //检查房间是否在玩家当前房间横向上的一格之外，或者纵向上的一格之外
+            if (Mathf.Abs(roomPos.x - MiniMapController.CurrentRoomPosPlayerAt.x) > RoomManager.RoomLength ||
+                Mathf.Abs(roomPos.y - MiniMapController.CurrentRoomPosPlayerAt.y) > RoomManager.RoomWidth )
             {
                 MiniMapPanel.Instance.MiniMapDict[roomPos].SetActive(false);        //取消激活该房间下的小地图物体
             }
