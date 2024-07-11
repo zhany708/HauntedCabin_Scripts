@@ -83,9 +83,6 @@ public class RoomManager : ManagerTemplate<RoomManager>
         {
             RoomKeys.FirstFloorRoomKeys.Remove("RitualRoom");
         }
-
-        //将入口大堂的坐标加进重要房间坐标列表，以在重置游戏时不被删除
-        ImportantRoomPos.Add(EntranceHall.Instance.transform.position);
     }
     #endregion
 
@@ -510,8 +507,12 @@ public class RoomManager : ManagerTemplate<RoomManager>
         //进入其余场景时（目前只有主菜单）
         else
         {
-            //删除所有普通房间，随后隐藏所有初始房间
-            ResetGame();                 
+            //检查玩家是否第一次进入游戏
+            if (!EnvironmentManager.Instance.IsFirstTimeEnterGame)
+            {
+                //删除所有普通房间，随后隐藏所有初始房间（只在非第一次进入游戏才会执行）
+                ResetGame(); 
+            }
 
             SetActiveAllRoom(false);
         }

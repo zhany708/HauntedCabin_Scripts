@@ -21,15 +21,15 @@ public class RootRoomController : MonoBehaviour
     public MiniMapController MiniMapControllerInsideThisRoom { get; private set; }
 
 
-    const string m_ShadowObjectName = "Shadow";
-    Transform m_Shadow;                             //房间的阴影图物体
+    const string m_ShadowObjectName = "Shadow";         //阴影图物体的名字
+    Transform m_Shadow;                                 //房间的阴影图物体
     
     RoomType m_RoomType;
 
  
 
     bool m_HasGeneratedRoom = false;
-    bool m_FirstTimeEnterRoom = true;      //表示玩家是否第一次进入该房间
+    bool m_FirstTimeEnterRoom = true;                   //表示玩家是否第一次进入该房间
 
 
 

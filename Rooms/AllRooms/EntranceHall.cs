@@ -38,12 +38,11 @@ public class EntranceHall : RootRoomController      //入口大堂脚本
 
     protected override void Start()
     {
-        base.Start();
-
-
         //检查该房间是否是唯一保留的那个
         if (Instance == this)
         {
+            base.Start();           //将房间加进RoomManager的GeneratedRoomDict字典
+           
             if (!RoomManager.Instance.ImportantRoomPos.Contains(transform.position))
             {
                 //将该房间的坐标加进重要房间坐标列表，以在重置游戏时不被删除
@@ -55,9 +54,9 @@ public class EntranceHall : RootRoomController      //入口大堂脚本
     protected override void OnDisable()
     {
         //只有含Instance的本房间取消激活时，才会从字典中移除当前房间的坐标
-        if (RoomManager.Instance.GeneratedRoomDict.ContainsKey(transform.position) && Instance == this)
+        if (Instance == this)
         {
-            RoomManager.Instance.GeneratedRoomDict.Remove(transform.position);
+            base.OnDisable();
         }
     }
 
@@ -84,7 +83,7 @@ public class EntranceHall : RootRoomController      //入口大堂脚本
     #endregion
 
 
-    #region 主要函数
+    #region 其它函数
     public override void ResetGame()
     {
         base.ResetGame();
