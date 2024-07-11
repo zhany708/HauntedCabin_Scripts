@@ -153,7 +153,7 @@ public class MiniMapController : MonoBehaviour
 
 
     #region 检查函数
-    //检查当前房间是否需要在小地图中显示（需要做的：只在小地图中显示玩家方圆内最近的9个房间）
+    //检查当前房间是否需要在小地图中显示（只在小地图中显示玩家方圆内最近的9个房间）
     public static void CheckIfDisplayMiniMap()
     {
         foreach (var roomPos in RoomManager.Instance.GeneratedRoomDict.Keys)

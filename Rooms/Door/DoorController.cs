@@ -26,6 +26,8 @@ public class DoorController : MonoBehaviour
 
 
 
+    const string m_FurnitureLayerName = "Furniture";                //家具Layer的名字
+
     RootRoomController m_MainRoom;          //父物体中用于控制房间的脚本组件
 
     bool m_IsRootRoom = false;              //表示当前门所在的房间是否为初始房间
@@ -71,7 +73,7 @@ public class DoorController : MonoBehaviour
         }
 
         //自动给所有此脚本中的的层级赋值
-        FurnitureLayerMask = LayerMask.GetMask("Furniture");
+        FurnitureLayerMask = LayerMask.GetMask(m_FurnitureLayerName);
     }
 
 
