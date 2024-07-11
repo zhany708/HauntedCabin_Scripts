@@ -26,12 +26,17 @@ public class MiniMapController : MonoBehaviour
     public const string UpBackupFrameName = "Up";
     public const string DownBackupFrameName = "Down";
 
+    //小地图层级的名字
+    public const string MiniMapLayerName = "MiniMap";               
+
 
     //用于表示是否进入过基础房间
     public const float InVisibleAlpha = 0.25f;          //玩家没进入时的透明度
     public const float VisibleAlpha = 0.75f;            //玩家进入后的透明度
 
 
+
+    
 
 
 
@@ -45,15 +50,6 @@ public class MiniMapController : MonoBehaviour
         {
             Debug.LogError("Some components are not assigned correctly in the " + name);
             return;
-        }
-    }
-
-    private void Start()
-    {
-        //将当前房间的坐标和相应的小地图物体加进小地图界面的字典
-        if (!MiniMapPanel.Instance.MiniMapDict.ContainsKey(transform.position) )
-        {
-            MiniMapPanel.Instance.MiniMapDict.Add(transform.position, gameObject);
         }
     }
     #endregion
@@ -122,6 +118,68 @@ public class MiniMapController : MonoBehaviour
         Debug.LogError("Cannot find the corresponding BackupFrame: " + targetName);
         return null;
     }
+
+
+
+
+    public static List<SpriteRenderer> GetSpriteRenderersWithLayer(GameObject parentObject, string layerName)
+    {
+        //创建即将返回的列表和层级的序列
+        List<SpriteRenderer> resultList = new List<SpriteRenderer>();
+        int layer = LayerMask.NameToLayer(layerName);
+
+        if (parentObject == null)
+        {
+            Debug.LogError("Parent GameObject is null");
+            return resultList;
+        }
+
+        //获取父物体下所有的精灵图组件
+        SpriteRenderer[] allSpriteRenderers = parentObject.GetComponentsInChildren<SpriteRenderer>();
+
+        //随后检索这些组件，将有小地图层级的精灵图加进列表
+        foreach (var spriteRenderer in allSpriteRenderers)
+        {
+            if (spriteRenderer.gameObject.layer == layer)
+            {
+                resultList.Add(spriteRenderer);
+            }
+        }
+
+        return resultList;
+    }
+
+    #endregion
+
+
+    #region 检查函数
+    //检查当前房间是否需要在小地图中显示（需要做的：只在小地图中显示玩家方圆内最近的9个房间）
+    public static void CheckIfDisplayMiniMap()
+    {
+        foreach (var roomPos in RoomManager.Instance.GeneratedRoomDict.Keys)
+        {
+            //检查房间是否在玩家当前房间横向上的一格之外，或者纵向上的一格之外
+            if (Mathf.Abs(roomPos.x - CurrentRoomPosPlayerAt.x) > RoomManager.RoomLength ||
+                Mathf.Abs(roomPos.y - CurrentRoomPosPlayerAt.y) > RoomManager.RoomWidth)
+            {
+                //隐藏该房间下的所有层级为小地图的精灵图组件
+                foreach (var spriteRenderer in GetSpriteRenderersWithLayer(RoomManager.Instance.GeneratedRoomDict[roomPos], MiniMapLayerName))
+                {
+                    spriteRenderer.enabled = false;
+                }
+            }
+
+            //当房间位于玩家方圆最近的9个房间内时
+            else
+            {
+                //激活该房间下的所有层级为小地图的精灵图组件
+                foreach (var spriteRenderer in GetSpriteRenderersWithLayer(RoomManager.Instance.GeneratedRoomDict[roomPos], MiniMapLayerName))
+                {
+                    spriteRenderer.enabled = true;
+                }
+            }
+        }
+    }
     #endregion
 
 
@@ -130,14 +188,6 @@ public class MiniMapController : MonoBehaviour
     {
         //更改所有房间该模块的精灵图透明度，以表示玩家还没进入该房间
         ChangeSpriteTransparency(false);
-
-
-        //将当前房间的坐标和相应的小地图物体从小地图界面的字典中移除（初始房间除外）
-        if (MiniMapPanel.Instance.MiniMapDict.ContainsKey(transform.position) && 
-            !RoomManager.Instance.ImportantRoomPos.Contains(transform.position) )
-        {
-            MiniMapPanel.Instance.MiniMapDict.Remove(transform.position);
-        }
     }
     #endregion
 }

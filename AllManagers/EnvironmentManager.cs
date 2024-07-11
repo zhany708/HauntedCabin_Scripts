@@ -19,8 +19,8 @@ public class EnvironmentManager : ManagerTemplate<EnvironmentManager>
     {
         Instantiate(generatedObject, generatedPos, Quaternion.identity, parentTransform);
 
-        //尝试从父物体那里获取房间脚本组件
-        RootRoomController parentObject = parentTransform.GetComponent<RootRoomController>();
+        //生成完物体后立刻检查是否应该在小地图中显示出来
+        MiniMapController.CheckIfDisplayMiniMap();
     }
     #endregion
 

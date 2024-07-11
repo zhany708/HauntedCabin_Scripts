@@ -116,7 +116,7 @@ public class RootRoomController : MonoBehaviour
             MiniMapController.CurrentRoomPosPlayerAt = transform.position;
 
             //检查哪些房间可以在小地图中显示
-            CheckIfDisplayMiniMap();
+            MiniMapController.CheckIfDisplayMiniMap();
         }
     }
 
@@ -150,26 +150,6 @@ public class RootRoomController : MonoBehaviour
     private void SetActiveShadowObject(bool isActive)
     {
         m_Shadow.gameObject.SetActive(isActive);
-    }
-
-    //检查当前房间是否需要在小地图中显示（需要做的：只在小地图中显示玩家方圆内最近的9个房间）
-    private void CheckIfDisplayMiniMap()
-    {
-        foreach (var roomPos in MiniMapPanel.Instance.MiniMapDict.Keys)
-        {
-            //检查房间是否在玩家当前房间横向上的一格之外，或者纵向上的一格之外
-            if (Mathf.Abs(roomPos.x - MiniMapController.CurrentRoomPosPlayerAt.x) > RoomManager.RoomLength ||
-                Mathf.Abs(roomPos.y - MiniMapController.CurrentRoomPosPlayerAt.y) > RoomManager.RoomWidth )
-            {
-                MiniMapPanel.Instance.MiniMapDict[roomPos].SetActive(false);        //取消激活该房间下的小地图物体
-            }
-
-            //当房间位于玩家方圆最近的9个房间内时
-            else
-            {
-                MiniMapPanel.Instance.MiniMapDict[roomPos].SetActive(true);         //激活该房间下的小地图物体
-            }
-        }
     }
     #endregion
 
