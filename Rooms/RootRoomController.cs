@@ -113,7 +113,10 @@ public class RootRoomController : MonoBehaviour
             RoomManager.Instance.CheckIfConnectSurroundingRooms(transform);        //每当玩家进入房间时，检查当前房间是否连接周围的房间  
 
             //赋值玩家当前所在的房间的坐标
-            MiniMapController.CurrentRoomPosPlayerAt = transform.position;        
+            MiniMapController.CurrentRoomPosPlayerAt = transform.position;
+
+            //检查哪些房间可以在小地图中显示
+            CheckIfDisplayMiniMap();
         }
     }
 
@@ -164,6 +167,12 @@ public class RootRoomController : MonoBehaviour
             else if (Mathf.Abs(roomPos.y - MiniMapController.CurrentRoomPosPlayerAt.y) > RoomManager.RoomWidth )
             {
                 MiniMapPanel.Instance.MiniMapDict[roomPos].SetActive(false);        //取消激活该房间下的小地图物体
+            }
+
+            //当房间位于玩家方圆最近的9个房间内时
+            else
+            {
+                MiniMapPanel.Instance.MiniMapDict[roomPos].SetActive(true);         //激活该房间下的小地图物体
             }
         }
     }

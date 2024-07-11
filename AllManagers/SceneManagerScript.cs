@@ -33,6 +33,7 @@ public class SceneManagerScript : ManagerTemplate<SceneManagerScript>
         //再调用其余管理器的加载场景脚本 
         PostProcessManager.Instance.OnSceneLoaded(scene, mode);
         EnemyPool.Instance.OnSceneLoaded(scene, mode);
+        ParticlePool.Instance.OnSceneLoaded(scene, mode);
 
         //先调用具体的某个UI界面的加载场景脚本
         PlayerStatusBar.Instance.OnSceneLoaded(scene, mode);

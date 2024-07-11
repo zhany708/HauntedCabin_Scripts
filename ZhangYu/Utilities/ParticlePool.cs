@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 
 
 
@@ -121,6 +122,43 @@ public class ParticlePool : MonoBehaviour       //用于子弹，特效等的对
         }
      
         return false;
+    }
+    #endregion
+
+
+    #region 其余函数（重置游戏等）
+    //每当加载新场景时调用的函数
+    public void OnSceneLoaded(UnityEngine.SceneManagement.Scene scene, LoadSceneMode mode)
+    {
+        //每当进入一楼场景时都调用以下逻辑
+        if (scene.name == "FirstFloor")
+        {
+
+        }
+
+        //进入其余场景时（目前只有主菜单）
+        else
+        {
+            //重置游戏
+            ResetGame();
+        }
+    }
+
+    public void ResetGame()     //重置游戏（在返回主菜单前调用此函数）
+    {
+        //在场景中取消激活所有对象池中的物体
+        foreach (Transform child in transform)
+        {
+            foreach (Transform child2 in child)     //检索每一个子物体的子物体
+            {
+                //如果任何物体处于激活状态，则放回池中
+                if (child2.gameObject.activeSelf)
+                {
+                    //这里必须放回池中，不能单纯的取消激活。否则在重置游戏后，将不会重复使用之前生成过的物体
+                    PushObject(child2.gameObject);      //将物体放回池中
+                }
+            }
+        }
     }
     #endregion
 }

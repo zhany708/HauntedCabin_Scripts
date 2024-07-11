@@ -33,7 +33,7 @@ public enum RoomTypeName
 
 
 [Flags]
-public enum DoorFlags   //通过Bit Flag判断房间的种类
+public enum DoorFlags       //通过Bit Flag判断房间的种类
 {
     None = 0,
 
@@ -61,11 +61,11 @@ public class RoomType : MonoBehaviour
 {
     Transform m_Doors;      //Doors子物体
 
-    DoorFlags m_DoorFlags;
-    CheckFlags m_CheckFlags = CheckFlags.None;      //初始化的时候，所有方向的布尔都为false
+    DoorFlags m_DoorFlags = DoorFlags.None;         //初始化的时候，所有方向的Flags都为None
+    CheckFlags m_CheckFlags = CheckFlags.None;      //初始化的时候，所有方向的Flags都为None
 
 
-    
+
 
 
 
@@ -74,10 +74,7 @@ public class RoomType : MonoBehaviour
     {
         m_Doors = transform.Find("Doors");      //找到Doors子物体，然后通过该子物体逐一寻找是否有对应的侧门
 
-        m_DoorFlags = DoorFlags.None;       //给Bit Flag赋值
-
-
-        InitDoorFlags();     //游戏开始时初始化门的旗帜
+        InitAllFlags();     //游戏开始时初始化所有跟门相关的旗帜
     }
 
     private void OnEnable()
@@ -154,26 +151,28 @@ public class RoomType : MonoBehaviour
 
 
 
-    private void InitDoorFlags()        //根据当前房间拥有的门来决定布尔
+    private void InitAllFlags()        
     {
+        //根据当前房间拥有的门来决定flags（如果门存在，则设置相应的旗帜）
         m_DoorFlags = (IsDoorExist(m_Doors, "LeftDoor") ? DoorFlags.Left : DoorFlags.None) |
                       (IsDoorExist(m_Doors, "RightDoor") ? DoorFlags.Right : DoorFlags.None) |
                       (IsDoorExist(m_Doors, "UpDoor") ? DoorFlags.Up : DoorFlags.None) |
                       (IsDoorExist(m_Doors, "DownDoor") ? DoorFlags.Down : DoorFlags.None);
+
+        
+        //根据当前房间拥有的门来决定flags（如果门不存在，则设置相应的布尔）
+        m_CheckFlags = (IsDoorExist(m_Doors, "LeftDoor") ? CheckFlags.None : CheckFlags.Left) |
+                       (IsDoorExist(m_Doors, "RightDoor") ? CheckFlags.None : CheckFlags.Right) |
+                       (IsDoorExist(m_Doors, "UpDoor") ? CheckFlags.None : CheckFlags.Up) |
+                       (IsDoorExist(m_Doors, "DownDoor") ? CheckFlags.None : CheckFlags.Down);
     }
+
 
     private bool IsDoorExist(Transform doors, string checkDoor)     //检查房间有哪些门
     {
         Transform door = doors.Find(checkDoor);
 
-        if (door != null)
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
+        return door != null;
     }
 
 
