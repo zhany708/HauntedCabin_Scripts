@@ -121,10 +121,10 @@ public class MiniMapController : MonoBehaviour
 
 
 
-
+    //获取参数一物体下面所有层级为参数二的精灵图组件（考虑将此函数放进一个管理器内，因为其它脚本可能也需要调用）
     public static List<SpriteRenderer> GetSpriteRenderersWithLayer(GameObject parentObject, string layerName)
     {
-        //创建即将返回的列表和层级的序列
+        //创建即将返回的列表和参数中层级的序列
         List<SpriteRenderer> resultList = new List<SpriteRenderer>();
         int layer = LayerMask.NameToLayer(layerName);
 
@@ -137,7 +137,7 @@ public class MiniMapController : MonoBehaviour
         //获取父物体下所有的精灵图组件
         SpriteRenderer[] allSpriteRenderers = parentObject.GetComponentsInChildren<SpriteRenderer>();
 
-        //随后检索这些组件，将有小地图层级的精灵图加进列表
+        //随后检索这些组件，将有参数中层级的精灵图加进列表
         foreach (var spriteRenderer in allSpriteRenderers)
         {
             if (spriteRenderer.gameObject.layer == layer)
