@@ -90,6 +90,19 @@ public class EntranceHall : RootRoomController      //入口大堂脚本
 
         MainDoorController.Instance.CloseMainDoor();                //重置游戏时关闭大门
         MainDoorController.Instance.SetDoOpenMainDoor(false);       //关闭大门的同时重置布尔
+
+
+        //检查该房间是否是唯一保留的那个
+        if (Instance == this)
+        {
+            //加进字典，防止因为一些原因导致房间没有正确的储存在字典中
+            if (!RoomManager.Instance.GeneratedRoomDict.ContainsKey(transform.position))
+            {
+                RoomManager.Instance.GeneratedRoomDict.Add(transform.position, gameObject);
+
+                //Debug.Log("We have room: " + RoomManager.Instance.GeneratedRoomDict[transform.position] + "at Vectro2.Zero");
+            }
+        }
     }
     #endregion
 }
