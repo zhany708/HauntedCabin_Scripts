@@ -16,8 +16,9 @@ public class RootRoomController : MonoBehaviour
     public float m_DarkPostProcessColorValue = -250f;
     public float m_PostProcessDuration = 1f;
 
-
+    //房间下的门控制器脚本
     public DoorController DoorControllerInsideThisRoom { get; private set; }
+    //房间下的小地图控制器脚本
     public MiniMapController MiniMapControllerInsideThisRoom { get; private set; }
 
 
@@ -95,7 +96,7 @@ public class RootRoomController : MonoBehaviour
             //检查该房间是否在周围生成过房间，当房间周围生成过一次房间后就不会再生成了
             if (!m_HasGeneratedRoom)
             {
-                RoomManager.Instance.GenerateRoomAtAround(transform, m_RoomType);  //在当前房间周围生成新的房间
+                RoomManager.Instance.GenerateRoomAtAround(transform, m_RoomType);    //在当前房间周围生成新的房间
             }
 
             //检查玩家是否第一次进入房间
@@ -110,7 +111,7 @@ public class RootRoomController : MonoBehaviour
                 MiniMapControllerInsideThisRoom.ChangeSpriteTransparency(true);       
             }
 
-            RoomManager.Instance.CheckIfConnectSurroundingRooms(transform);        //每当玩家进入房间时，检查当前房间是否连接周围的房间  
+            RoomManager.Instance.CheckIfConnectSurroundingRooms(transform);          //每当玩家进入房间时，检查当前房间是否连接周围的房间  
 
             //赋值玩家当前所在的房间的坐标
             MiniMapController.CurrentRoomPosPlayerAt = transform.position;
@@ -138,7 +139,8 @@ public class RootRoomController : MonoBehaviour
 
             if (DoorControllerInsideThisRoom != null)
             {
-                DoorControllerInsideThisRoom.RoomTrigger.enabled = true;    //玩家离开房间后重新激活门的触发器，从而让玩家之后再进入时生成敌人             
+                //玩家离开房间后重新激活门的触发器，从而让玩家之后再进入时生成敌人
+                DoorControllerInsideThisRoom.RoomTrigger.enabled = true;                 
             }             
         }
     }

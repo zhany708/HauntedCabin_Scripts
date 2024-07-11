@@ -76,7 +76,7 @@ public class DoorController : MonoBehaviour
 
 
 
-
+    //考虑做的：将此脚本依附的物体的触发器移除，在调用RootRoomController的OnTriggerEnter2D函数时调用此同名函数
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (other.CompareTag("Player"))

@@ -95,7 +95,7 @@ public class EntranceHall : RootRoomController      //入口大堂脚本
         //检查该房间是否是唯一保留的那个
         if (Instance == this)
         {
-            //加进字典，防止因为一些原因导致房间没有正确的储存在字典中
+            //加进字典，防止因为一些原因导致房间没有正确的储存在字典中（所有的初始房间都需要执行此逻辑）
             if (!RoomManager.Instance.GeneratedRoomDict.ContainsKey(transform.position))
             {
                 RoomManager.Instance.GeneratedRoomDict.Add(transform.position, gameObject);
