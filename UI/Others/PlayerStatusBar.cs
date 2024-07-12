@@ -262,10 +262,11 @@ public class PlayerStatusBar : BasePanel
     {
         //Debug.Log("UpdateHealthText is called in the PlayerStatusBar with currentHP: " + m_CurrentHealth + " and maxHP: " + m_MaxHealth);
 
-        //这里第一个参数不能用HealthText.text，否则代码识别不到{0}/{1}，导致数值只会在第一次正确显示
+        
         //可以考虑将{0}改成{0:0.00}，从而限制第一个显示的数字永远只会有两位小数
         if (m_CurrentHealth >= 1 || m_CurrentHealth <= 0)
         {
+            //这里第一个参数不能用HealthText.text，否则代码识别不到{0}/{1}，导致数值只会在第一次正确显示
             HealthText.text = string.Format("{0}/{1}", Mathf.FloorToInt(m_CurrentHealth), m_MaxHealth);       //将数值放入文本
         }
 
@@ -281,8 +282,9 @@ public class PlayerStatusBar : BasePanel
     public IEnumerator DelayedUpdateStatusAndHealth()
     {
         yield return new WaitForEndOfFrame();       //等待一帧的结束，以便所有其余的所需内容都已初始化完成
-        UpdateStatusUI();
         UpdateHealthText();
+        yield return new WaitForEndOfFrame();       //等待一帧的结束     
+        UpdateStatusUI();
     }
     #endregion
 
@@ -366,6 +368,11 @@ public class PlayerStatusBar : BasePanel
 
             //这里重新加载时需要用协程，否则会出现重新加载后无法正常显示数值的情况
             StartCoroutine(DelayedUpdateStatusAndHealth());
+        }
+
+        else
+        {
+            Debug.Log("Cannot get the Player reference at this point.");
         }
     }
     #endregion
