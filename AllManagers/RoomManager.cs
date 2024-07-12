@@ -497,24 +497,29 @@ public class RoomManager : ManagerTemplate<RoomManager>
     //每当加载新场景时调用的函数
     public void OnSceneLoaded(UnityEngine.SceneManagement.Scene scene, LoadSceneMode mode)
     {
-        //每当进入一楼场景时都调用以下逻辑
-        if (scene.name == "FirstFloor")
-        {
-            //Debug.Log("SetActiveAllRoom function in RoomManager is called.");
-            SetActiveAllRoom(true);      //激活所有房间
-        }
-
-        //进入其余场景时（目前只有主菜单）
-        else
+        //进入主菜单
+        if (scene.name == SceneManagerScript.MainMenuSceneName)
         {
             //检查玩家是否第一次进入游戏
             if (!EnvironmentManager.Instance.IsFirstTimeEnterGame)
             {
                 //删除所有普通房间，随后隐藏所有初始房间（只在非第一次进入游戏才会执行）
-                ResetGame(); 
+                ResetGame();
             }
 
             SetActiveAllRoom(false);
+        }
+
+        //进入一楼场景
+        else if (scene.name == SceneManagerScript.FirstFloorSceneName)
+        {
+            //Debug.Log("SetActiveAllRoom function in RoomManager is called.");
+            SetActiveAllRoom(true);      //激活所有房间
+        }
+
+        else
+        {
+            Debug.Log("We only have two scenes now, please check the parameters!");
         }
     }
 

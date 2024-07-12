@@ -1,4 +1,3 @@
-using System.Linq;
 using UnityEngine;
 
 
@@ -56,7 +55,8 @@ public class EntranceHall : RootRoomController      //入口大堂脚本
         //只有含Instance的本房间取消激活时，才会从字典中移除当前房间的坐标
         if (Instance == this)
         {
-            base.OnDisable();
+            //暂时先不给入口大堂从字典中移除的机会，防止小地图无法正常显示
+            //base.OnDisable();
         }
     }
 

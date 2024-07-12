@@ -6,6 +6,12 @@ using UnityEngine.SceneManagement;
 //用于处理加载场景相关的逻辑
 public class SceneManagerScript : ManagerTemplate<SceneManagerScript>
 {
+    //游戏的所有场景名
+    public const string MainMenuSceneName = "MainMenu";
+    public const string FirstFloorSceneName = "FirstFloor";
+
+
+
     #region Unity内部函数
     private void OnEnable()
     {

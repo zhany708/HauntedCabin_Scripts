@@ -3,6 +3,7 @@ using UnityEngine;
 
 
 
+//目前游戏中用不到
 public class TransitionStagePanel : BasePanel
 {
     public TextMeshProUGUI TransitionStageText;      //文本组件

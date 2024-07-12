@@ -282,9 +282,9 @@ public class PlayerStatusBar : BasePanel
     public IEnumerator DelayedUpdateStatusAndHealth()
     {
         yield return new WaitForEndOfFrame();       //等待一帧的结束，以便所有其余的所需内容都已初始化完成
-        UpdateHealthText();
-        yield return new WaitForEndOfFrame();       //等待一帧的结束     
-        UpdateStatusUI();
+        UpdateHealthText();      
+        yield return new WaitForEndOfFrame();       //再等待一帧（因为重新游戏时属性数值偶尔无法正常显示）  
+        UpdateStatusUI();      
     }
     #endregion
 
@@ -293,28 +293,8 @@ public class PlayerStatusBar : BasePanel
     //每当加载新场景时调用的函数
     public void OnSceneLoaded(UnityEngine.SceneManagement.Scene scene, LoadSceneMode mode)
     {
-        //每当进入一楼场景时都调用以下逻辑
-        if (scene.name == "FirstFloor")
-        {
-            if (Instance == this)
-            {
-                SetImagesToHealthBar();                 //先重新赋值图片给玩家血条脚本
-              
-                ResetGame();                            //随后再调用重置函数以初始化属性和血量
-               
-                CanvasGroup.alpha = FadeInAlpha;        //最后设置界面的透明度（显示出来）
-
-
-                if (m_PlayerHealthBar != null)
-                {
-                    //将更新血条文本的函数跟玩家血条脚本绑定起来
-                    m_PlayerHealthBar.OnHealthChange += UpdateHealthText;
-                }             
-            }           
-        }
-
-        //进入其余场景时（目前只有主菜单）
-        else
+        //进入主菜单
+        if (scene.name == SceneManagerScript.MainMenuSceneName)
         {
             if (Instance == this)
             {
@@ -327,6 +307,31 @@ public class PlayerStatusBar : BasePanel
                     m_PlayerHealthBar.OnHealthChange -= UpdateHealthText;
                 }
             }
+        }
+
+        //进入一楼场景
+        else if (scene.name == SceneManagerScript.FirstFloorSceneName)
+        {
+            if (Instance == this)
+            {
+                SetImagesToHealthBar();                 //先重新赋值图片给玩家血条脚本
+
+                ResetGame();                            //随后再调用重置函数以初始化属性和血量
+
+                CanvasGroup.alpha = FadeInAlpha;        //最后设置界面的透明度（显示出来）
+
+
+                if (m_PlayerHealthBar != null)
+                {
+                    //将更新血条文本的函数跟玩家血条脚本绑定起来
+                    m_PlayerHealthBar.OnHealthChange += UpdateHealthText;
+                }
+            }
+        }
+
+        else
+        {
+            Debug.Log("We only have two scenes now, please check the parameters!");
         }
     }
 
@@ -368,11 +373,6 @@ public class PlayerStatusBar : BasePanel
 
             //这里重新加载时需要用协程，否则会出现重新加载后无法正常显示数值的情况
             StartCoroutine(DelayedUpdateStatusAndHealth());
-        }
-
-        else
-        {
-            Debug.Log("Cannot get the Player reference at this time.");
         }
     }
     #endregion

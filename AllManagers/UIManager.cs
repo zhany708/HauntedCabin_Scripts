@@ -169,14 +169,8 @@ public class UIManager : ManagerTemplate<UIManager>
     //每当加载新场景时调用的函数
     public void OnSceneLoaded(UnityEngine.SceneManagement.Scene scene, LoadSceneMode mode)
     {
-        //每当进入一楼场景时都调用以下逻辑
-        if (scene.name == "FirstFloor")
-        {
-            
-        }
-
-        //进入其余场景时（目前只有主菜单）
-        else
+        //进入主菜单
+        if (scene.name == SceneManagerScript.MainMenuSceneName)
         {
             //只有非第一次进入主菜单才会重置游戏
             if (!EnvironmentManager.Instance.IsFirstTimeEnterGame)

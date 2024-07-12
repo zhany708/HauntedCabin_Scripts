@@ -170,18 +170,23 @@ public class EnvironmentManager : ManagerTemplate<EnvironmentManager>
     //每当加载新场景时调用的函数
     public void OnSceneLoaded(UnityEngine.SceneManagement.Scene scene, LoadSceneMode mode)
     {
-        //每当进入一楼场景时都调用以下逻辑
-        if (scene.name == "FirstFloor")
+        //进入主菜单
+        if (scene.name == SceneManagerScript.MainMenuSceneName)
+        {
+            //重置布尔
+            IsGameLost = false;
+        }
+
+        //进入一楼场景
+        else if (scene.name == SceneManagerScript.FirstFloorSceneName)
         {
             //将布尔设置为false，防止玩家重新游戏后重复打开游戏背景介绍
             IsFirstTimeEnterGame = false;
         }
 
-        //进入其余场景时（目前只有主菜单）
         else
         {
-            //重置布尔
-            IsGameLost = false;
+            Debug.Log("We only have two scenes now, please check the parameters!");
         }
     }
 

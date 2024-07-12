@@ -130,14 +130,8 @@ public class ParticlePool : MonoBehaviour       //用于子弹，特效等的对
     //每当加载新场景时调用的函数
     public void OnSceneLoaded(UnityEngine.SceneManagement.Scene scene, LoadSceneMode mode)
     {
-        //每当进入一楼场景时都调用以下逻辑
-        if (scene.name == "FirstFloor")
-        {
-
-        }
-
-        //进入其余场景时（目前只有主菜单）
-        else
+        //进入主菜单
+        if (scene.name == SceneManagerScript.MainMenuSceneName)
         {
             //重置游戏
             ResetGame();

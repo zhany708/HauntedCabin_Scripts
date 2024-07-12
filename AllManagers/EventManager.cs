@@ -21,7 +21,7 @@ public class EventManager : ManagerTemplate<EventManager>
     int m_EventCount = 0;                                      //表示生成过了多少事件
     int m_RandomGeneratedNum = -1;                             //随机生成的数（用于新的事件生成的索引）
 
-
+    bool m_IsEnterMainMenu = false;                            //表示玩家是否返回了主菜单
 
 
 
@@ -146,7 +146,11 @@ public class EventManager : ManagerTemplate<EventManager>
         //打开剧本
         if (ScreenplayManager.Instance.ScreenplayKeys != null && !string.IsNullOrEmpty(ScreenplayManager.Instance.ScreenplayKeys.HellsCall))
         {
-            await ScreenplayManager.Instance.OpenScreenplay(ScreenplayManager.Instance.ScreenplayKeys.HellsCall);
+            //确保只在玩家没有返回主菜单时，才进行相关逻辑（否则在返回主菜单后会报错）
+            if (!m_IsEnterMainMenu)
+            {
+                await ScreenplayManager.Instance.OpenScreenplay(ScreenplayManager.Instance.ScreenplayKeys.HellsCall);
+            }
         }
 
         else
@@ -183,11 +187,22 @@ public class EventManager : ManagerTemplate<EventManager>
     //每当加载新场景时调用的函数
     public void OnSceneLoaded(UnityEngine.SceneManagement.Scene scene, LoadSceneMode mode)
     {
-        //每当进入一楼场景时都调用以下逻辑
-        if (scene.name == "FirstFloor")
+        //进入主菜单
+        if (scene.name == SceneManagerScript.MainMenuSceneName)
+        {
+            m_IsEnterMainMenu = true;
+        }
+
+        //进入一楼场景
+        else if (scene.name == SceneManagerScript.FirstFloorSceneName)
         {
             //重置游戏
             ResetGame();
+        }
+
+        else
+        {
+            Debug.Log("We only have two scenes now, please check the parameters!");
         }
     }
     
@@ -200,8 +215,10 @@ public class EventManager : ManagerTemplate<EventManager>
         {
             //重置触发过的事件
             m_EventCount = 0;
-            IsSecondStage = false;
+            IsSecondStage = false;          
         }
+
+        m_IsEnterMainMenu = false;
     }
     #endregion
 

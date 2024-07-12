@@ -41,24 +41,23 @@ public class HellsCallBackground : BasePanel
 
     private void Update()
     {
-        SetBothMoveableAndAttackable(false);        //界面打开时禁止玩家移动和攻击
+        SetBothMoveableAndAttackable(false);            //界面打开时禁止玩家移动和攻击
     }
 
 
     private void OnEnable()
-    {
-        
-        OnFadeOutFinished += ClosePanel;        //界面完全淡出后调用的函数
-        OnFadeOutFinished += StartHealthDrain;
+    {        
+        OnFadeOutFinished += ClosePanel;                //界面完全淡出后调用的函数
+        OnFadeOutFinished += HandleFadeOutFinished;
 
-        OnFadeInFinished += StartTextAnimations;    //界面完全淡入后调用此函数
+        OnFadeInFinished += StartTextAnimations;        //界面完全淡入后调用此函数
     }
 
     protected override void OnDisable()
     {
         base.OnDisable();
         OnFadeOutFinished -= ClosePanel;
-        OnFadeOutFinished -= StartHealthDrain;
+        OnFadeOutFinished -= HandleFadeOutFinished;
         OnFadeInFinished -= StartTextAnimations;
     }
 
@@ -70,17 +69,12 @@ public class HellsCallBackground : BasePanel
     #endregion
 
 
-    #region 主要函数
-    public async override void ClosePanel()
+    #region 主要函数   
+    public override void ClosePanel()
     {
         base.ClosePanel();
 
-        await UIManager.Instance.OpenPanel(UIManager.Instance.UIKeys.TaskPanel);        //打开任务界面
-
-        SetBothMoveableAndAttackable(true);    //使玩家可以移动和攻击
-
         SoundManager.Instance.StopAudioPlay(false);     //停止播放火焰灼烧音效
-        await SoundManager.Instance.PlayBGMAsync(SoundManager.Instance.AudioClipKeys.FireEscape, true);       //播放剧本BGM
     }
     
 
@@ -124,10 +118,15 @@ public class HellsCallBackground : BasePanel
 
 
 
-    private void StartHealthDrain()     //开始持续掉血，并且播放火焰滤镜
+    //界面隐藏时进行的逻辑
+    private async void HandleFadeOutFinished()
     {
-        //HellsCall.Instance.SetDoFireEffect(true);       //设置布尔，从而开始火焰滤镜
-        HellsCall.Instance.StartHealthDrain();       
+        await UIManager.Instance.OpenPanel(UIManager.Instance.UIKeys.TaskPanel);        //打开任务界面
+
+        SetBothMoveableAndAttackable(true);             //使玩家可以移动和攻击
+        HellsCall.Instance.StartHealthDrain();          //开始持续掉血，并且播放火焰滤镜
+
+        await SoundManager.Instance.PlayBGMAsync(SoundManager.Instance.AudioClipKeys.FireEscape, true);       //播放剧本BGM
     }
     #endregion
 }
