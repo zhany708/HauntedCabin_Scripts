@@ -360,7 +360,7 @@ public class PlayerStatusBar : BasePanel
             Stats playerStats = Player.GetComponentInChildren<Stats>();      //获取玩家血条的脚本组件
             if (playerStats == null)
             {
-                Debug.LogError("PlayerStats component not found under Player object.");
+                Debug.LogError("Stats component not found under Player object.");
                 return;
             }
 
@@ -372,7 +372,7 @@ public class PlayerStatusBar : BasePanel
 
         else
         {
-            Debug.Log("Cannot get the Player reference at this point.");
+            Debug.Log("Cannot get the Player reference at this time.");
         }
     }
     #endregion
