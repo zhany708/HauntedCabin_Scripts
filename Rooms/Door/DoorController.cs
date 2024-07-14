@@ -13,8 +13,12 @@ public class DoorController : MonoBehaviour
 
 
     //用于储存所有需要永久关闭的门（代替生成木桶阻碍玩家前进）
-    public List<string> AlwaysClosedDoorNames { get; private set; } = new List<string>();      
+    public List<string> AlwaysClosedDoorNames { get; private set; } = new List<string>();    
+
+    //需要做的：将此脚本依附的物体的触发器移除，在调用RootRoomController的OnTriggerEnter2D函数时调用此脚本中的同名函数
     public Collider2D RoomTrigger { get; private set; }
+
+
     public LayerMask FurnitureLayerMask { get; private set; }      //家具的Layer
     public RandomPosition EnemySpwanPos { get; private set; }      //用于随机生成敌人坐标的脚本组件
     public int KilledEnemyCount { get; private set; } = 0;         //表示当前房间内击杀了多少敌人

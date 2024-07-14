@@ -42,17 +42,7 @@ public class RootRoomController : MonoBehaviour
     #region Unity内部函数
     protected virtual void Awake()
     {
-        DoorControllerInsideThisRoom = GetComponentInChildren<DoorController>();
-        MiniMapControllerInsideThisRoom = GetComponentInChildren<MiniMapController>();
-        m_RoomType = GetComponent<RoomType>();
-
-        //寻找房间阴影物体
-        m_Shadow = transform.Find(m_ShadowObjectName);
-        if (m_Shadow == null)
-        {
-            Debug.LogError("Shadow GameObject is not assigned correctly in the " + name);
-            return;
-        }
+        InitializeComponents();
     }
 
     protected virtual void Start()
@@ -157,6 +147,29 @@ public class RootRoomController : MonoBehaviour
 
 
     #region 其余函数
+    private void InitializeComponents()
+    {
+        //获取物体下的一些脚本的引用
+        DoorControllerInsideThisRoom = GetComponentInChildren<DoorController>();
+        MiniMapControllerInsideThisRoom = GetComponentInChildren<MiniMapController>();
+        m_RoomType = GetComponent<RoomType>();
+
+        if (DoorControllerInsideThisRoom == null || MiniMapControllerInsideThisRoom == null || m_RoomType == null)
+        {
+            Debug.LogError("Some components are not assigned correctly in the " + name);
+            return;
+        }
+
+        //寻找房间阴影物体
+        m_Shadow = transform.Find(m_ShadowObjectName);
+        if (m_Shadow == null)
+        {
+            Debug.LogError("Shadow GameObject is not assigned correctly in the " + name);
+            return;
+        }
+    }
+
+
     //重置游戏
     public virtual void ResetGame()
     {
