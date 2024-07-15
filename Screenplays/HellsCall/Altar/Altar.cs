@@ -25,14 +25,15 @@ public class Altar : MonoBehaviour      //仪式台的脚本
 
     Timer m_DurationTimer;              //用于计时仪式时长的计时器
 
-    [SerializeField] float m_RitualMaxHealth = 150f;       //仪式台的生命值上限
-    [SerializeField] float m_HitResistance = 99f;        //仪式台的受击退抗性
+    [SerializeField] float m_RitualMaxHealth = 150f;                //仪式台的生命值上限
+    [SerializeField] float m_HitResistance = 99f;                   //仪式台的受击退抗性
 
-    [SerializeField] float m_RitualDuration = 30f;        //仪式时间
-    [SerializeField] float m_EnemySpawnInterval = 3.5f;    //敌人生成的冷却
-    [SerializeField] float m_RestoreHealthAmout = 15f;    //玩家完成仪式后恢复的生命值
+    [SerializeField] float m_RitualDuration = 30f;                  //仪式时间
+    [SerializeField] float m_EnemySpawnInterval = 3.5f;             //敌人生成的冷却
+    [SerializeField] float m_RestorePlayerHealthAmout = 15f;        //完成仪式后玩家恢复的生命值
+    [SerializeField] float m_RestoreAltarHealthPercent = 0.3f;      //完成仪式后仪式台恢复的生命值比例
 
-    //bool m_IsHit = false;
+
 
 
 
@@ -49,16 +50,6 @@ public class Altar : MonoBehaviour      //仪式台的脚本
         m_DurationTimer = new Timer(m_RitualDuration);
     }
 
-    private void Update()
-    {
-        /*
-        if (Combat.IsHit && !m_IsHit)    //检查是否受到攻击，且当前是否处于受击状态
-        {
-            //将祷告石受击时的逻辑放在这
-            HitLogic();
-        }
-        */
-    }
 
     private void OnEnable()
     {
@@ -130,16 +121,6 @@ public class Altar : MonoBehaviour      //仪式台的脚本
     }
 
 
-    /*
-    //需要做的：决定要不要画祷告石的受击动画,不使用的话则需要通过某种方式表示祷告石被攻击了（特效，屏幕震动等）
-    private void HitLogic()      //受击相关的逻辑
-    {
-        Core.Animator.SetBool("Hit", true);
-
-        //m_IsHit = true; 
-    }
-    */
-
 
     private void FinishRitual()   //仪式结束后的逻辑
     {
@@ -153,13 +134,13 @@ public class Altar : MonoBehaviour      //仪式台的脚本
 
         if (!EnvironmentManager.Instance.IsGameLost)      //只有在游戏没有失败的时候才会进行下面的逻辑
         {
-            Stats.IncreaseHealth(m_RitualMaxHealth * 0.2f);                         //给祷告石回一点血
+            Stats.IncreaseHealth(m_RitualMaxHealth * m_RestoreAltarHealthPercent);          //给祷告石回一点血
 
-            EnemyPool.Instance.KillAllEnemy_DefenseWar();                           //立刻消灭所有敌人
-            RitualRoom.Instance.DoorControllerInsideThisRoom.OpenDoors();           //仪式结束后打开仪式房的门
+            EnemyPool.Instance.KillAllEnemy_DefenseWar();                                   //立刻消灭所有敌人
+            RitualRoom.Instance.DoorControllerInsideThisRoom.OpenDoors();                   //仪式结束后打开仪式房的门
 
-            HellsCall.Instance.PlayerStats.IncreaseHealth(m_RestoreHealthAmout);    //给玩家增加一定的血量
-            HellsCall.Instance.IncrementRitualCount();                              //增加仪式完成的计数
+            HellsCall.Instance.PlayerStats.IncreaseHealth(m_RestorePlayerHealthAmout);      //给玩家增加一定的血量
+            HellsCall.Instance.IncrementRitualCount();                                      //增加仪式完成的计数
         }     
     }
 
@@ -187,15 +168,6 @@ public class Altar : MonoBehaviour      //仪式台的脚本
         //在一定时间内，定期在房间内生成敌人（生成位置随机）
         GenerateEnemyThroughTime(m_RitualDuration, m_EnemySpawnInterval);
     }
-    
-    /*
-    private void SetAnimatorBool()
-    {
-        Core.Animator.SetBool("Hit", false);    //放在受击动画的最后几帧
-
-        //m_IsHit = false;
-    }
-    */
     #endregion
 
 
