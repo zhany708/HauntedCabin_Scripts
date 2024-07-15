@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
-using System.Threading.Tasks;
+
 
 
 
@@ -123,7 +123,7 @@ public class MainMenuPanel : PanelWithButton
             SceneManager.LoadScene("FirstFloor");
 
             //播放一楼BGM
-            await SoundManager.Instance.PlayBGMAsync(SoundManager.Instance.AudioClipKeys.StopForAMoment, true, SoundManager.Instance.MusicVolume);
+            await SoundManager.Instance.PlayBGMAsync(SoundManager.Instance.AudioClipKeys.StopForAMoment, true);
         }
     }
     #endregion

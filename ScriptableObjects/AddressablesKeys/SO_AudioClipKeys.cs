@@ -8,10 +8,11 @@ public class SO_AudioClipKeys : ScriptableObject
     //BGM
     [Header("BGM Music")]
     //休闲音乐
-    public string StopForAMoment;   
+    public string StopForAMoment;           //用于一楼场景
+    public string Heaven;                   //用于剧本《地狱的呼唤》胜利后
 
     //恐怖音乐
-    public string MyVeryOwnDeadShip;
+    public string MyVeryOwnDeadShip;        //用于主菜单
 
     //紧张音乐
     public string FireEscape;               //用于剧本《地狱的呼唤》

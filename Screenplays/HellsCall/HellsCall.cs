@@ -67,7 +67,7 @@ public class HellsCall : BaseScreenplay<HellsCall>
         await UIManager.Instance.InitPanel(UIManager.Instance.UIKeys.HellsCall_GameLostPanel);
 
         //提前加载好剧本胜利BGM
-        //await SoundManager.Instance.LoadClipAsync(SoundManager.Instance.AudioClipKeys.);
+        await SoundManager.Instance.LoadClipAsync(SoundManager.Instance.AudioClipKeys.Heaven);
 
         base.Start();
     }
@@ -144,7 +144,7 @@ public class HellsCall : BaseScreenplay<HellsCall>
         SoundManager.Instance.StopAudioPlay(true);
 
         //播放剧本胜利BGM
-        //await SoundManager.Instance.PlayBGMAsync(SoundManager.Instance.AudioClipKeys., true, SoundManager.Instance.MusicVolume);
+        await SoundManager.Instance.PlayBGMAsync(SoundManager.Instance.AudioClipKeys.Heaven, true);
     }
 
     public override async Task Lose()
