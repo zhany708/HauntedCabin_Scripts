@@ -14,11 +14,6 @@ public class DoorController : MonoBehaviour
 
     //用于储存所有需要永久关闭的门（代替生成木桶阻碍玩家前进）
     public List<string> AlwaysClosedDoorNames { get; private set; } = new List<string>();    
-
-    //需要做的：将此脚本依附的物体的触发器移除，在调用RootRoomController的OnTriggerEnter2D函数时调用此脚本中的同名函数
-    public Collider2D RoomTrigger { get; private set; }
-
-
     public LayerMask FurnitureLayerMask { get; private set; }      //家具的Layer
     public RandomPosition EnemySpwanPos { get; private set; }      //用于随机生成敌人坐标的脚本组件
     public int KilledEnemyCount { get; private set; } = 0;         //表示当前房间内击杀了多少敌人
@@ -46,8 +41,6 @@ public class DoorController : MonoBehaviour
     #region Unity内部函数
     private void Awake()
     {
-        RoomTrigger = GetComponent<Collider2D>();
-
         m_MainRoom = GetComponentInParent<RootRoomController>();
 
         if (EnemyObjects.Length != 0)   //如果房间有怪物
@@ -79,18 +72,17 @@ public class DoorController : MonoBehaviour
         //自动给所有此脚本中的的层级赋值
         FurnitureLayerMask = LayerMask.GetMask(m_FurnitureLayerName);
     }
+    #endregion
 
 
-
-    //考虑做的：将此脚本依附的物体的触发器移除，在调用RootRoomController的OnTriggerEnter2D函数时调用此同名函数
-    private void OnTriggerEnter2D(Collider2D other)
+    #region 主要函数
+    //手动调用的触发器函数（即不需要在编辑器中添加触发框）
+    public void OnTriggerEnter2DManually(Collider2D other)
     {
         if (other.CompareTag("Player"))
         {
-            RoomTrigger.enabled = false;    //玩家进入房间后取消激活门的触发器，防止玩家反复进出房间导致二次生成事件或敌人
-
             //检查是否为初始房间
-            if (!m_IsRootRoom)    
+            if (!m_IsRootRoom)
             {
                 //游戏处于第一阶段时
                 if (!EventManager.Instance.IsSecondStage)
@@ -105,7 +97,7 @@ public class DoorController : MonoBehaviour
 
                         //房间生成过一次事件后就不会再生成了，因此在这里设置之后，其他地方无需重置布尔值
                         HasGeneratedEvent = true;
-                    }                    
+                    }
                 }
 
                 //游戏处于第二阶段时
@@ -117,53 +109,15 @@ public class DoorController : MonoBehaviour
                         EnvironmentManager.Instance.GenerateEnemy(this);    //生成敌人
 
                         m_HasGeneratedEnemy = true;     //普通房间生成过一次敌人后就不会再生成了
-                    }                   
+                    }
                 }
-            }                       
-        }
-    }
-    #endregion
-
-
-    #region 主要函数
-    //关闭所有永久关闭的门，不影响其他的门
-    public void CloseNecessaryDoors()
-    {
-        foreach (Animator animator in DoorAnimators)
-        {
-            string doorName = animator.gameObject.name;         //获取门动画器所依附的物体的名字
-            if (AlwaysClosedDoorNames.Contains(doorName))
-            {
-                //确保永久关闭的门始终执行以下逻辑
-                animator.SetBool("isOpen", false);
-                animator.SetBool("isClose", true);
             }
         }
     }
 
-    //用于代替生成木桶阻碍玩家前进的逻辑（当需要阻碍玩家通过某个门时，获取当前脚本并在列表AlwaysClosedDoorNames中添加该门的名字）
-    private void SetDoorAnimation(bool isOpen)
-    {      
-        foreach (Animator animator in DoorAnimators)
-        {
-            string doorName = animator.gameObject.name;         //获取门动画器所依附的物体的名字
-            if (!AlwaysClosedDoorNames.Contains(doorName))      //只有正常的门才会根据参数进行打开/关闭的逻辑
-            {
-                animator.SetBool("isOpen", isOpen);
-                animator.SetBool("isClose", !isOpen);
-            }
-            else
-            {
-                //确保永久关闭的门始终执行以下逻辑
-                animator.SetBool("isOpen", false);
-                animator.SetBool("isClose", true);
-            }
-        }
-    }
 
-    public void OpenDoors() => SetDoorAnimation(true);
 
-    public void CloseDoors() => SetDoorAnimation(false);
+    
 
     
 
@@ -186,5 +140,47 @@ public class DoorController : MonoBehaviour
         KilledEnemyCount++;
         CheckIfOpenDoors();     //增加计数后判断是否满足开门条件
     }
+    #endregion
+
+
+    #region 门相关的函数
+    //关闭所有永久关闭的门，不影响其他的门
+    public void CloseNecessaryDoors()
+    {
+        foreach (Animator animator in DoorAnimators)
+        {
+            string doorName = animator.gameObject.name;         //获取门动画器所依附的物体的名字
+            if (AlwaysClosedDoorNames.Contains(doorName))
+            {
+                //确保永久关闭的门始终执行以下逻辑
+                animator.SetBool("isOpen", false);
+                animator.SetBool("isClose", true);
+            }
+        }
+    }
+
+    //用于代替生成木桶阻碍玩家前进的逻辑（当需要阻碍玩家通过某个门时，获取当前脚本并在列表AlwaysClosedDoorNames中添加该门的名字）
+    private void SetDoorAnimation(bool isOpen)
+    {
+        foreach (Animator animator in DoorAnimators)
+        {
+            string doorName = animator.gameObject.name;         //获取门动画器所依附的物体的名字
+            if (!AlwaysClosedDoorNames.Contains(doorName))      //只有正常的门才会根据参数进行打开/关闭的逻辑
+            {
+                animator.SetBool("isOpen", isOpen);
+                animator.SetBool("isClose", !isOpen);
+            }
+            else
+            {
+                //确保永久关闭的门始终执行以下逻辑
+                animator.SetBool("isOpen", false);
+                animator.SetBool("isClose", true);
+            }
+        }
+    }
+
+    public void OpenDoors() => SetDoorAnimation(true);
+
+    public void CloseDoors() => SetDoorAnimation(false);
     #endregion
 }

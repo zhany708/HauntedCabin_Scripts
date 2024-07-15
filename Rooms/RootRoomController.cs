@@ -109,6 +109,9 @@ public class RootRoomController : MonoBehaviour
             //检查哪些房间可以在小地图中显示
             MiniMapController.CheckIfDisplayMiniMap();
         }
+
+
+        DoorControllerInsideThisRoom.OnTriggerEnter2DManually(other);           //调用门控制器的触发函数
     }
 
     protected virtual void OnTriggerExit2D(Collider2D other)
@@ -124,14 +127,7 @@ public class RootRoomController : MonoBehaviour
             {
                 //将相机亮度一瞬间的变暗
                 PostProcessManager.Instance.DarkenThenBrighten(m_DarkPostProcessColorValue, m_PostProcessDuration);
-            }
-            
-
-            if (DoorControllerInsideThisRoom != null)
-            {
-                //玩家离开房间后重新激活门的触发器，从而让玩家之后再进入时生成敌人
-                DoorControllerInsideThisRoom.RoomTrigger.enabled = true;                 
-            }             
+            }                     
         }
     }
     #endregion
