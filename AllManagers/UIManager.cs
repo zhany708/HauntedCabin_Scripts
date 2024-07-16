@@ -3,7 +3,7 @@ using UnityEngine;
 using System.Threading.Tasks;
 using UnityEngine.SceneManagement;
 using System;
-using UnityEngine.InputSystem;
+
 
 
 
@@ -148,12 +148,25 @@ public class UIManager : ManagerTemplate<UIManager>
     #endregion
 
 
-    #region 打开特定界面
-    public async void OpenConfirmPanel(Action onYesAction)              //专门用于打开确认界面
+    #region 打开特定界面（确认界面，互动界面等）
+    public async void OpenConfirmPanel(Action onYesAction, BasePanel connectedPanel)              //专门用于打开确认界面
     {
+        connectedPanel.SetInteractableAndBlocksRaycasts(false);         //禁止连接界面的互动性，防止错误的选择位于底部的界面的按钮
+
+
+        if (ConfirmPanel.Instance == null)
+        {
+            await OpenPanel(UIKeys.ConfirmPanel);                       //异步加载并打开确认界面
+        }
+        else
+        {
+            ConfirmPanel.Instance.OpenPanel();                          //如果之前加载过了，则直接打开界面
+        }
+
+        
         ConfirmPanel.Instance.ClearAllSubscriptions();                  //先清空所有事件绑定的之前的函数
         ConfirmPanel.Instance.OnYesButtonPressed += onYesAction;        //将参数中的函数绑定到事件
-        await OpenPanel(UIKeys.ConfirmPanel);                           //打开确认界面
+        ConfirmPanel.Instance.SetConnectedPanel(connectedPanel);        //将连接的面板赋值给确认界面       
     }
 
     public async void OpenInteractPanel(Action onYesAction)             //专门用于打开互动界面

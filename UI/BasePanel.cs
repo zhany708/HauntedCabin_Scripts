@@ -83,6 +83,12 @@ public class BasePanel : MonoBehaviour
 
 
     #region 打开/关闭界面相关
+    public virtual void OpenPanel()         //不赋值界面名
+    {
+        //淡入界面
+        Fade(CanvasGroup, FadeInAlpha, FadeDuration, true);
+    }
+
     public virtual void OpenPanel(string name)
     {
         panelName = name;
@@ -235,6 +241,13 @@ public class BasePanel : MonoBehaviour
 
 
     #region 其余函数
+    public void SetInteractableAndBlocksRaycasts(bool isTrue)
+    {
+        CanvasGroup.interactable = isTrue;
+        CanvasGroup.blocksRaycasts = isTrue;
+    }
+
+
     protected void ResetGameSystems()       //重置游戏的各种系统
     {
         //先重置各大管理器脚本

@@ -19,7 +19,7 @@ public class SoundManager : ManagerTemplate<SoundManager>
     AudioSource m_SfxSource;    //用于音效的播放器
 
     //由于音频管理器加载的文件类型是音频，不是游戏物体，所以需要有自己的字典
-    Dictionary<string, AudioClip> m_AudioDict = new Dictionary<string, AudioClip>();
+    public Dictionary<string, AudioClip> AudioDict { get; private set; } = new Dictionary<string, AudioClip>();
 
 
 
@@ -43,7 +43,7 @@ public class SoundManager : ManagerTemplate<SoundManager>
     public async Task<AudioClip> LoadClipAsync(string name)
     {
         //如果字典里已经有了，则直接返回
-        if (m_AudioDict.TryGetValue(name, out AudioClip clip))
+        if (AudioDict.TryGetValue(name, out AudioClip clip))
         {
             return clip;
         }
@@ -53,7 +53,7 @@ public class SoundManager : ManagerTemplate<SoundManager>
         AudioClip loadedClip = await Addressables.LoadAssetAsync<AudioClip>(name).Task;
         if (loadedClip != null)
         {
-            m_AudioDict[name] = loadedClip;
+            AudioDict[name] = loadedClip;
         }
 
         else
@@ -75,12 +75,12 @@ public class SoundManager : ManagerTemplate<SoundManager>
         }
 
 
-        if (m_AudioDict.TryGetValue(key, out AudioClip clip))
+        if (AudioDict.TryGetValue(key, out AudioClip clip))
         {
             Addressables.Release(clip);
 
             //从字典中移除音频
-            m_AudioDict.Remove(key);
+            AudioDict.Remove(key);
 
             //Debug.Log("AudioClip released and removed from dictionary: " + key);
         }

@@ -6,14 +6,15 @@ using System;
 
 public class ConfirmPanel : PanelWithButton     //用于询问玩家是否确认自己的选择（每当调用这个界面前，需要先将逻辑绑定到事件）
 {
-    public event Action OnYesButtonPressed;     //接收方为需要选择的所有UI界面（比如事件中的选项，拾取武器等）
+    public event Action OnYesButtonPressed;     //接收方为需要做出选择的所有UI界面（比如事件中的选项，拾取武器等）
 
     public static ConfirmPanel Instance { get; private set; }
 
-    public Button YesButton;
+    public Button ConfirmButton;
     public Button NoButton;
 
 
+    BasePanel m_ConnectedPanel;                 //连接界面（需要打开此界面的那个面板）
 
 
 
@@ -40,29 +41,63 @@ public class ConfirmPanel : PanelWithButton     //用于询问玩家是否确认
 
 
         //检查按钮组件是否存在
-        if (YesButton == null || NoButton == null)
+        if (ConfirmButton == null || NoButton == null)
         {
             Debug.LogError("Some buttons are not assigned in the " + name);
             return;
         }
 
         //默认按钮为“确认”按钮
-        firstSelectedButton = YesButton.gameObject;
+        firstSelectedButton = ConfirmButton.gameObject;
     }
 
     private void Start()
     {
         //将按钮和函数绑定起来
-        YesButton.onClick.AddListener(() => OnYesButtonClick());
+        ConfirmButton.onClick.AddListener(() => OnYesButtonClick());
         NoButton.onClick.AddListener(() => OnNoButtonClick());
+
+        //赋值界面名字
+        if (panelName == null)
+        {
+            panelName = UIManager.Instance.UIKeys.ConfirmPanel;
+        }
+
+        if (!UIManager.Instance.ImportantPanelList.Contains(this) )
+        {
+            UIManager.Instance.ImportantPanelList.Add(this);    //将该界面加进列表，以在重置游戏时不被删除
+        }
+        
     }
+    #endregion
 
 
-    protected override void OnEnable() 
+    #region 主要函数
+    public override void Fade(CanvasGroup targetGroup, float targetAlpha, float duration, bool blocksRaycasts)
     {
-        base.OnEnable();
+        base.Fade(targetGroup, targetAlpha, duration, blocksRaycasts);
 
-        UIManager.Instance.ImportantPanelList.Add(this);    //将该界面加进列表，以在重置游戏时不被删除
+
+        //在淡入的情况下
+        if (targetAlpha != FadeOutAlpha)
+        {
+            //界面打开后加进列表，从而禁止玩家移动和攻击
+            if (!openedPanelsWithButton.Contains(this))
+            {
+                openedPanelsWithButton.Add(this);
+            }
+        }
+        //淡出
+        else
+        {
+            //界面关闭后移出列表，从而恢复玩家的移动和攻击
+            if (openedPanelsWithButton.Contains(this))
+            {
+                openedPanelsWithButton.Remove(this);
+            }
+        }
+
+        SetTopPriorityButton();
     }
     #endregion
 
@@ -80,6 +115,9 @@ public class ConfirmPanel : PanelWithButton     //用于询问玩家是否确认
     {
         //淡出界面
         Fade(CanvasGroup, FadeOutAlpha, FadeDuration, false);
+
+        //恢复连接界面的互动性
+        m_ConnectedPanel.SetInteractableAndBlocksRaycasts(true);
     }    
 
 
@@ -87,6 +125,14 @@ public class ConfirmPanel : PanelWithButton     //用于询问玩家是否确认
     public void ClearAllSubscriptions()         //删除所有事件绑定的函数
     {
         OnYesButtonPressed = null;
+    }
+    #endregion
+
+
+    #region Setters
+    public void SetConnectedPanel(BasePanel thisPanel)
+    {
+        m_ConnectedPanel = thisPanel;
     }
     #endregion
 }

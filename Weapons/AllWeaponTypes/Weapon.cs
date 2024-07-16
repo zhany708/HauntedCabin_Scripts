@@ -62,8 +62,8 @@ public class Weapon : MonoBehaviour
 
     protected async virtual void OnEnable()
     {
-        //确保已经赋值过音频名
-        if (WeaponData.AudioClipName.Length > 0)
+        //确保已经赋值过音频名，且音频还没加载过
+        if (WeaponData.AudioClipName.Length > 0 && !SoundManager.Instance.AudioDict.ContainsKey(WeaponData.AudioClipName))
         {
             //提前加载武器的攻击音效
             await SoundManager.Instance.LoadClipAsync(WeaponData.AudioClipName);
@@ -72,8 +72,8 @@ public class Weapon : MonoBehaviour
 
     private void OnDestroy() 
     {
-        //确保已经赋值过音频名
-        if (WeaponData.AudioClipName.Length > 0)
+        //确保已经赋值过音频名，且音频已加载过
+        if (WeaponData.AudioClipName.Length > 0 && SoundManager.Instance.AudioDict.ContainsKey(WeaponData.AudioClipName) )
         {
             //武器摧毁时释放武器的攻击音效
             SoundManager.Instance.ReleaseAudioClip(WeaponData.AudioClipName);
