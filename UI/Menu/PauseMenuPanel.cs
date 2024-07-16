@@ -177,9 +177,6 @@ public class PauseMenuPanel : PanelWithButton       //整个游戏过程中都�
         {
             //不在主菜单时，则返回主菜单
             SceneManager.LoadScene("MainMenu");
-
-            //重置游戏的各种系统
-            //ResetGameSystems();
         }
     }
 

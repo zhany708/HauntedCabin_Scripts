@@ -49,6 +49,9 @@ public class ConfirmPanel : PanelWithButton     //用于询问玩家是否确认
 
         //默认按钮为“确认”按钮
         firstSelectedButton = ConfirmButton.gameObject;
+
+        //设置此界面的淡入/出时长
+        FadeDuration = 0;
     }
 
     private void Start()

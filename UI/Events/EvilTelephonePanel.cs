@@ -108,57 +108,10 @@ public class EvilTelephonePanel : PanelWithButton
     #region 按钮相关
     private void OnButtonClicked(ButtonAction action)
     {
-        //需要做的：等确认面板完善好后，只需要保存这一行即可，下面的都可以删除（因为判断玩家选项和相关的逻辑都已经在传递到确认面板中的事件里了）
-        //UIManager.Instance.OpenConfirmPanel(() => LogicPassToConfirmPanel(action));
-
-
-        switch (action)
-        {
-            case ButtonAction.OptionA:
-                //赋值选项的结果文本
-                SetLocalizedText(ResultA_PhraseKey);
-
-                //改变玩家的属性
-                PlayerStatusBar.Instance.ChangePropertyValue(PlayerProperty.Sanity, 1f);
-
-                CommonLogicForOptions();
-                break;
-
-            case ButtonAction.OptionB:
-                //赋值选项的结果文本
-                SetLocalizedText(ResultB_PhraseKey);
-
-                //改变玩家的属性
-                PlayerStatusBar.Instance.ChangePropertyValue(PlayerProperty.Knowledge, 1f);
-
-                CommonLogicForOptions();
-                break;
-
-            case ButtonAction.OptionC:
-                //赋值选项的结果文本
-                SetLocalizedText(ResultC_PhraseKey);
-
-                //改变玩家的属性
-                PlayerStatusBar.Instance.ChangePropertyValue(PlayerProperty.Sanity, -1f);
-
-                CommonLogicForOptions();
-                break;
-
-            case ButtonAction.OptionD:
-                //赋值选项的结果文本
-                SetLocalizedText(ResultD_PhraseKey);
-
-                //改变玩家的属性
-                PlayerStatusBar.Instance.ChangePropertyValue(PlayerProperty.Strength, -1f);
-
-                CommonLogicForOptions();
-                break;
-
-            default:
-                Debug.Log("No Button is pressed.");
-                break;
-        }
+        //判断玩家选项和相关的逻辑都已经在传递到确认面板中的事件里了
+        UIManager.Instance.OpenConfirmPanel(() => LogicPassToConfirmPanel(action), this);
     }
+
 
     //本函数用于向确认面板传递选项相关的逻辑（玩家按下确认后才会执行下面的逻辑）
     private void LogicPassToConfirmPanel(ButtonAction action)           
