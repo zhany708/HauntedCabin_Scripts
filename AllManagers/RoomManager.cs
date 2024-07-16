@@ -179,7 +179,7 @@ public class RoomManager : ManagerTemplate<RoomManager>
                 isRoomPlaced = true;
 
                 //设置布尔表示该房间已经生成过房间了
-                RootRoomController currentRoomController = currentRoomTransform.GetComponent<RootRoomController>();
+                NormalRoomController currentRoomController = currentRoomTransform.GetComponent<NormalRoomController>();
                 if (currentRoomController != null)
                 {
                     currentRoomController.SetHasGenerateRoom(true);
@@ -443,7 +443,7 @@ public class RoomManager : ManagerTemplate<RoomManager>
     private void HandleUnconnectedDoorsCondition(Transform currentRoomTransform, string closedDoorName)
     {
         //获取当前房间的控制器脚本
-        RootRoomController currentRoomController = currentRoomTransform.GetComponent<RootRoomController>();
+        NormalRoomController currentRoomController = currentRoomTransform.GetComponent<NormalRoomController>();
         if (currentRoomController == null)
         {
             Debug.LogError("Cannot get the RootRoomController component in the " + currentRoomTransform.gameObject.name);
@@ -536,7 +536,7 @@ public class RoomManager : ManagerTemplate<RoomManager>
     {
         foreach (Transform child in m_FirstFloorRooms)    //在场景中删除所有AllRoom下的房间（除了初始房间）
         {
-            RootRoomController roomScript = child.GetComponent<RootRoomController>();
+            NormalRoomController roomScript = child.GetComponent<NormalRoomController>();
             if (roomScript == null)
             {
                 Debug.LogError("Cannot get the RootRoomController script from the: " + child.name);

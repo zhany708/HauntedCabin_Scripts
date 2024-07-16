@@ -88,7 +88,7 @@ public class HellsCall : BaseScreenplay<HellsCall>
 
         RoomManager.Instance.OnRoomGenerated -= GenerateStoneAtSingleRoom;
         RoomManager.Instance.OnRoomGenerated -= CheckRitualRoomAfterGeneratingRoom;
-        RootRoomController.OnPlayerFirstTimeEnterRoom -= CheckRitualRoomAfterPlayerEnteringRoom;
+        NormalRoomController.OnPlayerFirstTimeEnterRoom -= CheckRitualRoomAfterPlayerEnteringRoom;
     }
 
     private void OnDestroy()
@@ -214,7 +214,7 @@ public class HellsCall : BaseScreenplay<HellsCall>
         {
             //将检查仪式房的函数绑定到房间管理器中的事件
             RoomManager.Instance.OnRoomGenerated += CheckRitualRoomAfterGeneratingRoom;        //新生成房间时，检查是否需要生成仪式房
-            RootRoomController.OnPlayerFirstTimeEnterRoom += CheckRitualRoomAfterPlayerEnteringRoom;    //玩家进入房间后，检查是否需要生成仪式房
+            NormalRoomController.OnPlayerFirstTimeEnterRoom += CheckRitualRoomAfterPlayerEnteringRoom;    //玩家进入房间后，检查是否需要生成仪式房
 
             RoomManager.Instance.RoomKeys.FirstFloorRoomKeys.Add(RitualRoomName);       //将仪式房的名字加进列表，以便后续可以生成
         }
@@ -269,7 +269,7 @@ public class HellsCall : BaseScreenplay<HellsCall>
         foreach (var room in RoomManager.Instance.GeneratedRoomDict.Values)
         {
             //获取房间的控制器脚本
-            RootRoomController currentRoomController = room.GetComponent<RootRoomController>();
+            NormalRoomController currentRoomController = room.GetComponent<NormalRoomController>();
             if (currentRoomController == null)
             {
                 Debug.LogError("Cannot get the RootRoomController component in the " + room.name);

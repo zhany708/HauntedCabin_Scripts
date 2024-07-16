@@ -40,13 +40,7 @@ public class EntranceHall : RootRoomController      //入口大堂脚本
         //检查该房间是否是唯一保留的那个
         if (Instance == this)
         {
-            base.Start();           //将房间加进RoomManager的GeneratedRoomDict字典
-           
-            if (!RoomManager.Instance.ImportantRoomPos.Contains(transform.position))
-            {
-                //将该房间的坐标加进重要房间坐标列表，以在重置游戏时不被删除
-                RoomManager.Instance.ImportantRoomPos.Add(transform.position);
-            }
+            base.Start();           //将房间加进RoomManager的GeneratedRoomDict字典和ImportantRoomPos列表
         }
     }
 
@@ -77,22 +71,13 @@ public class EntranceHall : RootRoomController      //入口大堂脚本
     #region 其它函数
     public override void ResetGame()
     {
-        base.ResetGame();
-
-        MainDoorController.Instance.CloseMainDoor();                //重置游戏时关闭大门
-        MainDoorController.Instance.SetDoOpenMainDoor(false);       //关闭大门的同时重置布尔
-
-
         //检查该房间是否是唯一保留的那个
         if (Instance == this)
         {
-            //加进字典，防止因为一些原因导致房间没有正确的储存在字典中（所有的初始房间都需要执行此逻辑）
-            if (!RoomManager.Instance.GeneratedRoomDict.ContainsKey(transform.position))
-            {
-                RoomManager.Instance.GeneratedRoomDict.Add(transform.position, gameObject);
+            base.ResetGame();
 
-                //Debug.Log("We have room: " + RoomManager.Instance.GeneratedRoomDict[transform.position] + "at Vectro2.Zero");
-            }
+            MainDoorController.Instance.CloseMainDoor();                //重置游戏时关闭大门
+            MainDoorController.Instance.SetDoOpenMainDoor(false);       //关闭大门的同时重置布尔
         }
     }
     #endregion

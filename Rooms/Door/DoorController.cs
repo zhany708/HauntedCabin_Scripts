@@ -27,7 +27,7 @@ public class DoorController : MonoBehaviour
 
     const string m_FurnitureLayerName = "Furniture";                //家具Layer的名字
 
-    RootRoomController m_MainRoom;          //父物体中用于控制房间的脚本组件
+    NormalRoomController m_MainRoom;          //父物体中用于控制房间的脚本组件
 
     bool m_IsRootRoom = false;              //表示当前门所在的房间是否为初始房间
     bool m_HasGeneratedEnemy = false;       //表示当前房间是否生成过敌人
@@ -41,7 +41,7 @@ public class DoorController : MonoBehaviour
     #region Unity内部函数
     private void Awake()
     {
-        m_MainRoom = GetComponentInParent<RootRoomController>();
+        m_MainRoom = GetComponentInParent<NormalRoomController>();
 
         if (EnemyObjects.Length != 0)   //如果房间有怪物
         {
@@ -64,12 +64,9 @@ public class DoorController : MonoBehaviour
     private void Start()
     {
         //检查当前房间是否为普通房间（不是的话就不生成事件和敌人）
-        if ( !(m_MainRoom.GetComponent<RootRoomController>() is NormalRoomController) )
+        if ( (m_MainRoom.GetComponent<NormalRoomController>() is RootRoomController) )
         {
-            m_IsRootRoom = true;   
-
-            //将初始房间在小地图上的颜色改成绿色
-            m_MainRoom.MiniMapControllerInsideThisRoom.BaseSprite.color = m_MainRoom.MiniMapControllerInsideThisRoom.GreenForRootRoom;  
+            m_IsRootRoom = true;     
         }
 
         //自动给所有此脚本中的的层级赋值
