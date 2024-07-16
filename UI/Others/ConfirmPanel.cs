@@ -60,17 +60,22 @@ public class ConfirmPanel : PanelWithButton     //用于询问玩家是否确认
         ConfirmButton.onClick.AddListener(() => OnYesButtonClick());
         NoButton.onClick.AddListener(() => OnNoButtonClick());
 
+
         //赋值界面名字
         if (panelName == null)
         {
             panelName = UIManager.Instance.UIKeys.ConfirmPanel;
         }
 
-        if (!UIManager.Instance.ImportantPanelList.Contains(this) )
+
+        //检查该界面是否是唯一保留的那个
+        if (Instance == this)
         {
-            UIManager.Instance.ImportantPanelList.Add(this);    //将该界面加进列表，以在重置游戏时不被删除
-        }
-        
+            if (!UIManager.Instance.ImportantPanelList.Contains(this))
+            {
+                UIManager.Instance.ImportantPanelList.Add(this);    //将该界面加进列表，以在重置游戏时不被删除
+            }
+        }      
     }
     #endregion
 

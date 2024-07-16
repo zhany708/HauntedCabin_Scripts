@@ -3,6 +3,7 @@ using UnityEngine;
 using System.Threading.Tasks;
 using UnityEngine.SceneManagement;
 using System;
+using UnityEditor.AddressableAssets.Build;
 
 
 
@@ -192,6 +193,17 @@ public class UIManager : ManagerTemplate<UIManager>
                 ResetGame();
             }
         }
+
+        //进入一楼场景
+        else if (scene.name == SceneManagerScript.FirstFloorSceneName)
+        {
+            DisplayAllImportantPanelsWithoutButton();      //激活所有不带按钮的重要界面
+        }
+
+        else
+        {
+            Debug.Log("We only have two scenes now, please check the parameters!");
+        }
     }
 
 
@@ -206,11 +218,35 @@ public class UIManager : ManagerTemplate<UIManager>
                 return;
             }
 
-            if (!ImportantPanelList.Contains(childScript))      //只关闭不重要的界面
+
+            //普通的界面
+            if (!ImportantPanelList.Contains(childScript))      
             {
                 //Debug.Log("This panel will be deleted: " + childScript.name);
+
+                //只关闭不重要的界面
                 childScript.ClosePanel();
-            }           
+            }
+
+            //重要的界面
+            else
+            {
+                //淡出界面
+                childScript.Fade(childScript.CanvasGroup, BasePanel.FadeOutAlpha, childScript.FadeDuration, false);
+            }
+        }
+    }
+
+    private void DisplayAllImportantPanelsWithoutButton()
+    {
+        foreach (BasePanel childScript in ImportantPanelList)
+        {
+            //检查界面是否有按钮
+            if (!(childScript.GetComponent<BasePanel>() is PanelWithButton) )
+            {
+                //如果没有按钮则淡入界面
+                childScript.Fade(childScript.CanvasGroup, childScript.FadeInAlpha, childScript.FadeDuration, true);
+            }         
         }
     }
     #endregion

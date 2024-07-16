@@ -298,10 +298,14 @@ public class PlayerStatusBar : BasePanel
         {
             if (Instance == this)
             {
-                //设置界面的透明度（隐藏界面）
-                CanvasGroup.alpha = FadeOutAlpha;
+                //第一次进入游戏时
+                if (EnvironmentManager.Instance.IsFirstTimeEnterGame)
+                {
+                    //设置界面的透明度（隐藏界面）
+                    CanvasGroup.alpha = FadeOutAlpha;
+                }
 
-
+                
                 if (m_PlayerHealthBar != null)
                 {
                     m_PlayerHealthBar.OnHealthChange -= UpdateHealthText;
@@ -317,8 +321,6 @@ public class PlayerStatusBar : BasePanel
                 SetImagesToHealthBar();                 //先重新赋值图片给玩家血条脚本
 
                 ResetGame();                            //随后再调用重置函数以初始化属性和血量
-
-                CanvasGroup.alpha = FadeInAlpha;        //最后设置界面的透明度（显示出来）
 
 
                 if (m_PlayerHealthBar != null)

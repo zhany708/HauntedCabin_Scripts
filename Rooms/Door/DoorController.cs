@@ -64,7 +64,7 @@ public class DoorController : MonoBehaviour
     private void Start()
     {
         //检查当前房间是否为初始房间（是的话就不生成事件和敌人）
-        if ( (m_MainRoom.GetComponent<NormalRoomController>() is RootRoomController) )
+        if (m_MainRoom.GetComponent<NormalRoomController>() is RootRoomController)
         {
             m_IsRootRoom = true;     
         }
