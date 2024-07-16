@@ -15,8 +15,8 @@ public class MiniMapController : MonoBehaviour
     public static Vector2 CurrentRoomPosPlayerAt;               //玩家当前所在房间的坐标（静态的，表示所有此类共用这一个坐标）
 
     //用于表示是否进入过初始房间（入口大堂等）
-    public Color LightGreen = new Color(250, 250, 250);         //初始房间还未进入时在小地图上显示的颜色
-    public Color DarkGreen = new Color(250, 250, 250);          //初始房间进入后在小地图上显示的颜色
+    public Color GreenForRootRoom = new Color(250, 250, 250);         //初始房间在小地图上显示的颜色
+
 
 
     //以下是所有备用门框物体的统一名字

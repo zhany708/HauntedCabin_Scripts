@@ -71,15 +71,6 @@ public class EntranceHall : RootRoomController      //入口大堂脚本
             MainDoorController.Instance.OpenMainDoor();
         }
     }
-
-    protected override void OnTriggerExit2D(Collider2D other)
-    {
-        //只有在大门没开时，才会进行正常的逻辑（房间变暗等）
-        if (other.CompareTag("Player") && !MainDoorController.Instance.DoOpenMainDoor)
-        {
-            base.OnTriggerExit2D(other);
-        }
-    }
     #endregion
 
 

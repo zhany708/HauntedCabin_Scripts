@@ -66,7 +66,10 @@ public class DoorController : MonoBehaviour
         //检查当前房间是否为普通房间（不是的话就不生成事件和敌人）
         if ( !(m_MainRoom.GetComponent<RootRoomController>() is NormalRoomController) )
         {
-            m_IsRootRoom = true;        
+            m_IsRootRoom = true;   
+
+            //将初始房间在小地图上的颜色改成绿色
+            m_MainRoom.MiniMapControllerInsideThisRoom.BaseSprite.color = m_MainRoom.MiniMapControllerInsideThisRoom.GreenForRootRoom;  
         }
 
         //自动给所有此脚本中的的层级赋值
