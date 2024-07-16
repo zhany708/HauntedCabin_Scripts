@@ -1,9 +1,8 @@
-using UnityEngine;
-using UnityEngine.SceneManagement;
+//using UnityEngine;
 
 
 
-public class RootRoomController : NormalRoomController
+public class RootRoomController : NormalRoomController      //初始房间脚本
 {
     #region Unity内部函数
     protected override void Start()
@@ -16,7 +15,7 @@ public class RootRoomController : NormalRoomController
             RoomManager.Instance.ImportantRoomPos.Add(transform.position);
         }
 
-        //将初始房间在小地图上的颜色改成绿色
+        //将初始房间在小地图上显示的颜色改成绿色
         MiniMapControllerInsideThisRoom.BaseSprite.color = MiniMapControllerInsideThisRoom.GreenForRootRoom;
     }
     #endregion
