@@ -106,7 +106,7 @@ public class DoorController : MonoBehaviour
                 //游戏处于第二阶段时
                 else
                 {
-                    if (!m_HasGeneratedEnemy)       //如果房间没生成过敌人，则生成
+                    if (!m_HasGeneratedEnemy && EnemyObjects.Length != 0)       //如果房间没生成过敌人，则生成
                     {
                         CloseDoors();       //关门
                         EnvironmentManager.Instance.GenerateEnemy(this);    //生成敌人
