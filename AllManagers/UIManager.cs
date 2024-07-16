@@ -171,9 +171,19 @@ public class UIManager : ManagerTemplate<UIManager>
 
     public async void OpenInteractPanel(Action onYesAction)             //专门用于打开互动界面
     {
+        if (InteractPanel.Instance == null)
+        {
+            await OpenPanel(UIKeys.InteractPanel);                       //异步加载并打开互动界面
+        }
+        else
+        {
+            InteractPanel.Instance.OpenPanel();                          //如果之前加载过了，则直接打开界面
+        }
+
+
+
         InteractPanel.Instance.ClearAllSubscriptions();                 //先清空所有事件绑定的之前的函数
         InteractPanel.Instance.OnInteractKeyPressed += onYesAction;     //将参数中的函数绑定到事件
-        await OpenPanel(UIKeys.InteractPanel);                          //打开互动界面
     }
     #endregion
 

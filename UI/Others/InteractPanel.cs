@@ -6,7 +6,7 @@ using System;
 
 public class InteractPanel : BasePanel     //互动按键，给予玩家自己决定是否打开某些界面（比如拾取武器），而不是触发了触发器后自动打开界面
 {
-    public event Action OnInteractKeyPressed;     //接收方为需要选择的所有UI界面（比如事件中的选项，拾取武器等）
+    public event Action OnInteractKeyPressed;     //接收方为需要玩家触发的物体（比如事件，拾取武器等）
 
     public static InteractPanel Instance { get; private set; }
 
@@ -37,16 +37,31 @@ public class InteractPanel : BasePanel     //互动按键，给予玩家自己�
 
     private void Update() 
     {
-        if (PlayerInputHandler.Instance.IsInteractKeyPressed)       //持续检查玩家是否按下互动按键
+        //持续检查玩家是否按下互动按键
+        if (!IsRemoved && PlayerInputHandler.Instance.IsInteractKeyPressed)       
         {
             OnInteractKeyPressed?.Invoke();     //调用事件
         }
     }
 
 
-    private void OnEnable() 
+    private void Start()
     {
-        UIManager.Instance.ImportantPanelList.Add(this);    //将该界面加进列表，以在重置游戏时不被删除
+        //赋值界面名字
+        if (panelName == null)
+        {
+            panelName = UIManager.Instance.UIKeys.InteractPanel;
+        }
+
+
+        //检查该界面是否是唯一保留的那个
+        if (Instance == this)
+        {
+            if (!UIManager.Instance.ImportantPanelList.Contains(this))
+            {
+                UIManager.Instance.ImportantPanelList.Add(this);    //将该界面加进列表，以在重置游戏时不被删除
+            }
+        }      
     }
     #endregion
 
