@@ -33,6 +33,10 @@ public class InteractPanel : BasePanel     //互动按键，给予玩家自己�
                 DontDestroyOnLoad(gameObject);
             }
         }
+
+
+        //设置此界面的淡入/出时长
+        FadeDuration = 0;
     }
 
     private void Update() 
@@ -67,12 +71,26 @@ public class InteractPanel : BasePanel     //互动按键，给予玩家自己�
 
 
     #region 主要函数
-    //需要做的：玩家靠近一些物体后打开此界面，离开物体后淡出此界面。且此界面的坐标应更改为物体坐标（随触发的物体改变）
-    public override void ClosePanel()
+    public override void Fade(CanvasGroup targetGroup, float targetAlpha, float duration, bool blocksRaycasts)
     {
-        //淡出界面
-        Fade(CanvasGroup, FadeOutAlpha, FadeDuration, false);
+        base.Fade(targetGroup, targetAlpha, duration, blocksRaycasts);
+
+
+        //在淡入的情况下
+        if (targetAlpha != FadeOutAlpha)
+        {
+
+        }
+        //淡出
+        else
+        {
+            //清除事件绑定的函数
+            ClearAllSubscriptions();
+        }
     }
+
+
+    //需要做的：玩家靠近一些物体后打开此界面，离开物体后淡出此界面。且此界面的坐标应更改为物体坐标（随触发的物体改变）
 
 
     public void ClearAllSubscriptions()         //删除所有事件绑定的函数

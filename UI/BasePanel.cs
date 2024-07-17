@@ -164,8 +164,8 @@ public class BasePanel : MonoBehaviour
         isTyping = true;        //表示正在打字（防止正在打字时按空格会关闭UI）
 
 
-        int totalLength = fullText.Length;      //文本总长度，用于决定打字机何时结束
-        int visibleCount = 0;                   //显示的文字数量
+        int totalLength = fullText.Length;       //文本总长度，用于决定打字机何时结束
+        int visibleCount = 0;                    //显示的文字数量
 
 
         textComponent.maxVisibleCharacters = 0;  //一开始什么都不显示

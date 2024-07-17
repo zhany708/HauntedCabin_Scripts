@@ -109,7 +109,7 @@ public class UIManager : ManagerTemplate<UIManager>
 
 
     //关闭界面
-    public bool ClosePanel(string name)
+    public bool ClosePanel(string name, bool isFadeOut)
     {
         BasePanel panel = null;
 
@@ -119,8 +119,18 @@ public class UIManager : ManagerTemplate<UIManager>
             return false;
         }
 
-        panel.ClosePanel();
-       
+
+        //淡出
+        if (isFadeOut)
+        {
+            panel.Fade(panel.CanvasGroup, BasePanel.FadeOutAlpha, panel.FadeDuration, false);
+        }
+        //关闭
+        else
+        {
+            panel.ClosePanel();
+        }
+     
         return true;
     }
 

@@ -73,7 +73,7 @@ public class WeaponPickUp : MonoBehaviour
     {
         if (other.CompareTag("Player") && !InteractPanel.Instance.isRemoved)
         {
-            //UIManager.Instance.ClosePanel(UIManager.Instance.UIKeys.InteractPanel);      //关闭互动界面
+            //UIManager.Instance.ClosePanel(UIManager.Instance.UIKeys.InteractPanel, true);      //淡出互动界面
         }      
     }
     */
