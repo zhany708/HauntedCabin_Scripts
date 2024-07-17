@@ -252,14 +252,14 @@ public class UIManager : ManagerTemplate<UIManager>
             {
                 //Debug.Log("This panel will be deleted: " + childScript.name);
 
-                //只关闭不重要的界面
+                //关闭不重要的界面
                 childScript.ClosePanel();
             }
 
             //重要的界面
             else
             {
-                //淡出界面
+                //淡出重要的界面
                 childScript.Fade(childScript.CanvasGroup, BasePanel.FadeOutAlpha, childScript.FadeDuration, false);
             }
         }
