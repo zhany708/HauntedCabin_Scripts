@@ -1,6 +1,7 @@
 using UnityEngine.UI;
 using UnityEngine;
 using System;
+using TMPro;
 
 
 
@@ -11,6 +12,13 @@ public class InteractPanel : BasePanel     //互动按键，给予玩家自己�
     public static InteractPanel Instance { get; private set; }
 
 
+
+    RectTransform m_PanelTransform;     //界面的坐标组件
+    TextMeshProUGUI m_LetterText;       //字母文本（玩家需要按的键）   
+
+    [SerializeField] Vector2 m_PositionOffset = new Vector2(1, 0);      //距离目标坐标的偏移量
+
+    bool m_IsActionCalled = false;      //表示事件绑定的逻辑已经调用了（防止多次调用）
 
 
 
@@ -35,14 +43,13 @@ public class InteractPanel : BasePanel     //互动按键，给予玩家自己�
         }
 
 
-        //设置此界面的淡入/出时长
-        FadeDuration = 0;
+        InitializeComponents();         //初始化组件
     }
 
     private void Update() 
     {
-        //持续检查玩家是否按下互动按键
-        if (!IsRemoved && PlayerInputHandler.Instance.IsInteractKeyPressed)       
+        //持续检查玩家是否按下互动按键（需要确保界面打开，且事件还没有执行）
+        if (!IsRemoved && PlayerInputHandler.Instance.IsInteractKeyPressed && !m_IsActionCalled)       
         {
             OnInteractKeyPressed?.Invoke();     //调用事件
         }
@@ -63,7 +70,12 @@ public class InteractPanel : BasePanel     //互动按键，给予玩家自己�
         {
             if (!UIManager.Instance.ImportantPanelList.Contains(this))
             {
-                UIManager.Instance.ImportantPanelList.Add(this);    //将该界面加进列表，以在重置游戏时不被删除
+                UIManager.Instance.ImportantPanelList.Add(this);        //将该界面加进列表，以在重置游戏时不被删除
+            }
+
+            if (!UIManager.Instance.DontDisplayPanelList.Contains(this))
+            {
+                UIManager.Instance.DontDisplayPanelList.Add(this);      //将该界面加进列表，以在重置游戏时不显示出来
             }
         }      
     }
@@ -86,16 +98,54 @@ public class InteractPanel : BasePanel     //互动按键，给予玩家自己�
         {
             //清除事件绑定的函数
             ClearAllSubscriptions();
+            SetIsActionCalled(false);       //重置布尔，以便后续的调用
         }
     }
 
 
-    //需要做的：玩家靠近一些物体后打开此界面，离开物体后淡出此界面。且此界面的坐标应更改为物体坐标（随触发的物体改变）
+    //设置界面的坐标，需要加上偏移量
+    public void SetPositionWithOffset(Vector2 thisPos)
+    {
+        m_PanelTransform.position = thisPos + m_PositionOffset;
+    }
+
 
 
     public void ClearAllSubscriptions()         //删除所有事件绑定的函数
     {
         OnInteractKeyPressed = null;
+    }
+    #endregion
+
+
+    #region 其余函数
+    private void InitializeComponents()
+    {
+        m_LetterText = GetComponentInChildren<TextMeshProUGUI>();
+        if (m_LetterText == null)
+        {
+            Debug.LogError("LetterText is not assigned in the " + name);
+            return;
+        }
+
+        m_PanelTransform = GetComponent<RectTransform>();
+        if (m_PanelTransform == null)
+        {
+            Debug.LogError("RectTransform is not assigned in the " + name);
+            return;
+        }
+
+
+        //设置此界面的淡入/出时长
+        FadeDuration = 0;
+    }
+    #endregion
+
+
+    #region Setters
+    public void SetIsActionCalled(bool isTrue)
+    {
+        m_IsActionCalled = isTrue;
     }
     #endregion
 }

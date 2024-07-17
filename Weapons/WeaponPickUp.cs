@@ -62,21 +62,21 @@ public class WeaponPickUp : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            //UIManager.Instance.OpenInteractPanel(() => ProcessWeaponPickup(other));     //打开互动面板
+            UIManager.Instance.OpenInteractPanel(() => ProcessWeaponPickup(other), transform.position);     //打开互动面板
 
-            ProcessWeaponPickup(other);
+            //ProcessWeaponPickup(other);
         }              
     }
 
-    /*
+    
     private void OnTriggerExit2D(Collider2D other)
     {
-        if (other.CompareTag("Player") && !InteractPanel.Instance.isRemoved)
+        if (other.CompareTag("Player") && !InteractPanel.Instance.IsRemoved)
         {
-            //UIManager.Instance.ClosePanel(UIManager.Instance.UIKeys.InteractPanel, true);      //淡出互动界面
+            UIManager.Instance.ClosePanel(UIManager.Instance.UIKeys.InteractPanel, true);      //淡出互动界面
         }      
     }
-    */
+    
     #endregion
 
 
@@ -84,6 +84,9 @@ public class WeaponPickUp : MonoBehaviour
     //玩家碰撞地上的武器后，显示武器拾取UI
     private async void ProcessWeaponPickup(Collider2D other)
     {
+        //先设置互动界面里的布尔，防止重复调用
+        InteractPanel.Instance.SetIsActionCalled(true);
+
         if (!m_IsPanelOpen)
         {
             Player player = other.gameObject.GetComponentInParent<Player>();    //由于碰撞的是玩家的combat子物体，因此要用InParent

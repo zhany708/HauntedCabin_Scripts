@@ -3,6 +3,7 @@ using UnityEngine;
 using System.Threading.Tasks;
 using UnityEngine.SceneManagement;
 using System;
+using UnityEditor.SearchService;
 
 
 
@@ -17,6 +18,7 @@ public class UIManager : ManagerTemplate<UIManager>
 
     //用于储存所有不可删除的UI（比如玩家状态等）
     public List<BasePanel> ImportantPanelList { get; private set; } = new List<BasePanel>();
+    public List<BasePanel> DontDisplayPanelList { get; private set; } = new List<BasePanel>();
 
 
     Transform m_UIRoot;     //用于储存所有的UI（为了美观）
@@ -41,17 +43,22 @@ public class UIManager : ManagerTemplate<UIManager>
     private async void Start()
     {
         //检查是否处于场景0（主菜单）
-        if (SceneManager.GetActiveScene().name == "MainMenu")
+        if (SceneManager.GetActiveScene().name == SceneManagerScript.MainMenuSceneName)
         {
             //游戏开始时加载开始界面
             //await OpenPanel(UIKeys.MainMenuPanel);
         }
 
-        else
+        else if (SceneManager.GetActiveScene().name == SceneManagerScript.FirstFloorSceneName)
         {
-            //不在主菜单时，则播放一楼BGM
+            //位于一楼场景时，则播放一楼BGM
             await SoundManager.Instance.PlayBGMAsync(SoundManager.Instance.AudioClipKeys.StopForAMoment, true);
-        }       
+        }
+
+
+        //提前加载一些重要的界面
+        await InitPanel(UIKeys.ConfirmPanel);
+        await InitPanel(UIKeys.InteractPanel);
     }
     #endregion
 
@@ -179,7 +186,7 @@ public class UIManager : ManagerTemplate<UIManager>
         ConfirmPanel.Instance.SetConnectedPanel(connectedPanel);        //将连接的面板赋值给确认界面       
     }
 
-    public async void OpenInteractPanel(Action onYesAction)             //专门用于打开互动界面
+    public async void OpenInteractPanel(Action onYesAction, Vector2 objectPos)             //专门用于打开互动界面
     {
         if (InteractPanel.Instance == null)
         {
@@ -191,9 +198,9 @@ public class UIManager : ManagerTemplate<UIManager>
         }
 
 
-
         InteractPanel.Instance.ClearAllSubscriptions();                 //先清空所有事件绑定的之前的函数
         InteractPanel.Instance.OnInteractKeyPressed += onYesAction;     //将参数中的函数绑定到事件
+        InteractPanel.Instance.SetPositionWithOffset(objectPos);        //设置界面的坐标
     }
     #endregion
 
@@ -260,10 +267,10 @@ public class UIManager : ManagerTemplate<UIManager>
     {
         foreach (BasePanel childScript in ImportantPanelList)
         {
-            //检查界面是否有按钮
-            if (!(childScript.GetComponent<BasePanel>() is PanelWithButton) )
+            //检查界面是否有按钮，或者界面是否处于禁止显示列表中
+            if (!(childScript.GetComponent<BasePanel>() is PanelWithButton) && !DontDisplayPanelList.Contains(childScript) )
             {
-                //如果没有按钮则淡入界面
+                //如果都满足则淡入界面
                 childScript.Fade(childScript.CanvasGroup, childScript.FadeInAlpha, childScript.FadeDuration, true);
             }         
         }
