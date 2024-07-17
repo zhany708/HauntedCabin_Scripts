@@ -1,4 +1,3 @@
-using UnityEngine.UI;
 using UnityEngine;
 using System;
 using TMPro;
@@ -13,12 +12,16 @@ public class InteractPanel : BasePanel     //互动按键，给予玩家自己�
 
 
 
-    RectTransform m_PanelTransform;     //界面的坐标组件
-    TextMeshProUGUI m_LetterText;       //字母文本（玩家需要按的键）   
+    RectTransform m_PanelTransform;                 //界面的坐标组件
+    TextMeshProUGUI m_LetterText;                   //字母文本（玩家需要按的键）   
 
-    [SerializeField] Vector2 m_PositionOffset = new Vector2(1, 0);      //距离目标坐标的偏移量
+    Vector2 m_PositionOffset = Vector2.zero;        //距离目标坐标的偏移量
 
-    bool m_IsActionCalled = false;      //表示事件绑定的逻辑已经调用了（防止多次调用）
+    bool m_IsActionCalled = false;                  //表示事件绑定的逻辑已经调用了（防止多次调用）
+
+
+
+
 
 
 
@@ -78,6 +81,16 @@ public class InteractPanel : BasePanel     //互动按键，给予玩家自己�
                 UIManager.Instance.DontDisplayPanelList.Add(this);      //将该界面加进列表，以在重置游戏时不显示出来
             }
         }      
+    }
+
+
+    private void OnDestroy()
+    {
+        //界面删除时，从字典中移除
+        if (UIManager.Instance.PanelDict.ContainsKey(panelName) )
+        {
+            UIManager.Instance.PanelDict.Remove(panelName);
+        }
     }
     #endregion
 
@@ -146,6 +159,12 @@ public class InteractPanel : BasePanel     //互动按键，给予玩家自己�
     public void SetIsActionCalled(bool isTrue)
     {
         m_IsActionCalled = isTrue;
+    }
+
+    //设置界面的偏移量（因为不同的物体可能因为大小不同而需要不同的偏移量）
+    public void SetPositionOffset(Vector2 thisPos)
+    {
+        m_PositionOffset = thisPos;
     }
     #endregion
 }

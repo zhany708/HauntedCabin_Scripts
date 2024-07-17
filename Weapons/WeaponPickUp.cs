@@ -1,22 +1,21 @@
 using Lean.Localization;
-using System.Collections;
 using UnityEngine;
+
+
 
 
 public class WeaponPickUp : MonoBehaviour
 {
     //public SO_WeaponKeys WeaponKeys;
     public GameObject WeaponPreFab;
-
-    public string WeaponPhraseKey;      //从Lean Localization那调用时需要的string
-
-
-
+    public Vector2 OffsetPosForInteractPanel;       //用于打开互动界面前赋值过去的偏移量
+    public string WeaponPhraseKey;                  //从Lean Localization那调用时需要的string
 
 
     PickupWeaponPanel weaponPickupPanel;
+    
 
-    bool m_IsPanelOpen = false;     //用于防止玩家在UI显示时重新触发拾取武器的触发器导致的重复打开UI
+    bool m_IsPanelOpen = false;                     //用于防止玩家在UI显示时重新触发拾取武器的触发器导致的重复打开UI
 
 
 
@@ -31,15 +30,21 @@ public class WeaponPickUp : MonoBehaviour
     {
         if (WeaponPreFab == null)
         {
-            Debug.LogError("Weapon prefab is not assigned in the WeaponPickUp script.");
+            Debug.LogError("Weapon prefab is not assigned in the " + name);
+            return;
+        }
+
+        if (OffsetPosForInteractPanel == Vector2.zero)
+        {
+            Debug.LogError("OffsetPosForInteractPanel is not assigned in the " + name);
             return;
         }
 
         if (WeaponPhraseKey == "")
         {
-            Debug.LogError("WeaponPhraseKey is not written in the WeaponPickUp script.");
+            Debug.LogError("WeaponPhraseKey is not written in the " + name);
             return;
-        }
+        }     
     }
 
     private async void Start()
@@ -62,16 +67,17 @@ public class WeaponPickUp : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            UIManager.Instance.OpenInteractPanel(() => ProcessWeaponPickup(other), transform.position);     //打开互动面板
-
-            //ProcessWeaponPickup(other);
+            //打开互动面板
+            UIManager.Instance.OpenInteractPanel(() => ProcessWeaponPickup(other), transform.position, OffsetPosForInteractPanel);     
         }              
     }
 
     
     private void OnTriggerExit2D(Collider2D other)
     {
-        if (other.CompareTag("Player") && !InteractPanel.Instance.IsRemoved)
+        //检查是否是玩家碰撞，再检查界面是否存于字典中，最后再检查界面是否打开
+        if (other.CompareTag("Player") && UIManager.Instance.PanelDict.ContainsKey(UIManager.Instance.UIKeys.InteractPanel)
+            && !InteractPanel.Instance.IsRemoved )
         {
             UIManager.Instance.ClosePanel(UIManager.Instance.UIKeys.InteractPanel, true);      //淡出互动界面
         }      
@@ -81,11 +87,12 @@ public class WeaponPickUp : MonoBehaviour
 
 
     #region 主要函数
-    //玩家碰撞地上的武器后，显示武器拾取UI
+    //显示武器拾取UI
     private async void ProcessWeaponPickup(Collider2D other)
     {
         //先设置互动界面里的布尔，防止重复调用
-        InteractPanel.Instance.SetIsActionCalled(true);
+        InteractPanel.Instance.SetIsActionCalled(true);  
+
 
         if (!m_IsPanelOpen)
         {

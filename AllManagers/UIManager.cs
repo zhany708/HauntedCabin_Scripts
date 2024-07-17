@@ -3,7 +3,6 @@ using UnityEngine;
 using System.Threading.Tasks;
 using UnityEngine.SceneManagement;
 using System;
-using UnityEditor.SearchService;
 
 
 
@@ -16,8 +15,9 @@ public class UIManager : ManagerTemplate<UIManager>
     //存放已打开界面的字典（里面存储的都是正在打开的界面）
     public Dictionary<string, BasePanel> PanelDict { get; private set; } = new Dictionary<string, BasePanel>();
 
-    //用于储存所有不可删除的UI（比如玩家状态等）
+    //用于储存所有不可删除的UI（比如玩家状态，小地图等）
     public List<BasePanel> ImportantPanelList { get; private set; } = new List<BasePanel>();
+    //用于切换场景时不显示出来的重要UI界面（该列表里的界面一定也储存在ImportantPanelList列表里）
     public List<BasePanel> DontDisplayPanelList { get; private set; } = new List<BasePanel>();
 
 
@@ -186,21 +186,23 @@ public class UIManager : ManagerTemplate<UIManager>
         ConfirmPanel.Instance.SetConnectedPanel(connectedPanel);        //将连接的面板赋值给确认界面       
     }
 
-    public async void OpenInteractPanel(Action onYesAction, Vector2 objectPos)             //专门用于打开互动界面
+    //专门用于打开互动界面
+    public async void OpenInteractPanel(Action onYesAction, Vector2 objectPos, Vector2 offsetPosForInteractPanel)     
     {
         if (InteractPanel.Instance == null)
         {
-            await OpenPanel(UIKeys.InteractPanel);                       //异步加载并打开互动界面
+            await OpenPanel(UIKeys.InteractPanel);                              //异步加载并打开互动界面
         }
         else
         {
-            InteractPanel.Instance.OpenPanel();                          //如果之前加载过了，则直接打开界面
+            InteractPanel.Instance.OpenPanel();                                 //如果之前加载过了，则直接打开界面
         }
 
 
-        InteractPanel.Instance.ClearAllSubscriptions();                 //先清空所有事件绑定的之前的函数
-        InteractPanel.Instance.OnInteractKeyPressed += onYesAction;     //将参数中的函数绑定到事件
-        InteractPanel.Instance.SetPositionWithOffset(objectPos);        //设置界面的坐标
+        InteractPanel.Instance.ClearAllSubscriptions();                         //先清空所有事件绑定的之前的函数
+        InteractPanel.Instance.OnInteractKeyPressed += onYesAction;             //将参数中的函数绑定到事件       
+        InteractPanel.Instance.SetPositionOffset(offsetPosForInteractPanel);    //为互动界面设置专属于当前物体的偏移量
+        InteractPanel.Instance.SetPositionWithOffset(objectPos);                //设置界面的坐标
     }
     #endregion
 
