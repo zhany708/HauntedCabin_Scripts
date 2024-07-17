@@ -112,15 +112,6 @@ public class PlayerStatusBar : BasePanel
         //检查该界面是否是唯一保留的那个
         if (Instance == this)
         {
-            if (!UIManager.Instance.PanelDict.ContainsKey(panelName) )
-            {
-                //Debug.Log(panelName + " added into the PanelDict!");
-
-                //将界面加进字典，表示界面已经打开
-                UIManager.Instance.PanelDict.Add(panelName, this);
-            }
-
-
             if (!UIManager.Instance.ImportantPanelList.Contains(this) )
             {
                 //将该界面加进重要界面列表，以在重置游戏时不被删除
