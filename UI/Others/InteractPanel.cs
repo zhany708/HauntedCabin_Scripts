@@ -49,16 +49,6 @@ public class InteractPanel : BasePanel     //互动按键，给予玩家自己�
         InitializeComponents();         //初始化组件
     }
 
-    private void Update() 
-    {
-        //持续检查玩家是否按下互动按键（需要确保界面打开，且事件还没有执行）
-        if (!IsRemoved && PlayerInputHandler.Instance.IsInteractKeyPressed && !m_IsActionCalled)       
-        {
-            OnInteractKeyPressed?.Invoke();     //调用事件
-        }
-    }
-
-
     private void Start()
     {
         //赋值界面名字
@@ -78,18 +68,17 @@ public class InteractPanel : BasePanel     //互动按键，给予玩家自己�
 
             if (!UIManager.Instance.DontDisplayPanelList.Contains(this))
             {
-                UIManager.Instance.DontDisplayPanelList.Add(this);      //将该界面加进列表，以在重置游戏时不显示出来
+                UIManager.Instance.DontDisplayPanelList.Add(this);      //将该界面加进列表，以在进入一楼界面时不显示出来
             }
         }      
     }
 
-
-    private void OnDestroy()
+    private void Update() 
     {
-        //界面删除时，从字典中移除
-        if (UIManager.Instance.PanelDict.ContainsKey(panelName) )
+        //持续检查玩家是否按下互动按键（需要确保界面打开，且事件还没有执行）
+        if (!IsRemoved && PlayerInputHandler.Instance.IsInteractKeyPressed && !m_IsActionCalled)       
         {
-            UIManager.Instance.PanelDict.Remove(panelName);
+            OnInteractKeyPressed?.Invoke();     //调用事件
         }
     }
     #endregion

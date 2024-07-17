@@ -73,11 +73,20 @@ public class BasePanel : MonoBehaviour
 
     protected virtual void OnDisable()
     {
+        //从字典中移除，表示界面没打开
         if (UIManager.Instance.PanelDict.ContainsKey(panelName) )
-        {
-            //从字典中移除，表示界面没打开
+        {          
             UIManager.Instance.PanelDict.Remove(panelName);
         }     
+    }
+
+    private void OnDestroy()
+    {
+        //从字典中移除，表示界面没打开（双重检查）
+        if (UIManager.Instance.PanelDict.ContainsKey(panelName) )
+        {
+            UIManager.Instance.PanelDict.Remove(panelName);
+        }
     }
     #endregion
 
