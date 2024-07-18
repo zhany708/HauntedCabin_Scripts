@@ -50,10 +50,10 @@ public class MainMenuPanel : PanelWithButton
         {
             panelName = UIManager.Instance.UIKeys.MainMenuPanel;
         }
-        
+           
 
-        //播放主界面BGN
-        await SoundManager.Instance.PlayBGMAsync(SoundManager.Instance.AudioClipKeys.MyVeryOwnDeadShip, true, MainPanelBgmVolume);
+        //提前初始化游戏设置界面
+        await UIManager.Instance.InitPanel(UIManager.Instance.UIKeys.SettingPanel);
 
         //当玩家第一次进游戏时
         if (EnvironmentManager.Instance.IsFirstTimeEnterGame)
@@ -61,6 +61,10 @@ public class MainMenuPanel : PanelWithButton
             //提前初始化游戏背景介绍界面
             await UIManager.Instance.InitPanel(UIManager.Instance.UIKeys.GameBackgroundPanel);
         }
+
+
+        //播放主界面BGN
+        await SoundManager.Instance.PlayBGMAsync(SoundManager.Instance.AudioClipKeys.MyVeryOwnDeadShip, true, MainPanelBgmVolume);
     }
 
 
@@ -76,6 +80,12 @@ public class MainMenuPanel : PanelWithButton
         base.OnDisable();
 
         OnFadeOutFinished -= HandleFadeOutFinished;
+
+        //当UIManager的预制件字典里有设置界面时（即玩家没有打开并关闭过设置界面）
+        if (UIManager.Instance.prefabDict.ContainsKey(UIManager.Instance.UIKeys.SettingPanel) )
+        {
+            UIManager.Instance.ReleasePrefab(UIManager.Instance.UIKeys.SettingPanel);
+        }
     }
     #endregion
 

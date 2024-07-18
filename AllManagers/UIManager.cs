@@ -15,7 +15,7 @@ public class UIManager : ManagerTemplate<UIManager>
     //存放已打开界面的字典（里面存储的都是正在打开的界面）
     public Dictionary<string, BasePanel> PanelDict { get; private set; } = new Dictionary<string, BasePanel>();
 
-    //用于储存所有不可删除的UI（比如玩家状态，小地图等）
+    //用于储存所有重置游戏时不可删除的UI（比如玩家状态，小地图等）
     public List<BasePanel> ImportantPanelList { get; private set; } = new List<BasePanel>();
     //用于切换场景时不显示出来的重要UI界面（该列表里的界面一定也储存在ImportantPanelList列表里）
     public List<BasePanel> DontDisplayPanelList { get; private set; } = new List<BasePanel>();
@@ -37,28 +37,6 @@ public class UIManager : ManagerTemplate<UIManager>
 
         //寻找画布跟物体，没有的话就创建一个
         SetupRootGameObject(ref m_UIRoot, "Canvas");
-    }
-
-
-    private async void Start()
-    {
-        //检查是否处于场景0（主菜单）
-        if (SceneManager.GetActiveScene().name == SceneManagerScript.MainMenuSceneName)
-        {
-            //游戏开始时加载开始界面
-            //await OpenPanel(UIKeys.MainMenuPanel);
-        }
-
-        else if (SceneManager.GetActiveScene().name == SceneManagerScript.FirstFloorSceneName)
-        {
-            //位于一楼场景时，则播放一楼BGM
-            await SoundManager.Instance.PlayBGMAsync(SoundManager.Instance.AudioClipKeys.StopForAMoment, true);
-        }
-
-
-        //提前加载一些重要的界面
-        await InitPanel(UIKeys.ConfirmPanel);
-        await InitPanel(UIKeys.InteractPanel);
     }
     #endregion
 
@@ -116,14 +94,14 @@ public class UIManager : ManagerTemplate<UIManager>
 
 
     //关闭界面
-    public bool ClosePanel(string name, bool isFadeOut)
+    public void ClosePanel(string name, bool isFadeOut)
     {
         BasePanel panel = null;
 
         if (!PanelDict.TryGetValue (name, out panel))     //检查界面是否已打开，没打开的话则报错
         {
             Debug.LogError("This panel is not opened yet: " + name);
-            return false;
+            return;
         }
 
 
@@ -137,13 +115,11 @@ public class UIManager : ManagerTemplate<UIManager>
         {
             panel.ClosePanel();
         }
-     
-        return true;
     }
 
 
 
-    //提前加载界面（提前将预制件放入字典，防止卡顿）(跟打开界面函数几乎一模一样，只是少了生成并打开界面的步骤)
+    //提前加载界面（跟打开界面函数几乎一模一样，只是少了生成并打开界面的步骤)
     public async Task InitPanel(string name)
     {
         if (PanelDict.ContainsKey(name))
@@ -152,6 +128,7 @@ public class UIManager : ManagerTemplate<UIManager>
             return;
         }
 
+        //提前将预制件放入ManagerTemplate的字典，防止卡顿（不是PanelDict字典，是储存预制件的字典）
         await LoadPrefabAsync(name);
     }
 
@@ -225,7 +202,7 @@ public class UIManager : ManagerTemplate<UIManager>
         //进入一楼场景
         else if (scene.name == SceneManagerScript.FirstFloorSceneName)
         {
-            DisplayAllImportantPanelsWithoutButton();      //激活所有不带按钮的重要界面
+            DisplayAllImportantPanelsWithConditions();      //激活所有不带按钮的重要界面
         }
 
         else
@@ -265,7 +242,7 @@ public class UIManager : ManagerTemplate<UIManager>
         }
     }
 
-    private void DisplayAllImportantPanelsWithoutButton()
+    private void DisplayAllImportantPanelsWithConditions()
     {
         foreach (BasePanel childScript in ImportantPanelList)
         {

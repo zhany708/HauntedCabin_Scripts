@@ -35,6 +35,21 @@ public class SoundManager : ManagerTemplate<SoundManager>
         m_MusicSource = gameObject.AddComponent<AudioSource>();
         m_SfxSource = gameObject.AddComponent<AudioSource>();
     }
+
+    private async void Start()
+    {
+        //检查是否处于场景0（主菜单）
+        if (SceneManager.GetActiveScene().name == SceneManagerScript.MainMenuSceneName)
+        {
+            
+        }
+
+        else if (SceneManager.GetActiveScene().name == SceneManagerScript.FirstFloorSceneName)
+        {
+            //位于一楼场景时，则播放一楼BGM
+            await PlayBGMAsync(AudioClipKeys.StopForAMoment, true);
+        }
+    }
     #endregion
 
 

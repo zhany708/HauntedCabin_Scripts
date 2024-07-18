@@ -60,25 +60,21 @@ public class MiniMapPanel : BasePanel
 
     protected override void OnDisable()
     {
-        //先检查界面名字是否为空（为空的话则代表当前界面是重复的，因为是在Start函数中赋值名字）
-        if (panelName != null)
+        //检查界面名字是否为空（为空的话则代表当前界面是重复的，因为是在Start函数中赋值名字），以及当前界面是否是唯一的那个
+        if (panelName != null && Instance == this)
         {
-            //检查该界面是否是唯一保留的那个
-            if (Instance == this)
+            if (UIManager.Instance.PanelDict.ContainsKey(panelName))
             {
-                if (UIManager.Instance.PanelDict.ContainsKey(panelName))
-                {
-                    //从字典中移除，表示界面没打开
-                    UIManager.Instance.PanelDict.Remove(panelName);
-                }
-
-
-                if (UIManager.Instance.ImportantPanelList.Contains(this))
-                {
-                    //从重要界面列表中移除当前界面
-                    UIManager.Instance.ImportantPanelList.Remove(this);
-                }
+                //从字典中移除，表示界面没打开
+                UIManager.Instance.PanelDict.Remove(panelName);
             }
+
+
+            if (UIManager.Instance.ImportantPanelList.Contains(this))
+            {
+                //从重要界面列表中移除当前界面
+                UIManager.Instance.ImportantPanelList.Remove(this);
+            }         
         }
     }
 }
