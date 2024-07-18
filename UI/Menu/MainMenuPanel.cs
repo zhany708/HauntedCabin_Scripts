@@ -82,7 +82,7 @@ public class MainMenuPanel : PanelWithButton
         OnFadeOutFinished -= HandleFadeOutFinished;
 
         //当UIManager的预制件字典里有设置界面时（即玩家没有打开并关闭过设置界面）
-        if (UIManager.Instance.prefabDict.ContainsKey(UIManager.Instance.UIKeys.SettingPanel) )
+        if (UIManager.Instance.PrefabDict.ContainsKey(UIManager.Instance.UIKeys.SettingPanel) )
         {
             UIManager.Instance.ReleasePrefab(UIManager.Instance.UIKeys.SettingPanel);
         }

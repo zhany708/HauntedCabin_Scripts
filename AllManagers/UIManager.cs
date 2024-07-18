@@ -1,8 +1,8 @@
-using System.Collections.Generic;
 using UnityEngine;
-using System.Threading.Tasks;
 using UnityEngine.SceneManagement;
 using System;
+using System.Threading.Tasks;
+using System.Collections.Generic;
 
 
 
@@ -96,9 +96,7 @@ public class UIManager : ManagerTemplate<UIManager>
     //关闭界面
     public void ClosePanel(string name, bool isFadeOut)
     {
-        BasePanel panel = null;
-
-        if (!PanelDict.TryGetValue (name, out panel))     //检查界面是否已打开，没打开的话则报错
+        if (!PanelDict.TryGetValue (name, out BasePanel panel))     //检查界面是否已打开，没打开的话则报错
         {
             Debug.LogError("This panel is not opened yet: " + name);
             return;
@@ -114,6 +112,13 @@ public class UIManager : ManagerTemplate<UIManager>
         else
         {
             panel.ClosePanel();
+        }
+
+
+        if (PanelDict.ContainsKey(name))
+        {
+            //将界面从字典移除
+            PanelDict.Remove(name);
         }
     }
 
@@ -163,8 +168,10 @@ public class UIManager : ManagerTemplate<UIManager>
         ConfirmPanel.Instance.SetConnectedPanel(connectedPanel);        //将连接的面板赋值给确认界面       
     }
 
-    //专门用于打开互动界面
-    public async void OpenInteractPanel(Action onYesAction, Vector2 objectPos, Vector2 offsetPosForInteractPanel)     
+
+
+    //打开互动界面（参数中的事件不能为Task类型）
+    public async void OpenInteractPanel(Action onYesAction)     
     {
         if (InteractPanel.Instance == null)
         {
@@ -178,8 +185,7 @@ public class UIManager : ManagerTemplate<UIManager>
 
         InteractPanel.Instance.ClearAllSubscriptions();                         //先清空所有事件绑定的之前的函数
         InteractPanel.Instance.OnInteractKeyPressed += onYesAction;             //将参数中的函数绑定到事件       
-        InteractPanel.Instance.SetPositionOffset(offsetPosForInteractPanel);    //为互动界面设置专属于当前物体的偏移量
-        InteractPanel.Instance.SetPositionWithOffset(objectPos);                //设置界面的坐标
+        InteractPanel.Instance.SetPositionWithOffset();                         //设置界面的坐标
     }
     #endregion
 
@@ -202,7 +208,7 @@ public class UIManager : ManagerTemplate<UIManager>
         //进入一楼场景
         else if (scene.name == SceneManagerScript.FirstFloorSceneName)
         {
-            DisplayAllImportantPanelsWithConditions();      //激活所有不带按钮的重要界面
+            DisplayImportantPanelsWithConditions();      //激活所有不带按钮的重要界面
         }
 
         else
@@ -242,12 +248,14 @@ public class UIManager : ManagerTemplate<UIManager>
         }
     }
 
-    private void DisplayAllImportantPanelsWithConditions()
+    //显示一些符合条件的重要界面
+    private void DisplayImportantPanelsWithConditions()
     {
+        //更快速的淡入重要界面的方式，但会导致测试时直接进入一楼场景后无法正常实施功能
         foreach (BasePanel childScript in ImportantPanelList)
         {
             //检查界面是否有按钮，或者界面是否处于禁止显示列表中
-            if (!(childScript.GetComponent<BasePanel>() is PanelWithButton) && !DontDisplayPanelList.Contains(childScript) )
+            if (!(childScript is PanelWithButton) && !DontDisplayPanelList.Contains(childScript) )
             {
                 //如果都满足则淡入界面
                 childScript.Fade(childScript.CanvasGroup, childScript.FadeInAlpha, childScript.FadeDuration, true);

@@ -1,14 +1,9 @@
-using System.Collections.Generic;
 using UnityEngine;
 
 
 
 public class RitualStoneSpell : MonoBehaviour       //祷告石护符
 {
-
-
-
-
     #region Unity内部函数
     private void Start()
     {
@@ -26,21 +21,19 @@ public class RitualStoneSpell : MonoBehaviour       //祷告石护符
         //只有当玩家身上没有护符时才会触发效果
         if (other.gameObject.CompareTag("Player") && !HellsCall.Instance.GetCanStartRitual() )
         {
-            //UIManager.Instance.OpenInteractPanel(() => PickupLogic());     //打开互动面板
-
-            PickupLogic();
+            UIManager.Instance.OpenInteractPanel(() => PickupLogic());     //打开互动面板
         }
     }
-
-    /*
+   
     private void OnTriggerExit2D(Collider2D other)
     {
-        if (other.CompareTag("Player") && !InteractPanel.Instance.isRemoved)        //只有在界面打开时才关闭界面
+        //检查是否是玩家碰撞，再检查界面是否存于字典中，最后再检查界面是否打开
+        if (other.CompareTag("Player") && UIManager.Instance.PanelDict.ContainsKey(UIManager.Instance.UIKeys.InteractPanel)
+            && !InteractPanel.Instance.IsRemoved)
         {
-            //UIManager.Instance.ClosePanel(UIManager.Instance.UIKeys.InteractPanel);      //关闭互动界面
-        }      
+            UIManager.Instance.ClosePanel(UIManager.Instance.UIKeys.InteractPanel, true);      //淡出互动界面
+        }
     }
-    */
     #endregion
 
 

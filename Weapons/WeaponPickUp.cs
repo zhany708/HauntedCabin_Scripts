@@ -8,7 +8,6 @@ public class WeaponPickUp : MonoBehaviour
 {
     //public SO_WeaponKeys WeaponKeys;
     public GameObject WeaponPreFab;
-    public Vector2 OffsetPosForInteractPanel;       //用于打开互动界面前赋值过去的偏移量
     public string WeaponPhraseKey;                  //从Lean Localization那调用时需要的string
 
 
@@ -31,12 +30,6 @@ public class WeaponPickUp : MonoBehaviour
         if (WeaponPreFab == null)
         {
             Debug.LogError("Weapon prefab is not assigned in the " + name);
-            return;
-        }
-
-        if (OffsetPosForInteractPanel == Vector2.zero)
-        {
-            Debug.LogError("OffsetPosForInteractPanel is not assigned in the " + name);
             return;
         }
 
@@ -68,11 +61,21 @@ public class WeaponPickUp : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             //打开互动面板
-            UIManager.Instance.OpenInteractPanel(() => ProcessWeaponPickup(other), transform.position, OffsetPosForInteractPanel);     
+            UIManager.Instance.OpenInteractPanel(() => ProcessWeaponPickup(other) );     
         }              
     }
 
-    
+    private void OnTriggerStay2D(Collider2D other)
+    {
+        //检查玩家触发的中途互动界面是否因为一些原因关闭了
+        if (other.CompareTag("Player") && !UIManager.Instance.PanelDict.ContainsKey(UIManager.Instance.UIKeys.InteractPanel)
+            && InteractPanel.Instance.IsRemoved && InteractPanel.Instance.IsOpenable)
+        {
+            //打开互动面板
+            UIManager.Instance.OpenInteractPanel(() => ProcessWeaponPickup(other));
+        }
+    }
+
     private void OnTriggerExit2D(Collider2D other)
     {
         //检查是否是玩家碰撞，再检查界面是否存于字典中，最后再检查界面是否打开
@@ -81,8 +84,7 @@ public class WeaponPickUp : MonoBehaviour
         {
             UIManager.Instance.ClosePanel(UIManager.Instance.UIKeys.InteractPanel, true);      //淡出互动界面
         }      
-    }
-    
+    } 
     #endregion
 
 

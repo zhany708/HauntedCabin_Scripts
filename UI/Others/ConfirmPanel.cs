@@ -1,6 +1,8 @@
-using UnityEngine.UI;
 using UnityEngine;
+using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 using System;
+
 
 
 
@@ -15,6 +17,11 @@ public class ConfirmPanel : PanelWithButton     //用于询问玩家是否确认
 
 
     BasePanel m_ConnectedPanel;                 //连接界面（需要打开此界面的那个面板）
+
+
+    bool m_IsFirstTimeInitialize = true;       //表示界面是否第一次初始化
+
+
 
 
 
@@ -76,7 +83,20 @@ public class ConfirmPanel : PanelWithButton     //用于询问玩家是否确认
             {
                 UIManager.Instance.ImportantPanelList.Add(this);    
             }
-        }      
+        }
+
+
+        m_IsFirstTimeInitialize = false;        //设置布尔，表示界面已经初始化过了
+    }
+
+
+    protected override void OnEnable()
+    {
+        //只有当场景不在主菜单时才运行跟物体的同名函数（因为当前界面的渲染优先级高于主菜单界面，导致进入主菜单时，默认按钮在当前界面上）
+        if (!(SceneManager.GetActiveScene().name == SceneManagerScript.MainMenuSceneName) && !m_IsFirstTimeInitialize)
+        {
+            base.OnEnable();
+        }
     }
     #endregion
 

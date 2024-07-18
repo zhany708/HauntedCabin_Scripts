@@ -73,20 +73,28 @@ public class BasePanel : MonoBehaviour
 
     protected virtual void OnDisable()
     {
-        //从字典中移除，表示界面没打开
-        if (UIManager.Instance.PanelDict.ContainsKey(panelName) )
-        {          
-            UIManager.Instance.PanelDict.Remove(panelName);
-        }     
+        //先检查界面名是否为空（有的界面因为单例而删除前不会赋值名字）
+        if (panelName != null)
+        {
+            //从字典中移除，表示界面没打开
+            if (UIManager.Instance.PanelDict.ContainsKey(panelName))
+            {
+                UIManager.Instance.PanelDict.Remove(panelName);
+            }
+        }         
     }
 
     private void OnDestroy()
     {
-        //从字典中移除，表示界面没打开（双重检查）
-        if (UIManager.Instance.PanelDict.ContainsKey(panelName) )
+        //先检查界面名是否为空（有的界面因为单例而删除前不会赋值名字）
+        if (panelName != null)
         {
-            UIManager.Instance.PanelDict.Remove(panelName);
-        }
+            //从字典中移除，表示界面没打开（双重检查）
+            if (UIManager.Instance.PanelDict.ContainsKey(panelName))
+            {
+                UIManager.Instance.PanelDict.Remove(panelName);
+            }
+        }        
     }
     #endregion
 

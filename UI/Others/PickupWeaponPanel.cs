@@ -67,6 +67,8 @@ public class PickupWeaponPanel : PanelWithButton
 
         //界面完全淡出后调用此函数
         OnFadeOutFinished += ClosePanel;
+        //界面淡出后再设置布尔，防止还没完全淡出玩家就再次按下按钮导致打不开界面
+        OnFadeOutFinished += SetIsOpenableForInteractPanel;
     }
 
     protected override void OnDisable()
@@ -74,20 +76,7 @@ public class PickupWeaponPanel : PanelWithButton
         base.OnDisable();
 
         OnFadeOutFinished -= ClosePanel;
-    }
-    #endregion
-
-
-    #region 主要函数
-    public override void ClosePanel()
-    {
-        base.ClosePanel();
-
-        if (m_WeaponPickup != null)
-        {
-            //设置拾取武器脚本里的布尔
-            m_WeaponPickup.SetIsPanelOpen(false);
-        }
+        OnFadeOutFinished -= SetIsOpenableForInteractPanel;
     }
     #endregion
 
@@ -110,7 +99,9 @@ public class PickupWeaponPanel : PanelWithButton
                 break;
 
             case ButtonAction.Leave:
-                Fade(CanvasGroup, FadeOutAlpha, FadeDuration, false);
+
+                Fade(CanvasGroup, FadeOutAlpha, FadeDuration, false);              
+
                 break;
 
             default:
@@ -142,6 +133,28 @@ public class PickupWeaponPanel : PanelWithButton
             //删除地上的武器
             Destroy(m_WeaponPickup.gameObject);
         }
+    }
+    #endregion
+
+
+    #region 主要函数
+    public override void ClosePanel()
+    {
+        base.ClosePanel();
+
+        if (m_WeaponPickup != null)
+        {
+            //设置拾取武器脚本里的布尔
+            m_WeaponPickup.SetIsPanelOpen(false);
+        }
+    }
+    #endregion
+
+
+    #region 其余函数
+    private void SetIsOpenableForInteractPanel()
+    {
+        InteractPanel.Instance.SetIsOpenable(true);                 //设置布尔，以便玩家在OnTriggerStay2D中再次打开界面
     }
     #endregion
 

@@ -11,14 +11,40 @@ public class InteractPanel : BasePanel     //互动按键，给予玩家自己�
     public static InteractPanel Instance { get; private set; }
 
 
+    public Vector2 OffsetPos = Vector2.zero;       //用于打开互动界面时的偏移量
+
+    public Player Player                            //Lazy load（只在需要变量时才尝试获取组件，而不是一次性的放在某个Unity内部函数中）
+    {
+        get
+        {
+            if (m_Player == null)
+            {
+                m_Player = FindAnyObjectByType<Player>();
+                //如果尝试获取组件后Player变量仍然为空的话，则报错
+                if (m_Player == null)
+                {
+                    Debug.Log("Cannot get the reference of the Player component in the " + name);
+                }
+            }
+            return m_Player;
+        }
+        private set { }
+    }
+    private Player m_Player;
+
+
+    //表示是否允许打开界面（比如玩家因为某些原因需要在OnTriggerStay2D中再次打开此界面），所有的允许玩家反悔的物体或界面都需要跟此布尔进行交互
+    public bool IsOpenable { get; private set; } = true;            
+    public bool IsActionCalled { get; private set; } = false;              //表示事件绑定的逻辑已经调用了（防止多次调用）
+
+
 
     RectTransform m_PanelTransform;                 //界面的坐标组件
     TextMeshProUGUI m_LetterText;                   //字母文本（玩家需要按的键）   
 
-    Vector2 m_PositionOffset = Vector2.zero;        //距离目标坐标的偏移量
 
-    bool m_IsActionCalled = false;                  //表示事件绑定的逻辑已经调用了（防止多次调用）
-
+    
+    
 
 
 
@@ -49,6 +75,11 @@ public class InteractPanel : BasePanel     //互动按键，给予玩家自己�
         InitializeComponents();         //初始化组件
     }
 
+    private void OnEnable()
+    {
+        IsOpenable = true;              //开启界面后设置布尔
+    }
+
     private void Start()
     {
         //赋值界面名字
@@ -76,9 +107,13 @@ public class InteractPanel : BasePanel     //互动按键，给予玩家自己�
     private void Update() 
     {
         //持续检查玩家是否按下互动按键（需要确保界面打开，且事件还没有执行）
-        if (!IsRemoved && PlayerInputHandler.Instance.IsInteractKeyPressed && !m_IsActionCalled)       
+        if (!IsRemoved && PlayerInputHandler.Instance.IsInteractKeyPressed && !IsActionCalled)       
         {
             OnInteractKeyPressed?.Invoke();     //调用事件
+
+            Fade(CanvasGroup, FadeOutAlpha, FadeDuration, false);       //淡出界面
+
+            IsOpenable = false;
         }
     }
     #endregion
@@ -105,10 +140,10 @@ public class InteractPanel : BasePanel     //互动按键，给予玩家自己�
     }
 
 
-    //设置界面的坐标，需要加上偏移量
-    public void SetPositionWithOffset(Vector2 thisPos)
+    //设置界面的坐标，需要加上偏移量（界面统一显示在角色右侧）
+    public void SetPositionWithOffset()
     {
-        m_PanelTransform.position = thisPos + m_PositionOffset;
+        m_PanelTransform.position = (Vector2)Player.transform.position + OffsetPos;
     }
 
 
@@ -137,6 +172,13 @@ public class InteractPanel : BasePanel     //互动按键，给予玩家自己�
             return;
         }
 
+        
+        if (OffsetPos == Vector2.zero)
+        {
+            Debug.LogError("OffsetPosForInteractPanel is not assigned in the " + name);
+            return;
+        }
+        
 
         //设置此界面的淡入/出时长
         FadeDuration = 0;
@@ -145,15 +187,14 @@ public class InteractPanel : BasePanel     //互动按键，给予玩家自己�
 
 
     #region Setters
-    public void SetIsActionCalled(bool isTrue)
+    public void SetIsOpenable(bool isTrue)
     {
-        m_IsActionCalled = isTrue;
+        IsOpenable = isTrue;
     }
 
-    //设置界面的偏移量（因为不同的物体可能因为大小不同而需要不同的偏移量）
-    public void SetPositionOffset(Vector2 thisPos)
+    public void SetIsActionCalled(bool isTrue)
     {
-        m_PositionOffset = thisPos;
+        IsActionCalled = isTrue;
     }
     #endregion
 }

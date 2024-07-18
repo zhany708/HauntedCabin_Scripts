@@ -1,5 +1,5 @@
 using UnityEngine;
-using System.Threading.Tasks;
+
 
 
 
@@ -59,25 +59,27 @@ public class E_EvilTelephone : Event    //E开头的脚本表示跟事件相关
     }
 
 
-    private async void OnTriggerEnter2D(Collider2D other)
+    private void OnTriggerEnter2D(Collider2D other)
     {
         if (other.CompareTag("Player"))
         {
-            //UIManager.Instance.OpenInteractPanel(() => TriggerPlayerInteraction());     //打开互动面板
-
-            await TriggerPlayerInteraction();    //玩家出发后交互的逻辑
+            //打开互动面板
+            UIManager.Instance.OpenInteractPanel(() => TriggerPlayerInteraction() );     
         }      
     }
 
-    /*
+    //由于该界面强制玩家选择，没有提供取消选择的机会，因此无需在OnTriggerStay2D中再次打开
+
     private void OnTriggerExit2D(Collider2D other)
     {
-        if (other.CompareTag("Player") && !InteractPanel.Instance.isRemoved)
+        //检查是否是玩家碰撞，再检查界面是否存于字典中，最后再检查界面是否打开
+        if (other.CompareTag("Player") && UIManager.Instance.PanelDict.ContainsKey(UIManager.Instance.UIKeys.InteractPanel)
+            && !InteractPanel.Instance.IsRemoved)
         {
-            //UIManager.Instance.ClosePanel(UIManager.Instance.UIKeys.InteractPanel);      //关闭互动界面
-        }      
+            UIManager.Instance.ClosePanel(UIManager.Instance.UIKeys.InteractPanel, true);      //淡出互动界面
+        }
     }
-    */
+    
 
     private void OnDestroy()
     {
@@ -98,8 +100,12 @@ public class E_EvilTelephone : Event    //E开头的脚本表示跟事件相关
 
 
 
-    private async Task TriggerPlayerInteraction()
+    private async void TriggerPlayerInteraction()
     {
+        //先设置互动界面里的布尔，防止重复调用
+        InteractPanel.Instance.SetIsActionCalled(true);
+
+
         m_Animator.SetBool("Ringing", false);       //角色触碰电话后取消震动
 
         PlayAnswerPhoneSound();                     //播放接电话的音效
