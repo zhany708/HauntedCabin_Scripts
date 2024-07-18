@@ -11,7 +11,7 @@ public class PickupWeaponPanel : PanelWithButton
 
     
     TextMeshProUGUI m_ItemNameText;     //武器名   
-    GameObject m_WeaponPrefab;          //要拾取的武器物体
+    GameObject m_WeaponPrefab;          //待拾取的武器物体
    
     Player m_Player;                    //玩家脚本   
     WeaponPickUp m_WeaponPickup;        //拾取武器脚本
@@ -132,20 +132,6 @@ public class PickupWeaponPanel : PanelWithButton
         {
             //删除地上的武器
             Destroy(m_WeaponPickup.gameObject);
-        }
-    }
-    #endregion
-
-
-    #region 主要函数
-    public override void ClosePanel()
-    {
-        base.ClosePanel();
-
-        if (m_WeaponPickup != null)
-        {
-            //设置拾取武器脚本里的布尔
-            m_WeaponPickup.SetIsPanelOpen(false);
         }
     }
     #endregion

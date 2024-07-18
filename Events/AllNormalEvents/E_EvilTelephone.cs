@@ -7,7 +7,6 @@ public class E_EvilTelephone : Event    //E开头的脚本表示跟事件相关
 {
     Animator m_Animator;
     AudioSource m_AudioSource;
-    Collider2D m_Collider;
 
 
     float m_RingingVolume = 0.6f;       //电话响铃的声音大小
@@ -23,9 +22,8 @@ public class E_EvilTelephone : Event    //E开头的脚本表示跟事件相关
 
         m_Animator = GetComponent<Animator>();
         m_AudioSource = GetComponent<AudioSource>();
-        m_Collider = GetComponent<Collider2D>();
 
-        if (m_Animator == null || m_AudioSource == null || m_Collider == null)
+        if (m_Animator == null || m_AudioSource == null)
         {
             Debug.LogError("One or more components are missing on " + gameObject.name);
             return;
@@ -35,9 +33,6 @@ public class E_EvilTelephone : Event    //E开头的脚本表示跟事件相关
 
     private async void OnEnable()
     {
-        //每次加载时都重置碰撞框
-        m_Collider.enabled = true;
-
         EvilTelephonePanel.OnResultFinished += FinishEvent;     //UI界面关闭后再执行事件结束逻辑
 
         await UIManager.Instance.InitPanel(UIManager.Instance.UIKeys.EvilTelephonePanel);   //提前加载事件界面
@@ -106,13 +101,12 @@ public class E_EvilTelephone : Event    //E开头的脚本表示跟事件相关
         InteractPanel.Instance.SetIsActionCalled(true);
 
 
-        m_Animator.SetBool("Ringing", false);       //角色触碰电话后取消震动
 
         PlayAnswerPhoneSound();                     //播放接电话的音效
 
-        await UIManager.Instance.OpenPanel(UIManager.Instance.UIKeys.EvilTelephonePanel);   //打开事件界面
+        m_Animator.SetBool("Ringing", false);       //角色触碰电话后取消震动
 
-        m_Collider.enabled = false;                 //界面打开后，取消激活碰撞框
+        await UIManager.Instance.OpenPanel(UIManager.Instance.UIKeys.EvilTelephonePanel);   //打开事件界面
     }
 
 
