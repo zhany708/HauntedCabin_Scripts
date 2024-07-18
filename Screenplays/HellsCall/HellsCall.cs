@@ -190,9 +190,11 @@ public class HellsCall : BaseScreenplay<HellsCall>
 
         if (m_FireEffectCoroutine != null)
         {
-            PostProcessManager.Instance.TurnOffVignette();       //关闭滤镜
+            PostProcessManager.Instance.TurnOffVignette();      //关闭滤镜
             StopCoroutine(m_FireEffectCoroutine);
         }
+
+        EnvironmentManager.Instance.SetIsGameLost(true);        //设置布尔，表示游戏失败，同时防止执行正常仪式结束的逻辑
     }
     #endregion
 

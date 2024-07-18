@@ -273,6 +273,7 @@ public class BasePanel : MonoBehaviour
         RoomManager.Instance.ResetGame();
         ScreenplayManager.Instance.ResetGame();
         UIManager.Instance.ResetGame();
+        UIManager.Instance.DisplayImportantPanelsWithConditions();      //重置后，显示小地图等重要界面
 
         //再重置其余管理器脚本    
         PostProcessManager.Instance.ResetGame();

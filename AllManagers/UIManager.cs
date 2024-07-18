@@ -249,7 +249,7 @@ public class UIManager : ManagerTemplate<UIManager>
     }
 
     //显示一些符合条件的重要界面
-    private void DisplayImportantPanelsWithConditions()
+    public void DisplayImportantPanelsWithConditions()
     {
         //更快速的淡入重要界面的方式，但会导致测试时直接进入一楼场景后无法正常实施功能
         foreach (BasePanel childScript in ImportantPanelList)

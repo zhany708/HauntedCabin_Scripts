@@ -6,12 +6,12 @@ using TMPro;
 
 public class InteractPanel : BasePanel     //互动按键，给予玩家自己决定是否打开某些界面（比如拾取武器），而不是触发了触发器后自动打开界面
 {
-    public event Action OnInteractKeyPressed;       //接收方为需要玩家触发的物体（比如事件，拾取武器等）
+    public event Action OnInteractKeyPressed;       //接收方为需要玩家触发的物体（比如事件物体，拾取武器等）
 
     public static InteractPanel Instance { get; private set; }
 
 
-    public Vector2 OffsetPos = Vector2.zero;       //用于打开互动界面时的偏移量
+    public Vector2 OffsetPos = Vector2.zero;        //用于打开互动界面时的偏移量
 
     public Player Player                            //Lazy load（只在需要变量时才尝试获取组件，而不是一次性的放在某个Unity内部函数中）
     {
