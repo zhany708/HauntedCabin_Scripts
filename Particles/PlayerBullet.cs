@@ -7,14 +7,11 @@ public class PlayerBullet : MonoBehaviour
 
 
 
+    Coroutine m_DestroyBulletCoroutine;     //用于在子弹发射出去几秒后强制销毁子弹
 
     GunWeapon m_Gun;                        //玩家使用的枪械
 
-    //用于在子弹发射出去几秒后强制销毁子弹
-    float m_ExistTimer;
-    float m_CurrentTime;
-
-
+    float m_ExistDuration = 4f;             //表示子弹最长可以存在的时间
 
 
 
@@ -25,23 +22,15 @@ public class PlayerBullet : MonoBehaviour
         rigidBody2D = GetComponent<Rigidbody2D>();
     }
 
-    private void Update()
-    {
-        m_CurrentTime += Time.deltaTime;
-
-        if (m_CurrentTime - m_ExistTimer >= 4f)      //子弹生成4秒后强制销毁子弹
-        {
-            PushBulletBackToPool();
-        }
-    }
-
     private void OnEnable()
     {
-        m_ExistTimer = Time.time;
-        m_CurrentTime = Time.time;
+        //延迟几秒后强行销毁子弹
+        m_DestroyBulletCoroutine = StartCoroutine(Delay.Instance.DelaySomeTime(m_ExistDuration, () =>
+        {
+            Debug.Log("Time up for the bullet!");
+            PushBulletBackToPool();
+        }));
     }
-
-
 
     private void OnCollisionEnter2D(Collision2D other)
     {
@@ -64,6 +53,15 @@ public class PlayerBullet : MonoBehaviour
         }
 
         PushBulletBackToPool();
+    }
+
+    private void OnDisable()
+    {
+        //重置协程
+        if (m_DestroyBulletCoroutine != null)
+        {
+            m_DestroyBulletCoroutine = null;
+        }
     }
     #endregion
 
