@@ -27,7 +27,7 @@ public class PlayerBullet : MonoBehaviour
         //延迟几秒后强行销毁子弹
         m_DestroyBulletCoroutine = StartCoroutine(Delay.Instance.DelaySomeTime(m_ExistDuration, () =>
         {
-            Debug.Log("Time up for the bullet!");
+            //Debug.Log("Time up for the bullet!");
             PushBulletBackToPool();
         }));
     }
