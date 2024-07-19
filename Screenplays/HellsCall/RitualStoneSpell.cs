@@ -34,6 +34,15 @@ public class RitualStoneSpell : MonoBehaviour       //祷告石护符
             UIManager.Instance.ClosePanel(UIManager.Instance.UIKeys.InteractPanel, true);      //淡出互动界面
         }
     }
+
+    private void OnDestroy() 
+    {
+        //从地狱的呼唤剧本脚本的字典中删除坐标
+        if (HellsCall.Instance.AllStonePosDict.ContainsKey(transform.position))
+        {
+            HellsCall.Instance.AllStonePosDict.Remove(transform.position);
+        }
+    }
     #endregion
 
 
@@ -42,13 +51,6 @@ public class RitualStoneSpell : MonoBehaviour       //祷告石护符
     {
         //调整剧本物体中的布尔参数，表示玩家可以进行仪式
         HellsCall.Instance.SetCanStartRitual(true);
-
-
-        //从地狱的呼唤剧本脚本的字典中删除坐标
-        if (HellsCall.Instance.AllStonePosDict.ContainsKey(transform.position))
-        {
-            HellsCall.Instance.AllStonePosDict.Remove(transform.position);
-        }
 
         Destroy(gameObject);        //删除祷告石护符物体
     }

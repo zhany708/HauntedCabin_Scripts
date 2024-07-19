@@ -61,6 +61,12 @@ public class HellsCall : BaseScreenplay<HellsCall>
 
 
     #region Unity内部函数
+    private void OnEnable()
+    {
+        PlayerStats.OnHealthZero += DestroyCoroutine;                           //玩家死亡时停止持续掉血的协程
+        RoomManager.Instance.OnRoomGenerated += GenerateStoneAtSingleRoom;      //新生成房间时，检查是否生成祷告石
+    }
+
     protected override async void Start()
     {
         //提前加载好剧本失败界面
@@ -70,13 +76,6 @@ public class HellsCall : BaseScreenplay<HellsCall>
         await SoundManager.Instance.LoadClipAsync(SoundManager.Instance.AudioClipKeys.Heaven);
 
         base.Start();
-    }
-
-
-    private void OnEnable()
-    {
-        PlayerStats.OnHealthZero += DestroyCoroutine;                           //玩家死亡时停止持续掉血的协程
-        RoomManager.Instance.OnRoomGenerated += GenerateStoneAtSingleRoom;      //新生成房间时，检查是否生成祷告石
     }
 
     private void OnDisable()
@@ -193,8 +192,6 @@ public class HellsCall : BaseScreenplay<HellsCall>
             PostProcessManager.Instance.TurnOffVignette();      //关闭滤镜
             StopCoroutine(m_FireEffectCoroutine);
         }
-
-        EnvironmentManager.Instance.SetIsGameLost(true);        //设置布尔，表示游戏失败，同时防止执行正常仪式结束的逻辑
     }
     #endregion
 

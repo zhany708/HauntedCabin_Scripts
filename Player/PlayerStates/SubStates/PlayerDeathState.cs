@@ -8,29 +8,20 @@ public class PlayerDeathState : PlayerState
     {
     }
 
+
+
     public override void Enter()
     {
         base.Enter();
       
-        player.FootAnimator.gameObject.SetActive(false);    //取消激活玩家的脚
+        EnvironmentManager.Instance.SetIsGameLost(true);        //设置布尔，表示游戏失败，同时防止《地狱的呼唤》中仪式结束后执行相关的逻辑
+
+        player.FootAnimator.gameObject.SetActive(false);        //取消激活玩家的脚
 
         //取消激活所有武器
         player.PrimaryWeapon.gameObject.SetActive(false);
         player.SecondaryWeapon.gameObject.SetActive(false);
     }
-
-    public override async void Exit()
-    {
-        base.Exit();
-
-        player.gameObject.SetActive(false);    //取消激活玩家，从而退出玩家状态机
-
-        //游戏结束界面不能放在LogicUpdate函数里，防止重复打开多个界面
-        await UIManager.Instance.OpenPanel(UIManager.Instance.UIKeys.GameLostPanel);
-    }
-
-
-
 
     public override void LogicUpdate()
     {
@@ -46,4 +37,14 @@ public class PlayerDeathState : PlayerState
     }
 
     public override void PhysicsUpdate() { }
+
+    public override async void Exit()
+    {
+        base.Exit();
+
+        player.gameObject.SetActive(false);    //取消激活玩家，从而退出玩家状态机
+
+        //游戏结束界面不能放在LogicUpdate函数里，防止重复打开多个界面
+        await UIManager.Instance.OpenPanel(UIManager.Instance.UIKeys.GameLostPanel);
+    }
 }

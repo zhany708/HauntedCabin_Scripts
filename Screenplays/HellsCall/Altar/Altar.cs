@@ -50,29 +50,18 @@ public class Altar : MonoBehaviour      //仪式台的脚本
         m_DurationTimer = new Timer(m_RitualDuration);
     }
 
-
     private void OnEnable()
     {
         m_DurationTimer.OnTimerDone += FinishRitual;          //计时结束后进行仪式结束的逻辑
         Stats.OnHealthZero += GameLost;
     }
 
-    private void OnDisable()
-    {
-        m_DurationTimer.OnTimerDone -= FinishRitual;
-        Stats.OnHealthZero -= GameLost;
-    }
-
-
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.gameObject.CompareTag("Player"))
-        {          
-            //只有当玩家拿到祷告石后，才允许玩家开始仪式
-            if (HellsCall.Instance.GetCanStartRitual() )
-            {
-                UIManager.Instance.OpenInteractPanel(() => SetAnimatorStart() );     //打开互动面板  
-            }           
+        //只有当玩家拿到祷告石后，才允许玩家开始仪式
+        if (other.gameObject.CompareTag("Player") && HellsCall.Instance.GetCanStartRitual() )
+        {                   
+            UIManager.Instance.OpenInteractPanel(() => SetAnimatorStart() );     //打开互动面板                     
         }
     }
  
@@ -84,6 +73,12 @@ public class Altar : MonoBehaviour      //仪式台的脚本
         {
             UIManager.Instance.ClosePanel(UIManager.Instance.UIKeys.InteractPanel, true);      //淡出互动界面
         }
+    }
+
+    private void OnDisable()
+    {
+        m_DurationTimer.OnTimerDone -= FinishRitual;
+        Stats.OnHealthZero -= GameLost;
     }
     #endregion
 
