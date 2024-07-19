@@ -27,7 +27,7 @@ public class HellsCall : BaseScreenplay<HellsCall>
     }
     private Stats m_PlayerStats;
 
-    public const string RitualRoomName = "RitualRoom";      //加进Key里的仪式房的名字
+    public const string RitualRoomName = "_RitualRoom";      //加进Key里的仪式房的名字
 
 
     public DoorController RitualRoomDoorController { get; private set; }    //仪式房的DoorController脚本
@@ -45,6 +45,7 @@ public class HellsCall : BaseScreenplay<HellsCall>
 
     bool m_NeedGenerateStone = false;   //判断是否需要生成祷告石
     bool m_CanStartRitual = false;      //判断是否可以开始仪式
+    bool m_IsPlayerDie = false;         //表示玩家是否死亡
 
 
     [SerializeField] int m_NeededStoneNum = 3;            //需要生成的祷告石的数量（也是玩家需要达成的仪式数量）
@@ -63,7 +64,7 @@ public class HellsCall : BaseScreenplay<HellsCall>
     #region Unity内部函数
     private void OnEnable()
     {
-        PlayerStats.OnHealthZero += DestroyCoroutine;                           //玩家死亡时停止持续掉血的协程
+        PlayerStats.OnHealthZero += HandlePlayerDeath;                          //玩家死亡时执行函数的逻辑
         RoomManager.Instance.OnRoomGenerated += GenerateStoneAtSingleRoom;      //新生成房间时，检查是否生成祷告石
     }
 
@@ -82,7 +83,7 @@ public class HellsCall : BaseScreenplay<HellsCall>
     {
         if (PlayerStats != null)
         {
-            PlayerStats.OnHealthZero -= DestroyCoroutine;
+            PlayerStats.OnHealthZero -= HandlePlayerDeath;
         }
 
         RoomManager.Instance.OnRoomGenerated -= GenerateStoneAtSingleRoom;
@@ -168,8 +169,12 @@ public class HellsCall : BaseScreenplay<HellsCall>
         altar.Combat.gameObject.SetActive(false);            //禁用祷告石的战斗组件，防止鞭尸
 
 
-        //打开剧本失败界面
-        await UIManager.Instance.OpenPanel(UIManager.Instance.UIKeys.HellsCall_GameLostPanel);
+        //只有玩家没死亡时才打开剧本失败界面，防止两个失败界面都打开
+        if (!m_IsPlayerDie)
+        {
+            //打开剧本失败界面
+            await UIManager.Instance.OpenPanel(UIManager.Instance.UIKeys.HellsCall_GameLostPanel);
+        }      
     }
     #endregion
 
@@ -434,6 +439,14 @@ public class HellsCall : BaseScreenplay<HellsCall>
         {
             await Victory();
         }
+    }
+
+    //用于绑定玩家的OnHealthZero事件
+    private void HandlePlayerDeath()
+    {
+        m_IsPlayerDie = true;       //设置布尔，表示玩家死亡
+
+        DestroyCoroutine();     //停止持续掉血的协程
     }
     #endregion
 

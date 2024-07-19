@@ -197,8 +197,8 @@ public class EnemyPool : MonoBehaviour       //用于生成敌人的对象池，
         {
             foreach (Transform child2 in child)     //检索每一个子物体的子物体
             {
-                //检查物体是否有敌人标签，且处于激活状态
-                if (child2.CompareTag("Enemy") && child2.gameObject.activeSelf)
+                //检查物体是否有特殊敌人标签，且处于激活状态
+                if (child2.CompareTag("Enemy_DefenseWar") && child2.gameObject.activeSelf)
                 {
                     Enemy_DefenseWar enemyScript = child2.GetComponentInChildren<Enemy_DefenseWar>();     //从子物体那获取敌人脚本
 

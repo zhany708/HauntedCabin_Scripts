@@ -18,6 +18,7 @@ public class DoorController : MonoBehaviour
     public RandomPosition EnemySpwanPos { get; private set; }      //用于随机生成敌人坐标的脚本组件
     public int KilledEnemyCount { get; private set; } = 0;         //表示当前房间内击杀了多少敌人
     public bool HasGeneratedEvent { get; private set; } = false;   //表示当前房间是否生成过事件
+    public bool IsAllEnemyKilled { get; private set; } = false;    //表示该房间内生成的敌人是否都被杀死了
 
     //运用Physics2D检查重复坐标时需要的X和Y的值（火蝙蝠Y轴上有0.5的偏差，因为坐标点位于脚底）
     public float PhysicsCheckingXPos { get; private set; } = 2f;
@@ -31,7 +32,7 @@ public class DoorController : MonoBehaviour
 
     bool m_IsRootRoom = false;              //表示当前门所在的房间是否为初始房间
     bool m_HasGeneratedEnemy = false;       //表示当前房间是否生成过敌人
-
+    bool m_IsDoorOpenable = true;           //表示是否允许开启当前房间的门（某些剧本可能即使玩家杀死房间内的所有敌人后也不能立刻打开门）
 
 
 
@@ -58,6 +59,12 @@ public class DoorController : MonoBehaviour
             Vector2 rightTopPos = new Vector2(m_MainRoom.transform.position.x + EnemySpawnPosPositiveOffset.x, m_MainRoom.transform.position.y + EnemySpawnPosPositiveOffset.y);
 
             EnemySpwanPos = new RandomPosition(leftDownPos, rightTopPos, 1f);
+        }
+
+        //房间没有敌人生成
+        else
+        {
+            IsAllEnemyKilled = true;
         }
     }
 
@@ -128,7 +135,13 @@ public class DoorController : MonoBehaviour
         {
             if (KilledEnemyCount >= EnemyObjects.Length)
             {
-                OpenDoors();
+                IsAllEnemyKilled = true;        //设置布尔，表示该房间正常生成的敌人全都被消灭
+
+                //开门前先检查是否允许开门
+                if (m_IsDoorOpenable)
+                {
+                    OpenDoors();
+                }             
             }
         }
     }
@@ -182,5 +195,13 @@ public class DoorController : MonoBehaviour
     public void OpenDoors() => SetDoorAnimation(true);
 
     public void CloseDoors() => SetDoorAnimation(false);
+    #endregion
+
+
+    #region Setters
+    public void SetIsDoorOpenable(bool isTrue)
+    {
+        m_IsDoorOpenable = isTrue;
+    }
     #endregion
 }

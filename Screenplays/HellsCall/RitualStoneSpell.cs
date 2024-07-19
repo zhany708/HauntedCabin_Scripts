@@ -14,8 +14,6 @@ public class RitualStoneSpell : MonoBehaviour       //祷告石护符
         }
     }
 
-
-
     private void OnTriggerEnter2D(Collider2D other)
     {
         //只有当玩家身上没有护符时才会触发效果
