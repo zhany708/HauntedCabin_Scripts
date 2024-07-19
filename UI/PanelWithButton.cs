@@ -44,6 +44,21 @@ public class PanelWithButton : BasePanel        //专门用于有按钮的界面
         * /    
     }
     */
+
+    protected virtual void OnEnable()
+    {
+        //界面打开后加进列表
+        if (!openedPanelsWithButton.Contains(this) )
+        {
+            //Debug.Log("Panel with button added to the list: " + this.name);
+
+            openedPanelsWithButton.Add(this);
+        }
+
+        //每次界面重新加载后都设置新的按钮给EventSystem
+        SetTopPriorityButton();
+    }
+
     protected virtual void Update()
     {      
         //先检查事件系统是否为空
@@ -63,21 +78,6 @@ public class PanelWithButton : BasePanel        //专门用于有按钮的界面
                 lastSelectedButton = EventSystem.current.currentSelectedGameObject;
             }
         } 
-    }
-
-
-    protected virtual void OnEnable()
-    {
-        //界面打开后加进列表
-        if (!openedPanelsWithButton.Contains(this) )
-        {
-            //Debug.Log("Panel with button added to the list: " + this.name);
-
-            openedPanelsWithButton.Add(this);
-        }
-
-        //每次界面重新加载后都设置新的按钮给EventSystem
-        SetTopPriorityButton();
     }
 
     protected override void OnDisable()

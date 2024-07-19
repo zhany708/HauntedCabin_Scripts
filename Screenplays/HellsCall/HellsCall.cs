@@ -98,6 +98,12 @@ public class HellsCall : BaseScreenplay<HellsCall>
             RoomManager.Instance.RoomKeys.FirstFloorRoomKeys.Remove(RitualRoomName);
         }
 
+        //当UIManager的预制件字典里有剧本失败界面时（即玩家没有打开过该界面），释放该界面
+        if (UIManager.Instance.PrefabDict.ContainsKey(UIManager.Instance.UIKeys.HellsCall_GameLostPanel) )
+        {
+            UIManager.Instance.ReleasePrefab(UIManager.Instance.UIKeys.HellsCall_GameLostPanel);
+        }
+
         DestroyCoroutine();     //停止持续掉血的协程
     }
     #endregion
@@ -133,7 +139,7 @@ public class HellsCall : BaseScreenplay<HellsCall>
     {
         DestroyCoroutine();     //停止玩家掉血和火焰滤镜的协程
 
-        //打开入口大堂的大门
+        //设置布尔以打开入口大堂的大门
         MainDoorController.Instance.SetDoOpenMainDoor(true);       //设置布尔，以便玩家再次进入入口大堂后，大宅的大门会开启
 
         //提前加载好剧本胜利界面
