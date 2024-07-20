@@ -12,6 +12,7 @@ public class NormalRoomController : MonoBehaviour
     public static event RoomGeneratedHandler OnPlayerFirstTimeEnterRoom;
 
 
+    public int RoomIndex;      //房间的序列号，用于决定开启哪个剧本
 
     //后期处理相关的变量
     public float m_DarkPostProcessColorValue = -250f;
@@ -162,6 +163,13 @@ public class NormalRoomController : MonoBehaviour
         if (m_Shadow == null)
         {
             Debug.LogError("Shadow GameObject is not assigned correctly in the " + name);
+            return;
+        }
+
+        //检查房间序列号
+        if (RoomIndex == null)
+        {
+            Debug.LogError("RoomIndex is not assigned in the: " + name);
             return;
         }
     }

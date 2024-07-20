@@ -7,12 +7,15 @@ using UnityEngine.SceneManagement;
 //需要做的：在每个预兆事件和房间脚本中都添加一个int表示该事件/房间的序列号，因为需要根据这些序列号决定剧本名
 public class ScreenplayManager : ManagerTemplate<ScreenplayManager>     //用于管理剧本相关的逻辑的
 {
+    //需要做的：该Key里的剧本名需要跟下面2D数组中的剧本名一致
     public SO_ScreenplayKeys ScreenplayKeys;
 
 
-    string[,] m_AllScreenplays;     //用于表示每个剧本是由那个事件和房间触发的2D数组
+    string[,] m_AllScreenplays = new string[10, 10];     //用于表示每个剧本是由哪个事件和房间触发的2D数组（10x10）
 
     Transform m_ScreenplayRoot;     //用于在编辑器中储存所有的剧本的跟物体（为了美观）
+
+
 
 
 
@@ -25,12 +28,6 @@ public class ScreenplayManager : ManagerTemplate<ScreenplayManager>     //用于
 
         //寻找画布跟物体，没有的话就创建一个
         SetupRootGameObject(ref m_ScreenplayRoot, "ScreenplayRoot");
-    }
-
-    private void Start() 
-    {
-        //初始化2D数组（10x10）
-        m_AllScreenplays = new string[10, 10];
     }
     #endregion
 
@@ -57,6 +54,8 @@ public class ScreenplayManager : ManagerTemplate<ScreenplayManager>     //用于
         }
     }
 
+
+
     //根据事件的序列和房间的序列决定触发哪个剧本
     public string GetScreenplay(int roomIndex, int evilEventIndex)
     {
@@ -66,16 +65,16 @@ public class ScreenplayManager : ManagerTemplate<ScreenplayManager>     //用于
 
     //初始化所有剧本名
     private void InitializeScreenplays()
-{
-    //填充2D数组（根据事件的序列和房间的序列决定剧本名）
-    for (int roomIndex = 0; roomIndex < 10; roomIndex++)
     {
-        for (int omenIndex = 0; omenIndex < 10; omenIndex++)
+        //填充2D数组（根据事件的序列和房间的序列决定剧本名）
+        for (int roomIndex = 0; roomIndex < 10; roomIndex++)
         {
-            haunts[roomIndex, omenIndex] = $"Screenplay_{roomIndex}_{omenIndex}";
+            for (int evilEventIndex = 0; evilEventIndex < 10; evilEventIndex++)
+            {
+                haunts[roomIndex, evilEventIndex] = $"Screenplay_{roomIndex}_{evilEventIndex}";
+            }
         }
     }
-}
     #endregion
 
 
