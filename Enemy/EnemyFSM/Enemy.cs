@@ -94,25 +94,6 @@ public class Enemy : MonoBehaviour
         DeathState = new EnemyDeathState(this, StateMachine, EnemyData, "Death");       
     }
 
-    protected virtual void Start()      //只在第一帧运行前运行一次这个函数
-    {
-        StateMachine.Initialize(IdleState);     //初始化状态为闲置
-    }
-
-    protected void Update()
-    {
-        Core.LogicUpdate();     //获取当前速度
-
-        StateMachine.CurrentState.LogicUpdate();
-
-        AttackTimer.Tick();
-    }
-
-    protected void FixedUpdate()
-    {
-        StateMachine.CurrentState.PhysicsUpdate();
-    }
-
     protected virtual void OnEnable()       //每次重新激活时都会运行这个函数
     {
         AttackTimer = new Timer(EnemyData.AttackInterval);      //用攻击间隔初始化计时器
@@ -149,6 +130,25 @@ public class Enemy : MonoBehaviour
         {
             StateMachine.Initialize(IdleState);
         }
+    }
+
+    protected virtual void Start()      //只在第一帧运行前运行一次这个函数
+    {
+        StateMachine.Initialize(IdleState);     //初始化状态为闲置
+    }
+
+    protected void Update()
+    {
+        Core.LogicUpdate();     //获取当前速度
+
+        StateMachine.CurrentState.LogicUpdate();
+
+        AttackTimer.Tick();
+    }
+
+    protected void FixedUpdate()
+    {
+        StateMachine.CurrentState.PhysicsUpdate();
     }
 
     protected virtual void OnDisable()

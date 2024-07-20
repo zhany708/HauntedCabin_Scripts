@@ -61,6 +61,15 @@ public class ConfirmPanel : PanelWithButton     //用于询问玩家是否确认
         FadeDuration = 0;
     }
 
+    protected override void OnEnable()
+    {
+        //只有当场景不在主菜单时才运行跟物体的同名函数（因为当前界面的渲染优先级高于主菜单界面，导致进入主菜单时，默认按钮在当前界面上）
+        if (!(SceneManager.GetActiveScene().name == SceneManagerScript.MainMenuSceneName) && !m_IsFirstTimeInitialize)
+        {
+            base.OnEnable();
+        }
+    }
+
     private void Start()
     {
         //将按钮和函数绑定起来
@@ -87,16 +96,6 @@ public class ConfirmPanel : PanelWithButton     //用于询问玩家是否确认
 
 
         m_IsFirstTimeInitialize = false;        //设置布尔，表示界面已经初始化过了
-    }
-
-
-    protected override void OnEnable()
-    {
-        //只有当场景不在主菜单时才运行跟物体的同名函数（因为当前界面的渲染优先级高于主菜单界面，导致进入主菜单时，默认按钮在当前界面上）
-        if (!(SceneManager.GetActiveScene().name == SceneManagerScript.MainMenuSceneName) && !m_IsFirstTimeInitialize)
-        {
-            base.OnEnable();
-        }
     }
     #endregion
 

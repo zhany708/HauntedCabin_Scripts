@@ -47,6 +47,12 @@ public class NormalRoomController : MonoBehaviour
         InitializeComponents();
     }
 
+    protected virtual void OnEnable()
+    {
+        //房间激活时隐藏房间
+        SetActiveShadowObject(true);
+    }
+
     protected virtual void Start()
     {
         //在这里加进字典，防止字典还没实例化就尝试获取引用导致报错
@@ -57,23 +63,6 @@ public class NormalRoomController : MonoBehaviour
             //Debug.Log("Now we have this number of rooms in the dict: " + RoomManager.Instance.GeneratedRoomDict.Count);
         }
     }
-
-    protected virtual void OnEnable()
-    {
-        //房间激活时隐藏房间
-        SetActiveShadowObject(true);
-    }
-
-    protected virtual void OnDisable()
-    {
-        //每当房间取消激活时，从字典中移除当前房间的坐标
-        if (RoomManager.Instance.GeneratedRoomDict.ContainsKey(transform.position))
-        {
-            RoomManager.Instance.GeneratedRoomDict.Remove(transform.position);
-        }
-    }
-
-
 
     protected virtual void OnTriggerEnter2D(Collider2D other)
     {
@@ -130,6 +119,15 @@ public class NormalRoomController : MonoBehaviour
                 //将相机亮度一瞬间的变暗
                 PostProcessManager.Instance.DarkenThenBrighten(m_DarkPostProcessColorValue, m_PostProcessDuration);
             }
+        }
+    }
+
+    protected virtual void OnDisable()
+    {
+        //每当房间取消激活时，从字典中移除当前房间的坐标
+        if (RoomManager.Instance.GeneratedRoomDict.ContainsKey(transform.position))
+        {
+            RoomManager.Instance.GeneratedRoomDict.Remove(transform.position);
         }
     }
     #endregion

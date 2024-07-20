@@ -57,7 +57,6 @@ public class MiniMapPanel : BasePanel
         }
     }
 
-
     protected override void OnDisable()
     {
         //检查界面名字是否为空（为空的话则代表当前界面是重复的，因为是在Start函数中赋值名字），以及当前界面是否是唯一的那个

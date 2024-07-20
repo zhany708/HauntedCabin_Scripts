@@ -29,19 +29,18 @@ public class GameLostPanel : PanelWithButton
         firstSelectedButton = RestartButton.gameObject;
     }
 
-    private void Start()
-    {
-        //将按钮和函数绑定起来
-        RestartButton.onClick.AddListener(() => OnRestartButtonClick());
-        QuitButton.onClick.AddListener(() => OnQuitButtonClick());       
-    }
-
-
     protected override void OnEnable()
     {
         base.OnEnable();
 
         OnFadeOutFinished += HandleFadeOutFinished;        //彻底淡出时执行函数
+    }
+
+    private void Start()
+    {
+        //将按钮和函数绑定起来
+        RestartButton.onClick.AddListener(() => OnRestartButtonClick());
+        QuitButton.onClick.AddListener(() => OnQuitButtonClick());       
     }
 
     protected override void OnDisable()

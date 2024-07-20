@@ -26,6 +26,13 @@ public class HellsCall_GameLostPanel : BasePanel
         }
     }
 
+    private void OnEnable()
+    {
+        OnFadeOutFinished += Restart;               //界面淡出后执行函数以重置系统
+
+        OnFadeInFinished += StartTextAnimations;    //界面完全淡入后调用此函数
+    }
+
     private async void Start()
     {
         //提前加载一楼BGM
@@ -33,13 +40,6 @@ public class HellsCall_GameLostPanel : BasePanel
 
         //停止播放剧本BGM
         SoundManager.Instance.StopAudioPlay(true);
-    }
-
-    private void OnEnable()
-    {
-        OnFadeOutFinished += Restart;               //界面淡出后执行函数以重置系统
-
-        OnFadeInFinished += StartTextAnimations;    //界面完全淡入后调用此函数
     }
 
     protected override void OnDisable()

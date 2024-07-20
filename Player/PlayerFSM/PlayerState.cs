@@ -82,12 +82,6 @@ public class PlayerState
         player.Core.Animator.SetBool(m_AnimationBoolName, true);     //播放状态的动画
     }
 
-    public virtual void Exit()
-    {
-        player.Core.Animator.SetBool(m_AnimationBoolName, false);        //设置当前状态布尔为false以进入下个状态
-    }
-
-
     public virtual void LogicUpdate() 
     {
         input = PlayerInputHandler.Instance.RawMovementInput;   //通过Player脚本调用闲置状态和移动状态需要的向量数值
@@ -121,6 +115,11 @@ public class PlayerState
         {
             movement.SetVelocityZero();
         }
+    }
+
+    public virtual void Exit()
+    {
+        player.Core.Animator.SetBool(m_AnimationBoolName, false);        //设置当前状态布尔为false以进入下个状态
     }
     
 

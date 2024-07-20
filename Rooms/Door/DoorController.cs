@@ -126,9 +126,6 @@ public class DoorController : MonoBehaviour
 
     
 
-    
-
-
     public void CheckIfOpenDoors()      //敌人死亡时调用，检查是否达到开门的条件（即房间内所有敌人都死亡）
     {
         if (EnemyObjects.Length != 0)   //先检查房间是否有敌人

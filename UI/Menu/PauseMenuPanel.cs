@@ -62,6 +62,12 @@ public class PauseMenuPanel : PanelWithButton       //整个游戏过程中都�
         FadeDuration = 0;
     }
 
+    //重写函数，因为此界面游戏开始时就存在
+    protected override void OnEnable() 
+    {
+        OnFadeInFinished += base.OnEnable;
+        OnFadeOutFinished += base.OnDisable;
+    }
 
     private void Start()
     {
@@ -89,7 +95,6 @@ public class PauseMenuPanel : PanelWithButton       //整个游戏过程中都�
         }
     }
 
-
     protected override void Update()
     {
         //当界面打开时才调用父类的Update函数
@@ -114,13 +119,6 @@ public class PauseMenuPanel : PanelWithButton       //整个游戏过程中都�
                 Pause();
             }
         }                  
-    }
-
-    //重写函数，因为此界面游戏开始时就存在
-    protected override void OnEnable() 
-    {
-        OnFadeInFinished += base.OnEnable;
-        OnFadeOutFinished += base.OnDisable;
     }
 
     protected override void OnDisable()

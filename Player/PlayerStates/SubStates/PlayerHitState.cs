@@ -4,19 +4,12 @@ public class PlayerHitState : PlayerGroundedState
     {
     }
 
+
     public override void Enter()
     {
         base.Enter();
 
         isHit = true;
-    }
-
-    public override void Exit()
-    {
-        base.Exit();
-
-        combat.SetIsHit(false);
-        isHit = false;
     }
 
     public override void LogicUpdate()
@@ -34,5 +27,13 @@ public class PlayerHitState : PlayerGroundedState
     public override void PhysicsUpdate()
     {
         //重写此函数，从而禁止玩家受击时自由移动
+    }
+
+    public override void Exit()
+    {
+        base.Exit();
+
+        combat.SetIsHit(false);
+        isHit = false;
     }
 }

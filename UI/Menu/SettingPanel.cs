@@ -39,20 +39,19 @@ public class SettingPanel : PanelWithButton
         }
     }
 
+    protected override void OnEnable()
+    {
+        base.OnEnable();
+        //界面完全淡出后调用此函数
+        OnFadeOutFinished += ClosePanel;
+    }
+
     private void Start()
     {
         PopulateDropdown();     //根据拥有的语言填充下拉菜单
 
         Dropdown.onValueChanged.AddListener(ChangeLanguage);    //将函数绑定到下拉菜单
         CloseButton.onClick.AddListener(() => Fade(CanvasGroup, FadeOutAlpha, FadeDuration, false) );   //将函数绑定到按钮
-    }
-
-
-    protected override void OnEnable()
-    {
-        base.OnEnable();
-        //界面完全淡出后调用此函数
-        OnFadeOutFinished += ClosePanel;
     }
 
     protected override void OnDisable()

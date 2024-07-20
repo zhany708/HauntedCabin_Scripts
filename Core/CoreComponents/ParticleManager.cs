@@ -3,9 +3,6 @@ using UnityEngine;
 
 public class ParticleManager : ManagerTemplate<ParticleManager>     //用于管理特效
 {
-
-
-
     //基础生成特效函数
     public GameObject StartParticles(GameObject particlePrefab, Vector2 position, quaternion rotation)
     {

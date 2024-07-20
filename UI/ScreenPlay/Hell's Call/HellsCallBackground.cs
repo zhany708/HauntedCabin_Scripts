@@ -28,6 +28,14 @@ public class HellsCallBackground : BasePanel
         }
     }
 
+    private void OnEnable()
+    {        
+        OnFadeOutFinished += ClosePanel;                //界面完全淡出后调用的函数
+        OnFadeOutFinished += HandleFadeOutFinished;
+
+        OnFadeInFinished += StartTextAnimations;        //界面完全淡入后调用此函数
+    }
+
     private async void Start()
     {
         SoundManager.Instance.StopAudioPlay(true);      //停止当前BGM的播放
@@ -42,15 +50,6 @@ public class HellsCallBackground : BasePanel
     private void Update()
     {
         SetBothMoveableAndAttackable(false);            //界面打开时禁止玩家移动和攻击
-    }
-
-
-    private void OnEnable()
-    {        
-        OnFadeOutFinished += ClosePanel;                //界面完全淡出后调用的函数
-        OnFadeOutFinished += HandleFadeOutFinished;
-
-        OnFadeInFinished += StartTextAnimations;        //界面完全淡入后调用此函数
     }
 
     protected override void OnDisable()

@@ -28,11 +28,10 @@ public class Movement : CoreComponent   //用于管理移动
             return;
         }
     }
-    #endregion
-
 
     //public override void LogicUpdate() { }
-    
+    #endregion
+
 
     #region 设置速度相关
     public void SetVelocityZero()

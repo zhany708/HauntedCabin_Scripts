@@ -47,11 +47,6 @@ public class Enemy_DefenseWar : Enemy
         DeathState = new EnemyDeathState_DefenseWar(this, StateMachine, EnemyData, "Death");
     }
 
-    protected override void Start()      //只在第一帧运行前运行一次这个函数
-    {
-        StateMachine.Initialize(ChaseState);     //初始化状态为追击
-    }
-
     protected override void OnEnable()       //每次重新激活时都会运行这个函数
     {
         AttackTimer = new Timer(EnemyData.AttackInterval);      //用攻击间隔初始化计时器
@@ -74,6 +69,11 @@ public class Enemy_DefenseWar : Enemy
         {
             StateMachine.Initialize(ChaseState);
         }
+    }
+
+    protected override void Start()      //只在第一帧运行前运行一次这个函数
+    {
+        StateMachine.Initialize(ChaseState);     //初始化状态为追击
     }
 
     protected override void OnDisable()

@@ -43,15 +43,14 @@ public class TaskPanel : BasePanel
         }
     }
 
-    private void Start()
-    {
-        UpdateTaskText();       //游戏开始前正确显示任务数量
-    }
-
-
     private void OnEnable()
     {
         HellsCall.Instance.OnRitualFinished += UpdateTaskText;
+    }
+
+    private void Start()
+    {
+        UpdateTaskText();       //游戏开始前正确显示任务数量
     }
 
     protected override void OnDisable()

@@ -25,7 +25,6 @@ public class TransitionStagePanel : BasePanel
         }
     }
 
-
     private void OnEnable()
     {       
         OnFadeOutFinished += ClosePanel;            //彻底淡出后再删除界面，并且打开任务界面

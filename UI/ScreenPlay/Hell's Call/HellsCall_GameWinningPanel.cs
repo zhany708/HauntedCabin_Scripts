@@ -33,6 +33,14 @@ public class HellsCall_GameWinningPanel : PanelWithButton
         firstSelectedButton = RestartButton.gameObject;
     }
 
+    protected override void OnEnable()
+    {
+        base.OnEnable();
+
+        OnFadeOutFinished += HandleFadeOutFinished;        //彻底淡出时执行函数
+        OnFadeInFinished += StartTextAnimations;           //淡入后执行文本逻辑
+    }
+
     private void Start()
     {
         //将按钮和函数绑定起来
@@ -40,15 +48,6 @@ public class HellsCall_GameWinningPanel : PanelWithButton
         QuitButton.onClick.AddListener(() => OnQuitButtonClick());
 
         SetButtons(false);      //先隐藏按钮
-    }
-
-
-    protected override void OnEnable()
-    {
-        base.OnEnable();
-
-        OnFadeOutFinished += HandleFadeOutFinished;        //彻底淡出时执行函数
-        OnFadeInFinished += StartTextAnimations;           //淡入后执行文本逻辑
     }
 
     protected override void OnDisable()

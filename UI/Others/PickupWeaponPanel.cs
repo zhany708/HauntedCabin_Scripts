@@ -52,15 +52,6 @@ public class PickupWeaponPanel : PanelWithButton
         firstSelectedButton = EquipOnPrimary.gameObject;
     }
 
-    private void Start()
-    {
-        //将按钮和函数绑定起来
-        EquipOnPrimary.onClick.AddListener(() => OnButtonClicked(ButtonAction.EquipOnPrimary));
-        EquipOnSecondary.onClick.AddListener(() => OnButtonClicked(ButtonAction.EquipOnSecondary));
-        Leave.onClick.AddListener(() => OnButtonClicked(ButtonAction.Leave));  
-    }
-
-
     protected override void OnEnable()
     {
         base.OnEnable();
@@ -69,6 +60,14 @@ public class PickupWeaponPanel : PanelWithButton
         OnFadeOutFinished += ClosePanel;
         //界面淡出后再设置布尔，防止还没完全淡出玩家就再次按下按钮导致打不开界面
         OnFadeOutFinished += SetIsOpenableForInteractPanel;
+    }
+
+    private void Start()
+    {
+        //将按钮和函数绑定起来
+        EquipOnPrimary.onClick.AddListener(() => OnButtonClicked(ButtonAction.EquipOnPrimary));
+        EquipOnSecondary.onClick.AddListener(() => OnButtonClicked(ButtonAction.EquipOnSecondary));
+        Leave.onClick.AddListener(() => OnButtonClicked(ButtonAction.Leave));  
     }
 
     protected override void OnDisable()

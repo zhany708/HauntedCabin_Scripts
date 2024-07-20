@@ -36,6 +36,12 @@ public class MainMenuPanel : PanelWithButton
         firstSelectedButton = PlayButton.gameObject;
     }
 
+    protected override void OnEnable()
+    {
+        base.OnEnable();
+
+        OnFadeOutFinished += HandleFadeOutFinished;     //主菜单界面完全关闭后再打开其余界面
+    }
 
     private async void Start()
     {
@@ -65,14 +71,6 @@ public class MainMenuPanel : PanelWithButton
 
         //播放主界面BGN
         await SoundManager.Instance.PlayBGMAsync(SoundManager.Instance.AudioClipKeys.MyVeryOwnDeadShip, true, MainPanelBgmVolume);
-    }
-
-
-    protected override void OnEnable()
-    {
-        base.OnEnable();
-
-        OnFadeOutFinished += HandleFadeOutFinished;     //主菜单界面完全关闭后再打开其余界面
     }
 
     protected override void OnDisable()

@@ -12,6 +12,9 @@ public class SceneManagerScript : ManagerTemplate<SceneManagerScript>
 
 
 
+
+
+
     #region Unity内部函数
     private void OnEnable()
     {
@@ -26,6 +29,7 @@ public class SceneManagerScript : ManagerTemplate<SceneManagerScript>
     #endregion
 
 
+    #region 主要函数
     //每当加载场景时调用的函数（在新场景所有物体的Awake和OnEnable函数后，Start函数前执行）
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
@@ -44,4 +48,5 @@ public class SceneManagerScript : ManagerTemplate<SceneManagerScript>
         //先调用具体的某个UI界面的加载场景脚本
         PlayerStatusBar.Instance.OnSceneLoaded(scene, mode);
     }
+    #endregion
 }

@@ -25,6 +25,9 @@ public class EventManager : ManagerTemplate<EventManager>
 
 
 
+
+
+
     #region Unity内部函数循环
     protected override void Awake()
     {

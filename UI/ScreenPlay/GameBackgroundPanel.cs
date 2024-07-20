@@ -54,16 +54,6 @@ public class GameBackgroundPanel : BasePanel
         await InitializeKeywordAudioDict();       //初始化字典
     }
 
-    private async void Start() 
-    {
-        //提前加载一楼BGM
-        await SoundManager.Instance.LoadClipAsync(SoundManager.Instance.AudioClipKeys.StopForAMoment);
-
-        //循环播放下雨音效
-        SoundManager.Instance.PlaySFXAsync(SoundManager.Instance.AudioClipKeys.RainingKey, KeyWordAudioVolume, true);
-    }
-
-
     private void OnEnable()
     {
         //界面完全淡出后调用以下函数
@@ -71,6 +61,15 @@ public class GameBackgroundPanel : BasePanel
         OnFadeOutFinished += PlayGame;
 
         OnFadeInFinished += StartTextAnimations;    //界面完全淡入后调用此函数
+    }
+
+    private async void Start() 
+    {
+        //提前加载一楼BGM
+        await SoundManager.Instance.LoadClipAsync(SoundManager.Instance.AudioClipKeys.StopForAMoment);
+
+        //循环播放下雨音效
+        SoundManager.Instance.PlaySFXAsync(SoundManager.Instance.AudioClipKeys.RainingKey, KeyWordAudioVolume, true);
     }
 
     protected override void OnDisable()

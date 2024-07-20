@@ -44,17 +44,6 @@ public class EntranceHall : RootRoomController      //入口大堂脚本
         }
     }
 
-    protected override void OnDisable()
-    {
-        //只有含Instance的本房间取消激活时，才会从字典中移除当前房间的坐标
-        if (Instance == this)
-        {
-            //暂时先不给入口大堂从字典中移除的机会，防止小地图无法正常显示
-            //base.OnDisable();
-        }
-    }
-
-
     protected override void OnTriggerEnter2D(Collider2D other)
     {
         base.OnTriggerEnter2D(other);
@@ -65,6 +54,17 @@ public class EntranceHall : RootRoomController      //入口大堂脚本
             MainDoorController.Instance.OpenMainDoor();
         }
     }
+    /*
+    protected override void OnDisable()
+    {
+        //只有含Instance的本房间取消激活时，才会从字典中移除当前房间的坐标
+        if (Instance == this)
+        {
+            //暂时先不给入口大堂从字典中移除的机会，防止小地图无法正常显示
+            //base.OnDisable();
+        }
+    }
+    */
     #endregion
 
 

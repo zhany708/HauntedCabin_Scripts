@@ -30,7 +30,6 @@ public class E_EvilTelephone : DarkEvent    //E开头的脚本表示跟事件相
         }
     }
 
-
     private async void OnEnable()
     {
         EvilTelephonePanel.OnResultFinished += FinishEvent;     //UI界面关闭后再执行事件结束逻辑
@@ -47,12 +46,6 @@ public class E_EvilTelephone : DarkEvent    //E开头的脚本表示跟事件相
             await SoundManager.Instance.LoadClipAsync(EventData.AudioClipNames[i]);
         }
     }
-
-    private void OnDisable()
-    {
-        EvilTelephonePanel.OnResultFinished -= FinishEvent;
-    }
-
 
     private void OnTriggerEnter2D(Collider2D other)
     {
@@ -75,6 +68,10 @@ public class E_EvilTelephone : DarkEvent    //E开头的脚本表示跟事件相
         }
     }
     
+    private void OnDisable()
+    {
+        EvilTelephonePanel.OnResultFinished -= FinishEvent;
+    }
 
     private void OnDestroy()
     {

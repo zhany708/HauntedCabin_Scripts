@@ -73,6 +73,14 @@ public class EvilTelephonePanel : PanelWithButton
         firstSelectedButton = OptionD.gameObject;
     }
 
+    protected override void OnEnable()
+    {
+        base.OnEnable();
+        //界面完全淡出后调用此函数
+        OnFadeOutFinished += ClosePanel;
+
+        OnFadeInFinished += StartTextAnimations;    //界面完全淡入后调用此函数
+    }
 
     private void Start()
     {
@@ -84,16 +92,6 @@ public class EvilTelephonePanel : PanelWithButton
 
         //循环播放老妇人的低语
         SoundManager.Instance.PlaySFXAsync(eventScript.EventData.AudioClipNames[2], m_FemaleWhisperVolume, true);
-    }
-
-
-    protected override void OnEnable()
-    {
-        base.OnEnable();
-        //界面完全淡出后调用此函数
-        OnFadeOutFinished += ClosePanel;
-
-        OnFadeInFinished += StartTextAnimations;    //界面完全淡入后调用此函数
     }
 
     protected override void OnDisable()
