@@ -56,9 +56,9 @@ public class ScreenplayManager : ManagerTemplate<ScreenplayManager>     //用于
 
 
     //根据事件的序列和房间的序列决定触发哪个剧本
-    public string GetScreenplay(int roomIndex, int evilEventIndex)
+    public string GetScreenplay(int roomIndex, int darkEventIndex)
     {
-        return m_AllScreenplays[roomIndex, evilEventIndex];
+        return m_AllScreenplays[roomIndex, darkEventIndex];
     }
 
 
@@ -68,10 +68,10 @@ public class ScreenplayManager : ManagerTemplate<ScreenplayManager>     //用于
         //roomIndex应从6开始，因为0-5都是初始房间
         for (int roomIndex = 6; roomIndex < 10; roomIndex++)
         {
-            for (int evilEventIndex = 0; evilEventIndex < 10; evilEventIndex++)
+            for (int darkEventIndex = 0; darkEventIndex < 10; darkEventIndex++)
             {
                 //需要做的：决定哪些序列无需加进数组，因为不是所有房间都会触发剧本
-                m_AllScreenplays[roomIndex, evilEventIndex] = $"Screenplay_{roomIndex}_{evilEventIndex}";
+                m_AllScreenplays[roomIndex, darkEventIndex] = $"Screenplay_{roomIndex}_{darkEventIndex}";
             }
         }
     }
