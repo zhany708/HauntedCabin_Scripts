@@ -3,7 +3,7 @@ using UnityEngine;
 
 
 
-public class E_EvilTelephone : Event    //E开头的脚本表示跟事件相关
+public class E_EvilTelephone : DarkEvent    //E开头的脚本表示跟事件相关
 {
     Animator m_Animator;
     AudioSource m_AudioSource;

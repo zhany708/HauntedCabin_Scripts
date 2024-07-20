@@ -14,7 +14,7 @@ public abstract class DarkEvent : Event
 
         if (DarkEventIndex == null)
         {
-            Debug.LogError("DarkEventIndex is not assigned in the: " + name);
+            Debug.LogError("DarkEventIndex is not assigned in the: " + gameObject.name);
             return;
         }
     }

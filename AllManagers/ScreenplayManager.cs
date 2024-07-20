@@ -4,7 +4,6 @@ using UnityEngine.SceneManagement;
 
 
 
-//需要做的：在每个预兆事件和房间脚本中都添加一个int表示该事件/房间的序列号，因为需要根据这些序列号决定剧本名
 public class ScreenplayManager : ManagerTemplate<ScreenplayManager>     //用于管理剧本相关的逻辑的
 {
     //需要做的：该Key里的剧本名需要跟下面2D数组中的剧本名一致
@@ -63,15 +62,16 @@ public class ScreenplayManager : ManagerTemplate<ScreenplayManager>     //用于
     }
 
 
-    //初始化所有剧本名
+    //初始化所有剧本名（根据事件的序列和房间的序列决定剧本名）
     private void InitializeScreenplays()
     {
-        //填充2D数组（根据事件的序列和房间的序列决定剧本名）
-        for (int roomIndex = 0; roomIndex < 10; roomIndex++)
+        //roomIndex应从6开始，因为0-5都是初始房间
+        for (int roomIndex = 6; roomIndex < 10; roomIndex++)
         {
             for (int evilEventIndex = 0; evilEventIndex < 10; evilEventIndex++)
             {
-                haunts[roomIndex, evilEventIndex] = $"Screenplay_{roomIndex}_{evilEventIndex}";
+                //需要做的：决定哪些序列无需加进数组，因为不是所有房间都会触发剧本
+                m_AllScreenplays[roomIndex, evilEventIndex] = $"Screenplay_{roomIndex}_{evilEventIndex}";
             }
         }
     }
