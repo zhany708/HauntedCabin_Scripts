@@ -28,7 +28,7 @@ public abstract class Event : MonoBehaviour
     #region 事件相关
     public abstract void StartEvent();
 
-    protected void FinishEvent()
+    protected virtual void FinishEvent()
     {
         EventManager.Instance.IncrementEventCount();     //增加触发过的事件计数
 

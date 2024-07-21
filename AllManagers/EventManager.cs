@@ -18,7 +18,7 @@ public class EventManager : ManagerTemplate<EventManager>
     Vector2 m_RoomPosWhereEventOccur;                          //表示事件发生的房间的坐标
     Vector2 m_RoomPosWhereEnterSecondStage = Vector2.zero;     //表示进入二阶段时的房间的坐标
 
-    int m_EventCount = 0;                                      //表示生成过了多少事件
+    int m_EventCount = 0;                                      //表示生成过了多少事件（包括普通和预兆）
     int m_RandomGeneratedNum = -1;                             //随机生成的数（用于新的事件生成的索引）
 
     bool m_IsEnterMainMenu = false;                            //表示玩家是否返回了主菜单
@@ -176,7 +176,8 @@ public class EventManager : ManagerTemplate<EventManager>
     //检查是否进入二阶段
     private void CheckIfTranstionToSecondStage()
     {
-        if (m_EventCount >= EnterSecondStageCount && !IsSecondStage)   //检查是否触发了足够次数的事件，并且目前不是二阶段
+        //检查是否触发了足够次数的预兆事件，并且目前不是二阶段
+        if (DarkEvent.DarkEventCount >= EnterSecondStageCount && !IsSecondStage)   
         {
             transform.position = m_RoomPosWhereEventOccur;          //将事件管理器的坐标移到当前房间
             m_RoomPosWhereEnterSecondStage = transform.position;    //储存进入二阶段的房间的坐标
@@ -214,10 +215,11 @@ public class EventManager : ManagerTemplate<EventManager>
     public void ResetGame()
     {
         //判断玩家是否进行过游戏
-        if (m_EventCount != 0 || IsSecondStage)
+        if (m_EventCount != 0 || DarkEvent.DarkEventCount != 0 || IsSecondStage)
         {
             //重置触发过的事件
             m_EventCount = 0;
+            DarkEvent.ResetGame();      //重置触发过的预兆事件
             IsSecondStage = false;          
         }
 
