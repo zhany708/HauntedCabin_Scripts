@@ -12,7 +12,7 @@ public class NormalRoomController : MonoBehaviour
     public static event RoomGeneratedHandler OnPlayerFirstTimeEnterRoom;
 
 
-    public int RoomIndex;      //房间的序列号，用于决定开启哪个剧本
+    public int RoomIndex;      //房间的序列号，每个房间都不一样，具体可以查看云端里的“房间信息”文档
 
     //后期处理相关的变量
     public float m_DarkPostProcessColorValue = -250f;
@@ -152,7 +152,7 @@ public class NormalRoomController : MonoBehaviour
 
         if (DoorControllerInsideThisRoom == null || MiniMapControllerInsideThisRoom == null || m_RoomType == null)
         {
-            Debug.LogError("Some components are not assigned correctly in the " + name);
+            Debug.LogError("Some components are not assigned correctly in the " + gameObject.name);
             return;
         }
 
@@ -160,14 +160,14 @@ public class NormalRoomController : MonoBehaviour
         m_Shadow = transform.Find(m_ShadowObjectName);
         if (m_Shadow == null)
         {
-            Debug.LogError("Shadow GameObject is not assigned correctly in the " + name);
+            Debug.LogError("Shadow GameObject is not assigned correctly in the " + gameObject.name);
             return;
         }
 
         //检查房间序列号
         if (RoomIndex == null)
         {
-            Debug.LogError("RoomIndex is not assigned in the: " + name);
+            Debug.LogError("RoomIndex is not assigned in the: " + gameObject.name);
             return;
         }
     }
