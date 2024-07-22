@@ -90,17 +90,24 @@ public class NormalRoomController : MonoBehaviour
 
                 OnPlayerFirstTimeEnterRoom?.Invoke(transform.position);              //将当前房间的坐标连接到事件        
 
-                //更改精灵图的透明度，用以在小地图中表示已经进入过该房间了      需要做的：先检查当前房间是否为初始房间，随后再使用合适的方法
+                //更改精灵图的透明度，用以在小地图中表示已经进入过该房间了
                 MiniMapControllerInsideThisRoom.ChangeSpriteTransparency(true);
             }
 
             RoomManager.Instance.CheckIfConnectSurroundingRooms(transform);          //每当玩家进入房间时，检查当前房间是否连接周围的房间  
 
-            //赋值玩家当前所在的房间的坐标
+            //在小地图中赋值玩家当前所在的房间的坐标
             MiniMapController.CurrentRoomPosPlayerAt = transform.position;
 
             //检查哪些房间可以在小地图中显示
             MiniMapController.CheckIfDisplayMiniMap();
+
+
+            //先检查房间名界面是否能打开
+            if (!UIManager.Instance.PanelDict.ContainsKey(UIManager.Instance.UIKeys.RoomNamePanel) && RoomNamePanel.Instance.IsRemoved)
+            {                
+                UIManager.Instance.OpenRoomNamePanel(RoomNamePhraseKey);    //打开房间名界面
+            }          
         }
 
 

@@ -190,9 +190,9 @@ public class UIManager : ManagerTemplate<UIManager>
 
 
     //打开房间名界面
-    public async void OpenInteractPanel(string roomNamePhraseKey)     
+    public async void OpenRoomNamePanel(string roomNamePhraseKey)     
     {
-        if (InteractPanel.Instance == null)
+        if (RoomNamePanel.Instance == null)
         {
             await OpenPanel(UIKeys.RoomNamePanel);                              //异步加载并打开房间名界面
         }

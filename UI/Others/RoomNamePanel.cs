@@ -52,6 +52,8 @@ public class RoomNamePanel : BasePanel
         //此界面无需调用ClosePanel，因为会经常用到
 
         OnFadeInFinished += StartTextAnimations;    //彻底淡入后再开始打字
+
+        SetActiveTextComponent(false);              //隐藏文本组件
     }
 
     private void Start() 
@@ -100,7 +102,7 @@ public class RoomNamePanel : BasePanel
 
     private void StartTextAnimations()
     {
-        m_RoomNameText.gameObject.SetActive(true);       //激活文本组件
+        SetActiveTextComponent(true);       //激活文本组件
 
         //显示文本
         Coroutine textCoroutine = StartCoroutine(TypeText(m_RoomNameText, m_RoomNameText.text));
@@ -122,6 +124,12 @@ public class RoomNamePanel : BasePanel
         {
             m_RoomNameText.text = LeanLocalization.GetTranslationText(phraseKey);   //根据当前语言赋值文本
         }
+    }
+
+    //用于激活/隐藏界面的文本
+    private void SetActiveTextComponent(bool isTrue)
+    {
+        m_RoomNameText.gameObject.SetActive(isTrue);
     }
     #endregion
 
