@@ -2,10 +2,10 @@ using UnityEngine;
 
 
 
-public abstract class Event : MonoBehaviour
+public class Event : MonoBehaviour
 {
     public SO_EventData EventData;
-    public int EventIndex;          //事件的序列号，每个事件都不一样，具体可以查看云端里的“事件信息”文档
+    public int EventIndex = -1;          //事件的序列号，每个事件都不一样，具体可以查看云端里的“事件信息”文档
 
 
     protected DoorController doorController;
@@ -17,7 +17,7 @@ public abstract class Event : MonoBehaviour
     #region Unity内部函数
     protected virtual void Awake()
     {
-        if (EventData == null || EventIndex == null)
+        if (EventData == null || EventIndex < 0)
         {
             Debug.LogError("Some components are not set in the: " + gameObject.name);
             return;
@@ -27,7 +27,7 @@ public abstract class Event : MonoBehaviour
 
 
     #region 事件相关
-    public abstract void StartEvent();
+    public virtual void StartEvent() { }
 
     protected virtual void FinishEvent()
     {

@@ -9,7 +9,7 @@ public class SO_EventKeys : ScriptableObject
 
     //预兆事件
     [Header("Evil Event")]
-    public List<string> EvilEventKeys;
+    public List<string> DarkEventKeys;
 
     //普通事件
     [Header("Normal Event")]

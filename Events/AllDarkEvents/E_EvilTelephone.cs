@@ -1,9 +1,11 @@
 using UnityEngine;
 
+/*
+ * Introduction：
+ * Creator：Zhang Yu
+*/
 
-
-
-public class E_EvilTelephone : DarkEvent    //E开头的脚本表示跟事件相关
+public class E_EvilTelephone : DarkEvent
 {
     Animator m_Animator;
     AudioSource m_AudioSource;
@@ -37,7 +39,7 @@ public class E_EvilTelephone : DarkEvent    //E开头的脚本表示跟事件相
         await UIManager.Instance.InitPanel(UIManager.Instance.UIKeys.EvilTelephonePanel);   //提前加载事件界面
 
 
-        
+
         //提前加载事件所需的所有音效
         for (int i = 0; i < EventData.AudioClipNames.Count; i++)
         {
@@ -52,8 +54,8 @@ public class E_EvilTelephone : DarkEvent    //E开头的脚本表示跟事件相
         if (other.CompareTag("Player"))
         {
             //打开互动面板
-            UIManager.Instance.OpenInteractPanel(() => TriggerPlayerInteraction() );     
-        }      
+            UIManager.Instance.OpenInteractPanel(() => TriggerPlayerInteraction());
+        }
     }
 
     //由于该界面强制玩家选择，没有提供取消选择的机会，因此无需在OnTriggerStay2D中再次打开
@@ -67,7 +69,7 @@ public class E_EvilTelephone : DarkEvent    //E开头的脚本表示跟事件相
             UIManager.Instance.ClosePanel(UIManager.Instance.UIKeys.InteractPanel, true);      //淡出互动界面
         }
     }
-    
+
     private void OnDisable()
     {
         EvilTelephonePanel.OnResultFinished -= FinishEvent;

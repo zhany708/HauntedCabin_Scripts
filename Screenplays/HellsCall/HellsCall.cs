@@ -27,7 +27,7 @@ public class HellsCall : BaseScreenplay<HellsCall>
     }
     private Stats m_PlayerStats;
 
-    public const string RitualRoomName = "_RitualRoom";      //加进Key里的仪式房的名字
+    public const string RitualRoomName = "RitualRoom";      //加进Key里的仪式房的名字
 
 
     public DoorController RitualRoomDoorController { get; private set; }    //仪式房的DoorController脚本

@@ -12,7 +12,7 @@ public class NormalRoomController : MonoBehaviour
     public static event RoomGeneratedHandler OnPlayerFirstTimeEnterRoom;
 
 
-    public int RoomIndex;      //房间的序列号，每个房间都不一样，具体可以查看云端里的“房间信息”文档
+    public int RoomIndex = -1;      //房间的序列号，每个房间都不一样，具体可以查看云端里的“房间信息”文档
 
     //后期处理相关的变量
     public float m_DarkPostProcessColorValue = -250f;
@@ -165,7 +165,7 @@ public class NormalRoomController : MonoBehaviour
         }
 
         //检查房间序列号
-        if (RoomIndex == null)
+        if (RoomIndex < 0)
         {
             Debug.LogError("RoomIndex is not assigned in the: " + gameObject.name);
             return;

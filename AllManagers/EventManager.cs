@@ -65,12 +65,12 @@ public class EventManager : ManagerTemplate<EventManager>
         m_RoomPosWhereEventOccur = position;
 
         //根据列表的数量随机生成预兆事件    Todo:等事件足够多后需要决定触发预兆事件的频率
-        m_RandomGeneratedNum = UnityEngine.Random.Range(0, EventKeys.EvilEventKeys.Count);       
+        m_RandomGeneratedNum = UnityEngine.Random.Range(0, EventKeys.DarkEventKeys.Count);       
         
         //确认随机索引后尝试异步加载事件
         try
         {
-            GameObject loadedEventPrefab = await LoadPrefabAsync(EventKeys.EvilEventKeys[m_RandomGeneratedNum]);       //异步加载事件物体
+            GameObject loadedEventPrefab = await LoadPrefabAsync(EventKeys.DarkEventKeys[m_RandomGeneratedNum]);       //异步加载事件物体
             if (loadedEventPrefab != null)
             {
                 Event loadedEvent = loadedEventPrefab.GetComponent<Event>();
@@ -81,7 +81,7 @@ public class EventManager : ManagerTemplate<EventManager>
 
             else
             {
-                Debug.LogError("Failed to load event: " + EventKeys.EvilEventKeys[m_RandomGeneratedNum]);
+                Debug.LogError("Failed to load event: " + EventKeys.DarkEventKeys[m_RandomGeneratedNum]);
             }
         }
 

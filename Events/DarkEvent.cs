@@ -1,6 +1,10 @@
-public abstract class DarkEvent : Event
+using UnityEngine;
+
+
+
+public class DarkEvent : Event
 {
-    public int DarkEventIndex;      //预兆事件的序列号，用于决定开启哪个剧本
+    public int DarkEventIndex = -1;      //预兆事件的序列号，用于决定开启哪个剧本
 
 
     public static int DarkEventCount { get; private set; } = 0;   //表示玩家触发的预兆事件数量
@@ -17,7 +21,7 @@ public abstract class DarkEvent : Event
     {
         base.Awake();
 
-        if (DarkEventIndex == null)
+        if (DarkEventIndex < 0)
         {
             Debug.LogError("DarkEventIndex is not assigned in the: " + gameObject.name);
             return;
