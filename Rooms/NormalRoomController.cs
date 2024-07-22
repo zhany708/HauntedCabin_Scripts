@@ -12,7 +12,9 @@ public class NormalRoomController : MonoBehaviour
     public static event RoomGeneratedHandler OnPlayerFirstTimeEnterRoom;
 
 
-    public int RoomIndex = -1;      //房间的序列号，每个房间都不一样，具体可以查看云端里的“房间信息”文档
+
+    public string RoomNamePhraseKey;        //房间名界面对应的翻译文本的string
+    public int RoomIndex = -1;              //房间的序列号，每个房间都不一样，具体可以查看云端里的“房间信息”文档
 
     //后期处理相关的变量
     public float m_DarkPostProcessColorValue = -250f;
@@ -150,7 +152,7 @@ public class NormalRoomController : MonoBehaviour
         MiniMapControllerInsideThisRoom = GetComponentInChildren<MiniMapController>();
         m_RoomType = GetComponent<RoomType>();
 
-        if (DoorControllerInsideThisRoom == null || MiniMapControllerInsideThisRoom == null || m_RoomType == null)
+        if (RoomNamePhraseKey == null || DoorControllerInsideThisRoom == null || MiniMapControllerInsideThisRoom == null || m_RoomType == null)
         {
             Debug.LogError("Some components are not assigned correctly in the " + gameObject.name);
             return;

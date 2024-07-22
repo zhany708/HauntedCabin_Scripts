@@ -187,6 +187,23 @@ public class UIManager : ManagerTemplate<UIManager>
         InteractPanel.Instance.OnInteractKeyPressed += onYesAction;             //将参数中的函数绑定到事件       
         InteractPanel.Instance.SetPositionWithOffset();                         //设置界面的坐标
     }
+
+
+    //打开房间名界面
+    public async void OpenInteractPanel(string roomNamePhraseKey)     
+    {
+        if (InteractPanel.Instance == null)
+        {
+            await OpenPanel(UIKeys.RoomNamePanel);                              //异步加载并打开房间名界面
+        }
+        else
+        {
+            RoomNamePanel.Instance.OpenPanel();                                 //如果之前加载过了，则直接打开界面
+        }
+
+
+        RoomNamePanel.Instance.SetLocalizedText(roomNamePhraseKey);             //将参数传递给界面，以根据当前语言显示正确的文本
+    }
     #endregion
 
 

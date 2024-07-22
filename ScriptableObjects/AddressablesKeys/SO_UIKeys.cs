@@ -45,4 +45,5 @@ public class SO_UIKeys : ScriptableObject
     [Header("Other")]
     public string ConfirmPanel;       //确认界面
     public string InteractPanel;      //交互界面
+    public string RoomNamePanel;      //显示房间名的界面
 }
