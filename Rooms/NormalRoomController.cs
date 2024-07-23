@@ -102,12 +102,8 @@ public class NormalRoomController : MonoBehaviour
             //检查哪些房间可以在小地图中显示
             MiniMapController.CheckIfDisplayMiniMap();
 
-
-            //先检查房间名界面是否能打开
-            if (!UIManager.Instance.PanelDict.ContainsKey(UIManager.Instance.UIKeys.RoomNamePanel) && RoomNamePanel.Instance.IsRemoved)
-            {                
-                UIManager.Instance.OpenRoomNamePanel(RoomNamePhraseKey);    //打开房间名界面
-            }          
+            //打开房间名界面
+            UIManager.Instance.OpenRoomNamePanel(RoomNamePhraseKey);
         }
 
 

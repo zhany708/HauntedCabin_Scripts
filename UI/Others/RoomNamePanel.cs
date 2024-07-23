@@ -1,5 +1,6 @@
 using TMPro;
 using UnityEngine;
+using Lean.Localization;
 
 
 
@@ -9,14 +10,10 @@ public class RoomNamePanel : BasePanel
     public static RoomNamePanel Instance { get; private set; }
 
 
-    //需要做的：在编辑器中确定了时长后将变量范围改成Private
-    public float DisplayDuration = 1.5f;                 //显示时长
-
-
 
     TextMeshProUGUI m_RoomNameText;     //文本组件
 
-
+    float m_DisplayDuration = 1f;                 //显示时长
 
 
 
@@ -51,9 +48,7 @@ public class RoomNamePanel : BasePanel
     {       
         //此界面无需调用ClosePanel，因为会经常用到
 
-        OnFadeInFinished += StartTextAnimations;    //彻底淡入后再开始打字
-
-        SetActiveTextComponent(false);              //隐藏文本组件
+        OnFadeInFinished += HandleFadeInFinished;    //彻底淡入后再开始打字
     }
 
     private void Start() 
@@ -84,38 +79,24 @@ public class RoomNamePanel : BasePanel
     {
         base.OnDisable();
 
-        OnFadeInFinished -= StartTextAnimations;
+        OnFadeInFinished -= HandleFadeInFinished;
     }
     #endregion
 
 
     #region 主要函数
+    public override void OpenPanel()
+    {
+        Fade(CanvasGroup, FadeInAlpha, 0f, false);     //淡入（禁止射线阻挡）
+    }
+
     public override void OpenPanel(string name)
     {
         panelName = name;
 
-        Fade(CanvasGroup, FadeInAlpha, FadeDuration, false);     //淡入（禁止射线阻挡）
+        Fade(CanvasGroup, FadeInAlpha, 0f, false);     //淡入（禁止射线阻挡）
     }
 
-
-
-
-    private void StartTextAnimations()
-    {
-        SetActiveTextComponent(true);       //激活文本组件
-
-        //显示文本
-        Coroutine textCoroutine = StartCoroutine(TypeText(m_RoomNameText, m_RoomNameText.text));
-
-        //显示一定时间后淡出界面
-        Coroutine ClosePanelCoroutine = StartCoroutine(Delay.Instance.DelaySomeTime(DisplayDuration, () =>
-        {
-            Fade(CanvasGroup, FadeOutAlpha, FadeDuration, false);     //淡出
-        }));
-
-        generatedCoroutines.Add(textCoroutine);
-        generatedCoroutines.Add(ClosePanelCoroutine);
-    }
 
 
     public void SetLocalizedText(string phraseKey)
@@ -125,31 +106,35 @@ public class RoomNamePanel : BasePanel
             m_RoomNameText.text = LeanLocalization.GetTranslationText(phraseKey);   //根据当前语言赋值文本
         }
     }
-
-    //用于激活/隐藏界面的文本
-    private void SetActiveTextComponent(bool isTrue)
-    {
-        m_RoomNameText.gameObject.SetActive(isTrue);
-    }
     #endregion
 
 
     #region 其他函数
     private void InitializeComponents()     //初始化组件
     {
-        m_RoomNameText = GetComponent<TextMeshProUGUI>();       //获取界面下的文本组件
+        m_RoomNameText = GetComponentInChildren<TextMeshProUGUI>();       //获取界面下子物体中的文本组件
         if (m_RoomNameText == null)
         {
             Debug.LogError("RoomNameText component is not assigned in the: " + gameObject.name);
             return;
         }
 
-        //需要做的：在编辑器中确定了时长后将变量范围改成Private，并删除此处的检查变量逻辑
-        if (DisplayDuration == null)
+
+        FadeDuration = 0.5f;
+    }
+
+
+    public void HandleFadeInFinished()
+    {
+        CanvasGroup.alpha = FadeInAlpha;        //重置界面的透明度
+
+        //显示一定时间后淡出界面
+        Coroutine ClosePanelCoroutine = StartCoroutine(Delay.Instance.DelaySomeTime(m_DisplayDuration, () =>
         {
-            Debug.LogError("DisplayDuration component is not assigned in the: " + gameObject.name);
-            return;
-        }
-    }         
+            Fade(CanvasGroup, FadeOutAlpha, FadeDuration, false);     //淡出
+        }));
+
+        generatedCoroutines.Add(ClosePanelCoroutine);
+    }
     #endregion
 }

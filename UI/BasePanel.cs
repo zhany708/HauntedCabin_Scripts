@@ -223,7 +223,7 @@ public class BasePanel : MonoBehaviour
 
 
 
-    protected void ClearAllCoroutinesAndTweens()    //用于删除界面时检查是否有正在进行的协程和DOTween
+    public void ClearAllCoroutinesAndTweens()    //用于删除界面时检查是否有正在进行的协程和DOTween
     {
         foreach (var coroutine in generatedCoroutines)     //检阅列表中的所有协程
         {

@@ -198,11 +198,20 @@ public class UIManager : ManagerTemplate<UIManager>
         }
         else
         {
+            //当界面处于激活状态时（即正在显示其它房间名）
+            if (!RoomNamePanel.Instance.IsRemoved)
+            {
+                RoomNamePanel.Instance.ClearAllCoroutinesAndTweens();           //先删除上次打开界面时的协程，防止界面很快就淡出
+                RoomNamePanel.Instance.SetLocalizedText(roomNamePhraseKey);     //根据当前语言显示新的房间名
+                RoomNamePanel.Instance.HandleFadeInFinished();                  //开始新的协程，以便一段时间后界面再次淡出
+                return;
+            }
+
             RoomNamePanel.Instance.OpenPanel();                                 //如果之前加载过了，则直接打开界面
         }
 
 
-        RoomNamePanel.Instance.SetLocalizedText(roomNamePhraseKey);             //将参数传递给界面，以根据当前语言显示正确的文本
+        RoomNamePanel.Instance.SetLocalizedText(roomNamePhraseKey);             //将参数传递给界面，以根据当前语言显示房间名
     }
     #endregion
 
