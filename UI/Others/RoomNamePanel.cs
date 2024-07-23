@@ -13,7 +13,7 @@ public class RoomNamePanel : BasePanel
 
     TextMeshProUGUI m_RoomNameText;     //文本组件
 
-    float m_DisplayDuration = 1f;                 //显示时长
+    float m_DisplayDuration = 1f;                 //界面自动显示时长
 
 
 
@@ -87,14 +87,14 @@ public class RoomNamePanel : BasePanel
     #region 主要函数
     public override void OpenPanel()
     {
-        Fade(CanvasGroup, FadeInAlpha, 0f, false);     //淡入（禁止射线阻挡）
+        Fade(CanvasGroup, FadeInAlpha, 0f, false);     //立刻淡入，且禁止射线阻挡
     }
 
     public override void OpenPanel(string name)
     {
         panelName = name;
 
-        Fade(CanvasGroup, FadeInAlpha, 0f, false);     //淡入（禁止射线阻挡）
+        Fade(CanvasGroup, FadeInAlpha, 0f, false);     //立刻淡入，且禁止射线阻挡
     }
 
 
@@ -120,7 +120,7 @@ public class RoomNamePanel : BasePanel
         }
 
 
-        FadeDuration = 0.5f;
+        FadeDuration = 0.5f;        //设置界面的淡出时长（淡入时长为0）
     }
 
 
