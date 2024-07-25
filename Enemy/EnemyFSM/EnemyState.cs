@@ -57,7 +57,7 @@ public class EnemyState
 
 
 
-
+    #region 状态机内部函数
     public EnemyState(Enemy enemy, EnemyStateMachine stateMachine, SO_EnemyData enemyData, string animBoolName)
     {
         this.enemy = enemy;
@@ -98,6 +98,9 @@ public class EnemyState
         {
             stateMachine.ChangeState(enemy.HitState);
         }
+
+
+        SetMoveAnimationForShadow();        //设置阴影的动画
     }
 
     public virtual void PhysicsUpdate() 
@@ -120,4 +123,22 @@ public class EnemyState
     {
         enemy.Core.Animator.SetBool(animationBoolName, false);        //设置当前状态布尔为false以进入下个状态
     }
+    #endregion
+
+
+    #region 其余函数
+    //用于设置阴影物体的动画
+    protected virtual void SetMoveAnimationForShadow()
+    {
+        if (stateMachine.CurrentState == enemy.PatrolState || stateMachine.CurrentState == enemy.ChaseState)
+        {
+            core.SetAnimatorBoolForShadowObject(true);
+        }
+
+        else
+        {
+            core.SetAnimatorBoolForShadowObject(false);
+        }
+    }
+    #endregion
 }

@@ -6,10 +6,10 @@ public class Movement : CoreComponent   //用于管理移动
 {
     public Rigidbody2D Rigidbody2d {  get; private set; }
 
-    public Vector2 FacingDirection { get; private set; }
+    public Vector2 FacingDirection { get; private set; } = Vector2.zero;
 
 
-    Vector2 m_WorkSpace;        //用于内部的计算
+    Vector2 m_WorkSpace = Vector2.zero;        //用于内部的计算
 
 
 

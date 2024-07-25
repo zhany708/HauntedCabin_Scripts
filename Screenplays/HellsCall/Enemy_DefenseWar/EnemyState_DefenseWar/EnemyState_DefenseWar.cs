@@ -9,7 +9,7 @@ public class EnemyState_DefenseWar : EnemyState
 
 
 
-
+    #region 状态机内部函数
     public EnemyState_DefenseWar(Enemy_DefenseWar enemy, EnemyStateMachine stateMachine, SO_EnemyData enemyData, string animBoolName) : base(enemy, stateMachine, enemyData, animBoolName)
     {
         this.enemy = enemy;
@@ -38,5 +38,26 @@ public class EnemyState_DefenseWar : EnemyState
         {
             stateMachine.ChangeState(enemy.HitState);
         }
+
+
+        SetMoveAnimationForShadow();        //设置阴影的动画
     }
+    #endregion
+
+
+    #region 其余函数
+    //用于设置阴影物体的动画
+    protected override void SetMoveAnimationForShadow()
+    {
+        if (stateMachine.CurrentState == enemy.ChaseState)
+        {
+            core.SetAnimatorBoolForShadowObject(true);
+        }
+
+        else
+        {
+            core.SetAnimatorBoolForShadowObject(false);
+        }
+    }
+    #endregion
 }
