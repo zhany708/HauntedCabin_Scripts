@@ -113,7 +113,7 @@ public class PlayerState
         //否则暂停玩家的移动
         else
         {
-            movement.SetVelocityZero();
+            movement.SetVelocityZero();           
         }
     }
 
@@ -133,11 +133,19 @@ public class PlayerState
     {
         if (input.x == 0f && input.y == 0f)
         {
-            player.FootAnimator.SetBool("Move", false);
+            player.FootAnimator.SetBool("Move", false);         //暂停脚步移动动画
+
+            core.SetAnimatorBoolForShadowObject(false);         //暂停阴影动画
         }
         else
         {
-            player.FootAnimator.SetBool("Move", true);
+            player.FootAnimator.SetBool("Move", true);          //播放脚步移动动画
+
+            //只有当玩家移动，且允许移动时
+            if (BasePanel.IsPlayerMoveable)
+            {
+                core.SetAnimatorBoolForShadowObject(true);      //播放阴影动画
+            }          
         }
     }
     #endregion

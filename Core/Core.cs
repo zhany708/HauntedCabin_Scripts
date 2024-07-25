@@ -17,7 +17,12 @@ public class Core : MonoBehaviour
 
 
     //将所有Core组件加进去。readonly用于保护List，防止运行时不小心重新赋值
-    private readonly List<CoreComponent> m_CoreComponents = new List<CoreComponent>();      
+    private readonly List<CoreComponent> m_CoreComponents = new List<CoreComponent>();
+
+    Animator m_ShadowAnimator;                                  //阴影物体的动画控制器
+    Transform m_Shadow;                                         //角色脚底的阴影物体
+    const string ShadowName = "Shadow";                         //阴影物体的名字
+    const string ShadowAnimatorBoolName = "isMoving";           //阴影物体的动画器中的布尔名
 
 
 
@@ -25,14 +30,10 @@ public class Core : MonoBehaviour
 
     #region Unity内部函数
     private void Awake()
-    {       
+    {
         //Debug.Log("Core Awake");
-        Animator = GetComponentInParent<Animator>();        //调用父物体的动画控制器组件
-        if (Animator == null)
-        {
-            Debug.LogError("Cannot get the Animator component in the: " + transform.parent.name);
-            return;
-        }   
+
+        InitializeComponents();         //初始化脚本
     }
 
     public void LogicUpdate()       //由于该函数会在其余脚本里的Update函数中运行，因此放在“Unity内部函数”region内
@@ -70,12 +71,45 @@ public class Core : MonoBehaviour
 
 
     #region 其余函数
+    private void InitializeComponents()
+    {
+        Animator = GetComponentInParent<Animator>();        //调用父物体的动画控制器组件
+        if (Animator == null)
+        {
+            Debug.LogError("Cannot get the Animator component in the: " + transform.parent.name);
+            return;
+        }
+
+
+        m_Shadow = transform.Find(ShadowName);
+        if (m_Shadow == null)
+        {
+            Debug.LogError("Cannot get the Shadow GameObject in the: " + transform.parent.name);
+            return;
+        }
+
+
+        m_ShadowAnimator = m_Shadow.GetComponent<Animator>();
+        if (m_ShadowAnimator == null)
+        {
+            Debug.LogError("Cannot get the Animator component of the the Shadow GameObject in the: " + transform.parent.name);
+            return;
+        }
+    }
+
+    //用于将新的Core组件加进列表
     public void Addcomponent(CoreComponent component)
     {
         if (!m_CoreComponents.Contains(component))
         {
             m_CoreComponents.Add(component);     //如果组件不在List，则加进去
         }
+    }
+
+    //给阴影物体的动画器设置布尔，以进行不同的动画
+    public void SetAnimatorBoolForShadowObject(bool isTrue)
+    {
+        m_ShadowAnimator.SetBool(ShadowAnimatorBoolName, isTrue);
     }
     #endregion
 
