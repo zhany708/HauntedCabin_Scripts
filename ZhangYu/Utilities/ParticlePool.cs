@@ -54,6 +54,15 @@ public class ParticlePool : MonoBehaviour       //用于子弹，特效等的对
         return obj;
     }
 
+    //获取物体，同时赋予坐标
+    public GameObject GetObject(GameObject prefab, Vector2 spawnPos)
+    {
+        var obj = GetObject(prefab);            //生成物体
+        obj.transform.position = spawnPos;      //赋予坐标
+
+        return obj;
+    }
+
 
 
     private GameObject CreateNewObject(GameObject prefab)

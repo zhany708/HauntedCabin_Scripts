@@ -32,7 +32,7 @@ public class EnvironmentManager : ManagerTemplate<EnvironmentManager>
     public void GenerateSpawnWarningObject(Action relatedAction, Vector2 objectPos)
     {
         //从敌人对象池中生成警告物体
-        GameObject spawnWarningObject = EnemyPool.Instance.GetObject(SpawnWarningObject, objectPos);
+        GameObject spawnWarningObject = ParticlePool.Instance.GetObject(SpawnWarningObject, objectPos);
 
         //从警告物体那获取警告脚本
         SpawnWarning spawnWarning = spawnWarningObject.GetComponent<SpawnWarning>();
@@ -63,6 +63,7 @@ public class EnvironmentManager : ManagerTemplate<EnvironmentManager>
         InitializeEnemy(enemyObject, doorController);
     }
 
+    /*
     //根据房间提前设置的敌人数量生成敌人
     public void GenerateEnemy(DoorController doorController)
     {
@@ -76,7 +77,7 @@ public class EnvironmentManager : ManagerTemplate<EnvironmentManager>
 
             for (int i = 0; i < doorController.EnemyObjects.Length; i++)
             {
-                /*
+                
                 //从敌人对象池中生成警告物体
                 GameObject spawnWarningObject = EnemyPool.Instance.GetObject(SpawnWarningObject, enemySpawnList[i]);     
                
@@ -90,7 +91,7 @@ public class EnvironmentManager : ManagerTemplate<EnvironmentManager>
 
                 spawnWarning.SetEnemyObject(doorController.EnemyObjects[i]);
                 spawnWarning.SetDoorController(doorController);
-                */
+                
 
 
 
@@ -102,21 +103,82 @@ public class EnvironmentManager : ManagerTemplate<EnvironmentManager>
 
                 Debug.Log("The coreesponding GameObject at index " + i + " is: " + doorController.EnemyObjects[i].name);
 
-                //GenerateSpawnWarningObject(() => LogicPassToSpawnWarningObject(doorController.EnemyObjects[i], Vector2.zero, doorController), Vector2.zero);
+                GenerateSpawnWarningObject(() => LogicPassToSpawnWarningObject(doorController.EnemyObjects[i], enemySpawnList[i], doorController)
+                , enemySpawnList[i]);
+
+
+
                 
-
-
-                /*
                 //这里的enemy物体是敌人的跟物体（包含巡逻坐标的），在生成的同时赋予物体生成坐标
                 GameObject enemyObject = EnemyPool.Instance.GetObject(doorController.EnemyObjects[i], enemySpawnList[i]);     //从敌人对象池中生成敌人
 
                 //Debug.Log("The enemy spawn position is : " + enemySpawnList[i]);
 
                 InitializeEnemy(enemyObject, doorController);
-                */
+                
             }
         }
     }
+    */
+
+    public void GenerateEnemy(DoorController doorController)
+    {
+        //检查门控制器是否为空，或是否有敌人
+        if (doorController.EnemyObjects == null || doorController.EnemyObjects.Length == 0)
+        {
+            Debug.LogError("EnemyObjects array in the DoorController is null or empty.");
+            return;
+        }
+
+        //创建随机坐标，并放进列表
+        List<Vector2> enemySpawnList = doorController.EnemySpwanPos.GenerateMultiRandomPos(doorController.EnemyObjects.Length);
+
+        //生成完坐标后检查列表是否配置正确
+        if (enemySpawnList == null || enemySpawnList.Count != doorController.EnemyObjects.Length)
+        {
+            Debug.LogError("Enemy spawn list was not generated correctly. Check the GenerateMultiRandomPos method.");
+            return;
+        }
+
+
+        //确保生成的坐标不与家具重叠
+        EnsureNoFurnitureCollision(enemySpawnList, doorController);
+
+
+        for (int i = 0; i < doorController.EnemyObjects.Length; i++)
+        {
+            //检查索引是否超出列表
+            if (i >= enemySpawnList.Count)
+            {
+                Debug.LogError($"Index out of range: enemySpawnList count is {enemySpawnList.Count} but trying to access index {i}");
+                continue;
+            }
+
+            //检查要获取的敌人物体是否为空
+            if (doorController.EnemyObjects[i] == null)
+            {
+                Debug.LogError($"doorController.EnemyObjects[{i}] is null.");
+                continue;
+            }
+
+            //创建临时变量，以储存列表中的变量（否则如果直接使用列表中的变量，会出现Index out of range的BUG）
+            Vector2 spawnPos = enemySpawnList[i];
+            GameObject enemyPrefab = doorController.EnemyObjects[i];
+
+            //打印出索引和临时变量的坐标
+            Debug.Log($"Spawning warning for enemy at index {i} with position {spawnPos}");
+
+
+            GenerateSpawnWarningObject(() =>
+            {
+                //打印出索引和变量在传递给匿名函数后的数值（索引i与上方的不一致，导致BUG）
+                Debug.Log($"Inside lambda: Spawning enemy at index {i} with position {spawnPos}");
+                LogicPassToSpawnWarningObject(enemyPrefab, spawnPos, doorController);
+            }, spawnPos);
+        }
+    }
+
+
 
 
     private void LogicPassToSpawnWarningObject(GameObject thisObject, Vector2 spawnPos, DoorController doorController)
