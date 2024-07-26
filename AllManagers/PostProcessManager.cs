@@ -12,12 +12,11 @@ public class PostProcessManager : MonoBehaviour
 
 
     //更改颜色滤镜相关   
-    public Color OrangeFilter = new Color(250, 107, 58);   //橙色
-    public Color RedFilter = new Color(214, 53, 56);       //红色
+    public Color OrangeFilter = new Color(250, 107, 58);    //橙色
+    public Color RedFilter = new Color(214, 53, 56);        //红色
 
-    float m_FireEffectFrequency = 3.0f;                    //颜色转变频率
-    float m_Timer = 0f;     //用于颜色转变
-
+    float m_FireEffectFrequency = 3.0f;                     //颜色转变频率
+    float m_FireEffectTimer = 0f;                           //用于颜色转变
 
 
 
@@ -100,16 +99,14 @@ public class PostProcessManager : MonoBehaviour
     {
         if (m_ColorGrading != null)
         {
-            //先检查要调整的值是否等于当前的值
-            if (m_ColorGrading.postExposure.value != newBrightness)
-            {
-                //进行更改之前先保存当前的明暗值
-                float currentValue = m_ColorGrading.postExposure;
+            //进行更改之前先保存当前的明暗值
+            float currentValue = m_ColorGrading.postExposure.value;
 
-                //将相机阴影值从当前的值变为一个另一个值，随后变回来
-                DOTween.To(() => m_ColorGrading.postExposure.value, x => m_ColorGrading.postExposure.value = x, newBrightness, duration);
-                DOTween.To(() => m_ColorGrading.postExposure.value, x => m_ColorGrading.postExposure.value = x, currentValue, duration);
-            }
+
+            //将相机阴影值从当前的值变为一个另一个值，随后变回来（使用DOTween的Sequence从而进行连续的多个DOTween）
+            Sequence sequence = DOTween.Sequence();
+            sequence.Append(DOTween.To(() => m_ColorGrading.postExposure.value, x => m_ColorGrading.postExposure.value = x, newBrightness, duration) );
+            sequence.Append(DOTween.To(() => m_ColorGrading.postExposure.value, x => m_ColorGrading.postExposure.value = x, currentValue, duration) );            
         }
 
         else
@@ -129,10 +126,10 @@ public class PostProcessManager : MonoBehaviour
             m_Vignette.enabled.value = true;    //打开Vignette
 
             //根据当前时间更新闪烁频率
-            m_Timer += Time.deltaTime * m_FireEffectFrequency;
+            m_FireEffectTimer += Time.deltaTime * m_FireEffectFrequency;
 
             //根据频率在红色和橙色之间转换
-            float t = Mathf.Sin(m_Timer) * 0.5f + 0.5f;
+            float t = Mathf.Sin(m_FireEffectTimer) * 0.5f + 0.5f;
             Color currentColor = Color.Lerp(OrangeFilter, RedFilter, t);
 
             //赋值新的颜色

@@ -12,14 +12,10 @@ public class NormalRoomController : MonoBehaviour
     public static event RoomGeneratedHandler OnPlayerFirstTimeEnterRoom;
 
 
-
     public string RoomNamePhraseKey;        //房间名界面对应的翻译文本的string
     public int RoomIndex = -1;              //房间的序列号，每个房间都不一样，具体可以查看云端里的“房间信息”文档
 
-    //后期处理相关的变量
-    public float m_DarkPostProcessColorValue = -250f;
-    public float m_PostProcessDuration = 1f;
-
+    
     //房间下的门控制器脚本
     public DoorController DoorControllerInsideThisRoom { get; private set; }
     //房间下的小地图控制器脚本
@@ -31,7 +27,9 @@ public class NormalRoomController : MonoBehaviour
 
     RoomType m_RoomType;
 
-
+    //后期处理相关的变量
+    [SerializeField] float m_DarkPostProcessColorValue = -250f;
+    [SerializeField] float m_PostProcessDuration = 0.05f;
 
     bool m_HasGeneratedRoom = false;
     bool m_FirstTimeEnterRoom = true;                   //表示玩家是否第一次进入该房间

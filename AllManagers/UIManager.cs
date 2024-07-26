@@ -140,7 +140,7 @@ public class UIManager : ManagerTemplate<UIManager>
     //用于释放提前加载好的界面
     public void RemoveInitializedPanel(string name)
     {
-        //当预制件字典里有参数中的界面时（即玩家没有打开过该界面），则释放该界面
+        //当预制件字典里有参数中的界面时（即玩家没有打开过该界面，或打开后没有释放），则释放该界面
         if (PrefabDict.ContainsKey(name) )
         {
             ReleasePrefab(name);
