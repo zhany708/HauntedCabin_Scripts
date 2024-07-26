@@ -166,13 +166,14 @@ public class EnvironmentManager : ManagerTemplate<EnvironmentManager>
             GameObject enemyPrefab = doorController.EnemyObjects[i];
 
             //打印出索引和临时变量的坐标
-            Debug.Log($"Spawning warning for enemy at index {i} with position {spawnPos}");
+            //Debug.Log($"Spawning warning for enemy at index {i} with position {spawnPos}");
 
 
             GenerateSpawnWarningObject(() =>
             {
                 //打印出索引和变量在传递给匿名函数后的数值（索引i与上方的不一致，导致BUG）
-                Debug.Log($"Inside lambda: Spawning enemy at index {i} with position {spawnPos}");
+                //Debug.Log($"Inside lambda: Spawning enemy at index {i} with position {spawnPos}");
+
                 LogicPassToSpawnWarningObject(enemyPrefab, spawnPos, doorController);
             }, spawnPos);
         }
