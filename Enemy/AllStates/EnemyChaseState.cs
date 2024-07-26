@@ -10,7 +10,12 @@ public class EnemyChaseState : EnemyState
     {
     }
 
+    public override void Enter()
+    {
+        base.Enter();
 
+        //Debug.Log("Enemy entered ChaseState");
+    }
 
     public override void LogicUpdate()
     {

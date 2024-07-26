@@ -1,6 +1,7 @@
 using UnityEngine;
 
 
+
 [CreateAssetMenu(fileName = "newUIKeys", menuName = "Data/UI Data/UI Keys")]
 public class SO_UIKeys : ScriptableObject
 {
@@ -10,7 +11,7 @@ public class SO_UIKeys : ScriptableObject
     public string SettingPanel;         //游戏设置界面
     public string PauseMenuPanel;       //游戏暂停界面
     public string GameLostPanel;        //游戏失败界面
-    public string GameWinningPanel;     //游戏胜利界面
+    public string GameWinningPanel;     //游戏胜利界面（目前不需要）
 
     public string TaskPanel;            //游戏任务界面
     public string MiniMapPanel;         //小地图
@@ -32,7 +33,7 @@ public class SO_UIKeys : ScriptableObject
 
     //事件相关
     [Header("Event")]
-    public string TransitionStagePanelKey;    //进入二阶段文字
+    public string TransitionStagePanelKey;    //进入二阶段文字（目前不需要）
     public string EvilTelephonePanel;         //《电话铃声》事件界面
 
 

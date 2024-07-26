@@ -137,7 +137,15 @@ public class UIManager : ManagerTemplate<UIManager>
         await LoadPrefabAsync(name);
     }
 
-
+    //用于释放提前加载好的界面
+    public void RemoveInitializedPanel(string name)
+    {
+        //当预制件字典里有参数中的界面时（即玩家没有打开过该界面），则释放该界面
+        if (PrefabDict.ContainsKey(name) )
+        {
+            ReleasePrefab(name);
+        }
+    }
 
 
     public void ChangePanelLayer(BasePanel thisPanel)   //改变界面的渲染层级

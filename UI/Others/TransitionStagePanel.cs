@@ -33,6 +33,11 @@ public class TransitionStagePanel : BasePanel
         OnFadeInFinished += StartTextAnimations;    //彻底淡入后再开始打字
     }
 
+    private async void Start()
+    {
+        await UIManager.Instance.InitPanel(UIManager.Instance.UIKeys.HellsCallBackground);      //提前加载剧本背景界面
+    }
+
     protected override void OnDisable()
     {
         base.OnDisable();

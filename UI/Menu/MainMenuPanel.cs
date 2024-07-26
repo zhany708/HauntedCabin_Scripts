@@ -82,11 +82,8 @@ public class MainMenuPanel : PanelWithButton
 
     private void OnDestroy()
     {
-        //当UIManager的预制件字典里有设置界面时（即玩家没有打开并关闭过设置界面），释放该界面
-        if (UIManager.Instance.PrefabDict.ContainsKey(UIManager.Instance.UIKeys.SettingPanel) )
-        {
-            UIManager.Instance.ReleasePrefab(UIManager.Instance.UIKeys.SettingPanel);
-        }
+        //释放设置界面
+        UIManager.Instance.RemoveInitializedPanel(UIManager.Instance.UIKeys.SettingPanel);
     }
     #endregion
 

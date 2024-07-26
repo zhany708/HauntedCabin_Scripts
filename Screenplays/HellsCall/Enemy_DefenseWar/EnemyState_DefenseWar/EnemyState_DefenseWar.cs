@@ -1,6 +1,7 @@
 using UnityEngine;
 
 
+
 public class EnemyState_DefenseWar : EnemyState
 {
     protected new Enemy_DefenseWar enemy;

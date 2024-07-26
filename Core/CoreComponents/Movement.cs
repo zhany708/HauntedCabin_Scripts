@@ -9,10 +9,15 @@ public class Movement : CoreComponent   //用于管理移动
     public Vector2 FacingDirection { get; private set; } = Vector2.zero;
 
 
-    Vector2 m_WorkSpace = Vector2.zero;        //用于内部的计算
+    Vector2 m_WorkSpace = Vector2.zero;         //用于设置速度时内部的计算
 
 
-
+    /*
+    //用于检查物体是否正在移动
+    Vector2 m_LastPosition;                     //上次记录的位置
+    float m_Threshold = 0.01f;                  //用于计算物体是否正在移动的间隔（检查0.01秒前的坐标和当前的坐标）
+    bool m_IsMoving = false;
+    */
 
 
 
@@ -29,7 +34,28 @@ public class Movement : CoreComponent   //用于管理移动
         }
     }
 
-    //public override void LogicUpdate() { }
+    private void Start()
+    {
+        //m_LastPosition = transform.position;        //初始化上一次记录的坐标
+    }
+
+    public override void LogicUpdate() 
+    { 
+        /*
+        //检查物体当前是否正在移动
+        Vector2 currentPos = transform.position;
+        if (Vector2.Distance(m_LastPosition, currentPos) > m_Threshold )
+        {
+            m_IsMoving = true;
+
+            m_LastPosition = currentPos;            //重新赋值上一次记录的坐标
+        }
+        else
+        {
+            m_IsMoving = false;
+        }
+        */
+    }
     #endregion
 
 
@@ -92,5 +118,15 @@ public class Movement : CoreComponent   //用于管理移动
             return facingNum;
         }
     }
+    #endregion
+
+
+    #region Getters
+    /*
+    public bool GetIsMoving()
+    {
+        return m_IsMoving;
+    }
+    */
     #endregion
 }

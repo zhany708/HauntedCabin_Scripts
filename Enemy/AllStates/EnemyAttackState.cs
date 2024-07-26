@@ -1,3 +1,5 @@
+using UnityEngine;
+
 
 
 public class EnemyAttackState : EnemyState
@@ -13,6 +15,8 @@ public class EnemyAttackState : EnemyState
         base.Enter();
 
         enemy.AttackTimer.StopTimer();     //攻击期间停止计时
+
+        //Debug.Log("Enemy entered AttackState");
     }
 
     public override void LogicUpdate()      //重写逻辑函数，使敌人不会在攻击状态中进入受击状态

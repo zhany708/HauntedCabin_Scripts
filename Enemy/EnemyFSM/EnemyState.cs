@@ -1,6 +1,7 @@
 using UnityEngine;
 
 
+
 public class EnemyState
 {
     protected Core core;
@@ -14,7 +15,6 @@ public class EnemyState
         }
     }
     private Movement m_Movement;
-
 
     protected Combat enemyCombat
     {
@@ -46,7 +46,6 @@ public class EnemyState
 
     protected bool isHit = false;
 
-
     protected string animationBoolName;     //告诉动画器应该播放哪个动画
 
 
@@ -69,6 +68,7 @@ public class EnemyState
         if (!core)
         {
             Debug.LogError("Core is missing in the EnemyState!");
+            return;
         }
     }
 
@@ -77,13 +77,14 @@ public class EnemyState
     {
         if (!enemyMovement || !enemyCombat || !enemyStats)
         {
-            Debug.Log("Something is wrong in the EnemyState!");
+            Debug.LogError("Something is wrong in the EnemyState!");
+            return;
         }
 
 
         core.Animator.SetBool(animationBoolName, true);     //播放状态的动画
         
-        //Debug.Log(m_AnimationBoolName);
+        //Debug.Log("Enemy entered: " + animationBoolName);
     }
 
     public virtual void LogicUpdate()
@@ -129,7 +130,7 @@ public class EnemyState
     #region 其余函数
     //用于设置阴影物体的动画
     protected virtual void SetMoveAnimationForShadow()
-    {
+    {    
         if (stateMachine.CurrentState == enemy.PatrolState || stateMachine.CurrentState == enemy.ChaseState)
         {
             core.SetAnimatorBoolForShadowObject(true);
@@ -138,7 +139,7 @@ public class EnemyState
         else
         {
             core.SetAnimatorBoolForShadowObject(false);
-        }
+        }     
     }
     #endregion
 }
