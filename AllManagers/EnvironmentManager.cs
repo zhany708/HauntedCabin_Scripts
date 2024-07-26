@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -7,6 +8,9 @@ using UnityEngine.SceneManagement;
 //用于处理游戏过程中的一些动态变化（比如在某个地方生成某个新东西）
 public class EnvironmentManager : ManagerTemplate<EnvironmentManager>     
 {
+    public GameObject SpawnWarningObject;
+
+
     public bool IsGameLost { get; private set; } = false;
     public bool IsFirstTimeEnterGame { get; private set; } = true;
 
@@ -21,6 +25,25 @@ public class EnvironmentManager : ManagerTemplate<EnvironmentManager>
 
         //生成完物体后立刻检查是否应该在小地图中显示出来
         MiniMapController.CheckIfDisplayMiniMap();
+    }
+
+
+    //生成警告物体（通常用于生成敌人/事件前），同时传递物体动画播放后需要进行的逻辑
+    public void GenerateSpawnWarningObject(Action relatedAction, Vector2 objectPos)
+    {
+        //从敌人对象池中生成警告物体
+        GameObject spawnWarningObject = EnemyPool.Instance.GetObject(SpawnWarningObject, objectPos);
+
+        //从警告物体那获取警告脚本
+        SpawnWarning spawnWarning = spawnWarningObject.GetComponent<SpawnWarning>();
+        if (spawnWarning == null)
+        {
+            Debug.LogError("Cannot get the SpawnWarning component in the: " + spawnWarning.name);
+            return;
+        }
+
+
+        spawnWarning.OnAnimationFinished += relatedAction;      //将参数中的函数绑定到事件
     }
     #endregion
 
@@ -53,17 +76,88 @@ public class EnvironmentManager : ManagerTemplate<EnvironmentManager>
 
             for (int i = 0; i < doorController.EnemyObjects.Length; i++)
             {
+                /*
+                //从敌人对象池中生成警告物体
+                GameObject spawnWarningObject = EnemyPool.Instance.GetObject(SpawnWarningObject, enemySpawnList[i]);     
+               
+                //从警告物体那获取警告脚本
+                SpawnWarning spawnWarning = spawnWarningObject.GetComponent<SpawnWarning>();
+                if (spawnWarning == null)
+                {
+                    Debug.LogError("Cannot get the SpawnWarning component in the: " + spawnWarning.name);
+                    return;
+                }
+
+                spawnWarning.SetEnemyObject(doorController.EnemyObjects[i]);
+                spawnWarning.SetDoorController(doorController);
+                */
+
+
+
+                
+                //生成警告物体，同时将对应的逻辑传递给物体
+                GenerateSpawnWarningObject(() => LogicPassToSpawnWarningObject(doorController.EnemyObjects[i], enemySpawnList[i], doorController)
+                , enemySpawnList[i]);
+                
+
+                Debug.Log("The coreesponding GameObject at index " + i + " is: " + doorController.EnemyObjects[i].name);
+
+                //GenerateSpawnWarningObject(() => LogicPassToSpawnWarningObject(doorController.EnemyObjects[i], Vector2.zero, doorController), Vector2.zero);
+                
+
+
+                /*
                 //这里的enemy物体是敌人的跟物体（包含巡逻坐标的），在生成的同时赋予物体生成坐标
                 GameObject enemyObject = EnemyPool.Instance.GetObject(doorController.EnemyObjects[i], enemySpawnList[i]);     //从敌人对象池中生成敌人
 
                 //Debug.Log("The enemy spawn position is : " + enemySpawnList[i]);
 
                 InitializeEnemy(enemyObject, doorController);
+                */
             }
         }
     }
 
 
+    private void LogicPassToSpawnWarningObject(GameObject thisObject, Vector2 spawnPos, DoorController doorController)
+    {
+        //这里的enemy物体是敌人的跟物体（包含巡逻坐标的），在生成的同时赋予物体生成坐标
+        GameObject enemyObject = EnemyPool.Instance.GetObject(thisObject, spawnPos);     //从敌人对象池中生成敌人
+
+        InitializeEnemy(enemyObject, doorController);
+    }
+   
+
+    //生成完敌人后，进行初始化
+    public void InitializeEnemy(GameObject enemyObject, DoorController doorController)
+    {
+        Enemy enemyScript = enemyObject.GetComponentInChildren<Enemy>();
+        if (enemyScript == null)
+        {
+            Debug.LogError("Cannot get the Enemy reference in the " + enemyObject.name);
+            return;
+        }
+
+        //重置敌人脚本绑定的物体的本地（相对于父物体）坐标。因为敌人从对象池重新生成后，本地坐标会继承死亡前的本地坐标
+        enemyScript.ResetLocalPos();
+
+        //设置门控制器的脚本
+        enemyScript.SetDoorController(doorController);
+
+        //生成敌人后重置生命，否则重新激活的敌人生命依然为0
+        Stats enemyStats = enemyObject.GetComponentInChildren<Stats>();
+        if (enemyStats == null)
+        {
+            Debug.LogError("Cannot get the Stats reference in the " + enemyObject.name);
+            return;
+        }
+
+        enemyStats.SetCurrentHealth(enemyStats.MaxHealth);
+    }
+    #endregion
+
+
+    #region 检查函数
     //检查列表中的所有坐标处是否有家具
     private void EnsureNoFurnitureCollision(List<Vector2> enemySpawnPosList, DoorController doorController)
     {
@@ -94,6 +188,12 @@ public class EnvironmentManager : ManagerTemplate<EnvironmentManager>
             attemptCount++;
             adaptiveTolerance -= 0.1f;  //如果实在难以生成不会重复的坐标的话，减少检查重复的距离
         }
+
+        //当超出最大尝试次数后依然没有生成合适的坐标时，则进行提醒
+        if (attemptCount >= 100)
+        {
+            Debug.Log("Attempt counts already exceeds the max allowed counts!");
+        }
     }
 
     //检查单独的坐标是否跟家具重叠
@@ -108,8 +208,8 @@ public class EnvironmentManager : ManagerTemplate<EnvironmentManager>
         while (attemptCount < 100)      //确保不超过最大尝试次数
         {
             //检查是否跟家具重复，不重复的话就退出循环
-            if (IsPositionEmpty(enemySpawnPos, checkSize, doorController)) break;    
-            
+            if (IsPositionEmpty(enemySpawnPos, checkSize, doorController)) break;
+
 
             enemySpawnPos = doorController.EnemySpwanPos.GenerateSingleRandomPos();      //生成新的坐标
 
@@ -117,6 +217,12 @@ public class EnvironmentManager : ManagerTemplate<EnvironmentManager>
 
             attemptCount++;
             adaptiveTolerance -= 0.1f;  //如果实在难以生成不会重复的坐标的话，减少检查重复的距离
+        }
+
+        //当超出最大尝试次数后依然没有生成合适的坐标时，则进行提醒
+        if (attemptCount >= 100)
+        {
+            Debug.Log("Attempt counts already exceeds the max allowed counts!");
         }
     }
 
@@ -134,34 +240,6 @@ public class EnvironmentManager : ManagerTemplate<EnvironmentManager>
     {
         Collider2D overlapCheck = Physics2D.OverlapBox(positionToCheck, checkSize, 0f, checkedLayer);
         return overlapCheck == null;
-    }
-
-
-    //生成完敌人后，进行初始化
-    private void InitializeEnemy(GameObject enemyObject, DoorController doorController)
-    {
-        Enemy enemyScript = enemyObject.GetComponentInChildren<Enemy>();
-        if (enemyScript == null)
-        {
-            Debug.LogError("Cannot get the Enemy reference in the " + enemyObject.name);
-            return;
-        }
-
-        //重置敌人脚本绑定的物体的本地（相对于父物体）坐标。因为敌人从对象池重新生成后，本地坐标会继承死亡前的本地坐标
-        enemyScript.ResetLocalPos();
-
-        //设置门控制器的脚本
-        enemyScript.SetDoorController(doorController);
-
-        //生成敌人后重置生命，否则重新激活的敌人生命依然为0
-        Stats enemyStats = enemyObject.GetComponentInChildren<Stats>();
-        if (enemyStats == null)
-        {
-            Debug.LogError("Cannot get the Stats reference in the " + enemyObject.name);
-            return;
-        }
-
-        enemyStats.SetCurrentHealth(enemyStats.MaxHealth);
     }
     #endregion
 
