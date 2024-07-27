@@ -75,8 +75,13 @@ public class EventManager : ManagerTemplate<EventManager>
             {
                 Event loadedEvent = loadedEventPrefab.GetComponent<Event>();
 
+
+                //生成警告物体，同时将对应的逻辑传递给物体
+                EnvironmentManager.Instance.GenerateSpawnWarningObject(() => LogicPassToSpawnWarningObject(loadedEvent.EventData.EventPrefab, thisDoor)
+                , m_RoomPosWhereEventOccur);
+
                 //使用对象池生成事件预制件（因为使用对象池，所以第一次生成时会二次激活，导致调用两次OnEnable函数）
-                m_EventPrefab = ParticlePool.Instance.GetObject(loadedEvent.EventData.EventPrefab);        
+                //m_EventPrefab = ParticlePool.Instance.GetObject(loadedEvent.EventData.EventPrefab);        
             }
 
             else
@@ -91,7 +96,7 @@ public class EventManager : ManagerTemplate<EventManager>
         }
 
 
-
+        /*
         m_EventPrefab.transform.parent.position = m_RoomPosWhereEventOccur;      //赋值事件触发的房间的坐标给事件的父物体（因为对象池的缘故）
 
         Event eventScript = m_EventPrefab.GetComponent<Event>();
@@ -103,9 +108,33 @@ public class EventManager : ManagerTemplate<EventManager>
 
         eventScript.SetDoor(thisDoor);         //将事件发生的房间传过去
         eventScript.StartEvent();              //开始事件
+        */
 
         //需要做的：开始事件后从列表中移除事件，防止之后重复触发事件
     }
+
+    //传递给提醒物体脚本的函数，以在提醒完成后生成事件
+    private void LogicPassToSpawnWarningObject(GameObject eventObject, DoorController doorController)
+    {
+        //使用对象池生成事件预制件（因为使用对象池，所以第一次生成时会二次激活，导致调用两次OnEnable函数）
+        m_EventPrefab = ParticlePool.Instance.GetObject(eventObject); 
+
+
+        //赋值事件触发的房间的坐标给事件的父物体（因为对象池的缘故）
+        m_EventPrefab.transform.parent.position = m_RoomPosWhereEventOccur;      
+
+        Event eventScript = m_EventPrefab.GetComponent<Event>();
+        if (eventScript == null)
+        {
+            Debug.LogError("Cannot get the Event Script from the " m_EventPrefab.gameObject.name);
+            return;
+        }
+
+        eventScript.SetDoor(doorController);            //将事件发生的房间传过去
+        eventScript.StartEvent();                       //开始事件
+    }
+
+
 
 
     //取消激活事件物体

@@ -8,13 +8,27 @@ using UnityEngine.SceneManagement;
 //用于处理游戏过程中的一些动态变化（比如在某个地方生成某个新东西）
 public class EnvironmentManager : ManagerTemplate<EnvironmentManager>     
 {
-    public GameObject SpawnWarningObject;
+    public GameObject SpawnWarningObject;           //生成前的提醒物体
 
 
     public bool IsGameLost { get; private set; } = false;
     public bool IsFirstTimeEnterGame { get; private set; } = true;
 
 
+
+
+    #region Unity内部函数
+    protected override void Awake()
+    {
+        base.Awake();
+
+        if (SpawnWarningObject == null)
+        {
+            Debug.LogError($"The prefab: {SpawnWarningObject.name} is not assigned in the: {gameObject.name}");
+            return null;
+        }
+    }
+    #endregion
 
 
     #region 生成物体相关
@@ -57,10 +71,17 @@ public class EnvironmentManager : ManagerTemplate<EnvironmentManager>
         EnsureNoFurnitureCollision(ref spawnPos, doorController);      //检查是否跟家具重叠
 
 
+
+        //生成警告物体，同时将对应的逻辑传递给物体
+        GenerateSpawnWarningObject(() => LogicPassToSpawnWarningObject(enemyPrefab, spawnPos, doorController), spawnPos);
+
+
+        /*
         //这里的enemy物体是敌人的跟物体（包含巡逻坐标的），在生成的同时赋予物体生成坐标
         GameObject enemyObject = EnemyPool.Instance.GetObject(enemyPrefab, spawnPos);     //从敌人对象池中生成敌人
 
         InitializeEnemy(enemyObject, doorController);
+        */
     }
 
     /*
@@ -77,35 +98,10 @@ public class EnvironmentManager : ManagerTemplate<EnvironmentManager>
 
             for (int i = 0; i < doorController.EnemyObjects.Length; i++)
             {
-                
-                //从敌人对象池中生成警告物体
-                GameObject spawnWarningObject = EnemyPool.Instance.GetObject(SpawnWarningObject, enemySpawnList[i]);     
-               
-                //从警告物体那获取警告脚本
-                SpawnWarning spawnWarning = spawnWarningObject.GetComponent<SpawnWarning>();
-                if (spawnWarning == null)
-                {
-                    Debug.LogError("Cannot get the SpawnWarning component in the: " + spawnWarning.name);
-                    return;
-                }
-
-                spawnWarning.SetEnemyObject(doorController.EnemyObjects[i]);
-                spawnWarning.SetDoorController(doorController);
-                
-
-
-
-                
                 //生成警告物体，同时将对应的逻辑传递给物体
                 GenerateSpawnWarningObject(() => LogicPassToSpawnWarningObject(doorController.EnemyObjects[i], enemySpawnList[i], doorController)
                 , enemySpawnList[i]);
                 
-
-                Debug.Log("The coreesponding GameObject at index " + i + " is: " + doorController.EnemyObjects[i].name);
-
-                GenerateSpawnWarningObject(() => LogicPassToSpawnWarningObject(doorController.EnemyObjects[i], enemySpawnList[i], doorController)
-                , enemySpawnList[i]);
-
 
 
                 
@@ -121,6 +117,7 @@ public class EnvironmentManager : ManagerTemplate<EnvironmentManager>
     }
     */
 
+    //根据房间提前设置的敌人数量生成敌人
     public void GenerateEnemy(DoorController doorController)
     {
         //检查门控制器是否为空，或是否有敌人
@@ -181,7 +178,7 @@ public class EnvironmentManager : ManagerTemplate<EnvironmentManager>
 
 
 
-
+    //传递给提醒物体脚本的函数，以在提醒完成后生成敌人
     private void LogicPassToSpawnWarningObject(GameObject thisObject, Vector2 spawnPos, DoorController doorController)
     {
         //这里的enemy物体是敌人的跟物体（包含巡逻坐标的），在生成的同时赋予物体生成坐标

@@ -36,7 +36,7 @@ public class SpawnWarning : MonoBehaviour
 
 
     #region 动画帧事件
-    private void OnAnimationEnd()           //用于动画的最后一帧调用
+    private void OnAnimationEnd()           //放在动画的最后一帧调用
     {
         OnAnimationFinished?.Invoke();          //调用回调函数
         Destroy(gameObject);
