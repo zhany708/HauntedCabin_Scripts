@@ -13,9 +13,6 @@ public class SpawnWarning : MonoBehaviour
 
 
 
-    Animator m_Animator;                            //动画器
-
-
 
 
 
@@ -25,12 +22,7 @@ public class SpawnWarning : MonoBehaviour
     #region Unity内部函数
     private void Awake()
     {
-        m_Animator = GetComponent<Animator>();
-        if (m_Animator == null)
-        {
-            Debug.LogError("Cannot get the Aniamtor component in the: " + gameObject.name);
-            return;
-        }
+        
     }
     #endregion
 

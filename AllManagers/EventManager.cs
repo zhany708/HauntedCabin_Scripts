@@ -87,12 +87,14 @@ public class EventManager : ManagerTemplate<EventManager>
             else
             {
                 Debug.LogError("Failed to load event: " + EventKeys.DarkEventKeys[m_RandomGeneratedNum]);
+                return;
             }
         }
 
         catch (Exception ex)
         {
             Debug.LogError("Error loading event: " + ex.Message);
+            return;
         }
 
 
