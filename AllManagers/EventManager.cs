@@ -73,7 +73,7 @@ public class EventManager : ManagerTemplate<EventManager>
             GameObject loadedEventPrefab = await LoadPrefabAsync(EventKeys.DarkEventKeys[m_RandomGeneratedNum]);       //异步加载事件物体
             if (loadedEventPrefab != null)
             {
-                Event loadedEvent = loadedEventPrefab.GetComponent<Event>();
+                Event loadedEvent = loadedEventPrefab.GetComponent<Event>();        //获取事件脚本，随后从脚本中的Data处获取事件物体
 
 
                 //生成警告物体，同时将对应的逻辑传递给物体

@@ -22,7 +22,7 @@ public class SpawnWarning : MonoBehaviour
     #region Unity内部函数
     private void Awake()
     {
-        
+
     }
     #endregion
 
