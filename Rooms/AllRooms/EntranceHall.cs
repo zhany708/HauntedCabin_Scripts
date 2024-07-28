@@ -6,7 +6,7 @@ public class EntranceHall : RootRoomController      //入口大堂脚本
 {
     public static EntranceHall Instance { get; private set; }
 
-
+    GameObject ArrowTipObject;          //箭头提示，用于放在门前提醒玩家往此处移动
 
 
 
