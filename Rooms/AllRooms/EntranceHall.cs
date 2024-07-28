@@ -33,6 +33,13 @@ public class EntranceHall : RootRoomController      //入口大堂脚本
         }
 
         base.Awake();
+
+
+        if (ArrowTipObject == null)
+        {
+            Debug.LogError("ArrowTipObject is not assigned correctly in the " + gameObject.name);
+            return;
+        }
     }
 
     protected override void Start()
@@ -54,6 +61,18 @@ public class EntranceHall : RootRoomController      //入口大堂脚本
             MainDoorController.Instance.OpenMainDoor();
         }
     }
+
+    protected virtual void OnTriggerExit2D(Collider2D other)
+    {
+        base.OnTriggerExit2D(other);
+
+        //如果《箭头提示》物体处于激活状态，则取消激活
+        if (ArrowTipObject.activeSelf)
+        {
+            ArrowTipObject.SetActive(false);
+        }
+    }
+
     /*
     protected override void OnDisable()
     {
