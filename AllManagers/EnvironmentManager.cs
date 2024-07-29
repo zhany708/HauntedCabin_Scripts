@@ -25,7 +25,7 @@ public class EnvironmentManager : ManagerTemplate<EnvironmentManager>
         if (SpawnWarningObject == null)
         {
             Debug.LogError($"The prefab: {SpawnWarningObject.name} is not assigned in the: {gameObject.name}");
-            return null;
+            return;
         }
     }
     #endregion
@@ -74,48 +74,8 @@ public class EnvironmentManager : ManagerTemplate<EnvironmentManager>
 
         //生成警告物体，同时将对应的逻辑传递给物体
         GenerateSpawnWarningObject(() => LogicPassToSpawnWarningObject(enemyPrefab, spawnPos, doorController), spawnPos);
-
-
-        /*
-        //这里的enemy物体是敌人的跟物体（包含巡逻坐标的），在生成的同时赋予物体生成坐标
-        GameObject enemyObject = EnemyPool.Instance.GetObject(enemyPrefab, spawnPos);     //从敌人对象池中生成敌人
-
-        InitializeEnemy(enemyObject, doorController);
-        */
     }
 
-    /*
-    //根据房间提前设置的敌人数量生成敌人
-    public void GenerateEnemy(DoorController doorController)
-    {
-        if (doorController.EnemyObjects.Length != 0)   //如果房间有怪物
-        {
-            List<Vector2> enemySpawnList = doorController.EnemySpwanPos.GenerateMultiRandomPos(doorController.EnemyObjects.Length);     //根据怪物数量生成随机坐标list
-
-            //生成完坐标列表后。检查列表中是否有跟家具重合的坐标
-            EnsureNoFurnitureCollision(enemySpawnList, doorController);
-
-
-            for (int i = 0; i < doorController.EnemyObjects.Length; i++)
-            {
-                //生成警告物体，同时将对应的逻辑传递给物体
-                GenerateSpawnWarningObject(() => LogicPassToSpawnWarningObject(doorController.EnemyObjects[i], enemySpawnList[i], doorController)
-                , enemySpawnList[i]);
-                
-
-
-                
-                //这里的enemy物体是敌人的跟物体（包含巡逻坐标的），在生成的同时赋予物体生成坐标
-                GameObject enemyObject = EnemyPool.Instance.GetObject(doorController.EnemyObjects[i], enemySpawnList[i]);     //从敌人对象池中生成敌人
-
-                //Debug.Log("The enemy spawn position is : " + enemySpawnList[i]);
-
-                InitializeEnemy(enemyObject, doorController);
-                
-            }
-        }
-    }
-    */
 
     //根据房间提前设置的敌人数量生成敌人
     public void GenerateEnemy(DoorController doorController)

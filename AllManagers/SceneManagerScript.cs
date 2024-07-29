@@ -1,3 +1,4 @@
+using DG.Tweening;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -25,6 +26,11 @@ public class SceneManagerScript : ManagerTemplate<SceneManagerScript>
     private void OnDisable()
     {
         SceneManager.sceneLoaded -= OnSceneLoaded;
+    }
+
+    private void OnDestroy()
+    {
+        //DOTween.KillAll();      //杀死所有DOTween的逻辑，防止报错（不能放在这，否则加载一楼场景时小地图等UI不会正常淡入）
     }
     #endregion
 

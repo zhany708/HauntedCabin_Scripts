@@ -291,6 +291,8 @@ public class UIManager : ManagerTemplate<UIManager>
             //检查界面是否有按钮，或者界面是否处于禁止显示列表中
             if (!(childScript is PanelWithButton) && !DontDisplayPanelList.Contains(childScript) )
             {
+                //Debug.Log("This panel will be faded in: " + childScript.gameObject.name);
+
                 //如果都满足则淡入界面
                 childScript.Fade(childScript.CanvasGroup, childScript.FadeInAlpha, childScript.FadeDuration, true);
             }         

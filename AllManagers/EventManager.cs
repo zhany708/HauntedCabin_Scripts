@@ -78,10 +78,7 @@ public class EventManager : ManagerTemplate<EventManager>
 
                 //生成警告物体，同时将对应的逻辑传递给物体
                 EnvironmentManager.Instance.GenerateSpawnWarningObject(() => LogicPassToSpawnWarningObject(loadedEvent.EventData.EventPrefab, thisDoor)
-                , m_RoomPosWhereEventOccur);
-
-                //使用对象池生成事件预制件（因为使用对象池，所以第一次生成时会二次激活，导致调用两次OnEnable函数）
-                //m_EventPrefab = ParticlePool.Instance.GetObject(loadedEvent.EventData.EventPrefab);        
+                , m_RoomPosWhereEventOccur);        
             }
 
             else
@@ -96,21 +93,6 @@ public class EventManager : ManagerTemplate<EventManager>
             Debug.LogError("Error loading event: " + ex.Message);
             return;
         }
-
-
-        /*
-        m_EventPrefab.transform.parent.position = m_RoomPosWhereEventOccur;      //赋值事件触发的房间的坐标给事件的父物体（因为对象池的缘故）
-
-        Event eventScript = m_EventPrefab.GetComponent<Event>();
-        if (eventScript == null)
-        {
-            Debug.LogError("Cannot get the Event Script from the GameObject.");
-            return;
-        }
-
-        eventScript.SetDoor(thisDoor);         //将事件发生的房间传过去
-        eventScript.StartEvent();              //开始事件
-        */
 
         //需要做的：开始事件后从列表中移除事件，防止之后重复触发事件
     }
@@ -128,7 +110,7 @@ public class EventManager : ManagerTemplate<EventManager>
         Event eventScript = m_EventPrefab.GetComponent<Event>();
         if (eventScript == null)
         {
-            Debug.LogError("Cannot get the Event Script from the " m_EventPrefab.gameObject.name);
+            Debug.LogError("Cannot get the Event Script from the " + m_EventPrefab.gameObject.name);
             return;
         }
 

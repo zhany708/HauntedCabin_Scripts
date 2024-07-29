@@ -116,7 +116,7 @@ public class NormalRoomController : MonoBehaviour
             SetActiveShadowObject(true);
 
 
-            //确保只在场景持续存在且未卸载时，才会使用DoTeen（否则在场景卸载后会报错）
+            //确保只在场景持续存在且未加载时，才会使用DoTeen（否则在场景加载后会报错）
             if (SceneManager.GetActiveScene().isLoaded)
             {
                 //将相机亮度一瞬间的变暗

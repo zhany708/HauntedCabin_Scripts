@@ -128,6 +128,14 @@ public class Altar : MonoBehaviour      //仪式台的脚本
 
         if (!EnvironmentManager.Instance.IsGameLost)      //只有在游戏没有失败的时候才会进行下面的逻辑
         {
+            //检查是否有“生成提醒”物体存在，如果有的话则删除
+            SpawnWarning sapwnWarningObject = ParticlePool.Instance.gameObject.GetComponentInChildren<SpawnWarning>();
+            if (sapwnWarningObject != null)
+            {
+                Destroy(sapwnWarningObject.gameObject);
+            }
+
+
             Stats.IncreaseHealth(m_RitualMaxHealth * m_RestoreAltarHealthPercent);          //给祷告石回一点血
 
             EnemyPool.Instance.KillAllEnemy_DefenseWar();                                   //立刻消灭所有敌人

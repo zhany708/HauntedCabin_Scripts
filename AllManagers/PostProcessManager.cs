@@ -25,7 +25,7 @@ public class PostProcessManager : MonoBehaviour
     Vignette m_Vignette;                        //屏幕聚焦相关（比如模拟手电筒，只让玩家看到周围一小块面积）
 
 
-
+    Sequence DarkenSequence;                    //用于玩家离开房间后一瞬间变暗并恢复的Sequence
 
 
 
@@ -70,6 +70,11 @@ public class PostProcessManager : MonoBehaviour
             return;
         }
     }
+
+    private void OnDestroy()
+    {
+        DarkenSequence.Kill();      //物体摧毁时杀死Sequence
+    }
     #endregion
 
 
@@ -104,9 +109,9 @@ public class PostProcessManager : MonoBehaviour
 
 
             //将相机阴影值从当前的值变为一个另一个值，随后变回来（使用DOTween的Sequence从而进行连续的多个DOTween）
-            Sequence sequence = DOTween.Sequence();
-            sequence.Append(DOTween.To(() => m_ColorGrading.postExposure.value, x => m_ColorGrading.postExposure.value = x, newBrightness, duration) );
-            sequence.Append(DOTween.To(() => m_ColorGrading.postExposure.value, x => m_ColorGrading.postExposure.value = x, currentValue, duration) );            
+            DarkenSequence = DOTween.Sequence();
+            DarkenSequence.Append(DOTween.To(() => m_ColorGrading.postExposure.value, x => m_ColorGrading.postExposure.value = x, newBrightness, duration) );
+            DarkenSequence.Append(DOTween.To(() => m_ColorGrading.postExposure.value, x => m_ColorGrading.postExposure.value = x, currentValue, duration) );            
         }
 
         else

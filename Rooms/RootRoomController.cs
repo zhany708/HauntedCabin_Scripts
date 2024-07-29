@@ -2,6 +2,8 @@
 
 
 
+using UnityEngine;
+
 public class RootRoomController : NormalRoomController      //初始房间脚本
 {
     #region Unity内部函数
@@ -17,6 +19,17 @@ public class RootRoomController : NormalRoomController      //初始房间脚本
 
         //将初始房间在小地图上显示的颜色改成绿色
         MiniMapControllerInsideThisRoom.BaseSprite.color = MiniMapControllerInsideThisRoom.GreenForRootRoom;
+    }
+
+    protected override void OnTriggerEnter2D(Collider2D other)
+    {
+        base.OnTriggerEnter2D(other);
+
+        //检查房间是否加进字典（因为初始房间可能因为一些原因在加载时从字典中移除）
+        if (!RoomManager.Instance.GeneratedRoomDict.ContainsKey(transform.position))
+        {
+            RoomManager.Instance.GeneratedRoomDict.Add(transform.position, gameObject);
+        }
     }
     #endregion
 

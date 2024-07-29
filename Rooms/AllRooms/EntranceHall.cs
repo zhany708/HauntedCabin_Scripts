@@ -6,7 +6,7 @@ public class EntranceHall : RootRoomController      //入口大堂脚本
 {
     public static EntranceHall Instance { get; private set; }
 
-    GameObject ArrowTipObject;          //箭头提示，用于放在门前提醒玩家往此处移动
+    public GameObject ArrowTipObject;          //箭头提示，用于放在门前提醒玩家往此处移动
 
 
 
@@ -54,7 +54,8 @@ public class EntranceHall : RootRoomController      //入口大堂脚本
     protected override void OnTriggerEnter2D(Collider2D other)
     {
         base.OnTriggerEnter2D(other);
-        
+
+
         //当大门允许打开时，在玩家进入入口大堂后再打开大门
         if (other.CompareTag("Player") && MainDoorController.Instance.DoOpenMainDoor)   
         {
@@ -62,7 +63,7 @@ public class EntranceHall : RootRoomController      //入口大堂脚本
         }
     }
 
-    protected virtual void OnTriggerExit2D(Collider2D other)
+    protected override void OnTriggerExit2D(Collider2D other)
     {
         base.OnTriggerExit2D(other);
 
