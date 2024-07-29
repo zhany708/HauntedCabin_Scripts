@@ -12,8 +12,8 @@ public class PostProcessManager : MonoBehaviour
 
 
     //更改颜色滤镜相关   
-    public Color OrangeFilter = new Color(250, 107, 58);    //橙色
-    public Color RedFilter = new Color(214, 53, 56);        //红色
+    [SerializeField] Color m_OrangeFilter = new Color(250, 107, 58);    //橙色
+    [SerializeField] Color m_RedFilter = new Color(214, 53, 56);        //红色
 
     float m_FireEffectFrequency = 3.0f;                     //颜色转变频率
     float m_FireEffectTimer = 0f;                           //用于颜色转变
@@ -135,7 +135,7 @@ public class PostProcessManager : MonoBehaviour
 
             //根据频率在红色和橙色之间转换
             float t = Mathf.Sin(m_FireEffectTimer) * 0.5f + 0.5f;
-            Color currentColor = Color.Lerp(OrangeFilter, RedFilter, t);
+            Color currentColor = Color.Lerp(m_OrangeFilter, m_RedFilter, t);
 
             //赋值新的颜色
             m_Vignette.color.Override(currentColor);

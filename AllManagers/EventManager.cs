@@ -7,7 +7,7 @@ using UnityEngine.SceneManagement;
 public class EventManager : ManagerTemplate<EventManager>
 {
     public SO_EventKeys EventKeys;
-    public int EnterSecondStageCount;      //进入二阶段所需的事件数
+    [SerializeField] int m_EnterSecondStageCount = -1;      //进入二阶段所需的事件数
 
     public bool IsSecondStage { get; private set; } = false;
 
@@ -35,7 +35,7 @@ public class EventManager : ManagerTemplate<EventManager>
 
         m_Animator = GetComponent<Animator>();
 
-        if (EnterSecondStageCount <= 0)
+        if (m_EnterSecondStageCount <= 0)
         {
             Debug.LogError("The event counts for entering second stage cannot be less or equal to 0.");
             return;
@@ -190,7 +190,7 @@ public class EventManager : ManagerTemplate<EventManager>
     private void CheckIfTranstionToSecondStage()
     {
         //检查是否触发了足够次数的预兆事件，并且目前不是二阶段
-        if (DarkEvent.DarkEventCount >= EnterSecondStageCount && !IsSecondStage)   
+        if (DarkEvent.DarkEventCount >= m_EnterSecondStageCount && !IsSecondStage)   
         {
             transform.position = m_RoomPosWhereEventOccur;          //将事件管理器的坐标移到当前房间
             m_RoomPosWhereEnterSecondStage = transform.position;    //储存进入二阶段的房间的坐标

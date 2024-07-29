@@ -8,8 +8,7 @@ using UnityEngine.SceneManagement;
 //用于处理游戏过程中的一些动态变化（比如在某个地方生成某个新东西）
 public class EnvironmentManager : ManagerTemplate<EnvironmentManager>     
 {
-    public GameObject SpawnWarningObject;           //生成前的提醒物体
-
+    [SerializeField] GameObject m_SpawnWarningObject;           //生成前的提醒物体
 
     public bool IsGameLost { get; private set; } = false;
     public bool IsFirstTimeEnterGame { get; private set; } = true;
@@ -22,9 +21,9 @@ public class EnvironmentManager : ManagerTemplate<EnvironmentManager>
     {
         base.Awake();
 
-        if (SpawnWarningObject == null)
+        if (m_SpawnWarningObject == null)
         {
-            Debug.LogError($"The prefab: {SpawnWarningObject.name} is not assigned in the: {gameObject.name}");
+            Debug.LogError($"The prefab: {m_SpawnWarningObject.name} is not assigned in the: {gameObject.name}");
             return;
         }
     }
@@ -46,7 +45,7 @@ public class EnvironmentManager : ManagerTemplate<EnvironmentManager>
     public void GenerateSpawnWarningObject(Action relatedAction, Vector2 objectPos)
     {
         //从敌人对象池中生成警告物体
-        GameObject spawnWarningObject = ParticlePool.Instance.GetObject(SpawnWarningObject, objectPos);
+        GameObject spawnWarningObject = ParticlePool.Instance.GetObject(m_SpawnWarningObject, objectPos);
 
         //从警告物体那获取警告脚本
         SpawnWarning spawnWarning = spawnWarningObject.GetComponent<SpawnWarning>();
