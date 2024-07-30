@@ -180,7 +180,7 @@ public class SlotMachinePanel : BasePanel
         TextMeshProUGUI targetText = SlotMachineContainer.GetChild(TargetIndex).GetComponentInChildren<TextMeshProUGUI>();
         if (targetText == null)
         {
-            Debug.LogError("Cannot get the TextMeshProUGUI component in the chilkren of " + gameObject.name);
+            Debug.LogError("Cannot get the TextMeshProUGUI component in the children of " + gameObject.name);
             return;
         }
 
