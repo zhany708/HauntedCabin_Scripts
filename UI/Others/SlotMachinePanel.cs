@@ -123,6 +123,49 @@ public class SlotMachinePanel : BasePanel
         m_ScrollSequence.Play();
     }
 
+    /*
+    //用于老虎机的滚动
+    private void ScrollContinuously()
+    {
+        //计算老虎机一次旋转的总长度
+        float totalDistance = m_ImageHeight * TotalImages * ScrollSpeed;
+
+        //设置初始快速滚动阶段的时长和慢速滚动阶段的时长
+        float fastScrollDuration = ScrollDuration * 0.8f;   //前80%的时长
+        float slowScrollDuration = ScrollDuration * 0.2f;   //后20%的时长
+
+        //计算快速滚动阶段的距离和慢速滚动阶段的距离
+        float fastScrollDistance = totalDistance * 0.8f;
+        float slowScrollDistance = totalDistance * 0.2f;
+
+        //创建循环动画以进行老虎机旋转
+        m_ScrollSequence = DOTween.Sequence();
+
+        //初始快速滚动阶段（Ease.Linear的速度是均匀的，而Ease.OutCubic的速度是缓慢下降的）
+        m_ScrollSequence.Append(SlotMachineContainer.DOAnchorPosY(SlotMachineContainer.anchoredPosition.y - fastScrollDistance, fastScrollDuration).SetEase(Ease.Linear))
+            .Append(SlotMachineContainer.DOAnchorPosY(SlotMachineContainer.anchoredPosition.y - slowScrollDistance, slowScrollDuration).SetEase(Ease.OutCubic))
+            .OnUpdate(() =>
+            {
+                CheckAndRepositionImages();     //持续检查并更新图片的坐标
+
+                //不能开始旋转后就立刻更改，否则玩家会看到
+                if (SlotMachineContainer.anchoredPosition.y <= -100)
+                {
+                    ChangeTargetImageColor(Color.blue);     //更改目标图片的颜色
+                }
+            })
+            .OnComplete(() =>
+            {
+                m_IsScrolling = false;
+                ResetImagePositions();           //重置所有图片的坐标
+            });
+
+        m_ScrollSequence.Play();
+    }
+    */
+
+
+
     //用于无限循环滚动图片
     private void CheckAndRepositionImages()
     {
