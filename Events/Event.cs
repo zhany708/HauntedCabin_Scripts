@@ -5,7 +5,8 @@ using UnityEngine;
 public class Event : MonoBehaviour
 {
     public SO_EventData EventData;
-    public int EventIndex = -1;          //事件的序列号，每个事件都不一样，具体可以查看云端里的“事件信息”文档
+    public int EventIndex = -1;             //事件的序列号，每个事件都不一样，具体可以查看云端里的“事件信息”文档
+    public string EventNamePhraseKey;       //事件对应的翻译文本的string
 
 
     protected DoorController doorController;
@@ -17,7 +18,7 @@ public class Event : MonoBehaviour
     #region Unity内部函数
     protected virtual void Awake()
     {
-        if (EventData == null || EventIndex < 0)
+        if (EventData == null || EventNamePhraseKey == null || EventIndex < 0)
         {
             Debug.LogError("Some components are not set in the: " + gameObject.name);
             return;
