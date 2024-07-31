@@ -42,7 +42,7 @@ public class SlotMachinePanel : BasePanel
         base.Awake();
 
 
-        if (m_RoomContainer == null)
+        if (m_RoomContainer == null || m_EventContainer == null || m_TipText == null)
         {
             Debug.LogError("Some components are not assigned in the " + gameObject.name);
             return;
@@ -126,10 +126,7 @@ public class SlotMachinePanel : BasePanel
     private void DelayStartSlotMachine()
     {
         //等待1秒后，开始老虎机效果
-        Coroutine startSlotMachineCoroutine = StartCoroutine(Delay.Instance.DelaySomeTime(1f, () =>
-        {
-            StartSlotMachine();
-        }));
+        Coroutine startSlotMachineCoroutine = StartCoroutine(Delay.Instance.DelaySomeTime(1f, () => StartSlotMachine() ) );
 
         generatedCoroutines.Add(startSlotMachineCoroutine);            //将协程加进列表
     }
@@ -172,10 +169,7 @@ public class SlotMachinePanel : BasePanel
 
                     ResetImagePositions();      //重置坐标
 
-                    if (m_TipText != null)
-                    {
-                        StartTipTextAnimation();    //激活提示文本，以让玩家继续游戏
-                    }                   
+                    StartTipTextAnimation();    //激活提示文本，以让玩家继续游戏                 
                     //Debug.Log($"After: The position of target image is {m_ImageArray[TargetIndex]} and the position of Container is {SlotMachineContainer.anchoredPosition}");                 
                 });
         
@@ -208,10 +202,8 @@ public class SlotMachinePanel : BasePanel
         {
             RectTransform eventImageRect = m_EventContainer.GetChild(i).GetComponent<RectTransform>();
 
-            //由于老虎机的旋转是移动SlotMachineContainer，所以检查坐标时必须加上容器的坐标
             if (eventImageRect.anchoredPosition.y + m_EventContainer.anchoredPosition.y < -m_ImageHeight * (m_TotalImages))
             {
-                //将图片移至最上方
                 float newY = eventImageRect.anchoredPosition.y + m_ImageHeight * (m_TotalImages);
                 eventImageRect.anchoredPosition = new Vector2(eventImageRect.anchoredPosition.x, newY);
             }
@@ -265,67 +257,41 @@ public class SlotMachinePanel : BasePanel
     //更改目标图片的颜色
     private void ChangeTargetImageColor(Color thisColor, bool isRoom)
     {
-        if (isRoom)
-        {
-            Image targetRoomImage = m_RoomContainer.GetChild(m_TargetIndex).GetComponent<Image>();
-            if (targetRoomImage == null)
-            {
-                Debug.LogError("Cannot get the Image component in the " + gameObject.name);
-                return;
-            }
+        //根据参数中的布尔决定更改哪个容器
+        RectTransform targetContainer = isRoom ? m_RoomContainer : m_EventContainer;
 
-            targetRoomImage.color = thisColor;
+        Image targetImage = targetContainer.GetChild(m_TargetIndex).GetComponent<Image>();
+        if (targetImage == null)
+        {
+            Debug.LogError("Cannot get the Image component in the " + gameObject.name);
+            return;
         }
 
-        else
-        {
-            Image targetEventImage = m_EventContainer.GetChild(m_TargetIndex).GetComponent<Image>();
-            if (targetEventImage == null)
-            {
-                Debug.LogError("Cannot get the Image component in the " + gameObject.name);
-                return;
-            }
-
-            targetEventImage.color = thisColor;
-        }
+        targetImage.color = thisColor;
     }
 
 
     //更改目标文本
     private void ChangeTargetText(bool isRoom)
     {
-        if (isRoom)
+        //根据参数中的布尔决定更改哪个容器
+        RectTransform targetContainer = isRoom ? m_RoomContainer : m_EventContainer;
+
+        TextMeshProUGUI targetText = targetContainer.GetChild(m_TargetIndex).GetComponentInChildren<TextMeshProUGUI>();
+        if (targetText == null)
         {
-            TextMeshProUGUI targetRoomText = m_RoomContainer.GetChild(m_TargetIndex).GetComponentInChildren<TextMeshProUGUI>();
-            if (targetRoomText == null)
-            {
-                Debug.LogError("Cannot get the TextMeshProUGUI component in the children of " + gameObject.name);
-                return;
-            }
-
-
-            if (m_RoomTextForChanging != null)
-            {
-                targetRoomText.text = m_RoomTextForChanging;
-            }
+            Debug.LogError("Cannot get the TextMeshProUGUI component in the children of " + gameObject.name);
+            return;
         }
 
-        else
+
+        string textForChanging = isRoom ? m_RoomTextForChanging : m_EventTextForChanging;
+
+        if (textForChanging != null)
         {
-            TextMeshProUGUI targetEventText = m_EventContainer.GetChild(m_TargetIndex).GetComponentInChildren<TextMeshProUGUI>();
-            if (targetEventText == null)
-            {
-                Debug.LogError("Cannot get the TextMeshProUGUI component in the children of " + gameObject.name);
-                return;
-            }
-
-
-            if (m_EventTextForChanging != null)
-            {
-                targetEventText.text = m_EventTextForChanging;
-            }
+            targetText.text = textForChanging;
         }
-    }
+    }  
     #endregion
 
 
