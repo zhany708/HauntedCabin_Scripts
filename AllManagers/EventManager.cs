@@ -1,27 +1,31 @@
 using System;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using Lean.Localization;
 
 
 
 public class EventManager : ManagerTemplate<EventManager>
 {
     public SO_EventKeys EventKeys;
-    [SerializeField] int m_EnterSecondStageCount = -1;      //进入二阶段所需的事件数
+    [SerializeField] int m_EnterSecondStageCount = -1;          //进入二阶段所需的事件数
 
     public bool IsSecondStage { get; private set; } = false;
 
 
 
     Animator m_Animator;
-    GameObject m_EventPrefab;                                  //事件预制件
-    Vector2 m_RoomPosWhereEventOccur;                          //表示事件发生的房间的坐标
-    Vector2 m_RoomPosWhereEnterSecondStage = Vector2.zero;     //表示进入二阶段时的房间的坐标
+    GameObject m_EventPrefab;                                   //事件预制件
 
-    int m_EventCount = 0;                                      //表示生成过了多少事件（包括普通和预兆）
-    int m_RandomGeneratedNum = -1;                             //随机生成的数（用于新的事件生成的索引）
+    NormalRoomController m_RoomWhereEnterSecondStage;           //触发进入二阶段的房间脚本
+    Event m_EventWhereEnterSecondStage;                         //触发进入二阶段的事件脚本
+    Vector2 m_RoomPosWhereEventOccur;                           //表示事件发生时的房间的坐标
+    Vector2 m_RoomPosWhereEnterSecondStage = Vector2.zero;      //表示进入二阶段时的房间的坐标
 
-    bool m_IsEnterMainMenu = false;                            //表示玩家是否返回了主菜单
+    int m_EventCount = 0;                                       //表示生成过了多少事件（包括普通和预兆）
+    int m_RandomGeneratedNum = -1;                              //随机生成的数（用于新的事件生成的索引）
+
+    bool m_IsEnterMainMenu = false;                             //表示玩家是否返回了主菜单
 
 
 
@@ -54,6 +58,13 @@ public class EventManager : ManagerTemplate<EventManager>
         {
             Debug.LogError("UIKeys not set or the key for HellsCallBackground is empty.");
             return;
+        }
+
+
+        //提前加载老虎机界面
+        if (UIManager.Instance.UIKeys != null && !string.IsNullOrEmpty(UIManager.Instance.UIKeys.SlotMachinePanel))
+        {
+            await UIManager.Instance.InitPanel(UIManager.Instance.UIKeys.SlotMachinePanel);
         }
     }
     #endregion
@@ -187,19 +198,65 @@ public class EventManager : ManagerTemplate<EventManager>
     }
 
     //检查是否进入二阶段
-    private void CheckIfTranstionToSecondStage()
+    private async void CheckIfTranstionToSecondStage()
     {
         //检查是否触发了足够次数的预兆事件，并且目前不是二阶段
         if (DarkEvent.DarkEventCount >= m_EnterSecondStageCount && !IsSecondStage)   
         {
-            transform.position = m_RoomPosWhereEventOccur;          //将事件管理器的坐标移到当前房间
-            m_RoomPosWhereEnterSecondStage = transform.position;    //储存进入二阶段的房间的坐标
+            m_RoomPosWhereEnterSecondStage = m_RoomPosWhereEventOccur;    //储存进入二阶段的房间的坐标
+
+            SetEventAndRoomCauseSecondStage();                      //获取触发进入二阶段的房间和事件的脚本
+
+            /*
+            transform.position = m_RoomPosWhereEventOccur;          //将事件管理器的坐标移到当前房间            
             m_Animator.SetTrigger("TranstionSecondStage");          //随后播放过渡阶段的动画
+            */
+
+            await UIManager.Instance.OpenPanel(UIManager.Instance.UIKeys.SlotMachinePanel);     //打开老虎机界面
+
+            //获取老虎机脚本的引用
+            SlotMachinePanel slotMachine = UIManager.Instance.GetUIRoot().GetComponentInChildren<SlotMachinePanel>();
+            if (slotMachine == null)
+            {
+                Debug.LogError($"Cannot get the SlotMachinePanel in the children of {UIManager.Instance.GetUIRoot()}");
+                return;
+            }
+
+
+            if (LeanLocalization.CurrentLanguages != null)
+            {
+                //将触发进入二阶段的房间名和事件名赋值给老虎机界面
+                slotMachine.SetTextForChanging(LeanLocalization.GetTranslationText(m_RoomWhereEnterSecondStage.RoomNamePhraseKey)
+                    , LeanLocalization.GetTranslationText(m_EventWhereEnterSecondStage.EventNamePhraseKey));
+            }
+
+            slotMachine.OnFadeOutFinished += DisplayTransitionStageText;        //老虎机界面关闭后打开剧本背景界面
 
             IsSecondStage = true;
         }
     }
   
+    //获取触发进入二阶段的房间和事件的脚本
+    private void SetEventAndRoomCauseSecondStage()
+    {
+        m_RoomWhereEnterSecondStage = RoomManager.Instance.GeneratedRoomDict[m_RoomPosWhereEnterSecondStage].GetComponent<NormalRoomController>();
+        if (m_RoomWhereEnterSecondStage == null)
+        {
+            Debug.LogError($"Cannot get the NormalRoomController script from the room at position {m_RoomPosWhereEnterSecondStage}");
+            return;
+        }
+
+
+        m_EventWhereEnterSecondStage = m_EventPrefab.GetComponent<Event>();
+        if (m_EventWhereEnterSecondStage == null)
+        {
+            Debug.LogError($"Cannot get the Event script from the event prefab {m_EventPrefab}");
+            return;
+        }
+    }
+
+
+
 
     //每当加载新场景时调用的函数
     public void OnSceneLoaded(UnityEngine.SceneManagement.Scene scene, LoadSceneMode mode)

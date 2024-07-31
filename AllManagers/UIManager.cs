@@ -70,25 +70,22 @@ public class UIManager : ManagerTemplate<UIManager>
 
         //异步加载后生成物体并获取物体身上的组件
         GameObject panelObject = GameObject.Instantiate(panelPrefab, m_UIRoot, false);
-        BasePanel panel = panelObject.GetComponent<BasePanel>();
-        if (panel != null)
-        {
-            //获取组件后，打开界面
-            panel.OpenPanel(name);
-        }
+        BasePanel panel = panelObject.GetComponent<BasePanel>();         //尝试获取界面上的所有脚本（大部分界面只有1个）
 
-        else
+        if (panel == null)
         {
-            Debug.LogError("No BasePanel component found on prefab: " + name);
+            Debug.LogError("No BasePanel component found on prefab: " + panelObject.name);
             return;
         }
 
+        //获取组件后，打开界面
+        panel.OpenPanel(name);
 
+        //将界面加进储存正在打开界面的字典
         if (!PanelDict.ContainsKey(name))
-        {
-            //将界面加进储存正在打开界面的字典
+        {           
             PanelDict.Add(name, panel);
-        }         
+        }      
     }
 
 
@@ -155,7 +152,7 @@ public class UIManager : ManagerTemplate<UIManager>
     #endregion
 
 
-    #region 打开特定界面（确认界面，互动界面等）
+    #region 打开特殊界面（确认界面，互动界面等）
     public async void OpenConfirmPanel(Action onYesAction, BasePanel connectedPanel)              //专门用于打开确认界面
     {
         connectedPanel.SetInteractableAndBlocksRaycasts(false);         //禁止连接界面的互动性，防止错误的选择位于底部的界面的按钮
@@ -297,6 +294,14 @@ public class UIManager : ManagerTemplate<UIManager>
                 childScript.Fade(childScript.CanvasGroup, childScript.FadeInAlpha, childScript.FadeDuration, true);
             }         
         }
+    }
+    #endregion
+
+
+    #region Getters
+    public Transform GetUIRoot()
+    {
+        return m_UIRoot;
     }
     #endregion
 }
