@@ -143,6 +143,7 @@ public class SlotMachinePanel : BasePanel
 
         //先进行房间的旋转，再进行事件的。Ease.Linear的速度是全程均匀的，而Ease.OutCubic的速度是在末尾逐渐下降的
         m_ScrollSequence.Append(m_RoomContainer.DOAnchorPosY(m_RoomContainer.anchoredPosition.y - totalDistance, m_ScrollDuration).SetEase(Ease.OutCubic))
+                //Append是在上一个效果结束后执行，Join是同时执行
                 .Append(m_EventContainer.DOAnchorPosY(m_EventContainer.anchoredPosition.y - totalDistance, m_ScrollDuration).SetEase(Ease.OutCubic))
                 .OnUpdate(() =>
                 {
