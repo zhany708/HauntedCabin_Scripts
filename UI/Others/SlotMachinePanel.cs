@@ -1,6 +1,5 @@
 using UnityEngine;
 using DG.Tweening;
-using UnityEngine.UI;
 using TMPro;
 
 
@@ -11,6 +10,7 @@ public class SlotMachinePanel : BasePanel
     [SerializeField] RectTransform m_RoomContainer;         //储存房间图片的容器
     [SerializeField] RectTransform m_EventContainer;        //储存事件图片的容器
     [SerializeField] TextMeshProUGUI m_TipText;             //提示文本
+    [SerializeField] Animator m_PanelBackgroundAnimator;    //界面背景的动画控制器
 
 
     Vector2[] m_RoomImageArray;                     //储存所有房间图片的坐标的数组，用于Debug
@@ -42,7 +42,7 @@ public class SlotMachinePanel : BasePanel
         base.Awake();
 
 
-        if (m_RoomContainer == null || m_EventContainer == null || m_TipText == null)
+        if (m_RoomContainer == null || m_EventContainer == null || m_TipText == null || m_PanelBackgroundAnimator == null)
         {
             Debug.LogError("Some components are not assigned in the " + gameObject.name);
             return;
@@ -77,7 +77,7 @@ public class SlotMachinePanel : BasePanel
         //按空格开始旋转（用于测试，待界面完善后删除这部分）
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            //StartSlotMachine();
+            StartSlotMachine();
         }
     }
     
@@ -143,8 +143,17 @@ public class SlotMachinePanel : BasePanel
 
         //先进行房间的旋转，再进行事件的。Ease.Linear的速度是全程均匀的，而Ease.OutCubic的速度是在末尾逐渐下降的
         m_ScrollSequence.Append(m_RoomContainer.DOAnchorPosY(m_RoomContainer.anchoredPosition.y - totalDistance, m_ScrollDuration).SetEase(Ease.OutCubic))
+                //第一个动画结束后，第二个动画开始前执行的逻辑
+                .AppendCallback(() =>
+                {
+                    m_PanelBackgroundAnimator.SetBool("IsUpLightOn", true);     //让背景界面上方的灯亮
+                })
+            
+                
                 //Append是在上一个效果结束后执行，Join是同时执行
                 .Append(m_EventContainer.DOAnchorPosY(m_EventContainer.anchoredPosition.y - totalDistance, m_ScrollDuration).SetEase(Ease.OutCubic))
+
+                //Sequence期间持续执行的逻辑
                 .OnUpdate(() =>
                 {
                     CheckAndRepositionImages();     //持续检查并更新图片的坐标
@@ -153,19 +162,22 @@ public class SlotMachinePanel : BasePanel
                     //不能开始旋转后就立刻更改，否则玩家会看到
                     if (m_RoomContainer.anchoredPosition.y <= -100)
                     {
-                        ChangeTargetImageColor(Color.blue, true);       //更改目标图片的颜色
+                        //ChangeTargetImageColor(Color.blue, true);       //更改目标图片的颜色
                         ChangeTargetText(true);                         //更改房间的目标文本
                     }
 
                     if (m_EventContainer.anchoredPosition.y <= -100)
                     {
-                        ChangeTargetImageColor(Color.blue, false);      //更改目标图片的颜色
+                        //ChangeTargetImageColor(Color.blue, false);      //更改目标图片的颜色
                         ChangeTargetText(false);                        //更改事件的目标文本
                     }
                 })
-                 
+
+                //Sequence结束后执行的逻辑
                 .OnComplete(() =>
                 {
+                    m_PanelBackgroundAnimator.SetBool("IsDownLightOn", true);       //让背景界面下方的灯亮
+
                     m_IsScrolling = false;
 
                     ResetImagePositions();      //重置坐标
@@ -254,22 +266,6 @@ public class SlotMachinePanel : BasePanel
         }
     }
 
-
-    //更改目标图片的颜色
-    private void ChangeTargetImageColor(Color thisColor, bool isRoom)
-    {
-        //根据参数中的布尔决定更改哪个容器
-        RectTransform targetContainer = isRoom ? m_RoomContainer : m_EventContainer;
-
-        Image targetImage = targetContainer.GetChild(m_TargetIndex).GetComponent<Image>();
-        if (targetImage == null)
-        {
-            Debug.LogError("Cannot get the Image component in the " + gameObject.name);
-            return;
-        }
-
-        targetImage.color = thisColor;
-    }
 
 
     //更改目标文本
