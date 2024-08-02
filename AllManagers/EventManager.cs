@@ -225,9 +225,10 @@ public class EventManager : ManagerTemplate<EventManager>
 
             if (LeanLocalization.CurrentLanguages != null)
             {
-                //将触发进入二阶段的房间名和事件名赋值给老虎机界面
+                //将触发进入二阶段的房间名，事件名以及进入的剧本名赋值给老虎机界面
                 slotMachine.SetTextForChanging(LeanLocalization.GetTranslationText(m_RoomWhereEnterSecondStage.RoomNamePhraseKey)
-                    , LeanLocalization.GetTranslationText(m_EventWhereEnterSecondStage.EventNamePhraseKey));
+                    , LeanLocalization.GetTranslationText(m_EventWhereEnterSecondStage.EventNamePhraseKey)
+                    , LeanLocalization.GetTranslationText(ScreenplayManager.Instance.ScreenplayNamePhraseKey) );
             }
 
             slotMachine.OnFadeOutFinished += DisplayTransitionStageText;        //老虎机界面关闭后打开剧本背景界面
