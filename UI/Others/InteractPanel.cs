@@ -1,7 +1,7 @@
 using UnityEngine;
 using System;
 using TMPro;
-
+using Lean.Localization;
 
 
 public class InteractPanel : BasePanel     //互动按键，给予玩家自己决定是否打开某些界面（比如拾取武器），而不是触发了触发器后自动打开界面
@@ -39,10 +39,14 @@ public class InteractPanel : BasePanel     //互动按键，给予玩家自己�
 
 
 
+    const string m_InteractKey = "F";               //进行互动的按键（默认F）
+
     RectTransform m_PanelTransform;                 //界面的坐标组件
-    TextMeshProUGUI m_LetterText;                   //字母文本（玩家需要按的键）   
 
+    //中文：“按{0}{1}”，英文：“Press {0} to {1}”。{0}为需要按下的按键（可更改），{1}为按下按键后进行的具体功能（如拾取匕首，开始仪式等）
+    TextMeshProUGUI m_PanelText;                    //界面文本 
 
+    string m_InteractText;                          //互动相关的文本（如拾取霰弹枪等）
     
     
 
@@ -140,6 +144,13 @@ public class InteractPanel : BasePanel     //互动按键，给予玩家自己�
     }
 
 
+    //每次打开互动界面前需要执行的逻辑
+    public void UpdatePanelText()
+    {
+        m_PanelText.text = string.Format(m_InteractKey, m_InteractText);
+    } 
+
+
     //设置界面的坐标，需要加上偏移量（界面统一显示在角色右侧）
     public void SetPositionWithOffset()
     {
@@ -158,8 +169,8 @@ public class InteractPanel : BasePanel     //互动按键，给予玩家自己�
     #region 其余函数
     private void InitializeComponents()
     {
-        m_LetterText = GetComponentInChildren<TextMeshProUGUI>();
-        if (m_LetterText == null)
+        m_PanelText = GetComponentInChildren<TextMeshProUGUI>();
+        if (m_PanelText == null)
         {
             Debug.LogError("LetterText is not assigned in the " + name);
             return;
@@ -195,6 +206,14 @@ public class InteractPanel : BasePanel     //互动按键，给予玩家自己�
     public void SetIsActionCalled(bool isTrue)
     {
         IsActionCalled = isTrue;
+    }
+
+    public void SetInteractText(string thisPhraseKey)
+    {
+        if (LeanLocalization.CurrentLanguages != null)
+        {
+            m_InteractText = LeanLocalization.GetTranslationText(thisPhraseKey);
+        }      
     }
     #endregion
 }

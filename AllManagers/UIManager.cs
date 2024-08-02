@@ -179,7 +179,7 @@ public class UIManager : ManagerTemplate<UIManager>
 
 
     //打开互动界面（参数中的事件不能为Task类型）
-    public async void OpenInteractPanel(Action onYesAction)     
+    public async void OpenInteractPanel(Action onYesAction/*, string interactPhraseKey*/)     
     {
         if (InteractPanel.Instance == null)
         {
@@ -191,6 +191,9 @@ public class UIManager : ManagerTemplate<UIManager>
         }
 
 
+
+        //InteractPanel.Instance.SetInteractText();                               //赋值进行互动的文本
+        InteractPanel.Instance.UpdatePanelText();                               //更新界面文本
         InteractPanel.Instance.ClearAllSubscriptions();                         //先清空所有事件绑定的之前的函数
         InteractPanel.Instance.OnInteractKeyPressed += onYesAction;             //将参数中的函数绑定到事件       
         InteractPanel.Instance.SetPositionWithOffset();                         //设置界面的坐标
