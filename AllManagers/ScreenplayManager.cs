@@ -11,9 +11,16 @@ public class ScreenplayManager : ManagerTemplate<ScreenplayManager>     //用于
 
     public string ScreenplayNamePhraseKey;                  //剧本名对应的翻译文本的string（临时的，等有更多剧本后需要更改）
 
+
+
+
+
     string[,] m_AllScreenplays = new string[10, 10];        //用于表示每个剧本是由哪个事件和房间触发的2D数组（10x10）
 
     Transform m_ScreenplayRoot;     //用于在编辑器中储存所有的剧本的跟物体（为了美观）
+
+
+
 
 
 

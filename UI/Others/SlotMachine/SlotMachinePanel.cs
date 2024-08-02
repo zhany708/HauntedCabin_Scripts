@@ -79,7 +79,7 @@ public class SlotMachinePanel : BasePanel
         //按空格开始旋转（用于测试，待界面完善后删除这部分）
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            StartSlotMachine();
+            //StartSlotMachine();
         }
     }
     

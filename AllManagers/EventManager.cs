@@ -14,7 +14,7 @@ public class EventManager : ManagerTemplate<EventManager>
 
 
 
-    Animator m_Animator;
+    //Animator m_Animator;
     GameObject m_EventPrefab;                                   //事件预制件
 
     NormalRoomController m_RoomWhereEnterSecondStage;           //触发进入二阶段的房间脚本
@@ -37,7 +37,7 @@ public class EventManager : ManagerTemplate<EventManager>
     {
         base.Awake();
 
-        m_Animator = GetComponent<Animator>();
+        //m_Animator = GetComponent<Animator>();
 
         if (m_EnterSecondStageCount <= 0)
         {

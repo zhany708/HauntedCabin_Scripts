@@ -11,12 +11,12 @@ public class RoomManager : ManagerTemplate<RoomManager>
     public event RoomGeneratedHandler OnRoomGenerated;                      //使用上面的限制的事件。接收方为HellsCall脚本
 
 
-    public SO_RoomKeys RoomKeys;            //生成房间需要的所有房间名
-    public LayerMask RoomLayerMask;         //房间的图层
+    public SO_RoomKeys RoomKeys;                        //生成房间需要的所有房间名
+    [SerializeField] LayerMask m_RoomLayerMask;         //房间的图层
 
     //限制墙壁的大小，可根据难度的不同调整
-    public float MaximumXPos = 35f;
-    public float MaximumYPos = 35f;
+    [SerializeField] float m_MaximumXPos = 35f;
+    [SerializeField] float m_MaximumYPos = 35f;
 
 
     //以下是所有房间里的门的统一名字
@@ -61,7 +61,7 @@ public class RoomManager : ManagerTemplate<RoomManager>
     {
         base.Awake();
 
-        if (RoomKeys == null || MaximumXPos <= 0 || MaximumYPos <= 0)
+        if (RoomKeys == null || m_MaximumXPos <= 0 || m_MaximumYPos <= 0)
         {
             Debug.LogError("Some components are not correctly assigned in the RoomManager");
             return;          
@@ -348,7 +348,7 @@ public class RoomManager : ManagerTemplate<RoomManager>
     private bool IsPositionEmpty(Vector2 positionToCheck, Vector2 roomSize)
     {
         //第一个参数为中心点，第二个参数为检查的正方形大小，第三个参数为角度，第四个参数为检测的目标层级
-        Collider2D overlapCheck = Physics2D.OverlapBox(positionToCheck, roomSize, 0f, RoomLayerMask);
+        Collider2D overlapCheck = Physics2D.OverlapBox(positionToCheck, roomSize, 0f, m_RoomLayerMask);
         return overlapCheck == null;
     }
 
@@ -386,18 +386,18 @@ public class RoomManager : ManagerTemplate<RoomManager>
     private bool CheckIfBreakMaximumPos(Transform currentRoomTransform, Vector2 newRoomPos)
     {
         //如果要生成的房间的坐标超出了限制墙壁时，则关闭该房间对应的门
-        if (Mathf.Abs(newRoomPos.x) >= MaximumXPos || Mathf.Abs(newRoomPos.y) >= MaximumYPos)
+        if (Mathf.Abs(newRoomPos.x) >= m_MaximumXPos || Mathf.Abs(newRoomPos.y) >= m_MaximumYPos)
         {
             string closedDoorName = null;       //永久关闭的门的名字
 
 
-            if (Mathf.Abs(newRoomPos.x) >= MaximumXPos)
+            if (Mathf.Abs(newRoomPos.x) >= m_MaximumXPos)
             {           
                 //根据生成的坐标判断哪个门应该关闭
                 closedDoorName = newRoomPos.x <= 0 ? LeftDoorName : RightDoorName;
             }
 
-            else if (Mathf.Abs(newRoomPos.y) >= MaximumYPos)
+            else if (Mathf.Abs(newRoomPos.y) >= m_MaximumYPos)
             {
                 closedDoorName = newRoomPos.y <= 0 ? DownDoorName : UpDoorName;               
             }
@@ -466,10 +466,10 @@ public class RoomManager : ManagerTemplate<RoomManager>
     public void GetMaxAllowedRoomNum(ref int thisNum)       //获取可以生成的最大房间数
     {
         //一行可以生成的房间数量。FloorToInt函数用于将结果向下取整（无论小数部分有多大）
-        int allowedRoomNumOnRow = Mathf.FloorToInt(MaximumXPos * 2 / RoomLength) + 1;
+        int allowedRoomNumOnRow = Mathf.FloorToInt(m_MaximumXPos * 2 / RoomLength) + 1;
 
         //一列可以生成的房间数量
-        int allowedRoomNumOnColumn = Mathf.FloorToInt(MaximumYPos * 2 / RoomWidth) + 1;
+        int allowedRoomNumOnColumn = Mathf.FloorToInt(m_MaximumYPos * 2 / RoomWidth) + 1;
 
         thisNum = allowedRoomNumOnRow * allowedRoomNumOnColumn;       //一楼可以生成的最大房间数（当前为35）
     }

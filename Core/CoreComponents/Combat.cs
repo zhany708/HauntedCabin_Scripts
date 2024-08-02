@@ -5,7 +5,7 @@ using UnityEngine;
 public class Combat : CoreComponent, Idamageable, IKnockbackable    //用于管理受击
 {
     //强行让受击粒子在编辑器中显示（可编辑）
-    [SerializeField] private GameObject m_DamageParticle;
+    [SerializeField] GameObject m_DamageParticle;
 
     
 

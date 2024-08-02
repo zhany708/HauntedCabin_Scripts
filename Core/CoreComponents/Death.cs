@@ -1,11 +1,10 @@
 using UnityEngine;
 
 
+
 //适合存放通用的死亡逻辑（玩家，敌人都有的逻辑）
 public class Death : CoreComponent      //如果需要不同的死亡效果，则新建一个脚本，然后继承此脚本
 {
-
-
     #region Unity内部函数
     private void OnEnable()
     {

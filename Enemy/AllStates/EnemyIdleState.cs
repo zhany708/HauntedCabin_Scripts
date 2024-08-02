@@ -5,6 +5,10 @@ public class EnemyIdleState : EnemyState
 {
     float m_IdleTimer;      //巡逻（原地停留）时间
 
+
+
+
+
     public EnemyIdleState(Enemy enemy, EnemyStateMachine stateMachine, SO_EnemyData enemyData, string animBoolName) : base(enemy, stateMachine, enemyData, animBoolName)
     {
     }

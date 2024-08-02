@@ -3,7 +3,10 @@ using UnityEngine;
 
 public class FireBat : Enemy
 {
-    public GameObject FireBallPrefab;
+    [SerializeField] GameObject m_FireBallPrefab;           //火球预制件
+
+
+
 
 
     #region Unity内部函数
@@ -37,7 +40,7 @@ public class FireBat : Enemy
             float angle = Mathf.Atan2((tempPos.y + 0.5f - attackPosition.y), (tempPos.x - attackPosition.x)) * Mathf.Rad2Deg;      
 
             //生成火球，并设置坐标和旋转
-            GameObject FireBallObject = ParticlePool.Instance.GetObject(FireBallPrefab);
+            GameObject FireBallObject = ParticlePool.Instance.GetObject(m_FireBallPrefab);
             FireBallObject.transform.position = attackPosition;
             FireBallObject.transform.rotation = Quaternion.Euler(0, 0, angle);
 

@@ -18,19 +18,16 @@ public class Player : MonoBehaviour
 
 
     #region 组件
-    public CinemachineVirtualCamera PlayerCamera;
+    [SerializeField] CinemachineVirtualCamera m_PlayerCamera;       //用于玩家调整相机高度
+
+    public SO_PlayerData PlayerData;
+
+
     public Animator FootAnimator { get; private set; }
-    
-
-
-
     public Core Core { get; private set; }
     public Weapon PrimaryWeapon {  get; private set; }
     public Weapon SecondaryWeapon {  get; private set; }
 
-
-    [SerializeField]
-    public SO_PlayerData PlayerData;
 
     Flip m_PlayerFlip;
     #endregion
@@ -196,14 +193,14 @@ public class Player : MonoBehaviour
     //通过鼠标滚轮拉近或拉远相机
     private void ZoomCamera()       
     {
-        if (PlayerCamera != null)
+        if (m_PlayerCamera != null)
         {
             float mouseScroll = PlayerInputHandler.Instance.MouseScrollInput.y;    //使用鼠标滚轮信息的y值
 
-            float newOrthoSize = PlayerCamera.m_Lens.OrthographicSize - mouseScroll * ZoomSpeed;
+            float newOrthoSize = m_PlayerCamera.m_Lens.OrthographicSize - mouseScroll * ZoomSpeed;
             newOrthoSize = Mathf.Clamp(newOrthoSize, MinOrthoSize, MaxOrthoSize);       //计算后将新的相机镜片矫正尺寸保持在最大和最小之间
 
-            PlayerCamera.m_Lens.OrthographicSize = newOrthoSize;    //计算完成后赋予新的值
+            m_PlayerCamera.m_Lens.OrthographicSize = newOrthoSize;    //计算完成后赋予新的值
         }
     }
     #endregion

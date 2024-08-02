@@ -6,6 +6,10 @@ public class FireBatAttackState : EnemyAttackState
     FireBat m_FireBat;
     Transform m_PlayerTarget;
 
+
+
+
+
     public FireBatAttackState(FireBat fireBat, EnemyStateMachine stateMachine, SO_EnemyData enemyData, string animBoolName) : base(fireBat, stateMachine, enemyData, animBoolName)
     {
         m_FireBat = fireBat;

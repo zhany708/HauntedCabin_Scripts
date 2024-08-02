@@ -1,9 +1,12 @@
 using Unity.Mathematics;
 using UnityEngine;
 
-public class ParticleManager : ManagerTemplate<ParticleManager>     //用于管理特效
+
+
+
+public class ParticleManager : ManagerTemplate<ParticleManager>     //用于管理粒子特效
 {
-    //基础生成特效函数
+    //基础生成特效
     public GameObject StartParticles(GameObject particlePrefab, Vector2 position, quaternion rotation)
     {
         GameObject particle = ParticlePool.Instance.GetObject(particlePrefab);
