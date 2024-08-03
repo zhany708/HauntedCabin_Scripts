@@ -1,0 +1,86 @@
+using UnityEngine;
+using UnityEngine.UI;
+
+
+
+//用于管理QTE相关的逻辑
+public class QTEManager : BasePanel
+{
+    [SerializeField] RectTransform m_Needle;              //围绕圆环旋转的指针
+    [SerializeField] RectTransform m_TargetZone;          //指针需要停留的目标区域
+    [SerializeField] float m_NeedleSpeed = 200f;          //指针旋转的速度
+    [SerializeField] float m_SuccessThreshold = 15f;      //QTE检查的范围值
+
+
+
+
+    bool m_IsQTEActive = false;
+    float m_NeedleRotation = 0f;
+
+
+
+
+    #region Unity内部函数
+    protected override void Awake()
+    {
+        if (m_Needle == null || m_TargetZone == null || m_NeedleSpeed <= 0 || m_SuccessThreshold <= 0)
+        {
+            Debug.LogError("Some components are not assigned in the " + gameObject.name);
+            return;
+        }
+    }
+
+    private void Update()
+    {
+        if (m_IsQTEActive)
+        {
+            //持续更新指针的角度
+            m_NeedleRotation += m_NeedleSpeed * Time.deltaTime;
+            m_NeedleRotation %= 360f;
+            m_Needle.localRotation = Quaternion.Euler(0, 0, -m_NeedleRotation);
+
+
+            //检查玩家是否按下空格（临时用，待界面完善后删除此部分）
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                CheckQTEResult();
+            }
+        }
+    }
+    #endregion
+
+
+    #region 主要函数
+    //开始旋转指针
+    public void StartQTE()
+    {
+        m_IsQTEActive = true;
+
+        //开始QTE检查前重置指针旋转的值
+        m_NeedleRotation = 0f;
+        m_Needle.localRotation = Quaternion.Euler(0, 0, 0);
+    }
+
+    private void CheckQTEResult()
+    {
+        m_IsQTEActive = false;
+
+        //检查指针和目标区域之间的角度偏差
+        float targetZoneRotation = m_TargetZone.localRotation.eulerAngles.z;
+        float angleDifference = Mathf.Abs(Mathf.DeltaAngle(m_NeedleRotation, targetZoneRotation));
+
+
+        if (angleDifference <= m_SuccessThreshold)
+        {
+            //QTE成功相关的逻辑
+            Debug.Log("QTE Success!");
+        }
+
+        else
+        {
+            //QTE失败相关的逻辑
+            Debug.Log("QTE Failed!");
+        }
+    }
+    #endregion
+}

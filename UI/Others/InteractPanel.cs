@@ -4,6 +4,7 @@ using TMPro;
 using Lean.Localization;
 
 
+
 public class InteractPanel : BasePanel     //互动按键，给予玩家自己决定是否打开某些界面（比如拾取武器），而不是触发了触发器后自动打开界面
 {
     public event Action OnInteractKeyPressed;       //接收方为需要玩家触发的物体（比如事件物体，拾取武器等）
@@ -144,7 +145,7 @@ public class InteractPanel : BasePanel     //互动按键，给予玩家自己�
     }
 
 
-    //每次打开互动界面前需要执行的逻辑
+    //更新界面文本。每次打开互动界面前都需要执行的逻辑
     public void UpdatePanelText()
     {
         m_PanelText.text = string.Format(m_InteractKey, m_InteractText);
