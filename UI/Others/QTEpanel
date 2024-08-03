@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 
 //用于管理QTE相关的逻辑
-public class QTEManager : BasePanel
+public class QTEpanel : BasePanel
 {
     [SerializeField] RectTransform m_Needle;              //围绕圆环旋转的指针
     [SerializeField] RectTransform m_TargetZone;          //指针需要停留的目标区域
@@ -14,8 +14,10 @@ public class QTEManager : BasePanel
 
 
 
-    bool m_IsQTEActive = false;
-    float m_NeedleRotation = 0f;
+    bool m_IsQTEActive = false;                 //表示QTE检查是否正在运行
+    bool m_HasPassedTargetZone = false;         //表示指针是否经过并超出了检查范围
+    float m_NeedleRotation = 0f;                //指针的角度
+    float m_TargetZoneRotation;                 //目标区域的角度
 
 
 
@@ -36,14 +38,31 @@ public class QTEManager : BasePanel
         {
             //持续更新指针的角度
             m_NeedleRotation += m_NeedleSpeed * Time.deltaTime;
-            m_NeedleRotation %= 360f;
             m_Needle.localRotation = Quaternion.Euler(0, 0, -m_NeedleRotation);
 
 
-            //检查玩家是否按下空格（临时用，待界面完善后删除此部分）
-            if (Input.GetKeyDown(KeyCode.Space))
+            //检查指针是否经过目标区域
+            if (!m_HasPassedTargetZone && m_NeedleRotation >= m_TargetZoneRotation)
+            {
+                m_HasPassedTargetZone = true;
+            }
+
+            //当指针超出范围后玩家依然没有反应时
+            if (m_HasPassedTargetZone)
+            {
+                m_IsQTEActive = false;
+
+                //QTE失败相关的逻辑
+                Debug.Log("QTE Failed! (Automatic)");
+
+                return;         //返回，以避免执行非必要的其他逻辑
+            }
+
+            //玩家按下空格时
+            if (Input.GetKeyDown(KeyCode.Space) )
             {
                 CheckQTEResult();
+                return;
             }
         }
     }
@@ -56,7 +75,10 @@ public class QTEManager : BasePanel
     {
         m_IsQTEActive = true;
 
+        m_TargetZoneRotation = m_TargetZone.localRotation.eulerAngles.z;        //计算目标区域的角度
+
         //开始QTE检查前重置指针旋转的值
+        m_HasPassedTargetZone = false;
         m_NeedleRotation = 0f;
         m_Needle.localRotation = Quaternion.Euler(0, 0, 0);
     }
@@ -66,8 +88,7 @@ public class QTEManager : BasePanel
         m_IsQTEActive = false;
 
         //检查指针和目标区域之间的角度偏差
-        float targetZoneRotation = m_TargetZone.localRotation.eulerAngles.z;
-        float angleDifference = Mathf.Abs(Mathf.DeltaAngle(m_NeedleRotation, targetZoneRotation));
+        float angleDifference = Mathf.Abs(Mathf.DeltaAngle(m_NeedleRotation, m_TargetZoneRotation));
 
 
         if (angleDifference <= m_SuccessThreshold)
