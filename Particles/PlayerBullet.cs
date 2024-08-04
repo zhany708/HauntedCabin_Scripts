@@ -1,6 +1,8 @@
 using UnityEngine;
 
 
+
+
 public class PlayerBullet : MonoBehaviour
 {
     protected Rigidbody2D rigidBody2D;

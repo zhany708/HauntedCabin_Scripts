@@ -30,10 +30,10 @@ public class Enemy : MonoBehaviour
     public EnemyChaseState ChaseState { get; private set; }
     public EnemyAttackState AttackState { get; protected set; }
     public EnemyHitState HitState { get; private set; }
-    public EnemyDeathState DeathState { get; protected set;}
+    public EnemyDeathState DeathState { get; protected set; }
     #endregion
 
-
+    
     #region 组件
     public EnemyParameter Parameter;
     public SO_EnemyData EnemyData;

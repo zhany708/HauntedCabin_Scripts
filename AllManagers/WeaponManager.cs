@@ -5,12 +5,14 @@ using UnityEngine;
 
 public class WeaponManager : ManagerTemplate<WeaponManager>        //用于管理武器的加载/销毁等
 {
-    private Transform m_PrimaryWeapon;
-    private Transform m_SecondaryWeapon;
-
     //主副武器的父物体名（不是武器名）
     const string m_PrimaryWeaponName = "PrimaryWeapon";
     const string m_SecondaryWeaponName = "SecondaryWeapon";
+
+
+    Transform m_PrimaryWeapon;
+    Transform m_SecondaryWeapon;
+
 
 
     //Dictionary<string, Weapon> m_WeaponDict;      //存放正在使用的武器的字典

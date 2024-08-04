@@ -4,7 +4,12 @@ using UnityEngine;
 
 public class EnemyChaseState : EnemyState
 {
-    float m_DistanceToPlayer;
+    float m_DistanceToPlayer;       //离玩家的距离
+
+
+
+
+
 
     public EnemyChaseState(Enemy enemy, EnemyStateMachine stateMachine, SO_EnemyData enemyData, string animBoolName) : base(enemy, stateMachine, enemyData, animBoolName)
     {

@@ -11,6 +11,7 @@ public class BaseScreenplay<T> : BaseScreenplay where T : Component         //�
 
 
 
+
     protected virtual void Awake()
     {
         //单例模式

@@ -44,7 +44,8 @@ public class SO_UIKeys : ScriptableObject
 
     //其他
     [Header("Other")]
-    public string ConfirmPanel;       //确认界面
-    public string InteractPanel;      //交互界面
-    public string RoomNamePanel;      //显示房间名的界面
+    public string ConfirmPanel;         //确认界面
+    public string InteractPanel;        //交互界面
+    public string RoomNamePanel;        //显示房间名的界面
+    public string SlotMachinePanel;     //老虎机界面
 }

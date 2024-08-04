@@ -3,12 +3,12 @@ using UnityEngine;
 
 public class EnemyPatrolState : EnemyState
 {
-    //获取家具图层
+    //家具图层
     LayerMask m_FurnitureLayerMask = LayerMask.GetMask("Furniture");
 
 
     Vector2 m_RandomPosition;       //随机生成的坐标
-    float m_PatrolTimer;    //用于巡逻的计时器
+    float m_PatrolTimer;            //用于巡逻的计时器
 
 
     //运用Physics2D检查重复坐标时需要的X和Y的值（火蝙蝠Y轴上有0.5的偏差，因为坐标点位于脚底）
