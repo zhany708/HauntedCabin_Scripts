@@ -183,6 +183,9 @@ public class QTEpanel : BasePanel
 
 
     #region 多目标区域（目前先不具体研究）
+    public event Action[] OnAllQTESuccessed;          //接收方为需要进行QTE的所有脚本，用于为不同的区域做不同的结果逻辑
+
+
     [SerializeField] RectTransform[] m_AllTargetZones;          //界面内的所有目标区域
     [SerializeField] float[] m_AllTargetZonePercent;            //所有目标区域对应的判定成功的角度的百分比（让不同的选择的难度不同）
 
@@ -203,7 +206,8 @@ public class QTEpanel : BasePanel
         for (int i = 0; i < m_NumberOfZones; i++)
         {
             //根据玩家的属性数值以及选项的难易度百分比计算最终的判定成功的角度
-            int zoneSuccessThreshold = playerPropertyValue * m_ThresholdPerValue * m_AllTargetZonePercent[i];
+            int zoneSuccessThreshold = m_ThresholdPerValue * playerPropertyValue * m_AllTargetZonePercent[i];
+
 
             if (!TargetZoneDict.ContainsKey(m_AllTargetZones[i] ) )
             {
@@ -213,8 +217,43 @@ public class QTEpanel : BasePanel
     }
 
 
-    //随机设置所有目标区域的坐标（防止每次QTE检验都在同一位置）
-    public void SetZonePositions()
+    //逐个检查指针是否处于某个目标区域内
+    private void CheckQTEResultForAllZones()
+    {
+        int arrayIndex = 0;
+
+
+        m_IsQTEActive = false;
+
+        for (int arrayIndex = 0; arrayIndex < m_NumberOfZones; arrayIndex++)
+        {
+            m_TargetZoneRotation = m_AllTargetZones[arrayIndex].localRotation.eulerAngles.z;        //逐个计算目标区域的角度
+
+
+            //检查指针和目标区域之间的角度偏差
+            float angleDifference = Mathf.Abs(Mathf.DeltaAngle(m_NeedleRotation, m_TargetZoneRotation));
+
+
+            if (angleDifference <= TargetZoneDict[m_AllTargetZones[arrayIndex] ] )
+            {
+                //根据结果回调具体的事件
+                OnAllQTESuccessed[i]?.Invoke();           
+
+                break;
+            }
+        }      
+
+
+        //指针不处于任何区域时
+        if (arrayIndex >= m_NumberOfZones)
+        {
+            FailLogic();
+        }
+    }
+
+
+    //随机设置所有目标区域的坐标（防止每次QTE检验时，目标区域都在同一位置）
+    public void SetRandomZonePositions()
     {
 
     }
@@ -225,6 +264,8 @@ public class QTEpanel : BasePanel
     public void SetNumberOfZones(int thisNumber)
     {
         m_NumberOfZones = thisNumber;
+
+        OnAllQTESuccessed = new Action[m_NumberOfZones];        //根据选项的数量赋值回调事件的数量
     }
     #endregion
 
