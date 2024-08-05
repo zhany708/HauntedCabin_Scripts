@@ -9,6 +9,7 @@ public class Altar : MonoBehaviour      //仪式台的脚本
 {
     public GameObject EnemyPrefab;      //敌人的预制件（用于在仪式期间生成）
     public string InteractTextPhraseKey;            //传递给互动界面的文本
+    public string TipTextPhraseKey;                 //传递给提示界面的文本
 
 
     public Core Core { get; private set; }
@@ -53,7 +54,7 @@ public class Altar : MonoBehaviour      //仪式台的脚本
         m_DurationTimer = new Timer(m_RitualDuration);
 
 
-        if (EnemyPrefab == null || InteractTextPhraseKey == "")
+        if (EnemyPrefab == null || InteractTextPhraseKey == "" || TipTextPhraseKey == "")
         {
             Debug.LogError("One or more components are not assigned on " + gameObject.name);
             return;
@@ -79,19 +80,32 @@ public class Altar : MonoBehaviour      //仪式台的脚本
             //需要做的：当玩家身上没有护符时，提醒玩家需要获得某些物品以开始仪式
             else
             {
-
+                //先赋值文本，再打开提示面板
+                TipPanel.Instance.UpdatePanelText(TipTextPhraseKey);
+                TipPanel.Instance.OpenPanel();
             }
         }
     }
  
     private void OnTriggerExit2D(Collider2D other)
     {
-        //检查是否是玩家碰撞，再检查界面是否存于字典中，最后再检查界面是否打开
-        if (other.CompareTag("Player") && UIManager.Instance.PanelDict.ContainsKey(UIManager.Instance.UIKeys.InteractPanel)
-            && !InteractPanel.Instance.IsRemoved)
+        //检查是否是玩家碰撞
+        if (other.CompareTag("Player") )
         {
-            UIManager.Instance.ClosePanel(UIManager.Instance.UIKeys.InteractPanel, true);      //淡出互动界面
-        }
+            //检查互动界面是否存于字典中，最后再检查互动界面是否打开
+            if (UIManager.Instance.PanelDict.ContainsKey(UIManager.Instance.UIKeys.InteractPanel)
+                && !InteractPanel.Instance.IsRemoved)
+            {
+                UIManager.Instance.ClosePanel(UIManager.Instance.UIKeys.InteractPanel, true);       //淡出互动界面
+            }
+
+
+            if (UIManager.Instance.PanelDict.ContainsKey(UIManager.Instance.UIKeys.TipPanel)
+                && !TipPanel.Instance.IsRemoved)
+            {
+                UIManager.Instance.ClosePanel(UIManager.Instance.UIKeys.TipPanel, true);            //淡出提示界面
+            }
+        } 
     }
 
     private void OnDisable()
