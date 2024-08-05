@@ -12,26 +12,9 @@ public class InteractPanel : BasePanel     //互动按键，给予玩家自己�
     public static InteractPanel Instance { get; private set; }
 
 
-    public Vector2 OffsetPos = Vector2.zero;        //用于打开互动界面时的偏移量
+    public string InteractTextPhraseKey;            //本界面的翻译文本
 
-    public Player Player                            //Lazy load（只在需要变量时才尝试获取组件，而不是一次性的放在某个Unity内部函数中）
-    {
-        get
-        {
-            if (m_Player == null)
-            {
-                m_Player = FindAnyObjectByType<Player>();
-                //如果尝试获取组件后Player变量仍然为空的话，则报错
-                if (m_Player == null)
-                {
-                    Debug.Log("Cannot get the reference of the Player component in the " + name);
-                }
-            }
-            return m_Player;
-        }
-        private set { }
-    }
-    private Player m_Player;
+
 
 
     //表示是否允许打开界面（比如玩家因为某些原因需要在OnTriggerStay2D中再次打开此界面），所有的允许玩家反悔的物体或界面都需要跟此布尔进行交互
@@ -41,8 +24,6 @@ public class InteractPanel : BasePanel     //互动按键，给予玩家自己�
 
 
     const string m_InteractKey = "F";               //进行互动的按键（默认F）
-
-    RectTransform m_PanelTransform;                 //界面的坐标组件
 
     //中文：“按{0}{1}”，英文：“Press {0} to {1}”。{0}为需要按下的按键（可更改），{1}为按下按键后进行的具体功能（如拾取匕首，开始仪式等）
     TextMeshProUGUI m_PanelText;                    //界面文本 
@@ -83,6 +64,8 @@ public class InteractPanel : BasePanel     //互动按键，给予玩家自己�
     private void OnEnable()
     {
         IsOpenable = true;              //开启界面后设置布尔
+
+        OnFadeOutFinished += ResetInteractText;         //界面淡出后重置互动文本
     }
 
     private void Start()
@@ -121,6 +104,13 @@ public class InteractPanel : BasePanel     //互动按键，给予玩家自己�
             IsOpenable = false;
         }
     }
+
+    protected override void OnDisable()
+    {
+        base.OnDisable();
+
+        OnFadeOutFinished -= ResetInteractText;
+    }
     #endregion
 
 
@@ -137,9 +127,8 @@ public class InteractPanel : BasePanel     //互动按键，给予玩家自己�
         }
         //淡出
         else
-        {
-            //清除事件绑定的函数
-            ClearAllSubscriptions();
+        {           
+            ClearAllSubscriptions();        //清除事件绑定的函数
             SetIsActionCalled(false);       //重置布尔，以便后续的调用
         }
     }
@@ -148,15 +137,10 @@ public class InteractPanel : BasePanel     //互动按键，给予玩家自己�
     //更新界面文本。每次打开互动界面前都需要执行的逻辑
     public void UpdatePanelText()
     {
-        m_PanelText.text = string.Format(m_InteractKey, m_InteractText);
+        string tempText = m_PanelText.text;         //创建临时string，以用于下面的转换
+
+        m_PanelText.text = string.Format(tempText, m_InteractKey, m_InteractText);
     } 
-
-
-    //设置界面的坐标，需要加上偏移量（界面统一显示在角色右侧）
-    public void SetPositionWithOffset()
-    {
-        m_PanelTransform.position = (Vector2)Player.transform.position + OffsetPos;
-    }
 
 
 
@@ -164,12 +148,27 @@ public class InteractPanel : BasePanel     //互动按键，给予玩家自己�
     {
         OnInteractKeyPressed = null;
     }
+
+    private void ResetInteractText()         //重置界面文本，以用于下次打开
+    {
+        if (LeanLocalization.CurrentLanguages != null)
+        {
+            m_PanelText.text = LeanLocalization.GetTranslationText(InteractTextPhraseKey);
+        }
+    }
     #endregion
 
 
     #region 其余函数
     private void InitializeComponents()
     {
+        if (InteractTextPhraseKey == null)
+        {
+            Debug.LogError("One or more components are missing on " + gameObject.name);
+            return;
+        }
+
+
         m_PanelText = GetComponentInChildren<TextMeshProUGUI>();
         if (m_PanelText == null)
         {
@@ -177,20 +176,7 @@ public class InteractPanel : BasePanel     //互动按键，给予玩家自己�
             return;
         }
 
-        m_PanelTransform = GetComponent<RectTransform>();
-        if (m_PanelTransform == null)
-        {
-            Debug.LogError("RectTransform is not assigned in the " + name);
-            return;
-        }
 
-        
-        if (OffsetPos == Vector2.zero)
-        {
-            Debug.LogError("OffsetPosForInteractPanel is not assigned in the " + name);
-            return;
-        }
-        
 
         //设置此界面的淡入/出时长
         FadeDuration = 0;

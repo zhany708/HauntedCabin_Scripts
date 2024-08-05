@@ -1,5 +1,8 @@
 using UnityEngine;
 using UnityEngine.UI;
+using System;
+using System.Collections.Generic;
+
 
 
 
@@ -181,8 +184,8 @@ public class QTEpanel : BasePanel
 
 
 
-
     #region 多目标区域（目前先不具体研究）
+    /*
     public event Action[] OnAllQTESuccessed;          //接收方为需要进行QTE的所有脚本，用于为不同的区域做不同的结果逻辑
 
 
@@ -200,13 +203,13 @@ public class QTEpanel : BasePanel
 
 
     //根据玩家属性值调整所有QTE的判定成功的角度             需要做的：等游戏难易度系统设置好后，也需要考虑游戏难易度
-    public InitalizeTargetZones(float playerPropertyValue)
+    public void InitalizeTargetZones(float playerPropertyValue)
     {
         //根据需要的目标区域数量，从所有目标区域数组中获取
         for (int i = 0; i < m_NumberOfZones; i++)
         {
             //根据玩家的属性数值以及选项的难易度百分比计算最终的判定成功的角度
-            int zoneSuccessThreshold = m_ThresholdPerValue * playerPropertyValue * m_AllTargetZonePercent[i];
+            float zoneSuccessThreshold = m_ThresholdPerValue * playerPropertyValue * m_AllTargetZonePercent[i];
 
 
             if (!TargetZoneDict.ContainsKey(m_AllTargetZones[i] ) )
@@ -225,7 +228,7 @@ public class QTEpanel : BasePanel
 
         m_IsQTEActive = false;
 
-        for (int arrayIndex = 0; arrayIndex < m_NumberOfZones; arrayIndex++)
+        for (arrayIndex = 0; arrayIndex < m_NumberOfZones; arrayIndex++)
         {
             m_TargetZoneRotation = m_AllTargetZones[arrayIndex].localRotation.eulerAngles.z;        //逐个计算目标区域的角度
 
@@ -237,7 +240,7 @@ public class QTEpanel : BasePanel
             if (angleDifference <= TargetZoneDict[m_AllTargetZones[arrayIndex] ] )
             {
                 //根据结果回调具体的事件
-                OnAllQTESuccessed[i]?.Invoke();           
+                OnAllQTESuccessed[arrayIndex]?.Invoke();           
 
                 break;
             }
@@ -267,6 +270,6 @@ public class QTEpanel : BasePanel
 
         OnAllQTESuccessed = new Action[m_NumberOfZones];        //根据选项的数量赋值回调事件的数量
     }
+    */
     #endregion
-
 }

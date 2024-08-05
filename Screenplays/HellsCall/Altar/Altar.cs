@@ -8,6 +8,9 @@ using ZhangYu.Utilities;
 public class Altar : MonoBehaviour      //仪式台的脚本
 {
     public GameObject EnemyPrefab;      //敌人的预制件（用于在仪式期间生成）
+    public string InteractTextPhraseKey;            //传递给互动界面的文本
+
+
     public Core Core { get; private set; }
 
     
@@ -48,6 +51,13 @@ public class Altar : MonoBehaviour      //仪式台的脚本
 
         //初始化计数器
         m_DurationTimer = new Timer(m_RitualDuration);
+
+
+        if (EnemyPrefab == null || InteractTextPhraseKey == "")
+        {
+            Debug.LogError("One or more components are not assigned on " + gameObject.name);
+            return;
+        }
     }
 
     private void OnEnable()
@@ -57,11 +67,20 @@ public class Altar : MonoBehaviour      //仪式台的脚本
     }
 
     private void OnTriggerEnter2D(Collider2D other)
-    {
-        //只有当玩家拿到祷告石后，才允许玩家开始仪式
-        if (other.gameObject.CompareTag("Player") && HellsCall.Instance.GetCanStartRitual() )
-        {                   
-            UIManager.Instance.OpenInteractPanel(() => SetAnimatorStart() );     //打开互动面板                     
+    {       
+        if (other.gameObject.CompareTag("Player") )
+        {
+            //只有当玩家拿到祷告石后，才允许玩家开始仪式
+            if (HellsCall.Instance.GetCanStartRitual())
+            {
+                UIManager.Instance.OpenInteractPanel(() => SetAnimatorStart(), InteractTextPhraseKey);     //打开互动面板    
+            }
+
+            //需要做的：当玩家身上没有护符时，提醒玩家需要获得某些物品以开始仪式
+            else
+            {
+
+            }
         }
     }
  

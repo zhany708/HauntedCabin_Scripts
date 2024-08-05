@@ -248,18 +248,19 @@ public class PlayerStatusBar : BasePanel
     {
         //Debug.Log("UpdateHealthText is called in the PlayerStatusBar with currentHP: " + m_CurrentHealth + " and maxHP: " + m_MaxHealth);
 
-        
+        string tempHealthText = HealthText.text;        //创建临时string，以用于下面的转换
+
         //可以考虑将{0}改成{0:0.00}，从而限制第一个显示的数字永远只会有两位小数
         if (m_CurrentHealth >= 1 || m_CurrentHealth <= 0)
         {
             //这里第一个参数不能用HealthText.text，否则代码识别不到{0}/{1}，导致数值只会在第一次正确显示
-            HealthText.text = string.Format("{0}/{1}", Mathf.FloorToInt(m_CurrentHealth), m_MaxHealth);       //将数值放入文本
+            HealthText.text = string.Format(tempHealthText, Mathf.FloorToInt(m_CurrentHealth), m_MaxHealth);       //将数值放入文本
         }
 
         //当玩家血量在0和1之间时（有小数点），此时为了防止玩家误以为生命值到0了，默认显示当前生命值还有1
         else
         {
-            HealthText.text = string.Format("{0}/{1}", 1, m_MaxHealth);       //将数值放入文本
+            HealthText.text = string.Format(tempHealthText, 1, m_MaxHealth);       //将数值放入文本
         }
     } 
 

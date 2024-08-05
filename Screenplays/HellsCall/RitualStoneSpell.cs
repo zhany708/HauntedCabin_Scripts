@@ -4,7 +4,20 @@ using UnityEngine;
 
 public class RitualStoneSpell : MonoBehaviour       //祷告石护符
 {
+    public string InteractTextPhraseKey;            //传递给互动界面的文本
+
+
+
     #region Unity内部函数
+    private void Awake()
+    {
+        if (InteractTextPhraseKey == "")
+        {
+            Debug.LogError("Some string are not assigned in the " + gameObject.name);
+            return;
+        }
+    }
+
     private void Start()
     {
         //在这里加进字典，防止字典还没实例化就尝试获取引用导致报错
@@ -15,11 +28,20 @@ public class RitualStoneSpell : MonoBehaviour       //祷告石护符
     }
 
     private void OnTriggerEnter2D(Collider2D other)
-    {
-        //只有当玩家身上没有护符时才会触发效果
-        if (other.gameObject.CompareTag("Player") && !HellsCall.Instance.GetCanStartRitual() )
+    {       
+        if (other.gameObject.CompareTag("Player") )
         {
-            UIManager.Instance.OpenInteractPanel(() => PickupLogic());     //打开互动面板
+            //只有当玩家身上没有护符时才会触发效果
+            if (!HellsCall.Instance.GetCanStartRitual() )
+            {
+                UIManager.Instance.OpenInteractPanel(() => PickupLogic(), InteractTextPhraseKey);     //打开互动面板
+            }
+
+            //需要做的：当玩家身上已经有护符时提醒玩家      
+            else
+            {
+
+            }
         }
     }
    

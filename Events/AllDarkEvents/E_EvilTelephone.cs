@@ -7,6 +7,9 @@ using UnityEngine;
 
 public class E_EvilTelephone : DarkEvent
 {
+    public string InteractTextPhraseKey;            //传递给互动界面的文本
+
+
     Animator m_Animator;
     AudioSource m_AudioSource;
 
@@ -25,7 +28,7 @@ public class E_EvilTelephone : DarkEvent
         m_Animator = GetComponent<Animator>();
         m_AudioSource = GetComponent<AudioSource>();
 
-        if (m_Animator == null || m_AudioSource == null)
+        if (m_Animator == null || m_AudioSource == null || InteractTextPhraseKey == "")
         {
             Debug.LogError("One or more components are missing on " + gameObject.name);
             return;
@@ -54,7 +57,7 @@ public class E_EvilTelephone : DarkEvent
         if (other.CompareTag("Player"))
         {
             //打开互动面板
-            UIManager.Instance.OpenInteractPanel(() => TriggerPlayerInteraction());
+            UIManager.Instance.OpenInteractPanel(() => TriggerPlayerInteraction(), InteractTextPhraseKey);
         }
     }
 

@@ -9,6 +9,9 @@ public class WeaponPickUp : MonoBehaviour
     //public SO_WeaponKeys WeaponKeys;
     public GameObject WeaponPreFab;                 //待拾取的武器预制件
     public string WeaponPhraseKey;                  //从Lean Localization那调用时需要的string
+    public string InteractTextPhraseKey;            //传递给互动界面的文本
+
+
 
 
     PickupWeaponPanel weaponPickupPanel;            //拾取武器界面的脚本
@@ -30,9 +33,9 @@ public class WeaponPickUp : MonoBehaviour
             return;
         }
 
-        if (WeaponPhraseKey == "")
+        if (WeaponPhraseKey == "" || InteractTextPhraseKey == "")
         {
-            Debug.LogError("WeaponPhraseKey is not written in the " + name);
+            Debug.LogError("Some string are not assigned in the " + gameObject.name);
             return;
         }     
     }
@@ -59,7 +62,7 @@ public class WeaponPickUp : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             //打开互动面板
-            UIManager.Instance.OpenInteractPanel(() => ProcessWeaponPickup(other) );     
+            UIManager.Instance.OpenInteractPanel(() => ProcessWeaponPickup(other), InteractTextPhraseKey);     
         }              
     }
 
@@ -70,7 +73,7 @@ public class WeaponPickUp : MonoBehaviour
             && InteractPanel.Instance.IsRemoved && InteractPanel.Instance.IsOpenable)
         {
             //打开互动面板
-            UIManager.Instance.OpenInteractPanel(() => ProcessWeaponPickup(other));
+            UIManager.Instance.OpenInteractPanel(() => ProcessWeaponPickup(other), InteractTextPhraseKey);
         }
     }
 
