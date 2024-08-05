@@ -7,7 +7,7 @@ using System.Collections.Generic;
 
 
 //用于管理QTE相关的逻辑         需要做的：想出一个表示不同结果的区域的逻辑
-public class QTEpanel : BasePanel
+public class QTEPanel : BasePanel
 {
     public event Action OnQTESuccessed;         //接收方为需要进行QTE的所有脚本（比如部分事件）
 
