@@ -80,7 +80,7 @@ public class TipPanel : BasePanel
         {
             m_TipPanelText.text = LeanLocalization.GetTranslationText(thisPhraseKey);
         }
-    } 
+    }
     #endregion
 
 
