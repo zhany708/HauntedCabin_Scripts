@@ -26,6 +26,7 @@ public class QTEPanel : BasePanel
     float m_TargetZoneRotation;                 //目标区域的角度
 
     [SerializeField] float m_Radius = 123.7f;                   //圆环的半径，在编辑器里通过坐标系统得出的
+    [SerializeField] float m_MinRandomDegrees = 30f;            //计算目标区域的随机角度时允许的最小值
 
 
 
@@ -101,6 +102,9 @@ public class QTEPanel : BasePanel
     //开始旋转指针
     public void StartQTE()
     {
+        SetRandomPositionAndRotationForTargetZone();       //随机设置目标区域的坐标
+
+        
         m_TargetZoneRotation = m_TargetZone.localRotation.eulerAngles.z;        //计算目标区域的角度
 
         //进行QTE检查前重置指针旋转的值
@@ -162,6 +166,23 @@ public class QTEPanel : BasePanel
 
 
     #region 其余函数
+    //为目标区域设置随机角度和坐标
+    private void SetRandomPositionAndRotationForTargetZone()
+    {
+        //从允许的最小值开始，否则过于靠前会导致玩家来不及反应
+        float randomRotation = UnityEngine.Random.Range(m_MinRandomDegrees, 360f);      
+
+
+        //根据角度计算应该处于的坐标（使用Cos函数时，参数需要从度数转换成弧度）  
+        float Xpos = -m_Radius * Mathf.Cos(randomRotation * Mathf.Deg2Rad);
+        float Ypos = m_Radius * Mathf.Sin(randomRotation * Mathf.Deg2Rad);
+
+
+        m_TargetZone.anchoredPosition = new Vector2(Xpos, Ypos);                    //设置坐标
+        m_TargetZone.localRotation = Quaternion.Euler(0, 0, randomRotation);        //设置角度
+    }
+
+
     //删除所有事件绑定的函数
     public void ClearAllSubscriptions()         
     {
