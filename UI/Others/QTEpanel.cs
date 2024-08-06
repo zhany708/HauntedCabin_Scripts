@@ -16,7 +16,7 @@ public class QTEPanel : BasePanel
     [SerializeField] RectTransform m_TargetZone;            //指针需要停留的目标区域
     [SerializeField] float m_NeedleSpeed = 200f;            //指针旋转的速度
     [SerializeField] float m_SuccessThreshold = 15f;        //目标区域前后的判定成功的角度，用于QTE检查（难度越大，此变量越小）
-    [SerializeField] float m_ThresholdPerValue = 4f;        //每1点玩家属性值对应的判定成功角度（需要乘以2）
+    [SerializeField] float m_ThresholdPerValue = 12f;        //每1点玩家属性值对应的判定成功角度（需要乘以2）
 
 
 
@@ -25,7 +25,7 @@ public class QTEPanel : BasePanel
     float m_NeedleRotation = 0f;                //指针的角度
     float m_TargetZoneRotation;                 //目标区域的角度
 
-    float m_Radius;                             //圆环的半径
+    [SerializeField] float m_Radius = 123.7f;                   //圆环的半径，在编辑器里通过坐标系统得出的
 
 
 
@@ -41,8 +41,8 @@ public class QTEPanel : BasePanel
         }
 
 
-        //计算圆环的半径
-        m_Radius = (m_TargetZone.parent as RectTransform).rect.width / 2f;
+        //计算圆环的半径（这里由于圆并不完全填充由长和宽组成的正方形，因此不能通过此方法得出半径）
+        //m_Radius = (m_TargetZone.parent as RectTransform).rect.width / 2f;
 
         //设置目标区域的宽度
         SetTargetZoneWidth();
@@ -57,8 +57,8 @@ public class QTEPanel : BasePanel
             m_Needle.localRotation = Quaternion.Euler(0, 0, -m_NeedleRotation);
 
 
-            //检查指针是否经过目标区域
-            if (!m_HasPassedTargetZone && m_NeedleRotation >= m_TargetZoneRotation)
+            //检查指针是否经过目标区域（需要额外加上判定区域的一半）
+            if (!m_HasPassedTargetZone && m_NeedleRotation >= m_TargetZoneRotation + m_SuccessThreshold)
             {
                 m_HasPassedTargetZone = true;
             }
@@ -82,6 +82,17 @@ public class QTEPanel : BasePanel
                 return;
             }
         }
+    }
+
+    private void Start()
+    {
+        if (panelName == null)
+        {
+            panelName = UIManager.Instance.UIKeys.QTEPanel;
+        }
+
+
+        StartQTE();     //开始测试
     }
     #endregion
 
@@ -165,7 +176,7 @@ public class QTEPanel : BasePanel
         float circumference = 2 * Mathf.PI * m_Radius;
 
         //目标区域的宽度
-        float targetZoneWidth = (m_SuccessThreshold / 360f) * circumference;
+        float targetZoneWidth = (m_SuccessThreshold * 2 / 360f) * circumference;
 
         //设置目标区域的宽度
         m_TargetZone.sizeDelta = new Vector2(targetZoneWidth, m_TargetZone.sizeDelta.y);
