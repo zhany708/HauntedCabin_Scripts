@@ -14,9 +14,9 @@ public class QTEPanel : BasePanel
 
     [SerializeField] RectTransform m_Needle;                //围绕圆环旋转的指针
     [SerializeField] RectTransform m_TargetZone;            //指针需要停留的目标区域
-    [SerializeField] float m_NeedleSpeed = 200f;            //指针旋转的速度
+    [SerializeField] float m_NeedleSpeed = 80f;             //指针旋转的速度
     [SerializeField] float m_SuccessThreshold = 15f;        //目标区域前后的判定成功的角度，用于QTE检查（难度越大，此变量越小）
-    [SerializeField] float m_ThresholdPerValue = 12f;        //每1点玩家属性值对应的判定成功角度（需要乘以2）
+    [SerializeField] float m_ThresholdPerValue = 4f;        //每1点玩家属性值对应的判定成功角度（需要乘以2）
 
 
 
@@ -183,7 +183,7 @@ public class QTEPanel : BasePanel
     }
 
 
-    //删除所有事件绑定的函数
+    //删除所有回调事件绑定的函数
     public void ClearAllSubscriptions()         
     {
         OnQTESuccessed = null;
