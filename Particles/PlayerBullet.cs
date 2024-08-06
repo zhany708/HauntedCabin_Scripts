@@ -59,10 +59,10 @@ public class PlayerBullet : MonoBehaviour
 
     private void OnDisable()
     {
-        //重置协程
+        //停止协程
         if (m_DestroyBulletCoroutine != null)
         {
-            m_DestroyBulletCoroutine = null;
+            StopCoroutine(m_DestroyBulletCoroutine);
         }
     }
     #endregion

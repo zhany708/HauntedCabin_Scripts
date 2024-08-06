@@ -12,9 +12,9 @@ public class TipPanel : BasePanel
 
 
 
-    TextMeshProUGUI m_TipPanelText;                    //界面文本 
-    
-    
+    TextMeshProUGUI m_TipPanelText;                     //界面文本 
+
+    float m_DisplayDuration = 2f;      //用于界面打开后自动关闭
 
 
 
@@ -45,6 +45,13 @@ public class TipPanel : BasePanel
         InitializeComponents();         //初始化组件
     }
 
+    private void OnEnable()
+    {
+        OnFadeInFinished += StartCloseCountdown;                //界面彻底淡入后开始自动关闭计时
+
+        OnFadeOutFinished += ClearAllCoroutinesAndTweens;       //淡出后清除所有协程，否则会导致再次打开界面后会立刻淡出
+    }
+
     private void Start()
     {
         //赋值界面名字
@@ -68,6 +75,15 @@ public class TipPanel : BasePanel
             }
         }      
     }
+
+    protected override void OnDisable()
+    {
+        base.OnDisable();
+
+        OnFadeInFinished -= StartCloseCountdown;
+
+        OnFadeOutFinished -= ClearAllCoroutinesAndTweens;
+    }
     #endregion
 
 
@@ -85,6 +101,21 @@ public class TipPanel : BasePanel
 
 
     #region 其余函数
+    //开始界面的自动关闭倒计时
+    private void StartCloseCountdown()
+    {
+        //显示一定时间后淡出界面
+        Coroutine ClosePanelCoroutine = StartCoroutine(Delay.Instance.DelaySomeTime(m_DisplayDuration, () =>
+        {
+            Fade(CanvasGroup, FadeOutAlpha, FadeDuration, false);     //淡出
+        }));
+
+
+        generatedCoroutines.Add(ClosePanelCoroutine);
+    }
+
+
+
     private void InitializeComponents()
     {
         m_TipPanelText = GetComponentInChildren<TextMeshProUGUI>();
