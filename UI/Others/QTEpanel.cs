@@ -25,7 +25,7 @@ public class QTEPanel : BasePanel
     float m_NeedleRotation = 0f;                //指针的角度
     float m_TargetZoneRawRotation;              //目标区域的原始角度（与编辑器中物体的角度可能会有出入，因为Unity会标准化角度至[-180， 180]的范围）
 
-    float m_Radius;                   //圆环的半径，在编辑器里通过坐标系统得出的
+    float m_Radius;                             //圆环的半径，在编辑器里通过坐标系统得出的
     [SerializeField] float m_MinRandomDegrees = -355f;          //计算目标区域的随机角度时允许的最小值
     [SerializeField] float m_MaxRandomDegrees = -30f;           //计算目标区域的随机角度时允许的最大值
 
@@ -234,17 +234,27 @@ public class QTEPanel : BasePanel
 
     #region 多目标区域（目前先不具体研究）
     /*
-    public event Action[] OnAllQTESuccessed;          //接收方为需要进行QTE的所有脚本，用于为不同的区域做不同的结果逻辑
+    public List<Action> OnAllQTESuccessed;          //接收方为需要进行QTE的所有脚本，用于为不同的区域做不同的结果逻辑
 
 
-    [SerializeField] RectTransform[] m_AllTargetZones;          //界面内的所有目标区域
-    [SerializeField] float[] m_AllTargetZonePercent;            //所有目标区域对应的判定成功的角度的百分比（让不同的选择的难度不同）
+    [SerializeField] List<RectTransform> m_AllTargetZones;          //界面内的所有目标区域
+    [SerializeField] List<float> m_AllTargetZonePercent;            //所有目标区域对应的判定成功的角度的百分比（让不同的选择的难度不同）
 
 
-    //用于储存需要的所有目标区域以及对应的判定成功的角度
+    //用于储存需要的部分目标区域以及对应的判定成功的角度
     public Dictionary<RectTransform, float> TargetZoneDict { get; private set; } = new Dictionary<RectTransform, float>();
 
+
+
+    //目标区域的原始角度（与编辑器中物体的角度可能会有出入，因为Unity会标准化角度至[-180， 180]的范围）
+    List<float> m_AllTargetZoneRawRotation = new List<float>();
+    List<int> m_MinDistances = new List<int>();     //储存所有区域的判定成功的角度的列表，用于随机生成角度和坐标
+
     int m_NumberOfZones;        //需要激活的目标区域的数量
+
+      
+    
+
 
 
 
@@ -265,6 +275,9 @@ public class QTEPanel : BasePanel
                 TargetZoneDict.Add(m_AllTargetZones[i], zoneSuccessThreshold);
             }
         }
+
+
+        StoreAllSuccessThreshold();     //将所有区域的判定成功的区域储存进列表
     }
 
 
@@ -278,11 +291,8 @@ public class QTEPanel : BasePanel
 
         for (arrayIndex = 0; arrayIndex < m_NumberOfZones; arrayIndex++)
         {
-            m_TargetZoneRotation = m_AllTargetZones[arrayIndex].localRotation.eulerAngles.z;        //逐个计算目标区域的角度
-
-
             //检查指针和目标区域之间的角度偏差
-            float angleDifference = Mathf.Abs(Mathf.DeltaAngle(m_NeedleRotation, m_TargetZoneRotation));
+            float angleDifference = Mathf.Abs(Mathf.DeltaAngle(m_NeedleRotation, m_AllTargetZoneRawRotation[arrayIndex]));
 
 
             if (angleDifference <= TargetZoneDict[m_AllTargetZones[arrayIndex] ] )
@@ -303,11 +313,74 @@ public class QTEPanel : BasePanel
     }
 
 
+    //将所有区域的判定成功的区域储存进列表，用于随机生成区域的角度和坐标
+    private void StoreAllSuccessThreshold()
+    {
+        for (int i = 0; i < m_NumberOfZones; i++)
+        {
+            //从字典中获取判定成功的角度
+            m_MinDistances[i] = TargetZoneDict[m_AllTargetZones[i]];
+        }
+    }
+
+
     //随机设置所有目标区域的坐标（防止每次QTE检验时，目标区域都在同一位置）
     private void SetRandomPositionAndRotationForTargetZones()
     {
+        List<float> allRotations = GenerateUniqueRandomNumbers(m_NumberOfZones, m_MinRandomDegrees, m_MaxRandomDegrees, m_MinDistances);
 
+
+        for (int i = 0; i < m_NumberOfZones; i++)
+        {
+            //根据角度计算应该处于的坐标（使用Cos函数时，参数需要从度数转换成弧度）  
+            float Xpos = m_Radius * Mathf.Cos( (allRotations[i] + 90f) * Mathf.Deg2Rad);
+            float Ypos = m_Radius * Mathf.Sin( (allRotations[i] + 90f) * Mathf.Deg2Rad);
+
+
+            m_AllTargetZones[i].anchoredPosition = new Vector2(Xpos, Ypos);                    //设置坐标
+            m_AllTargetZones[i].localEulerAngles = new Vector3(0, 0, allRotations[i]);          //设置角度
+
+
+            m_AllTargetZoneRawRotation[i] = allRotations[i];       //赋值原始角度
+        }      
     }
+
+
+    //第一个参数为需要生成的数量，第二和第三个参数为可生成的最小和最大数，第四个参数为每个数对应的距离其它数之间的最小值
+    List<float> GenerateUniqueRandomNumbers(int neededNum, float minNum, float maxNum, List<int> minDistances)
+    {
+        List<float> allNumbers = new List<float>();
+        
+        while (allNumbers.Count < neededNum)
+        {
+            float newNumber = Random.Range(minNum, maxNum);             //在范围内随机生成数字
+            bool isTooClose = false;
+            int currentMinDistance = minDistances[allNumbers.Count];    //获取当前索引的数字所能接受的距离其它数的最小值
+
+
+            foreach (int number in allNumbers)
+            {
+                //检查新生成的数是否跟任何其它数过于接近（由于是圆环，因此也考虑了最小数和最大数之间的距离）
+                if (Mathf.Abs(newNumber - number) < currentMinDistance || 
+                    Mathf.Abs(newNumber - number) > (Mathf.Abs(maxNum - minNum) - currentMinDistance) )
+                {
+                    isTooClose = true;
+                    break;
+                }
+            }
+
+
+            //只有当新生成的数跟所有其他数都较远时才加进列表
+            if (!isTooClose)
+            {
+                allNumbers.Add(newNumber);
+            }
+        }
+
+        return allNumbers;
+    }
+
+
 
 
 
