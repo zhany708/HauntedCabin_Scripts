@@ -288,7 +288,7 @@ public class QTEPanel : BasePanel
 
 
     //随机设置所有目标区域的坐标（防止每次QTE检验时，目标区域都在同一位置）
-    public void SetRandomZonePositions()
+    private void SetRandomPositionAndRotationForTargetZones()
     {
 
     }
