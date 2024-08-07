@@ -84,6 +84,12 @@ public class PauseMenuPanel : PanelWithButton       //整个游戏过程中都�
         }
 
 
+        if (!UIManager.Instance.NoMoveAndAttackList.Contains(this))
+        {
+            UIManager.Instance.NoMoveAndAttackList.Add(this);       //界面淡入后禁止玩家移动和攻击
+        }
+
+
         //检查该界面是否是唯一保留的那个
         if (Instance == this)
         {
@@ -140,7 +146,6 @@ public class PauseMenuPanel : PanelWithButton       //整个游戏过程中都�
         Time.timeScale = 1f;
         
         m_IsGamePaused = false;
-        SetBothMoveableAndAttackable(true);     //允许玩家移动和攻击
     }
 
 
@@ -154,7 +159,6 @@ public class PauseMenuPanel : PanelWithButton       //整个游戏过程中都�
         Time.timeScale = 0f;        
 
         m_IsGamePaused = true;
-        SetBothMoveableAndAttackable(false);    //不允许玩家移动和攻击
     }
 
 

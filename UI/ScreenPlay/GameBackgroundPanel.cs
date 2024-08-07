@@ -54,7 +54,7 @@ public class GameBackgroundPanel : BasePanel
         await InitializeKeywordAudioDict();       //初始化字典
     }
 
-    private void OnEnable()
+    protected override void OnEnable()
     {
         //界面完全淡出后调用以下函数
         OnFadeOutFinished += ClosePanel;

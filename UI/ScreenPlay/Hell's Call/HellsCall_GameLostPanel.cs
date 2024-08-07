@@ -26,8 +26,10 @@ public class HellsCall_GameLostPanel : BasePanel
         }
     }
 
-    private void OnEnable()
+    protected override void OnEnable()
     {
+        base.OnEnable();
+
         OnFadeOutFinished += Restart;               //界面淡出后执行函数以重置系统
 
         OnFadeInFinished += StartTextAnimations;    //界面完全淡入后调用此函数
@@ -35,6 +37,12 @@ public class HellsCall_GameLostPanel : BasePanel
 
     private async void Start()
     {
+        if (!UIManager.Instance.NoMoveAndAttackList.Contains(this))
+        {
+            UIManager.Instance.NoMoveAndAttackList.Add(this);       //界面淡入后禁止玩家移动和攻击
+        }
+
+
         //提前加载一楼BGM
         await SoundManager.Instance.LoadClipAsync(SoundManager.Instance.AudioClipKeys.StopForAMoment);
 
@@ -82,7 +90,6 @@ public class HellsCall_GameLostPanel : BasePanel
         //将玩家传送回入口大堂（必须在重置游戏后，否则顺序错误会导致无法正常生成新的房间）
         player.gameObject.transform.position = new Vector2(0, -3.5f); 
 
-        SetBothMoveableAndAttackable(true);    //使玩家可以移动和攻击
 
         //重新播放一楼BGM
         await SoundManager.Instance.PlayBGMAsync(SoundManager.Instance.AudioClipKeys.StopForAMoment, true);
@@ -91,7 +98,6 @@ public class HellsCall_GameLostPanel : BasePanel
 
     private void StartTextAnimations()
     {
-        SetBothMoveableAndAttackable(false);            //界面打开时禁止玩家移动和攻击
         FirstPartText.gameObject.SetActive(true);       //激活第一段文本
 
         //先开始第一段文本的打字效果

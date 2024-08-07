@@ -19,6 +19,8 @@ public class UIManager : ManagerTemplate<UIManager>
     public List<BasePanel> ImportantPanelList { get; private set; } = new List<BasePanel>();
     //用于切换场景时不显示出来的重要UI界面（该列表里的界面一定也储存在ImportantPanelList列表里）
     public List<BasePanel> DontDisplayPanelList { get; private set; } = new List<BasePanel>();
+    //用于储存除了有按钮之外的界面打开时禁止移动和攻击的界面
+    public List<BasePanel> NoMoveAndAttackList { get; private set; } = new List<BasePanel>();
 
 
     Transform m_UIRoot;     //用于储存所有的UI（为了美观）

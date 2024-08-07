@@ -70,6 +70,12 @@ public class BasePanel : MonoBehaviour
     #region Unity内部函数
     protected virtual void Awake() { }
 
+    protected virtual void OnEnable() 
+    {
+        OnFadeInFinished += HandleFadeInFinished;
+
+        OnFadeOutFinished += HandleFadeOutFinished;
+    }
 
     protected virtual void OnDisable()
     {
@@ -81,7 +87,10 @@ public class BasePanel : MonoBehaviour
             {
                 UIManager.Instance.PanelDict.Remove(panelName);
             }
-        }         
+        }
+
+        OnFadeInFinished -= HandleFadeInFinished;
+        OnFadeOutFinished -= HandleFadeOutFinished;
     }
 
     private void OnDestroy()
@@ -248,16 +257,43 @@ public class BasePanel : MonoBehaviour
     }
 
 
-
-    protected void SetBothMoveableAndAttackable(bool isTrue)    //设置是否允许玩家移动和攻击
+    protected virtual void HandleFadeInFinished()
     {
-        IsPlayerMoveable = isTrue;
-        IsPlayerAttackable = isTrue;
+        if (UIManager.Instance.NoMoveAndAttackList.Contains(this))
+        {
+            SetBothMoveableAndAttackable(false);
+        }
+    }
+
+    protected virtual void HandleFadeOutFinished()
+    {
+        //先检查界面名是否为空（有的界面因为单例而删除前不会赋值名字）
+        if (panelName != null)
+        {
+            //检查当前界面是否处于储存玩家禁止移动和攻击的界面列表
+            if (UIManager.Instance.NoMoveAndAttackList.Contains(this))
+            {
+                UIManager.Instance.NoMoveAndAttackList.Remove(this);
+
+
+                //随后检查所有禁止移动和攻击的界面是否都已经关闭
+                if (UIManager.Instance.NoMoveAndAttackList.Count <= 0)
+                {
+                    SetBothMoveableAndAttackable(true);
+                }
+            }          
+        }
     }
     #endregion
 
 
     #region 其余函数
+    protected void SetBothMoveableAndAttackable(bool isTrue)    //设置是否允许玩家移动和攻击
+    {
+        IsPlayerMoveable = isTrue;
+        IsPlayerAttackable = isTrue;
+    }
+
     public void SetInteractableAndBlocksRaycasts(bool isTrue)
     {
         CanvasGroup.interactable = isTrue;

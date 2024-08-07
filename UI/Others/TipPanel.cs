@@ -45,7 +45,7 @@ public class TipPanel : BasePanel
         InitializeComponents();         //初始化组件
     }
 
-    private void OnEnable()
+    protected override void OnEnable()
     {
         OnFadeInFinished += StartCloseCountdown;                //界面彻底淡入后开始自动关闭计时
 

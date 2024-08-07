@@ -61,7 +61,7 @@ public class InteractPanel : BasePanel     //互动按键，给予玩家自己�
         InitializeComponents();         //初始化组件
     }
 
-    private void OnEnable()
+    protected override void OnEnable()
     {
         IsOpenable = true;              //开启界面后设置布尔
 

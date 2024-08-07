@@ -43,7 +43,7 @@ public class TaskPanel : BasePanel
         }
     }
 
-    private void OnEnable()
+    protected override void OnEnable()
     {
         HellsCall.Instance.OnRitualFinished += UpdateTaskText;
     }

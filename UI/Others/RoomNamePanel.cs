@@ -44,7 +44,7 @@ public class RoomNamePanel : BasePanel
         InitializeComponents();         //初始化组件
     }
 
-    private void OnEnable()
+    protected override void OnEnable()
     {       
         //此界面无需调用ClosePanel，因为会经常用到
 
@@ -124,7 +124,7 @@ public class RoomNamePanel : BasePanel
     }
 
 
-    public void HandleFadeInFinished()
+    new public void HandleFadeInFinished()
     {
         CanvasGroup.alpha = FadeInAlpha;        //重置界面的透明度
 

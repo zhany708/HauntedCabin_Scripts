@@ -45,8 +45,10 @@ public class PanelWithButton : BasePanel        //专门用于有按钮的界面
     }
     */
 
-    protected virtual void OnEnable()
+    protected override void OnEnable()
     {
+        base.OnEnable();
+
         //界面打开后加进列表
         if (!openedPanelsWithButton.Contains(this) )
         {
@@ -130,7 +132,8 @@ public class PanelWithButton : BasePanel        //专门用于有按钮的界面
         //根据是否有带按钮的界面打开来决定是否允许玩家移动和攻击
         SetBothMoveableAndAttackable(!m_IsPanelWithButtonOpened);
     }
-    
+
+
 
     /*
     //用于调试

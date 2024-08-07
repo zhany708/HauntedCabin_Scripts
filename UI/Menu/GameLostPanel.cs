@@ -73,8 +73,10 @@ public class GameLostPanel : PanelWithButton
 
 
     #region 其余函数
-    private void HandleFadeOutFinished()
+    protected override void HandleFadeOutFinished()
     {
+        base.HandleFadeOutFinished();
+
         //返回主菜单
         SceneManager.LoadScene("MainMenu");
 

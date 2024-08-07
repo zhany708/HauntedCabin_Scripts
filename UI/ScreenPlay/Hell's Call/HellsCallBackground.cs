@@ -28,8 +28,10 @@ public class HellsCallBackground : BasePanel
         }
     }
 
-    private void OnEnable()
-    {        
+    protected override void OnEnable()
+    {
+        base.OnEnable();
+
         OnFadeOutFinished += ClosePanel;                //界面完全淡出后调用的函数
         OnFadeOutFinished += HandleFadeOutFinished;
 
@@ -38,6 +40,12 @@ public class HellsCallBackground : BasePanel
 
     private async void Start()
     {
+        if (!UIManager.Instance.NoMoveAndAttackList.Contains(this))
+        {
+            UIManager.Instance.NoMoveAndAttackList.Add(this);       //界面淡入后禁止玩家移动和攻击
+        }
+
+
         SoundManager.Instance.StopAudioPlay(true);      //停止当前BGM的播放
 
         //循环播放火焰灼烧音效
@@ -49,12 +57,13 @@ public class HellsCallBackground : BasePanel
 
     private void Update()
     {
-        SetBothMoveableAndAttackable(false);            //界面打开时禁止玩家移动和攻击
+        //SetBothMoveableAndAttackable(false);            //界面打开时禁止玩家移动和攻击
     }
 
     protected override void OnDisable()
     {
         base.OnDisable();
+
         OnFadeOutFinished -= ClosePanel;
         OnFadeOutFinished -= HandleFadeOutFinished;
         OnFadeInFinished -= StartTextAnimations;
@@ -118,11 +127,12 @@ public class HellsCallBackground : BasePanel
 
 
     //界面隐藏时进行的逻辑
-    private async void HandleFadeOutFinished()
+    protected async override void HandleFadeOutFinished()
     {
+        base.HandleFadeOutFinished();
+
         await UIManager.Instance.OpenPanel(UIManager.Instance.UIKeys.TaskPanel);        //打开任务界面
 
-        SetBothMoveableAndAttackable(true);             //使玩家可以移动和攻击
         HellsCall.Instance.StartHealthDrain();          //开始持续掉血，并且播放火焰滤镜
 
         await SoundManager.Instance.PlayBGMAsync(SoundManager.Instance.AudioClipKeys.FireEscape, true);       //播放剧本BGM

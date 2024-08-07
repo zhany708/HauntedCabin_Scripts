@@ -14,7 +14,7 @@ public class QTEPanel : BasePanel
 
     [SerializeField] RectTransform m_Needle;                //围绕圆环旋转的指针
     [SerializeField] RectTransform m_TargetZone;            //指针需要停留的目标区域
-    [SerializeField] float m_NeedleSpeed = 80f;             //指针旋转的速度
+    [SerializeField] float m_NeedleSpeed = 180f;             //指针旋转的速度
     [SerializeField] float m_SuccessThreshold = 15f;        //目标区域前后的判定成功的角度，用于QTE检查（难度越大，此变量越小）
     [SerializeField] float m_ThresholdPerValue = 4f;        //每1点玩家属性值对应的判定成功角度（需要乘以2）
 
@@ -23,10 +23,16 @@ public class QTEPanel : BasePanel
     bool m_IsQTEActive = false;                 //表示QTE检查是否正在运行
     bool m_HasPassedTargetZone = false;         //表示指针是否经过并超出了检查范围
     float m_NeedleRotation = 0f;                //指针的角度
-    float m_TargetZoneRotation;                 //目标区域的角度
+    float m_TargetZoneRawRotation;              //目标区域的原始角度（与编辑器中物体的角度可能会有出入，因为Unity会标准化角度至[-180， 180]的范围）
 
-    [SerializeField] float m_Radius = 123.7f;                   //圆环的半径，在编辑器里通过坐标系统得出的
-    [SerializeField] float m_MinRandomDegrees = 30f;            //计算目标区域的随机角度时允许的最小值
+    float m_Radius;                   //圆环的半径，在编辑器里通过坐标系统得出的
+    [SerializeField] float m_MinRandomDegrees = -355f;          //计算目标区域的随机角度时允许的最小值
+    [SerializeField] float m_MaxRandomDegrees = -30f;           //计算目标区域的随机角度时允许的最大值
+
+    [SerializeField] Button m_TestButton;       //测试按钮，后续需要删掉
+
+
+
 
 
 
@@ -43,10 +49,29 @@ public class QTEPanel : BasePanel
 
 
         //计算圆环的半径（这里由于圆并不完全填充由长和宽组成的正方形，因此不能通过此方法得出半径）
-        //m_Radius = (m_TargetZone.parent as RectTransform).rect.width / 2f;
+        m_Radius = (m_TargetZone.parent as RectTransform).rect.width / 2f;
 
         //设置目标区域的宽度
         SetTargetZoneWidth();
+    }
+
+    private void Start()
+    {
+        if (panelName == null)
+        {
+            panelName = UIManager.Instance.UIKeys.QTEPanel;
+        }
+
+        if (!UIManager.Instance.NoMoveAndAttackList.Contains(this))
+        {
+            UIManager.Instance.NoMoveAndAttackList.Add(this);       //界面淡入后禁止玩家移动和攻击
+        }
+
+
+        //StartQTE();     //开始测试
+
+
+        m_TestButton.onClick.AddListener(() => StartQTE());
     }
 
     private void Update()
@@ -54,12 +79,12 @@ public class QTEPanel : BasePanel
         if (m_IsQTEActive)
         {
             //持续更新指针的角度（指针的坐标应跟圆盘一致，且半径也一致。这样就只需要更改角度即可实现“运动”效果）
-            m_NeedleRotation += m_NeedleSpeed * Time.deltaTime;
-            m_Needle.localRotation = Quaternion.Euler(0, 0, -m_NeedleRotation);
+            m_NeedleRotation -= m_NeedleSpeed * Time.deltaTime;
+            m_Needle.localRotation = Quaternion.Euler(0, 0, m_NeedleRotation);
 
 
-            //检查指针是否经过目标区域（需要额外加上判定区域的一半）
-            if (!m_HasPassedTargetZone && m_NeedleRotation >= m_TargetZoneRotation + m_SuccessThreshold)
+            //检查指针是否经过目标区域（需要额外减去判定区域的一半）
+            if (!m_HasPassedTargetZone && m_NeedleRotation <= m_TargetZoneRawRotation - m_SuccessThreshold)
             {
                 m_HasPassedTargetZone = true;
             }
@@ -84,17 +109,6 @@ public class QTEPanel : BasePanel
             }
         }
     }
-
-    private void Start()
-    {
-        if (panelName == null)
-        {
-            panelName = UIManager.Instance.UIKeys.QTEPanel;
-        }
-
-
-        StartQTE();     //开始测试
-    }
     #endregion
 
 
@@ -105,7 +119,6 @@ public class QTEPanel : BasePanel
         SetRandomPositionAndRotationForTargetZone();       //随机设置目标区域的坐标
 
         
-        m_TargetZoneRotation = m_TargetZone.localRotation.eulerAngles.z;        //计算目标区域的角度
 
         //进行QTE检查前重置指针旋转的值
         m_HasPassedTargetZone = false;
@@ -121,7 +134,7 @@ public class QTEPanel : BasePanel
         m_IsQTEActive = false;
 
         //检查指针和目标区域之间的角度偏差
-        float angleDifference = Mathf.Abs(Mathf.DeltaAngle(m_NeedleRotation, m_TargetZoneRotation));
+        float angleDifference = Mathf.Abs(Mathf.DeltaAngle(m_NeedleRotation, m_TargetZoneRawRotation));
 
 
         if (angleDifference <= m_SuccessThreshold)
@@ -160,7 +173,7 @@ public class QTEPanel : BasePanel
     {
         ClearAllSubscriptions();        //重置事件绑定的函数
 
-        Fade(CanvasGroup, FadeOutAlpha, FadeDuration, false);       //淡出界面
+        //Fade(CanvasGroup, FadeOutAlpha, FadeDuration, false);       //淡出界面
     }
     #endregion
 
@@ -170,16 +183,19 @@ public class QTEPanel : BasePanel
     private void SetRandomPositionAndRotationForTargetZone()
     {
         //从允许的最小值开始，否则过于靠前会导致玩家来不及反应
-        float randomRotation = UnityEngine.Random.Range(m_MinRandomDegrees, 360f);      
+        float randomRotation = UnityEngine.Random.Range(m_MinRandomDegrees, m_MaxRandomDegrees);
 
 
         //根据角度计算应该处于的坐标（使用Cos函数时，参数需要从度数转换成弧度）  
-        float Xpos = -m_Radius * Mathf.Cos(randomRotation * Mathf.Deg2Rad);
-        float Ypos = m_Radius * Mathf.Sin(randomRotation * Mathf.Deg2Rad);
+        float Xpos = m_Radius * Mathf.Cos( (randomRotation + 90f) * Mathf.Deg2Rad);
+        float Ypos = m_Radius * Mathf.Sin( (randomRotation + 90f) * Mathf.Deg2Rad);
 
 
         m_TargetZone.anchoredPosition = new Vector2(Xpos, Ypos);                    //设置坐标
-        m_TargetZone.localRotation = Quaternion.Euler(0, 0, randomRotation);        //设置角度
+        m_TargetZone.localEulerAngles = new Vector3(0, 0, randomRotation);          //设置角度
+
+
+        m_TargetZoneRawRotation = randomRotation;       //赋值原始角度
     }
 
 

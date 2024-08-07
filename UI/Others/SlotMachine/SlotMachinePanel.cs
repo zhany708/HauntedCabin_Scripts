@@ -60,9 +60,9 @@ public class SlotMachinePanel : BasePanel
         m_InitialEventContainerPos = m_EventContainer.anchoredPosition;
     }
 
-    private void OnEnable()
+    protected override void OnEnable()
     {
-        SetBothMoveableAndAttackable(false);        //界面打开时禁止玩家移动和攻击
+        base.OnEnable();   
 
         OnFadeInFinished += DelayStartSlotMachine;       //界面淡入后开始老虎机旋转
         OnFadeOutFinished += ClosePanel;
@@ -70,6 +70,12 @@ public class SlotMachinePanel : BasePanel
 
     private void Start()
     {
+        if (!UIManager.Instance.NoMoveAndAttackList.Contains(this))
+        {
+            UIManager.Instance.NoMoveAndAttackList.Add(this);       //界面打开时禁止玩家移动和攻击
+        }
+
+
         //计算每个图片的高度
         m_ImageHeight = m_RoomContainer.GetChild(0).GetComponent<RectTransform>().rect.height;
     }
@@ -86,8 +92,6 @@ public class SlotMachinePanel : BasePanel
     protected override void OnDisable()
     {
         base.OnDisable();
-
-        SetBothMoveableAndAttackable(true);         //恢复玩家的移动和攻击
 
         OnFadeInFinished -= DelayStartSlotMachine;
         OnFadeOutFinished -= ClosePanel;
