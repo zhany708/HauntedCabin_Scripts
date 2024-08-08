@@ -1,8 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 using System;
-using System.Collections.Generic;
-
 
 
 
@@ -23,13 +22,21 @@ public class QTEPanel : BasePanel
     bool m_IsQTEActive = false;                 //表示QTE检查是否正在运行
     bool m_HasPassedTargetZone = false;         //表示指针是否经过并超出了检查范围
     float m_NeedleRotation = 0f;                //指针的角度
-    float m_TargetZoneRawRotation;              //目标区域的原始角度（与编辑器中物体的角度可能会有出入，因为Unity会标准化角度至[-180， 180]的范围）
+    int m_TargetZoneRawRotation;              //目标区域的原始角度（与编辑器中物体的角度可能会有出入，因为Unity会标准化角度至[-180， 180]的范围）
 
     float m_Radius;                             //圆环的半径，在编辑器里通过坐标系统得出的
-    [SerializeField] float m_MinRandomDegrees = -355f;          //计算目标区域的随机角度时允许的最小值
-    [SerializeField] float m_MaxRandomDegrees = -30f;           //计算目标区域的随机角度时允许的最大值
+    [SerializeField] int m_MinRandomDegrees = -355;          //计算目标区域的随机角度时允许的最小值
+    [SerializeField] int m_MaxRandomDegrees = -30;           //计算目标区域的随机角度时允许的最大值
 
-    [SerializeField] Button m_TestButton;       //测试按钮，后续需要删掉
+
+    //以下变量用于测试，后续需要删除
+    [SerializeField] Button m_TestButton;               //测试按钮，用于开始QTE
+
+
+    [SerializeField] TextMeshProUGUI m_CountText;       //用于成功和失败的计数文本
+    string m_InitialCountText;                          //计数文本的初始文本，用于后续更新
+    int m_SuccessCount = 0;
+    int m_FailCount = 0;
 
 
 
@@ -72,6 +79,12 @@ public class QTEPanel : BasePanel
 
 
         m_TestButton.onClick.AddListener(() => StartQTE());
+
+
+
+        m_InitialCountText = m_CountText.text;      //初始化成功计数的文本
+
+        UpdateCountText();      //初始化成功计数
     }
 
     private void Update()
@@ -153,7 +166,9 @@ public class QTEPanel : BasePanel
     //QTE成功相关的逻辑
     private void SuccessLogic()
     {
-        Debug.Log("QTE Success!");
+        m_SuccessCount++;
+
+        //Debug.Log("QTE Success!");
 
         OnQTESuccessed?.Invoke();           //回调事件
 
@@ -163,7 +178,9 @@ public class QTEPanel : BasePanel
     //QTE失败相关的逻辑
     private void FailLogic()
     {
-        Debug.Log("QTE Failed!");
+        m_FailCount++;
+
+        //Debug.Log("QTE Failed!");
 
         CompleteLogic();
     }
@@ -174,6 +191,8 @@ public class QTEPanel : BasePanel
         ClearAllSubscriptions();        //重置事件绑定的函数
 
         //Fade(CanvasGroup, FadeOutAlpha, FadeDuration, false);       //淡出界面
+
+        UpdateCountText();      //更新成功计数
     }
     #endregion
 
@@ -183,7 +202,7 @@ public class QTEPanel : BasePanel
     private void SetRandomPositionAndRotationForTargetZone()
     {
         //从允许的最小值开始，否则过于靠前会导致玩家来不及反应
-        float randomRotation = UnityEngine.Random.Range(m_MinRandomDegrees, m_MaxRandomDegrees);
+        int randomRotation = UnityEngine.Random.Range(m_MinRandomDegrees, m_MaxRandomDegrees);
 
 
         //根据角度计算应该处于的坐标（使用Cos函数时，参数需要从度数转换成弧度）  
@@ -227,170 +246,14 @@ public class QTEPanel : BasePanel
 
         SetTargetZoneWidth();       //设置完判定成功的角度后更改目标区域的宽度
     }
-    #endregion
 
 
 
 
-    #region 多目标区域（目前先不具体研究）
-    /*
-    public List<Action> OnAllQTESuccessed;          //接收方为需要进行QTE的所有脚本，用于为不同的区域做不同的结果逻辑
-
-
-    [SerializeField] List<RectTransform> m_AllTargetZones;          //界面内的所有目标区域
-    [SerializeField] List<float> m_AllTargetZonePercent;            //所有目标区域对应的判定成功的角度的百分比（让不同的选择的难度不同）
-
-
-    //用于储存需要的部分目标区域以及对应的判定成功的角度
-    public Dictionary<RectTransform, float> TargetZoneDict { get; private set; } = new Dictionary<RectTransform, float>();
-
-
-
-    //目标区域的原始角度（与编辑器中物体的角度可能会有出入，因为Unity会标准化角度至[-180， 180]的范围）
-    List<float> m_AllTargetZoneRawRotation = new List<float>();
-    List<int> m_MinDistances = new List<int>();     //储存所有区域的判定成功的角度的列表，用于随机生成角度和坐标
-
-    int m_NumberOfZones;        //需要激活的目标区域的数量
-
-      
-    
-
-
-
-
-
-
-    //根据玩家属性值调整所有QTE的判定成功的角度             需要做的：等游戏难易度系统设置好后，也需要考虑游戏难易度
-    public void InitalizeTargetZones(float playerPropertyValue)
+    //更新成功和失败计数
+    private void UpdateCountText()
     {
-        //根据需要的目标区域数量，从所有目标区域数组中获取
-        for (int i = 0; i < m_NumberOfZones; i++)
-        {
-            //根据玩家的属性数值以及选项的难易度百分比计算最终的判定成功的角度
-            float zoneSuccessThreshold = m_ThresholdPerValue * playerPropertyValue * m_AllTargetZonePercent[i];
-
-
-            if (!TargetZoneDict.ContainsKey(m_AllTargetZones[i] ) )
-            {
-                TargetZoneDict.Add(m_AllTargetZones[i], zoneSuccessThreshold);
-            }
-        }
-
-
-        StoreAllSuccessThreshold();     //将所有区域的判定成功的区域储存进列表
+        m_CountText.text = string.Format(m_InitialCountText, m_SuccessCount, m_FailCount);
     }
-
-
-    //逐个检查指针是否处于某个目标区域内
-    private void CheckQTEResultForAllZones()
-    {
-        int arrayIndex = 0;
-
-
-        m_IsQTEActive = false;
-
-        for (arrayIndex = 0; arrayIndex < m_NumberOfZones; arrayIndex++)
-        {
-            //检查指针和目标区域之间的角度偏差
-            float angleDifference = Mathf.Abs(Mathf.DeltaAngle(m_NeedleRotation, m_AllTargetZoneRawRotation[arrayIndex]));
-
-
-            if (angleDifference <= TargetZoneDict[m_AllTargetZones[arrayIndex] ] )
-            {
-                //根据结果回调具体的事件
-                OnAllQTESuccessed[arrayIndex]?.Invoke();           
-
-                break;
-            }
-        }      
-
-
-        //指针不处于任何区域时
-        if (arrayIndex >= m_NumberOfZones)
-        {
-            FailLogic();
-        }
-    }
-
-
-    //将所有区域的判定成功的区域储存进列表，用于随机生成区域的角度和坐标
-    private void StoreAllSuccessThreshold()
-    {
-        for (int i = 0; i < m_NumberOfZones; i++)
-        {
-            //从字典中获取判定成功的角度
-            m_MinDistances[i] = TargetZoneDict[m_AllTargetZones[i]];
-        }
-    }
-
-
-    //随机设置所有目标区域的坐标（防止每次QTE检验时，目标区域都在同一位置）
-    private void SetRandomPositionAndRotationForTargetZones()
-    {
-        List<float> allRotations = GenerateUniqueRandomNumbers(m_NumberOfZones, m_MinRandomDegrees, m_MaxRandomDegrees, m_MinDistances);
-
-
-        for (int i = 0; i < m_NumberOfZones; i++)
-        {
-            //根据角度计算应该处于的坐标（使用Cos函数时，参数需要从度数转换成弧度）  
-            float Xpos = m_Radius * Mathf.Cos( (allRotations[i] + 90f) * Mathf.Deg2Rad);
-            float Ypos = m_Radius * Mathf.Sin( (allRotations[i] + 90f) * Mathf.Deg2Rad);
-
-
-            m_AllTargetZones[i].anchoredPosition = new Vector2(Xpos, Ypos);                    //设置坐标
-            m_AllTargetZones[i].localEulerAngles = new Vector3(0, 0, allRotations[i]);          //设置角度
-
-
-            m_AllTargetZoneRawRotation[i] = allRotations[i];       //赋值原始角度
-        }      
-    }
-
-
-    //第一个参数为需要生成的数量，第二和第三个参数为可生成的最小和最大数，第四个参数为每个数对应的距离其它数之间的最小值
-    List<float> GenerateUniqueRandomNumbers(int neededNum, float minNum, float maxNum, List<int> minDistances)
-    {
-        List<float> allNumbers = new List<float>();
-        
-        while (allNumbers.Count < neededNum)
-        {
-            float newNumber = Random.Range(minNum, maxNum);             //在范围内随机生成数字
-            bool isTooClose = false;
-            int currentMinDistance = minDistances[allNumbers.Count];    //获取当前索引的数字所能接受的距离其它数的最小值
-
-
-            foreach (int number in allNumbers)
-            {
-                //检查新生成的数是否跟任何其它数过于接近（由于是圆环，因此也考虑了最小数和最大数之间的距离）
-                if (Mathf.Abs(newNumber - number) < currentMinDistance || 
-                    Mathf.Abs(newNumber - number) > (Mathf.Abs(maxNum - minNum) - currentMinDistance) )
-                {
-                    isTooClose = true;
-                    break;
-                }
-            }
-
-
-            //只有当新生成的数跟所有其他数都较远时才加进列表
-            if (!isTooClose)
-            {
-                allNumbers.Add(newNumber);
-            }
-        }
-
-        return allNumbers;
-    }
-
-
-
-
-
-    //设置需要激活的目标区域的数量
-    public void SetNumberOfZones(int thisNumber)
-    {
-        m_NumberOfZones = thisNumber;
-
-        OnAllQTESuccessed = new Action[m_NumberOfZones];        //根据选项的数量赋值回调事件的数量
-    }
-    */
     #endregion
 }
