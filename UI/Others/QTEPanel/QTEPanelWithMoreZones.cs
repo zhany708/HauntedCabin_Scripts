@@ -12,7 +12,11 @@ using System.Linq;
 
 public class QTEPanelWithMoreZones : BasePanel
 {
-    public List<Action> OnAllQTESuccessed = new List<Action>();          //接收方为需要进行QTE的所有脚本，用于为不同的区域做不同的结果逻辑
+    public List<Action> OnAllQTESuccessed = new List<Action>();         //接收方为需要进行QTE的所有脚本，用于为不同的区域做不同的结果逻辑
+    public Action OnQTEFailed;                                          //接收方为需要进行QTE的所有脚本
+
+
+    public static QTEPanelWithMoreZones Instance { get; private set; }
 
 
     [SerializeField] List<RectTransform> m_AllTargetZones;      //界面内的所有目标区域
@@ -35,7 +39,7 @@ public class QTEPanelWithMoreZones : BasePanel
     bool m_HasPassedTargetZone = false;                     //表示指针是否经过并超出了检查范围
     float m_NeedleRotation = 0f;                            //指针的角度
 
-    float m_Radius;                                         //圆环的半径，在编辑器里通过坐标系统得出的
+    float m_Radius;                                         //圆环的半径，在编辑器里通过坐标系统得出
     [SerializeField] int m_MinRandomDegrees = -340;         //计算目标区域的随机角度时允许的最小值
     [SerializeField] int m_MaxRandomDegrees = -45;          //计算目标区域的随机角度时允许的最大值
 
@@ -52,6 +56,26 @@ public class QTEPanelWithMoreZones : BasePanel
     #region Unity内部函数
     protected override void Awake()
     {
+        //单例模式
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+        }
+
+        else
+        {
+            Instance = this;
+
+            //只有在没有父物体时才运行防删函数，否则会出现提醒
+            if (gameObject.transform.parent == null)
+            {
+                DontDestroyOnLoad(gameObject);
+            }
+        }
+
+
+
+
         if (m_Needle == null || m_AllTargetZones == null || m_AllTargetZonePercent == null || m_NeedleSpeed <= 0 || m_ThresholdPerValue <= 0)
         {
             Debug.LogError("Some components are not assigned in the " + gameObject.name);
@@ -68,7 +92,7 @@ public class QTEPanelWithMoreZones : BasePanel
     {
         if (panelName == null)
         {
-            panelName = UIManager.Instance.UIKeys.QTEPanel;
+            panelName = UIManager.Instance.UIKeys.QTEPanelWithMoreZones;
         }
 
         if (!UIManager.Instance.NoMoveAndAttackList.Contains(this))
@@ -83,9 +107,10 @@ public class QTEPanelWithMoreZones : BasePanel
         m_TestButton.onClick.AddListener(() => StartQTE());
 
 
-        //模拟触发事件前调用的函数
+        /*模拟触发事件前调用的函数
         SetNumberOfZones(4);            //总共需要4个目标区域
         InitalizeTargetZones(5);        //模拟角色的属性值为5
+        */
     }
 
     private void Update()
@@ -182,7 +207,7 @@ public class QTEPanelWithMoreZones : BasePanel
         Debug.Log($"QTE Success on Zone {zoneIndex}!");
 
         //根据结果回调具体的事件
-        //OnAllQTESuccessed[zoneIndex]?.Invoke();
+        OnAllQTESuccessed[zoneIndex]?.Invoke();
 
         CompleteLogic();
     }
@@ -192,6 +217,8 @@ public class QTEPanelWithMoreZones : BasePanel
     {
         Debug.Log("QTE Failed!");
 
+        OnQTEFailed?.Invoke();      //回调QTE失败相关的逻辑
+
         CompleteLogic();
     }
 
@@ -200,7 +227,9 @@ public class QTEPanelWithMoreZones : BasePanel
     {
         ClearAllSubscriptions();        //重置事件绑定的函数
 
-        //Fade(CanvasGroup, FadeOutAlpha, FadeDuration, false);       //淡出界面
+        Fade(CanvasGroup, FadeOutAlpha, FadeDuration, false);       //淡出界面
+
+        m_Needle.localRotation = Quaternion.Euler(0, 0, 0);         //重置指针的位置
     }
     #endregion
 
@@ -320,6 +349,7 @@ public class QTEPanelWithMoreZones : BasePanel
     public void ClearAllSubscriptions()
     {
         OnAllQTESuccessed.Clear();      //清空链表
+        OnQTEFailed = null;             //重置回调事件
     }
 
 
@@ -362,6 +392,16 @@ public class QTEPanelWithMoreZones : BasePanel
     public void SetNumberOfZones(int thisNumber)
     {
         m_NumberOfZones = thisNumber;
+    }
+
+    public void SetSuccessedAction(List<Action> thisAction)
+    {
+        OnAllQTESuccessed = thisAction;     //赋值成功相关的回调事件
+    }
+
+    public void SetFailedAction(Action thisAction)
+    {
+        OnQTEFailed = thisAction;           //赋值失败相关的回调事件
     }
     #endregion
 }

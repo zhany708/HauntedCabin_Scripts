@@ -3,6 +3,7 @@ using UnityEngine;
 using TMPro;
 using System;
 using Lean.Localization;
+using System.Collections.Generic;
 
 
 
@@ -238,6 +239,7 @@ public class EvilTelephonePanel : PanelWithButton
 
             Coroutine eventInfoCoroutine = StartCoroutine(TypeText(EventInfo, EventInfo.text, () =>
             {
+                /*
                 SetButtons(true);       //事件介绍完毕后，激活所有按钮
 
                 //同时打字所有选项按钮的文本
@@ -250,6 +252,11 @@ public class EvilTelephonePanel : PanelWithButton
                 generatedCoroutines.Add(OptionBTextCoroutine);
                 generatedCoroutines.Add(OptionCTextCoroutine);
                 generatedCoroutines.Add(OptionDTextCoroutine);
+                */
+
+
+                //打开QTE界面
+                UIManager.Instance.OpenQTEPanel(3, PlayerStatusBar.Instance.SanityValue, InitializeActionList(), FailedAction);
             }));
 
             generatedCoroutines.Add(eventInfoCoroutine);       //将协程加进列表
@@ -260,6 +267,39 @@ public class EvilTelephonePanel : PanelWithButton
             Debug.LogError("EventInfo text is empty.");
             return;
         }
+    }
+    #endregion
+
+
+    #region 其余函数（QTE相关）
+    private List<Action> InitializeActionList()         //初始化回调事件链表，以传递给QTE界面
+    {
+        List<Action> actions = new List<Action>();
+
+        actions.Add(SuccessedActionOne);
+        actions.Add(SuccessedActionTwo);
+        actions.Add(SuccessedActionThree);
+
+        return actions;
+    }
+
+    private void SuccessedActionOne()
+    {
+        LogicPassToConfirmPanel(ButtonAction.OptionA);
+    }
+    private void SuccessedActionTwo()
+    {
+        LogicPassToConfirmPanel(ButtonAction.OptionB);
+    }
+    private void SuccessedActionThree()
+    {
+        LogicPassToConfirmPanel(ButtonAction.OptionC);
+    }
+
+
+    private void FailedAction()
+    {
+        LogicPassToConfirmPanel(ButtonAction.OptionD);
     }
     #endregion
 

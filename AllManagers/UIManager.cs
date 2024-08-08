@@ -176,7 +176,6 @@ public class UIManager : ManagerTemplate<UIManager>
     }
 
 
-
     //打开互动界面（参数中的事件不能为Task类型）
     public async void OpenInteractPanel(Action onYesAction, string interactPhraseKey)     
     {
@@ -196,6 +195,7 @@ public class UIManager : ManagerTemplate<UIManager>
         InteractPanel.Instance.ClearAllSubscriptions();                         //先清空所有事件绑定的之前的函数
         InteractPanel.Instance.OnInteractKeyPressed += onYesAction;             //将参数中的函数绑定到事件       
     }
+
 
 
     //打开房间名界面
@@ -221,6 +221,27 @@ public class UIManager : ManagerTemplate<UIManager>
 
 
         RoomNamePanel.Instance.SetLocalizedText(roomNamePhraseKey);             //将参数传递给界面，以根据当前语言显示房间名
+    }
+
+
+
+    //打开QTE检测界面
+    public async void OpenQTEPanel(int neededZoneNum, float propertyVal, List<Action> successedActions, Action failedAction)
+    {
+        if (QTEPanelWithMoreZones.Instance == null)
+        {
+            await OpenPanel(UIKeys.QTEPanelWithMoreZones);                              //异步加载并打开互动界面
+        }
+        else
+        {
+            QTEPanelWithMoreZones.Instance.OpenPanel();                         //如果之前加载过了，则直接打开界面
+        }
+
+
+        QTEPanelWithMoreZones.Instance.SetNumberOfZones(neededZoneNum);         //赋值需要的区域数量
+        QTEPanelWithMoreZones.Instance.SetSuccessedAction(successedActions);    //赋值成功相关的回调事件
+        QTEPanelWithMoreZones.Instance.SetFailedAction(failedAction);           //赋值失败相关的回调事件
+        QTEPanelWithMoreZones.Instance.InitalizeTargetZones(propertyVal);       //初始化区域
     }
     #endregion
 
