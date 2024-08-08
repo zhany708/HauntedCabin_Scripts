@@ -168,30 +168,32 @@ public class EvilTelephonePanel : PanelWithButton
 
     private void CommonLogicForOptions()        //所有选项的通用逻辑
     {
-        SetButtons(false);      //取消激活所有按钮
-        ResultText.gameObject.SetActive(true);     //激活结果文本
-
-
-        //先开始结果文本的打字效果
-        Coroutine resultTextCoroutine = StartCoroutine(TypeText(ResultText, ResultText.text, () =>       
+        //延迟1秒后再显示结果（否则会导致玩家进行QTE的空格会跳过打字效果甚至关闭界面）
+        Coroutine delayDisplayCoroutine = StartCoroutine(Delay.Instance.DelaySomeTime(1f, () =>
         {
-            //Debug.Log("First Coroutine done!.");
+            //SetButtons(false);      //取消激活所有按钮
+            ResultText.gameObject.SetActive(true);     //激活结果文本
 
-            TipText.gameObject.SetActive(true);     //激活提示文本，提醒玩家按空格或点击以继续游戏
 
-            //等待玩家按空格或点击鼠标
-            Coroutine waitForInputCoroutine = StartCoroutine(Delay.Instance.WaitForPlayerInput(() =>     
+            //先开始结果文本的打字效果
+            Coroutine resultTextCoroutine = StartCoroutine(TypeText(ResultText, ResultText.text, () =>       
             {
-                //Debug.Log("Second Coroutine done!.");
+                TipText.gameObject.SetActive(true);     //激活提示文本，提醒玩家按空格或点击以继续游戏
 
-                //淡出界面
-                Fade(CanvasGroup, FadeOutAlpha, FadeDuration, false);
+                //等待玩家按空格或点击鼠标
+                Coroutine waitForInputCoroutine = StartCoroutine(Delay.Instance.WaitForPlayerInput(() =>     
+                {
+                    //淡出界面
+                    Fade(CanvasGroup, FadeOutAlpha, FadeDuration, false);
+                }));
+
+                generatedCoroutines.Add(waitForInputCoroutine);    //将协程加进列表
             }));
 
-            generatedCoroutines.Add(waitForInputCoroutine);    //将协程加进列表
+            generatedCoroutines.Add(resultTextCoroutine);      //将协程加进列表
         }));
 
-        generatedCoroutines.Add(resultTextCoroutine);      //将协程加进列表
+        generatedCoroutines.Add(delayDisplayCoroutine);     //将协程加进列表
     }
     #endregion
 
@@ -271,7 +273,7 @@ public class EvilTelephonePanel : PanelWithButton
     #endregion
 
 
-    #region 其余函数（QTE相关）
+    #region 其余函数 (QTE相关)
     private List<Action> InitializeActionList()         //初始化回调事件链表，以传递给QTE界面
     {
         List<Action> actions = new List<Action>();
