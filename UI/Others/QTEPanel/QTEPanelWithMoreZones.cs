@@ -6,7 +6,7 @@ using System.Linq;
 
 
 /*
- * Introduction：
+ * Introduction：用于多目标区域的QTE界面
  * Creator：Zhang Yu
 */
 
@@ -39,8 +39,8 @@ public class QTEPanelWithMoreZones : BasePanel
     bool m_HasPassedTargetZone = false;                     //表示指针是否经过并超出了检查范围
     bool m_DoCheckPassTargetZone = false;                   //表示是否需要让指针只走一圈就自动失败
     float m_NeedleRotation = 0f;                            //指针的角度
-
     float m_Radius;                                         //圆环的半径，在编辑器里通过坐标系统得出
+
     [SerializeField] int m_MinRandomDegrees = -340;         //计算目标区域的随机角度时允许的最小值
     [SerializeField] int m_MaxRandomDegrees = -45;          //计算目标区域的随机角度时允许的最大值
 
@@ -50,7 +50,7 @@ public class QTEPanelWithMoreZones : BasePanel
     [SerializeField] Button m_TestButton;                   //测试按钮，用于开始QTE
 
 
-
+    
 
 
 
@@ -61,6 +61,7 @@ public class QTEPanelWithMoreZones : BasePanel
         if (Instance != null && Instance != this)
         {
             Destroy(gameObject);
+            return;
         }
 
         else
@@ -75,18 +76,8 @@ public class QTEPanelWithMoreZones : BasePanel
         }
 
 
-
-
-        if (m_Needle == null || m_AllTargetZones == null || m_AllTargetZonePercent == null || m_NeedleSpeed <= 0 || m_ThresholdPerValue <= 0)
-        {
-            Debug.LogError("Some components are not assigned in the " + gameObject.name);
-            return;
-        }
-
-
-        //计算圆环的半径（这里由于圆并不完全填充由长和宽组成的正方形，因此不能通过此方法得出半径）
-        m_Radius = (m_AllTargetZones[0].parent as RectTransform).rect.width / 2f;
-
+        CheckComponents();      //检查界面组件是否全部配置
+        InitializeRadius();     //初始化圆环的半径
     }
 
     private void Start()
@@ -116,38 +107,18 @@ public class QTEPanelWithMoreZones : BasePanel
     {
         if (m_IsQTEActive)
         {
-            //持续更新指针的角度（指针的坐标应跟圆盘一致，且半径也一致。这样就只需要更改角度即可实现“运动”效果）
-            m_NeedleRotation -= m_NeedleSpeed * Time.deltaTime;
-            m_Needle.localRotation = Quaternion.Euler(0, 0, m_NeedleRotation);
-
-            
+            UpdateNeedleRotation();             //持续更新指针角度
 
             if (m_DoCheckPassTargetZone)
             {
-                //检查指针是否经过最后一个目标区域（需要额外减去该目标区域的判定区域的一半）
-                if (!m_HasPassedTargetZone && m_NeedleRotation <= GetSmallestRawRotation() - TargetZoneDict[m_AllTargetZones[GetIndexOfSmallestRawRotation()]])
-                {
-                    m_HasPassedTargetZone = true;
-                }
-
-                //当指针超出范围后玩家依然没有反应时
-                if (m_HasPassedTargetZone)
-                {
-                    m_IsQTEActive = false;
-
-                    FailLogic();        //执行失败相关的逻辑
-
-                    return;             //返回，以避免执行非必要的其他逻辑
-                }
+                HandleAutoFailOnPass();         //让指针转一圈后结果自动失败
             }
 
-            
-            
+
             //玩家按下空格时
             if (Input.GetKeyDown(KeyCode.Space))
             {
                 CheckQTEResultForAllZones();
-                return;
             }
         }
     }
@@ -172,34 +143,54 @@ public class QTEPanelWithMoreZones : BasePanel
     }
 
 
+    private void UpdateNeedleRotation()
+    {
+        //持续更新指针的角度（指针的坐标应跟圆盘一致，且半径也一致。这样就只需要更改角度即可实现“运动”效果）
+        m_NeedleRotation -= m_NeedleSpeed * Time.deltaTime;
+        m_Needle.localRotation = Quaternion.Euler(0, 0, m_NeedleRotation);
+    }
+
+    private void HandleAutoFailOnPass()
+    {
+        //检查指针是否经过最后一个目标区域（需要额外减去该目标区域的判定区域的一半）
+        if (!m_HasPassedTargetZone && m_NeedleRotation <= GetSmallestRawRotation() - TargetZoneDict[m_AllTargetZones[GetIndexOfSmallestRawRotation()]])
+        {
+            m_HasPassedTargetZone = true;
+        }
+
+        //当指针超出范围后玩家依然没有反应时
+        if (m_HasPassedTargetZone)
+        {
+            m_IsQTEActive = false;
+
+            FailLogic();        //执行失败相关的逻辑
+        }      
+    }
+
+
+
+
     //逐个检查指针是否处于某个目标区域内
     private void CheckQTEResultForAllZones()
     {
-        int arrayIndex;
-
-
         m_IsQTEActive = false;
 
-        for (arrayIndex = 0; arrayIndex < m_NumberOfZones; arrayIndex++)
+        for (int i = 0; i < m_NumberOfZones; i++)
         {
             //检查指针和目标区域之间的角度偏差
-            float angleDifference = Mathf.Abs(Mathf.DeltaAngle(m_NeedleRotation, m_AllTargetZoneRawRotation[arrayIndex]));
+            float angleDifference = Mathf.Abs(Mathf.DeltaAngle(m_NeedleRotation, m_AllTargetZoneRawRotation[i]));
 
 
-            if (angleDifference <= TargetZoneDict[m_AllTargetZones[arrayIndex]])
+            if (angleDifference <= TargetZoneDict[m_AllTargetZones[i]])
             {
-                SuccessLogic(arrayIndex);       //进行该区域的成功逻辑
-
-                break;
+                SuccessLogic(i);       //进行该区域的成功逻辑
+                return;
             }
         }
 
 
         //指针不处于任何区域时
-        if (arrayIndex >= m_NumberOfZones)
-        {
-            FailLogic();
-        }
+        FailLogic();       
     }
 
 
@@ -243,6 +234,22 @@ public class QTEPanelWithMoreZones : BasePanel
 
 
     #region 其余函数
+    private void CheckComponents()
+    {
+        if (m_Needle == null || m_AllTargetZones == null || m_AllTargetZonePercent == null || m_NeedleSpeed <= 0 || m_ThresholdPerValue <= 0)
+        {
+            Debug.LogError("Some components are not assigned in the " + gameObject.name);
+            return;
+        }
+    }
+
+    private void InitializeRadius()
+    {
+        //计算圆环的半径（这里由于圆并不完全填充由长和宽组成的正方形，因此不能通过此方法得出半径）
+        m_Radius = (m_AllTargetZones[0].parent as RectTransform).rect.width / 2f;
+    }
+
+
     //根据玩家属性值调整所有QTE的判定成功的角度             需要做的：等游戏难易度系统设置好后，也需要考虑游戏难易度
     public void InitalizeTargetZones(float playerPropertyValue)
     {
@@ -376,7 +383,7 @@ public class QTEPanelWithMoreZones : BasePanel
     {
         base.HandleFadeOutFinished();
 
-        m_Needle.localRotation = Quaternion.Euler(0, 0, 0);         //重置指针的位置
+        m_Needle.localRotation = Quaternion.Euler(0, 0, 0);         //重置指针的角度
     }
 
 
@@ -418,11 +425,7 @@ public class QTEPanelWithMoreZones : BasePanel
 
 
         m_NumberOfZones = thisNumber;
-
-        if (m_NumberOfZones <= 1)
-        {
-            m_DoCheckPassTargetZone = true;     //只有当目标区域小于等于1时，才只让指针转1圈
-        }
+        m_DoCheckPassTargetZone = m_NumberOfZones <= 1;     //只有当目标区域小于等于1时，才只让指针转一圈      
     }
 
     public void SetSuccessedAction(List<Action> thisAction)
