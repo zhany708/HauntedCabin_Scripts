@@ -10,13 +10,13 @@ using System.Linq;
  * Creator：Zhang Yu
 */
 
-public class QTEPanelWithMoreZones : BasePanel
+public class QTEPanel : BasePanel
 {
     public List<Action> OnAllQTESuccessed = new List<Action>();         //接收方为需要进行QTE的所有脚本，用于为不同的区域做不同的结果逻辑
     public Action OnQTEFailed;                                          //接收方为需要进行QTE的所有脚本
 
 
-    public static QTEPanelWithMoreZones Instance { get; private set; }
+    public static QTEPanel Instance { get; private set; }
 
 
     [SerializeField] List<RectTransform> m_AllTargetZones;      //界面内的所有目标区域
@@ -84,7 +84,7 @@ public class QTEPanelWithMoreZones : BasePanel
     {
         if (panelName == null)
         {
-            panelName = UIManager.Instance.UIKeys.QTEPanelWithMoreZones;
+            panelName = UIManager.Instance.UIKeys.QTEPanel;
         }
 
         if (!UIManager.Instance.NoMoveAndAttackList.Contains(this))

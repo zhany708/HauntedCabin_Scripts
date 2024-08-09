@@ -101,7 +101,7 @@ public class EvilTelephonePanel : PanelWithButton
         OnFadeOutFinished -= ClosePanel;
         OnFadeInFinished -= StartTextAnimations;
 
-        QTEPanelWithMoreZones.Instance.OnFadeOutFinished -= CommonLogicForOptions;
+        QTEPanel.Instance.OnFadeOutFinished -= CommonLogicForOptions;
     }
     #endregion
 
@@ -126,7 +126,7 @@ public class EvilTelephonePanel : PanelWithButton
                 //改变玩家的属性
                 PlayerStatusBar.Instance.ChangePropertyValue(PlayerProperty.Sanity, 1f);
 
-                QTEPanelWithMoreZones.Instance.OnFadeOutFinished += CommonLogicForOptions;
+                QTEPanel.Instance.OnFadeOutFinished += CommonLogicForOptions;
                 break;
 
             case ButtonAction.OptionB:
@@ -136,7 +136,7 @@ public class EvilTelephonePanel : PanelWithButton
                 //改变玩家的属性
                 PlayerStatusBar.Instance.ChangePropertyValue(PlayerProperty.Knowledge, 1f);
 
-                QTEPanelWithMoreZones.Instance.OnFadeOutFinished += CommonLogicForOptions;
+                QTEPanel.Instance.OnFadeOutFinished += CommonLogicForOptions;
                 break;
 
             case ButtonAction.OptionC:
@@ -146,7 +146,7 @@ public class EvilTelephonePanel : PanelWithButton
                 //改变玩家的属性
                 PlayerStatusBar.Instance.ChangePropertyValue(PlayerProperty.Sanity, -1f);
 
-                QTEPanelWithMoreZones.Instance.OnFadeOutFinished += CommonLogicForOptions;
+                QTEPanel.Instance.OnFadeOutFinished += CommonLogicForOptions;
                 break;
 
             case ButtonAction.OptionD:
@@ -156,7 +156,7 @@ public class EvilTelephonePanel : PanelWithButton
                 //改变玩家的属性
                 PlayerStatusBar.Instance.ChangePropertyValue(PlayerProperty.Strength, -1f);
 
-                QTEPanelWithMoreZones.Instance.OnFadeOutFinished += CommonLogicForOptions;
+                QTEPanel.Instance.OnFadeOutFinished += CommonLogicForOptions;
                 break;
 
             default:

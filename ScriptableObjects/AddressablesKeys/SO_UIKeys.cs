@@ -50,5 +50,4 @@ public class SO_UIKeys : ScriptableObject
     public string RoomNamePanel;        //显示房间名的界面
     public string SlotMachinePanel;     //老虎机界面
     public string QTEPanel;             //QTE检测界面
-    public string QTEPanelWithMoreZones;             //QTE检测界面
 }

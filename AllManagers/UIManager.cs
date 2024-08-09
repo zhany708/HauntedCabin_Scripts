@@ -228,20 +228,20 @@ public class UIManager : ManagerTemplate<UIManager>
     //打开QTE检测界面
     public async void OpenQTEPanel(int neededZoneNum, float propertyVal, List<Action> successedActions, Action failedAction)
     {
-        if (QTEPanelWithMoreZones.Instance == null)
+        if (QTEPanel.Instance == null)
         {
-            await OpenPanel(UIKeys.QTEPanelWithMoreZones);                              //异步加载并打开互动界面
+            await OpenPanel(UIKeys.QTEPanel);                       //异步加载并打开互动界面
         }
         else
         {
-            QTEPanelWithMoreZones.Instance.OpenPanel();                         //如果之前加载过了，则直接打开界面
+            QTEPanel.Instance.OpenPanel();                          //如果之前加载过了，则直接打开界面
         }
 
 
-        QTEPanelWithMoreZones.Instance.SetNumberOfZones(neededZoneNum);         //赋值需要的区域数量
-        QTEPanelWithMoreZones.Instance.SetSuccessedAction(successedActions);    //赋值成功相关的回调事件
-        QTEPanelWithMoreZones.Instance.SetFailedAction(failedAction);           //赋值失败相关的回调事件
-        QTEPanelWithMoreZones.Instance.InitalizeTargetZones(propertyVal);       //初始化区域
+        QTEPanel.Instance.SetNumberOfZones(neededZoneNum);          //赋值需要的区域数量
+        QTEPanel.Instance.SetSuccessedAction(successedActions);     //赋值成功相关的回调事件
+        QTEPanel.Instance.SetFailedAction(failedAction);            //赋值失败相关的回调事件
+        QTEPanel.Instance.InitalizeTargetZones(propertyVal);        //初始化区域
     }
     #endregion
 
