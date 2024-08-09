@@ -100,6 +100,8 @@ public class EvilTelephonePanel : PanelWithButton
         base.OnDisable();
         OnFadeOutFinished -= ClosePanel;
         OnFadeInFinished -= StartTextAnimations;
+
+        QTEPanelWithMoreZones.Instance.OnFadeOutFinished -= CommonLogicForOptions;
     }
     #endregion
 
@@ -124,7 +126,7 @@ public class EvilTelephonePanel : PanelWithButton
                 //改变玩家的属性
                 PlayerStatusBar.Instance.ChangePropertyValue(PlayerProperty.Sanity, 1f);
 
-                CommonLogicForOptions();
+                QTEPanelWithMoreZones.Instance.OnFadeOutFinished += CommonLogicForOptions;
                 break;
 
             case ButtonAction.OptionB:
@@ -134,7 +136,7 @@ public class EvilTelephonePanel : PanelWithButton
                 //改变玩家的属性
                 PlayerStatusBar.Instance.ChangePropertyValue(PlayerProperty.Knowledge, 1f);
 
-                CommonLogicForOptions();
+                QTEPanelWithMoreZones.Instance.OnFadeOutFinished += CommonLogicForOptions;
                 break;
 
             case ButtonAction.OptionC:
@@ -144,7 +146,7 @@ public class EvilTelephonePanel : PanelWithButton
                 //改变玩家的属性
                 PlayerStatusBar.Instance.ChangePropertyValue(PlayerProperty.Sanity, -1f);
 
-                CommonLogicForOptions();
+                QTEPanelWithMoreZones.Instance.OnFadeOutFinished += CommonLogicForOptions;
                 break;
 
             case ButtonAction.OptionD:
@@ -154,7 +156,7 @@ public class EvilTelephonePanel : PanelWithButton
                 //改变玩家的属性
                 PlayerStatusBar.Instance.ChangePropertyValue(PlayerProperty.Strength, -1f);
 
-                CommonLogicForOptions();
+                QTEPanelWithMoreZones.Instance.OnFadeOutFinished += CommonLogicForOptions;
                 break;
 
             default:
@@ -168,8 +170,8 @@ public class EvilTelephonePanel : PanelWithButton
 
     private void CommonLogicForOptions()        //所有选项的通用逻辑
     {
-        //延迟1秒后再显示结果（否则会导致玩家进行QTE的空格会跳过打字效果甚至关闭界面）
-        Coroutine delayDisplayCoroutine = StartCoroutine(Delay.Instance.DelaySomeTime(1f, () =>
+        //延迟0.5秒后再显示结果（否则会导致玩家进行QTE的空格会跳过打字效果甚至关闭界面）
+        Coroutine delayDisplayCoroutine = StartCoroutine(Delay.Instance.DelaySomeTime(0.5f, () =>
         {
             //SetButtons(false);      //取消激活所有按钮
             ResultText.gameObject.SetActive(true);     //激活结果文本
@@ -223,7 +225,7 @@ public class EvilTelephonePanel : PanelWithButton
         }
     }
 
-
+    /*
     private void SetButtons(bool isActive)      //激活或隐藏按钮
     {
         OptionA.gameObject.SetActive(isActive);
@@ -231,7 +233,7 @@ public class EvilTelephonePanel : PanelWithButton
         OptionC.gameObject.SetActive(isActive);
         OptionD.gameObject.SetActive(isActive);       
     }
-
+    */
 
     private void StartTextAnimations()
     {       

@@ -37,6 +37,7 @@ public class QTEPanelWithMoreZones : BasePanel
     int m_NumberOfZones;                                    //需要激活的目标区域的数量
     bool m_IsQTEActive = false;                             //表示QTE检查是否正在运行
     bool m_HasPassedTargetZone = false;                     //表示指针是否经过并超出了检查范围
+    bool m_DoCheckPassTargetZone = false;                   //表示是否需要让指针只走一圈就自动失败
     float m_NeedleRotation = 0f;                            //指针的角度
 
     float m_Radius;                                         //圆环的半径，在编辑器里通过坐标系统得出
@@ -101,8 +102,6 @@ public class QTEPanelWithMoreZones : BasePanel
         }
 
 
-        //StartQTE();     //开始测试
-
 
         m_TestButton.onClick.AddListener(() => StartQTE());
 
@@ -121,25 +120,29 @@ public class QTEPanelWithMoreZones : BasePanel
             m_NeedleRotation -= m_NeedleSpeed * Time.deltaTime;
             m_Needle.localRotation = Quaternion.Euler(0, 0, m_NeedleRotation);
 
+            
 
-            //检查指针是否经过最后一个目标区域（需要额外减去该目标区域的判定区域的一半）
-            if (!m_HasPassedTargetZone && m_NeedleRotation <= GetSmallestRawRotation() - TargetZoneDict[m_AllTargetZones[GetIndexOfSmallestRawRotation()] ])
+            if (m_DoCheckPassTargetZone)
             {
-                m_HasPassedTargetZone = true;
+                //检查指针是否经过最后一个目标区域（需要额外减去该目标区域的判定区域的一半）
+                if (!m_HasPassedTargetZone && m_NeedleRotation <= GetSmallestRawRotation() - TargetZoneDict[m_AllTargetZones[GetIndexOfSmallestRawRotation()]])
+                {
+                    m_HasPassedTargetZone = true;
+                }
+
+                //当指针超出范围后玩家依然没有反应时
+                if (m_HasPassedTargetZone)
+                {
+                    m_IsQTEActive = false;
+
+                    FailLogic();        //执行失败相关的逻辑
+
+                    return;             //返回，以避免执行非必要的其他逻辑
+                }
             }
 
-            //当指针超出范围后玩家依然没有反应时
-            if (m_HasPassedTargetZone)
-            {
-                m_IsQTEActive = false;
-
-                FailLogic();        //执行失败相关的逻辑
-
-                return;             //返回，以避免执行非必要的其他逻辑
-            }
-
-
-
+            
+            
             //玩家按下空格时
             if (Input.GetKeyDown(KeyCode.Space))
             {
@@ -227,9 +230,14 @@ public class QTEPanelWithMoreZones : BasePanel
     {
         ClearAllSubscriptions();        //重置事件绑定的函数
 
-        Fade(CanvasGroup, FadeOutAlpha, FadeDuration, false);       //淡出界面
 
-        m_Needle.localRotation = Quaternion.Euler(0, 0, 0);         //重置指针的位置
+        //延迟1秒后再淡出界面
+        Coroutine delayFadeOut = StartCoroutine(Delay.Instance.DelaySomeTime(1f, () =>
+        {
+            Fade(CanvasGroup, FadeOutAlpha, FadeDuration, false);       //淡出界面   
+        }));
+
+        generatedCoroutines.Add(delayFadeOut);     //将协程加进列表
     }
     #endregion
 
@@ -345,14 +353,7 @@ public class QTEPanelWithMoreZones : BasePanel
     }
 
 
-    //删除所有回调事件绑定的函数
-    public void ClearAllSubscriptions()
-    {
-        OnAllQTESuccessed.Clear();      //清空链表
-        OnQTEFailed = null;             //重置回调事件
-    }
-
-
+   
     //根据判定成功的角度更改目标区域的宽度
     private void SetTargetZoneWidth()
     {
@@ -368,6 +369,23 @@ public class QTEPanelWithMoreZones : BasePanel
             //设置目标区域的宽度
             m_AllTargetZones[i].sizeDelta = new Vector2(targetZoneWidth, m_AllTargetZones[i].sizeDelta.y);
         }    
+    }
+
+
+    protected override void HandleFadeOutFinished()
+    {
+        base.HandleFadeOutFinished();
+
+        m_Needle.localRotation = Quaternion.Euler(0, 0, 0);         //重置指针的位置
+    }
+
+
+
+    //删除所有回调事件绑定的函数
+    public void ClearAllSubscriptions()
+    {
+        OnAllQTESuccessed.Clear();      //清空链表
+        OnQTEFailed = null;             //重置回调事件
     }
     #endregion
 
@@ -391,7 +409,20 @@ public class QTEPanelWithMoreZones : BasePanel
     //设置需要激活的目标区域的数量
     public void SetNumberOfZones(int thisNumber)
     {
+        //检查参数是否小于等于0
+        if (thisNumber <= 0)
+        {
+            Debug.LogError($"Cannot assign {thisNumber} target zones in the " + gameObject.name);
+            return;
+        }
+
+
         m_NumberOfZones = thisNumber;
+
+        if (m_NumberOfZones <= 1)
+        {
+            m_DoCheckPassTargetZone = true;     //只有当目标区域小于等于1时，才只让指针转1圈
+        }
     }
 
     public void SetSuccessedAction(List<Action> thisAction)
