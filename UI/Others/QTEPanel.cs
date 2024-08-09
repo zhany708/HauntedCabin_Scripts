@@ -3,6 +3,7 @@ using UnityEngine.UI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using TMPro;
 
 
 /*
@@ -22,6 +23,7 @@ public class QTEPanel : BasePanel
     [SerializeField] List<RectTransform> m_AllTargetZones;      //界面内的所有目标区域
     [SerializeField] List<float> m_AllTargetZonePercent;        //所有目标区域对应的判定成功的角度的百分比（让不同的选择的难度不同）
     [SerializeField] RectTransform m_Needle;                    //围绕圆环旋转的指针
+    [SerializeField] TextMeshProUGUI m_TipText;                 //给与玩家不同区域的结果提示的文本
     [SerializeField] float m_NeedleSpeed = 160f;                //指针旋转的速度
     [SerializeField] float m_ThresholdPerValue = 2f;            //每1点玩家属性值对应的判定成功角度（需要乘以2以得到最终角度）
 
@@ -29,11 +31,15 @@ public class QTEPanel : BasePanel
     //用于储存需要的部分目标区域以及对应的判定成功的角度
     public Dictionary<RectTransform, float> TargetZoneDict { get; private set; } = new Dictionary<RectTransform, float>();
 
+    //用于给予玩家不同区域的结果相关的提示（如“影响神志”）
+    Dictionary<Color, string> m_ZoneEffects;
+
 
     //目标区域的原始角度（与编辑器中物体的角度可能会有出入，因为Unity会标准化角度至[-180, 180]的范围）
     List<int> m_AllTargetZoneRawRotation = new List<int>();
     List<float> m_TargetZoneSuccessThreshold = new List<float>();         //储存所有区域的判定成功的角度的列表，用于随机生成角度和坐标
 
+    string m_FailTipText = "Default fail result";           //QTE失败的结果相关的提示
     int m_NumberOfZones;                                    //需要激活的目标区域的数量
     bool m_IsQTEActive = false;                             //表示QTE检查是否正在运行
     bool m_HasPassedTargetZone = false;                     //表示指针是否经过并超出了检查范围
@@ -76,8 +82,9 @@ public class QTEPanel : BasePanel
         }
 
 
-        CheckComponents();      //检查界面组件是否全部配置
-        InitializeRadius();     //初始化圆环的半径
+        CheckComponents();              //检查界面组件是否全部配置
+        InitializeRadius();             //初始化圆环的半径
+        InitializeZoneEffects();        //初始化提示字典
     }
 
     private void Start()
@@ -132,7 +139,6 @@ public class QTEPanel : BasePanel
         SetRandomPositionAndRotationForTargetZones();       //随机设置目标区域的坐标
 
 
-
         //进行QTE检查前重置指针旋转的值
         m_HasPassedTargetZone = false;
         m_NeedleRotation = 0f;
@@ -140,6 +146,8 @@ public class QTEPanel : BasePanel
 
 
         m_IsQTEActive = true;       //设置布尔后，才会真正开始旋转
+
+        //UpdateTipText();            //更新提示文本信息
     }
 
 
@@ -234,46 +242,6 @@ public class QTEPanel : BasePanel
 
 
     #region 其余函数
-    private void CheckComponents()
-    {
-        if (m_Needle == null || m_AllTargetZones == null || m_AllTargetZonePercent == null || m_NeedleSpeed <= 0 || m_ThresholdPerValue <= 0)
-        {
-            Debug.LogError("Some components are not assigned in the " + gameObject.name);
-            return;
-        }
-    }
-
-    private void InitializeRadius()
-    {
-        //计算圆环的半径（这里由于圆并不完全填充由长和宽组成的正方形，因此不能通过此方法得出半径）
-        m_Radius = (m_AllTargetZones[0].parent as RectTransform).rect.width / 2f;
-    }
-
-
-    //根据玩家属性值调整所有QTE的判定成功的角度             需要做的：等游戏难易度系统设置好后，也需要考虑游戏难易度
-    public void InitalizeTargetZones(float playerPropertyValue)
-    {
-        //根据需要的目标区域数量，从所有目标区域数组中获取
-        for (int i = 0; i < m_NumberOfZones; i++)
-        {
-            m_AllTargetZones[i].gameObject.SetActive(true);     //激活需要的区域物体
-
-
-            //根据玩家的属性数值以及选项的难易度百分比计算最终的判定成功的角度
-            float zoneSuccessThreshold = m_ThresholdPerValue * playerPropertyValue * m_AllTargetZonePercent[i];
-
-
-            if (!TargetZoneDict.ContainsKey(m_AllTargetZones[i]))
-            {
-                TargetZoneDict.Add(m_AllTargetZones[i], zoneSuccessThreshold);
-            }
-        }
-
-
-        SetTargetZoneWidth();           //设置所有目标区域的宽度
-        StoreAllSuccessThreshold();     //将所有区域的判定成功的区域储存进列表
-    }
-
     //将所有区域的判定成功的区域储存进列表，用于随机生成区域的角度和坐标
     private void StoreAllSuccessThreshold()
     {
@@ -393,6 +361,131 @@ public class QTEPanel : BasePanel
     {
         OnAllQTESuccessed.Clear();      //清空链表
         OnQTEFailed = null;             //重置回调事件
+    }
+    #endregion
+
+
+    #region 初始化相关
+    private void CheckComponents()
+    {
+        if (m_Needle == null || m_AllTargetZones == null || m_AllTargetZonePercent == null || m_NeedleSpeed <= 0 || m_ThresholdPerValue <= 0)
+        {
+            Debug.LogError("Some components are not assigned in the " + gameObject.name);
+            return;
+        }
+    }
+
+    private void InitializeRadius()
+    {
+        //计算圆环的半径（这里由于圆并不完全填充由长和宽组成的正方形，因此不能通过此方法得出半径）
+        m_Radius = (m_AllTargetZones[0].parent as RectTransform).rect.width / 2f;
+    }
+
+
+    //根据玩家属性值调整所有QTE的判定成功的角度             需要做的：等游戏难易度系统设置好后，也需要考虑游戏难易度
+    public void InitalizeTargetZones(float playerPropertyValue)
+    {
+        //根据需要的目标区域数量，从所有目标区域数组中获取
+        for (int i = 0; i < m_NumberOfZones; i++)
+        {
+            m_AllTargetZones[i].gameObject.SetActive(true);     //激活需要的区域物体
+
+
+            //根据玩家的属性数值以及选项的难易度百分比计算最终的判定成功的角度
+            float zoneSuccessThreshold = m_ThresholdPerValue * playerPropertyValue * m_AllTargetZonePercent[i];
+
+
+            if (!TargetZoneDict.ContainsKey(m_AllTargetZones[i]))
+            {
+                TargetZoneDict.Add(m_AllTargetZones[i], zoneSuccessThreshold);
+            }
+        }
+
+
+        SetTargetZoneWidth();           //设置所有目标区域的宽度
+        StoreAllSuccessThreshold();     //将所有区域的判定成功的区域储存进列表
+    }
+    #endregion
+
+
+    #region 不同区域结果的提示文本相关
+    //初始化给予玩家不同区域的结果相关的提示的字典
+    private void InitializeZoneEffects()
+    {
+        m_ZoneEffects = new Dictionary<Color, string>
+        {
+            { Color.red, "affects sanity" },
+            { Color.yellow, "affects strength" },
+            { Color.blue, "affects speed" },
+            { Color.green, "affects knoweledge" },
+            { Color.magenta, "affects health" },
+            { Color.cyan, "affects weapon" }
+        };
+    }
+
+    
+    private void UpdateTipText()
+    {
+        List<string> tipTexts = new List<string>();     //用于储存所需的所有文本的链表
+
+
+        for (int i = 0; i < m_NumberOfZones; i++)
+        {
+            Image zoneImage = m_AllTargetZones[i].GetComponent<Image>();
+            if (zoneImage == null)
+            {
+                Debug.LogError($"Cannot get the Image component from {m_AllTargetZones[i].gameObject.name}");
+                return;
+            }
+
+
+            if (m_ZoneEffects.ContainsKey(zoneImage.color) )
+            {
+                string effectText = m_ZoneEffects[zoneImage.color];         //从字典那获取不同的颜色区域所对应的文本内容
+
+                tipTexts.Add($"{GetColorName(zoneImage.color)} zone: {effectText}");
+            }
+        }
+
+        tipTexts.Add($"Failing the QTE: {m_FailTipText}");      //将失败的提示文本加进链表，最后显示出来
+
+        m_TipText.text = string.Join("\n", tipTexts);           //将链表中的文本显示出来，每段文本之间空一行
+    }
+
+    private string GetColorName(Color color)
+    {
+        if (color == Color.red) return "Red";
+        if (color == Color.yellow) return "Yellow";
+        if (color == Color.blue) return "Blue";
+        if (color == Color.green) return "Green";
+        if (color == Color.magenta) return "Magenta";
+        if (color == Color.cyan) return "Cyan";
+
+        return "UnKnown";       //颜色都不匹配的时候，返回UnKnown
+    }
+
+
+    //用于外部调用，以赋值提示的文本给不同的区域
+    public void SetZoneEffect(Color zoneColor, string effectText)
+    {
+        //如果字典中有参数内的颜色，则更改文本
+        if (m_ZoneEffects.ContainsKey(zoneColor) )
+        {
+            m_ZoneEffects[zoneColor] = effectText;
+        }
+
+        //如果没有，则将颜色和文本加进字典
+        else
+        {
+            m_ZoneEffects.Add(zoneColor, effectText);
+        }
+    }
+
+
+    //用于外部调用，以赋值提示的文本给失败时的结果
+    public void SetFailTipText(string failTip)
+    {
+        m_FailTipText = failTip;
     }
     #endregion
 
