@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
+using Lean.Localization;
 
 
 /*
@@ -24,6 +25,7 @@ public class QTEPanel : BasePanel
     [SerializeField] List<float> m_AllTargetZonePercent;        //所有目标区域对应的判定成功的角度的百分比（让不同的选择的难度不同）
     [SerializeField] RectTransform m_Needle;                    //围绕圆环旋转的指针
     [SerializeField] TextMeshProUGUI m_TipText;                 //给与玩家不同区域的结果提示的文本
+    [SerializeField] List<string> m_AllTipPhraseKey;            //所有提示文本的翻译文件（第一个默认填失败文本，后面按颜色依次填）
     [SerializeField] float m_NeedleSpeed = 160f;                //指针旋转的速度
     [SerializeField] float m_ThresholdPerValue = 2f;            //每1点玩家属性值对应的判定成功角度（需要乘以2以得到最终角度）
 
@@ -443,49 +445,50 @@ public class QTEPanel : BasePanel
             {
                 string effectText = m_ZoneEffects[zoneImage.color];         //从字典那获取不同的颜色区域所对应的文本内容
 
-                tipTexts.Add($"{GetColorName(zoneImage.color)} zone: {effectText}");
+                tipTexts.Add($"{GetTargetZoneName(zoneImage.color)}: {effectText}");
             }
         }
 
-        tipTexts.Add($"Failing the QTE: {m_FailTipText}");      //将失败的提示文本加进链表，最后显示出来
+        //将失败的提示文本最后加进链表，显示在最末尾
+        tipTexts.Add($"{LeanLocalization.GetTranslationText(m_AllTipPhraseKey[0])}: {m_FailTipText}");      
 
         m_TipText.text = string.Join("\n", tipTexts);           //将链表中的文本显示出来，每段文本之间空一行
     }
 
-    private string GetColorName(Color color)
+    //根据颜色以及当前语言获取目标区域的名字（如红色区域，黄色区域等）
+    private string GetTargetZoneName(Color color)
     {
-        if (color == Color.red) return "Red";
-        if (color == Color.yellow) return "Yellow";
-        if (color == Color.blue) return "Blue";
-        if (color == Color.green) return "Green";
-        if (color == Color.magenta) return "Magenta";
-        if (color == Color.cyan) return "Cyan";
+        if (color == Color.red) return LeanLocalization.GetTranslationText(m_AllTipPhraseKey[1]);
+        if (color == Color.yellow) return LeanLocalization.GetTranslationText(m_AllTipPhraseKey[2]);
+        if (color == Color.blue) return LeanLocalization.GetTranslationText(m_AllTipPhraseKey[3]);
+        if (color == Color.green) return LeanLocalization.GetTranslationText(m_AllTipPhraseKey[4]);
+        if (color == Color.magenta) return LeanLocalization.GetTranslationText(m_AllTipPhraseKey[5]);
+        if (color == Color.cyan) return LeanLocalization.GetTranslationText(m_AllTipPhraseKey[6]);
 
         return "UnKnown";       //颜色都不匹配的时候，返回UnKnown
     }
 
 
     //用于外部调用，以赋值提示的文本给不同的区域
-    public void SetZoneEffect(Color zoneColor, string effectText)
+    public void SetFailTipAndZoneEffect(List<Color> zoneColors, List<string> effectTexts)
     {
-        //如果字典中有参数内的颜色，则更改文本
-        if (m_ZoneEffects.ContainsKey(zoneColor) )
+        m_FailTipText = effectTexts[0];     //先赋值提示的文本给失败时的结果
+
+
+        for (int i = 0; i < m_NumberOfZones; i++)
         {
-            m_ZoneEffects[zoneColor] = effectText;
-        }
+            //如果字典中有参数内的颜色，则更改文本
+            if (m_ZoneEffects.ContainsKey(zoneColors[i]) )
+            {
+                m_ZoneEffects[zoneColors[i]] = effectTexts[i + 1];      //因为string链表的第一个始终为失败的结果，因此这里从i + 1开始
+            }
 
-        //如果没有，则将颜色和文本加进字典
-        else
-        {
-            m_ZoneEffects.Add(zoneColor, effectText);
-        }
-    }
-
-
-    //用于外部调用，以赋值提示的文本给失败时的结果
-    public void SetFailTipText(string failTip)
-    {
-        m_FailTipText = failTip;
+            //如果没有，则将颜色和文本加进字典
+            else
+            {
+                m_ZoneEffects.Add(zoneColors[i], effectTexts[i + 1]);
+            }
+        }     
     }
     #endregion
 

@@ -29,6 +29,9 @@ public class EvilTelephonePanel : PanelWithButton
     public string ResultD_PhraseKey;
 
 
+    [SerializeField] List<string> m_AllTipPhraseKey;         //所有传递给QTE界面提示文本的翻译文本（第一个默认放失败文本）
+    List<string> m_AllQTEColors;         //所有传递给QTE界面提示文本的颜色链表
+
 
     //按钮的文本组件
     TextMeshProUGUI m_OptionAText;      
@@ -72,6 +75,8 @@ public class EvilTelephonePanel : PanelWithButton
 
         //默认按钮为“第四个选项”按钮
         firstSelectedButton = OptionD.gameObject;
+
+        InitializeQTEColor();       //初始化颜色链表
     }
 
     protected override void OnEnable()
@@ -260,7 +265,7 @@ public class EvilTelephonePanel : PanelWithButton
 
 
                 //打开QTE界面
-                UIManager.Instance.OpenQTEPanel(3, PlayerStatusBar.Instance.SanityValue, InitializeActionList(), FailedAction);
+                UIManager.Instance.OpenQTEPanel(3, PlayerStatusBar.Instance.SanityValue, InitializeActionList(), FailedAction, HandleOpenQTEPanel);
             }));
 
             generatedCoroutines.Add(eventInfoCoroutine);       //将协程加进列表
@@ -276,6 +281,24 @@ public class EvilTelephonePanel : PanelWithButton
 
 
     #region 其余函数 (QTE相关)
+    private Action HandleOpenQTEPanel()     //传递给UIManager，用于打开QTE界面后执行
+    {
+        QTEPanel.Instance.SetFailTipAndZoneEffect(m_AllQTEColors, m_AllTipPhraseKey);       //赋值QTE界面内的提示文本
+    }
+
+
+    //初始化给予玩家不同区域的结果相关的提示颜色的链表
+    private void InitializeQTEColor()
+    {
+        m_AllQTEColors = new List<string>
+        {
+            { Color.red },
+            { Color.yellow },
+            { Color.blue }
+        };
+    }
+
+
     private List<Action> InitializeActionList()         //初始化回调事件链表，以传递给QTE界面
     {
         List<Action> actions = new List<Action>();

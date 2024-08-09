@@ -226,7 +226,7 @@ public class UIManager : ManagerTemplate<UIManager>
 
 
     //打开QTE检测界面
-    public async void OpenQTEPanel(int neededZoneNum, float propertyVal, List<Action> successedActions, Action failedAction)
+    public async void OpenQTEPanel(int neededZoneNum, float propertyVal, List<Action> successedActions, Action failedAction, Action actionAfterPanelOpen)
     {
         if (QTEPanel.Instance == null)
         {
@@ -242,6 +242,9 @@ public class UIManager : ManagerTemplate<UIManager>
         QTEPanel.Instance.SetSuccessedAction(successedActions);     //赋值成功相关的回调事件
         QTEPanel.Instance.SetFailedAction(failedAction);            //赋值失败相关的回调事件
         QTEPanel.Instance.InitalizeTargetZones(propertyVal);        //初始化区域
+
+
+        actionAfterPanelOpen?.Invoke();
     }
     #endregion
 
